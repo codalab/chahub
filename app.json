@@ -1,0 +1,24 @@
+{
+  "name": "competitions-v2",
+  "scripts": {
+    "postdeploy": "bin/init_staging"
+  },
+  "env": {
+    "USE_SSL": "True"
+  },
+  "formation": {
+  },
+  "addons": [
+    "heroku-postgresql",
+    "searchbox:starter"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "heroku/python"
+    }
+
+  ]
+}
