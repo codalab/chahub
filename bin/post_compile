@@ -4,3 +4,5 @@ python manage.py migrate
 
 npm run build-stylus
 npm run build-riot
+
+python manage.py collectstatic --noinput
