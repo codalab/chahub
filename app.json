@@ -1,5 +1,5 @@
 {
-  "name": "competitions-v2",
+  "name": "chahub",
   "scripts": {
     "postdeploy": "bin/init_staging"
   },
