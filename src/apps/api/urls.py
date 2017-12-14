@@ -24,7 +24,7 @@ urlpatterns = [
     # url('docs/', get_swagger_view(title='Codalab')),
 
     # Docs are on /api/schema
-    url(f'^', include('drf_openapi.urls')),
+    # url(f'^', include('drf_openapi.urls')),
 
     url('query/', search.query),
     url('my_profile/', profiles.GetMyProfile.as_view()),
