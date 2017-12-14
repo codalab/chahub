@@ -29,7 +29,7 @@ THIRD_PARTY_APPS = (
 
     'rest_framework',
     # 'rest_framework_swagger',
-    'drf_openapi',
+    # 'drf_openapi',
     'whitenoise',
     'oauth2_provider',
     'corsheaders',
