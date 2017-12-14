@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.urls import path
-from django.conf.urls import include
+from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 
@@ -11,7 +11,7 @@ urlpatterns = [
     path('profiles/', include('profiles.urls', namespace='profiles')),
 
     # Third party
-    path('api/', include('api.urls')),
+    path('api/<str:version>/', include('api.urls')),
     path('oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 
     # Django built in
