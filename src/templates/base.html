@@ -34,11 +34,12 @@
     <!-- Compiled stylus -->
     <link rel="stylesheet" href="{% static "generated/output.css" %}">
 
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="{% static "js/reconnecting-websocket.min.js" %}"></script>
 
     {% block extra_head %}
     {% endblock %}
-
-
 </head>
 <body>
 
@@ -145,6 +146,30 @@
         },
         API: "/api/"
     }
+
+    $(document).ready(function () {
+        // fix menu when passed
+        $('.masthead')
+            .visibility({
+                once: false,
+                onBottomPassed: function () {
+                    $('.fixed.menu').transition('fade in')
+                },
+                onBottomPassedReverse: function () {
+                    $('.fixed.menu').transition('fade out')
+                }
+            })
+        // create sidebar and attach to menu open
+        $('.ui.sidebar')
+            .sidebar('attach events', '.toc.item')
+        // Websocket listener
+        var ws_protocol = window.location.protocol == 'https:' ? 'wss' : 'ws'
+        var socket = new ReconnectingWebSocket(ws_protocol + '://' + window.location.host + '/')
+        socket.onmessage = function(e) {
+            toastr.success("Received msg: " + e.data)
+        }
+        window.socket = socket
+    })
 </script>
 
 
