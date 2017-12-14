@@ -17,12 +17,17 @@ router.register('data_groups', data.DataGroupViewSet)
 # router.register('query', SearchAPIView, base_name='Search')
 # router.register('query', url('^query/', query), base_name='query')
 
+API_PREFIX = "v1"
+
 urlpatterns = [
     url('^', include(router.urls)),
-    url('^query/', search.query),
-    url('^my_profile/', profiles.GetMyProfile.as_view()),
+    # url('docs/', get_swagger_view(title='Codalab')),
 
-    url('^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    # Docs are on /api/schema
+    url(f'^', include('drf_openapi.urls')),
 
-    url('^docs/', get_swagger_view(title='Codalab'))
+    url('query/', search.query),
+    url('my_profile/', profiles.GetMyProfile.as_view()),
+
+    url('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

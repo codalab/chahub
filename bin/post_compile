@@ -2,5 +2,9 @@
 
 python manage.py migrate
 
+# Make directory for generated files
+mkdir -p src/static/generated/
+
+# Generate frontend files
 npm run build-stylus
 npm run build-riot
