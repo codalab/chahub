@@ -7,6 +7,12 @@ class Competition(models.Model):
     created_when = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=256)
 
+    producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True)
+    remote_id = models.PositiveIntegerField()
+
+    class Meta:
+        unique_together = ('remote_id', 'producer')
+
 
 class Phase(models.Model):
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE, related_name='phases')

@@ -44,6 +44,7 @@ OUR_APPS = (
     'pages',
     'profiles',
     'sockets',
+    'producers',
 )
 INSTALLED_APPS = THIRD_PARTY_APPS + OUR_APPS
 
@@ -193,8 +194,8 @@ else:
 # =============================================================================
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         # 'rest_framework.permissions.IsAuthenticated',

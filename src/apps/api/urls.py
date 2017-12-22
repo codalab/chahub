@@ -9,13 +9,6 @@ from .views import competitions, data, profiles, search
 
 router = SimpleRouter()
 router.register('competitions', competitions.CompetitionViewSet)
-router.register('phases', competitions.PhaseViewSet)
-router.register('submissions', competitions.SubmissionViewSet)
-router.register('data', data.DataViewSet)
-router.register('data_groups', data.DataGroupViewSet)
-# router.register(r'groups', GroupViewSet)
-# router.register('query', SearchAPIView, base_name='Search')
-# router.register('query', url('^query/', query), base_name='query')
 
 API_PREFIX = "v1"
 
