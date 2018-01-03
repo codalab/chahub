@@ -25,5 +25,8 @@ CHAHUB.api = {
     },
     update_producer: function(pk, data) {
         return CHAHUB.api.request('PUT', URLS.API + "producers/" + pk + "/", data)
+    },
+    delete_producer: function(pk) {
+        return CHAHUB.api.request('DELETE', URLS.API + "producers/" + pk + "/")
     }
 }

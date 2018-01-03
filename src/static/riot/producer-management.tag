@@ -43,7 +43,7 @@
             <td class="center aligned">
                 <div class="ui small basic icon buttons">
                     <button class="ui button" onclick="{ edit.bind(this, producer) }"><i class="edit icon"></i></button>
-                    <button class="ui button"><i class="red delete icon"></i></button>
+                    <button class="ui button" onclick="{ delete.bind(this, producer) }"><i class="red delete icon"></i></button>
                 </div>
             </td>
         </tr>
@@ -72,9 +72,8 @@
         <div class="content">
             <div class="ui grid">
                 <div class="column sixteen wide center aligned">
-            <h3 class="ui center aligned header">{secret_key}</h3>
-            <p class="ui center aligned">Send this key to the producer, it will not be revealed again.</p>
-
+                    <h3 class="ui center aligned header">{secret_key}</h3>
+                    <p class="ui center aligned">Send this key to the producer, it will not be revealed again.</p>
                 </div>
             </div>
         </div>
@@ -115,7 +114,7 @@
             self.selected_producer = {}
         }
 
-        self.edit = function(producer) {
+        self.edit = function (producer) {
             self.selected_producer = producer
 
             self.refs.name.refs.input.value = producer.name
@@ -154,7 +153,7 @@
 
                     $("#producer_form")[0].reset();
 
-                    if(data.api_key) {
+                    if (data.api_key) {
                         // We received a secret key, so we must have made a new producer. Show the
                         // key so it can be copied down
                         $("#producer_secret_key_modal").modal('show')
@@ -173,6 +172,19 @@
                         self.update({errors: errors})
                     }
                 })
+        }
+
+        self.delete = function (producer) {
+            if (confirm("Are you sure you want to delete this?")) {
+                CHAHUB.api.delete_producer(producer.id)
+                    .done(function () {
+                        toastr.success("Deleted!")
+                        self.update_producers()
+                    })
+                    .fail(function (response) {
+                        toastr.error("Could not delete.\n\n" + response.responseText)
+                    })
+            }
         }
     </script>
 </producer-management>
