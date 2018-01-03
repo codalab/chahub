@@ -6,6 +6,7 @@ class ProducerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Producer
         fields = (
+            'id',
             'name',
             'contact',
             'url',

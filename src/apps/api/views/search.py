@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 
 @api_view(['GET'])
-def query(request):
+def query(request, version="v1"):
     if 'q' not in request.GET:
         return Response()
 

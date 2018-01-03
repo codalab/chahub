@@ -9,6 +9,7 @@ urlpatterns = [
     # Our URLS
     path('', include('pages.urls', namespace='pages')),
     path('profiles/', include('profiles.urls', namespace='profiles')),
+    path('producers/', include('producers.urls', namespace='producers')),
 
     # Third party
     path('api/<str:version>/', include('api.urls')),

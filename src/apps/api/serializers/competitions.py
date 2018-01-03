@@ -21,6 +21,7 @@ class CompetitionSerializer(serializers.ModelSerializer):
         validators = []
         extra_kwargs = {
             'producer': {
+                # UniqueTogether validator messes this up
                 'validators': [],
             }
         }

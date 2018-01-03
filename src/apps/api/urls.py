@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from rest_framework.routers import SimpleRouter
 # from rest_framework_swagger.views import get_swagger_view
-
+from api.views.producers import ProducerViewSet
 from .views import competitions, data, profiles, search
 
 # from .views.search import query
@@ -9,6 +9,7 @@ from .views import competitions, data, profiles, search
 
 router = SimpleRouter()
 router.register('competitions', competitions.CompetitionViewSet)
+router.register('producers', ProducerViewSet)
 
 API_PREFIX = "v1"
 
