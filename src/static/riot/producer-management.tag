@@ -117,6 +117,10 @@
         self.edit = function (producer) {
             self.selected_producer = producer
 
+            // We have to use our references to the custom <fields> to get their references to
+            // the inputs!
+            // Example for name:
+            // <field ref="name"> -> <input ref="input">
             self.refs.name.refs.input.value = producer.name
             self.refs.contact.refs.input.value = producer.contact
             self.refs.url.refs.input.value = producer.url
@@ -129,8 +133,6 @@
         self.save = function (save_event) {
             // Stop the form from propagating
             save_event.preventDefault()
-
-            self.update()
 
             var data = $("#producer_form").serializeObject()
             var endpoint = undefined  // we'll pick form create OR update for the endpoint
