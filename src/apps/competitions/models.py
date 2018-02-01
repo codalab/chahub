@@ -1,3 +1,6 @@
+import json
+
+from channels import Group
 from django.conf import settings
 from django.db import models
 
@@ -12,6 +15,18 @@ class Competition(models.Model):
 
     class Meta:
         unique_together = ('remote_id', 'producer')
+
+    def save(self, *args, **kwargs):
+        from api.serializers.competitions import CompetitionSerializer
+        Group("updates").send({
+            "text": json.dumps({
+                "type": "competition_update",
+                "data": CompetitionSerializer(self).data
+            }),
+        })
+        print("CHANNELS??????@@@@@@@@@@@@@@@@@@@@")
+
+        return super().save(*args, **kwargs)
 
 
 class Phase(models.Model):

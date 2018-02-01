@@ -30,7 +30,7 @@ class CompetitionSerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
 
         # Set producer here... is there a nicer way to do this, like via kwargs?
-        if 'producer' in kwargs['context']:
+        if 'context' in kwargs and 'producer' in kwargs['context']:
             self.fields['producer'].default = kwargs['context']['producer']
 
     def save(self, **kwargs):

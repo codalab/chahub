@@ -1,3 +1,4 @@
+from channels import Group
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -14,6 +15,8 @@ class ProducerViewSet(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         # Augment the default behavior to return the secret key instead of the entire producer object
+
+        # We then display the API key to the user to forward on to the producer
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

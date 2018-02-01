@@ -7,7 +7,7 @@ from django.contrib import admin
 
 urlpatterns = [
     # Our URLS
-    path('', include('pages.urls', namespace='pages')),
+    # path('', include('pages.urls', namespace='pages')),
     path('profiles/', include('profiles.urls', namespace='profiles')),
     path('producers/', include('producers.urls', namespace='producers')),
 

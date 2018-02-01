@@ -1,3 +1,4 @@
+from channels import Group
 from rest_framework.viewsets import ModelViewSet
 
 from api.authenticators import ProducerAuthentication
@@ -37,8 +38,7 @@ class CompetitionViewSet(ModelViewSet):
 
         return context
 
-    def post(self, *args, **kwargs):
-        return super().post(*args, **kwargs)
+
 #
 #
 # class PhaseViewSet(ModelViewSet):
