@@ -1,9 +1,9 @@
 from django.conf import settings
-from django.urls import path
+from django.urls import path, re_path
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-
+from django.views.generic import TemplateView
 
 urlpatterns = [
     # Our URLS
@@ -20,6 +20,8 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
     path('social/', include('social_django.urls', namespace='social')),
+
+    re_path(r'.*', TemplateView.as_view(template_name="index.html")),
 ]
 
 
