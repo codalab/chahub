@@ -1,9 +1,17 @@
 <app>
     <router>
-        <route path="apple"><p>Apple</p></route>
-        <route path="banana"><p>Banana</p></route>
-        <route path="coffee"><p>Coffee</p></route>
+        <route path="/">
+        </route>
+        <route path="/search">
+            <search-results></search-results>
+        </route>
     </router>
+
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/search">Search!</a></li>
+    </ul>
+
     <script>
         const self = this
     </script>

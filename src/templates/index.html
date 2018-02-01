@@ -40,24 +40,12 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="{% static "js/reconnecting-websocket.min.js" %}"></script>
 
-
-
-
-
     {% block extra_head %}
     {% endblock %}
 </head>
 <body>
 
-
-<div class="ui grid container">
-    <div class="row">
-        <div class="column wide sixteen">
-            <app></app>
-        </div>
-    </div>
-</div>
-
+<app></app>
 
 <script>
     // Load in URLs or other django generated goodies
@@ -72,7 +60,5 @@
 
 {% block extra_body %}
 {% endblock %}
-
-
 </body>
 </html>
