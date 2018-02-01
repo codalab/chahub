@@ -3,7 +3,7 @@
         <div class="ui grid container menu-holder">
             <div class="item column thirteen wide">
                 <div class="ui icon input">
-                    <input type="text" placeholder="Search...">
+                    <input type="text" placeholder="Search..." ref="search" onkeydown="{ input_updated }">
                     <i class="search icon"></i>
                 </div>
             </div>
@@ -111,7 +111,7 @@
                 <div class="ui divided stacked items">
                     <search-result each="{ results }"></search-result>
                     <div class="item" show="{ results.length == 0 }">
-                        <i>No results found...</i> <b>for { query }</b>
+                        <i>No results found...</i>
                     </div>
                 </div>
             </div>
@@ -198,9 +198,14 @@
         })
 
 
-        self.on('route', function(){
-            var q = route.query()
-            self.query = q.q
+        self.on('route', function () {
+            var params = route.query()
+
+            // On page load set search bar to search and execute search if we were given a query
+            if(!!params.q) {
+                self.search(params.q)
+                self.refs.search.value = params.q
+            }
         })
 
         self.input_updated = function () {
@@ -209,17 +214,17 @@
             }, 100)
         }
 
-        /*
-         Just using semantic search instead.... for now...
-         self.search = function () {
-         CODALAB.api.search(self.refs.search_field.value)
-         .done(function (data) {
-         self.update({
-         results: data.results,
-         suggestions: data.suggestions
-         })
-         })
-         }*/
+        self.search = function (query) {
+            query = query || self.refs.search.value
+            CHAHUB.api.search(query)
+                .done(function (data) {
+                    console.log(data)
+                    self.update({
+                        results: data.results,
+                        suggestions: data.suggestions
+                    })
+                })
+        }
     </script>
 
     <style type="text/stylus">
