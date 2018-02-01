@@ -27,8 +27,6 @@ class ProducerPermission(permissions.BasePermission):
 
 
 
-            print("@@@@", request.user)
-            print(isinstance(request.user, Producer))
 
 
 
