@@ -13,14 +13,16 @@ def query(request, version="v1"):
     if 'q' not in request.GET:
         return Response()
 
+    query = request.GET.get('q')
     client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
     s = Search(using=client)
 
-    # Do keyword search
-    s = s.query("match_phrase_prefix", title=request.GET['q'])
-    s = s.highlight('title', fragment_size=50)
-    s = s.suggest('suggestions', request.GET['q'], term={'field': 'title'})
-    # s = s.slop(1)
+    if query:
+        # Do keyword search
+        s = s.query("match_phrase_prefix", title=query)
+        s = s.highlight('title', fragment_size=50)
+        s = s.suggest('suggestions', query, term={'field': 'title'})
+        # s = s.slop(1)
 
     # Do filters
     # ...

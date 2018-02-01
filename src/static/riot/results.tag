@@ -202,10 +202,8 @@
             var params = route.query()
 
             // On page load set search bar to search and execute search if we were given a query
-            if(!!params.q) {
-                self.search(params.q)
-                self.refs.search.value = params.q
-            }
+            self.refs.search.value = params.q || ''
+            self.search()
         })
 
         self.input_updated = function () {
