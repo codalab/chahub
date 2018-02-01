@@ -1,17 +1,29 @@
 <search-results>
     <div class="ui top fixed menu">
-        <div class="item">
+        <div class="ui grid container menu-holder">
+            <div class="item column thirteen wide">
+                <div class="ui icon input">
+                    <input type="text" placeholder="Search...">
+                    <i class="search icon"></i>
+                </div>
+            </div>
+            <div class="item column three wide">
+                <div class="ui input">
+                    <div class="ui primary button">Create Competition</div>
+                </div>
+            </div>
+        </div>
+        <!--<div class="item">
             <div class="ui icon input">
                 <input type="text" placeholder="Search...">
                 <i class="search icon"></i>
             </div>
         </div>
         <div class="right item">
-            <div class="ui action input">
-                <input type="text" placeholder="Navigate to...">
-                <div class="ui button">Go</div>
+            <div class="ui input">
+                <div class="ui primary button">Create Competition</div>
             </div>
-        </div>
+        </div>-->
     </div>
 
     <div class="ui stackable grid container">
@@ -91,31 +103,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div id="search_wrapper" ref="search_wrapper" class="ui fluid search focus">
-                    <div class="ui icon input fluid">
-                        <!--<input ref="search_field" class="prompt" type="text" placeholder="Keywords" oninput="{ input_updated }">-->
-                        <input ref="search_field" class="prompt" type="text" placeholder="Keywords"">
-                        <i class="search icon"></i>
-                    </div>
-                    <!--<div class="results transition {visible: !!suggestions && suggestions.length > 0}">
-                        <a class="result" each="{ suggestions }">
-                            <div class="content">
-                                <div class="title">{ text } (score: { score })</div>
-                            </div>
-                        </a>
-                    </div>-->
-
-                    <!--<div ref="search_wrapper" class="ui fluid multiple search selection dropdown exclude-from-init">
-                        <input type="hidden" name="country" value="kp">
-                        <i class="search icon"></i>
-                        <input ref="search_field" class="search" oninput="{ input_updated }">
-                        <div class="default text">Search...</div>
-                        <div class="menu">
-                            <div class="item" each="{ suggestions }">{ text } (score: { score })</div>
-                        </div>
-                    </div>-->
-                </div>
             </div>
         </div>
 
@@ -123,6 +110,9 @@
             <div class="twelve wide column">
                 <div class="ui divided stacked items">
                     <search-result each="{ results }"></search-result>
+                    <div class="item" show="{ results.length == 0 }">
+                        <i>No results found...</i> <b>for { query }</b>
+                    </div>
                 </div>
             </div>
         </div>
@@ -152,6 +142,7 @@
 
     <script>
         var self = this
+        self.results = []
 
         self.on('mount', function () {
             /*$(self.refs.search_wrapper).dropdown({
@@ -204,6 +195,12 @@
                 duration: 300,
                 transition: 'slide down'
             });
+        })
+
+
+        self.on('route', function(){
+            var q = route.query()
+            self.query = q.q
         })
 
         self.input_updated = function () {

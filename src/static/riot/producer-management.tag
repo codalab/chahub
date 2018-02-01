@@ -78,7 +78,7 @@
             </div>
         </div>
         <div class="actions">
-            <div class="ui cancel button">I've copied down this key</div>
+            <div class="ui cancel red button">I've copied down this key</div>
         </div>
     </div>
 

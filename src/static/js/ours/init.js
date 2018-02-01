@@ -65,5 +65,7 @@ $(document).ready(function () {
     CHAHUB.events = riot.observable()
 
     riot.mount('*')
-    //route.start(true)  // true here means "auto start evaluating from current URL"
+
+    // Make the URLs in riotjs router start from / instead of the default #
+    route.base('/')
 })

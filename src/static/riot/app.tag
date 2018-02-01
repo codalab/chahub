@@ -1,8 +1,9 @@
 <app>
     <router>
         <route path="/">
+            <search></search>
         </route>
-        <route path="/search">
+        <route path="/search..">
             <search-results></search-results>
         </route>
     </router>
