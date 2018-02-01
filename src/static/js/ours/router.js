@@ -1,5 +1,1 @@
-route(function(thing, thing1, thing2){
-    console.log(thing)
-    console.log(thing1)
-    console.log(thing2)
-})
+// Might put special things here to handle any time we change a route???
