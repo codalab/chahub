@@ -22,4 +22,7 @@ class CompetitionDocument(DocType):
     created_by = StringField()
 
     def prepare_created_by(self, instance):
-        return instance.created_by.username if instance.created_by else ""
+        return instance.created_by
+
+        # We are using a regular string for created_by right now, used to be a user instance
+        # return instance.created_by.username if instance.created_by else ""
