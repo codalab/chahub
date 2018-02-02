@@ -1,15 +1,96 @@
 <search-results>
-    <div class="ui top fixed menu">
+    <div class="ui top">
         <div class="ui grid container menu-holder">
             <div class="item column thirteen wide">
-                <div class="ui icon input">
-                    <input type="text" placeholder="Search..." ref="search" onkeydown="{ input_updated }">
-                    <i class="search icon"></i>
+                <div class="ui grid">
+                    <div class="row search-wrapper">
+                        <div class="ui icon input">
+                            <input type="text" placeholder="Search..." ref="search" onkeydown="{ input_updated }">
+                            <i class="search icon"></i>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="ui form">
+                            <div class="inline fields">
+                                <div class="field">
+                                    <div id="time-range" class="ui floating labeled icon dropdown button">
+                                        <i class="filter icon"></i>
+                                        <span class="text">Any time</span>
+                                        <div class="menu">
+                                            <div class="header">
+                                                Timeframe
+                                            </div>
+                                            <div class="divider"></div>
+                                            <div class="item" data-value="active">
+                                                Active
+                                            </div>
+                                            <div class="item" data-value="past_month">
+                                                Started past month
+                                            </div>
+                                            <div class="item" data-value="past_year">
+                                                Started past year
+                                            </div>
+                                            <div class="divider"></div>
+                                            <div class="header">
+                                                Date range
+                                            </div>
+                                            <div class="ui left icon input datepicker">
+                                                <i class="calendar icon"></i>
+                                                <input type="text" name="search" placeholder="Start date">
+                                            </div>
+                                            <div class="ui left icon input datepicker">
+                                                <i class="calendar icon"></i>
+                                                <input type="text" name="search" placeholder="End date">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <div class="ui floating labeled icon dropdown multiple button">
+                                        <i class="filter icon"></i>
+                                        <span class="text">Attributes (select many)</span>
+                                        <div class="menu">
+                                            <div class="header">
+                                                <i class="tags icon"></i>
+                                                Competition filters
+                                            </div>
+                                            <div class="item">
+                                                I'm in
+                                            </div>
+                                            <div class="item">
+                                                Has not finished
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <div class="ui floating labeled icon dropdown button">
+                                        <i class="filter icon"></i>
+                                        <span class="text">Sorted by</span>
+                                        <div class="menu">
+                                            <div class="item">
+                                                Next deadline
+                                            </div>
+                                            <div class="item">
+                                                Prize amount
+                                            </div>
+                                            <div class="item">
+                                                Number of participants
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
             </div>
             <div class="item column three wide">
                 <div class="ui input">
-                    <div class="ui primary button">Create Competition</div>
+                    <div class="ui inverted blue button">Create Competition</div>
                 </div>
             </div>
         </div>
@@ -29,80 +110,7 @@
     <div class="ui stackable grid container">
         <div class="row centered">
             <div class="twelve wide column">
-                <div class="ui form">
-                    <div class="inline fields">
-                        <div class="field">
-                            <div id="time-range" class="ui floating labeled icon dropdown button">
-                                <i class="filter icon"></i>
-                                <span class="text">Any time</span>
-                                <div class="menu">
-                                    <div class="header">
-                                        Timeframe
-                                    </div>
-                                    <div class="divider"></div>
-                                    <div class="item" data-value="active">
-                                        Active
-                                    </div>
-                                    <div class="item" data-value="past_month">
-                                        Started past month
-                                    </div>
-                                    <div class="item" data-value="past_year">
-                                        Started past year
-                                    </div>
-                                    <div class="divider"></div>
-                                    <div class="header">
-                                        Date range
-                                    </div>
-                                    <div class="ui left icon input datepicker">
-                                        <i class="calendar icon"></i>
-                                        <input type="text" name="search" placeholder="Start date">
-                                    </div>
-                                    <div class="ui left icon input datepicker">
-                                        <i class="calendar icon"></i>
-                                        <input type="text" name="search" placeholder="End date">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="field">
-                            <div class="ui floating labeled icon dropdown multiple button">
-                                <i class="filter icon"></i>
-                                <span class="text">Attributes (select many)</span>
-                                <div class="menu">
-                                    <div class="header">
-                                        <i class="tags icon"></i>
-                                        Competition filters
-                                    </div>
-                                    <div class="item">
-                                        I'm in
-                                    </div>
-                                    <div class="item">
-                                        Has not finished
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="ui floating labeled icon dropdown button">
-                                <i class="filter icon"></i>
-                                <span class="text">Sorted by</span>
-                                <div class="menu">
-                                    <div class="item">
-                                        Next deadline
-                                    </div>
-                                    <div class="item">
-                                        Prize amount
-                                    </div>
-                                    <div class="item">
-                                        Number of participants
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -234,6 +242,12 @@
 
         .ui.button:hover .icon
             opacity 1
+
+        .search-wrapper
+            padding-bottom 0 !important
+
+            .input
+                width 100%
     </style>
 </search-results>
 

@@ -61,9 +61,12 @@
     <script>
         const self = this
 
+        console.log(self)
+
         self.search_key_down = function(event) {
             // enter key
             if (event.keyCode === 13) {
+                $(self.root).slideUp()
                 self.search()
             }
         }
