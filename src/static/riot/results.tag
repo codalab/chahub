@@ -321,11 +321,9 @@
             </div>
             <div class="three wide blue column center aligned" style="min-height: 100%">
                     <i>Comp deadline:</i>
-                    <br>
                     <i>August 14 2018</i>
                     <div class="ui divider"></div>
                     <i>Phase deadline:</i>
-                    <br>
                     <i>April 14 2018</i>
                     <div class="ui divider"></div>
                     <i>17 participants</i>
