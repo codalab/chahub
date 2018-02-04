@@ -64,11 +64,18 @@
         console.log(self)
 
         self.search_key_down = function(event) {
+            // If we get enough characters start searching
+            if(self.refs.search.value.length > 1) {
+                self.search()
+                return
+            }
+
             // enter key
             if (event.keyCode === 13) {
                 $(self.root).slideUp()
                 self.search()
             }
+
         }
 
         self.search = function() {

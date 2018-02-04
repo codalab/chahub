@@ -213,6 +213,9 @@
             // On page load set search bar to search and execute search if we were given a query
             self.refs.search.value = params.q || ''
             self.search()
+
+            // Focus on search
+            self.refs.search.focus()
         })
 
         self.input_updated = function () {
