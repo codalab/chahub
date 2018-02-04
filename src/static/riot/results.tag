@@ -1,5 +1,5 @@
 <search-results>
-    <div class="ui top">
+    <div id="particle_header" class="ui top">
         <div class="ui grid container menu-holder">
             <div class="item column thirteen wide">
                 <div class="ui grid">
@@ -178,6 +178,9 @@
 
              onNoResults: function(search) {}
              })*/
+            // header particles
+            particlesJS.load('particle_header', URLS.assets.header_particles)
+
             // Template stuff
             $('.datepicker').calendar({
                 type: 'date',
@@ -259,6 +262,19 @@
     </script>
 
     <style type="text/stylus">
+        .ui.top
+            // This is for the particles js animations to fit to this
+            position relative
+
+            canvas
+                position absolute
+                top 0
+                right 0
+                left 0
+                bottom 0
+                z-index -1
+                background rgba(22, 12, 160, 0.9)
+
         #results_container
             min-height 375px
 
