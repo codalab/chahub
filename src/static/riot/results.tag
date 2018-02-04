@@ -82,6 +82,17 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="field">
+                                    <div class="ui icon buttons">
+                                        <button class="ui button { positive: display_mode === 'list' }" onclick="{ set_display_mode.bind(this, 'list') }">
+                                            <i class="list layout icon"></i>
+                                        </button>
+                                        <button class="ui button { positive: display_mode === 'card' }" onclick="{ set_display_mode.bind(this, 'card') }">
+                                            <i class="grid layout icon"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -115,10 +126,14 @@
         </div>
 
         <div id="results_container" class="row centered">
-            <div class="twelve wide column">
+            <div class="fourteen wide column">
                 <div class="ui stacked">
                     <!--<search-result each="{ results }"></search-result>-->
-                    <competition-tile each="{ results }" class="item"></competition-tile>
+                    <competition-tile each="{ results }" class="item" show="{ display_mode === 'list' }"></competition-tile>
+
+                    <div class="ui link cards">
+                        <competition-card each="{ results }" class="ui centered card" show="{ display_mode === 'card' }"></competition-card>
+                    </div>
                     <div show="{ results.length == 0 }">
                         <i>No results found...</i>
                     </div>
@@ -152,6 +167,7 @@
     <script>
         var self = this
         self.results = []
+        self.display_mode = 'list'
 
         self.on('mount', function () {
             /*$(self.refs.search_wrapper).dropdown({
@@ -235,6 +251,11 @@
                     })
                 })
         }
+
+        self.set_display_mode = function (mode) {
+            self.display_mode = mode
+            self.update()
+        }
     </script>
 
     <style type="text/stylus">
@@ -289,47 +310,47 @@
                 </div>
             </div>
             <div class="nine wide column">
-                    <div class="ui row">
-                        <div class="twelve wide column">
-                            <h1 class="ui large header">
-                                {title}
-                            </h1>
-                            <p style="font-size: 14px">
-                                A competition description
-                                {description}
-                            </p>
-                        </div>
-                        <div class="four wide right justify left align column">
-                            <div align="right" class="content">
-                                <i>Organized by: <b>Someone</b></i>
-                            </div>
+                <div class="ui row">
+                    <div class="twelve wide column">
+                        <h1 class="ui large header">
+                            {title}
+                        </h1>
+                        <p style="font-size: 14px">
+                            A competition description
+                            {description}
+                        </p>
+                    </div>
+                    <div class="four wide right justify left align column">
+                        <div align="right" class="content">
+                            <i>Organized by: <b>Someone</b></i>
                         </div>
                     </div>
-                    <div class="ui row">
-                        <div class="sixteen wide column">
-                            <div class="content">
-                                <!--Tags?-->
-                            </div>
+                </div>
+                <div class="ui row">
+                    <div class="sixteen wide column">
+                        <div class="content">
+                            <!--Tags?-->
                         </div>
                     </div>
-                    <div class="ui row">
-                        <div class="sixteen wide column">
-                            <div class="content">
-                                Tags: <b>Beginner</b>, <b>AutoML</b>
-                                <br>
-                                Admins: <b>tthomas63</b>
-                            </div>
+                </div>
+                <div class="ui row">
+                    <div class="sixteen wide column">
+                        <div class="content">
+                            Tags: <b>Beginner</b>, <b>AutoML</b>
+                            <br>
+                            Admins: <b>tthomas63</b>
                         </div>
                     </div>
+                </div>
             </div>
             <div class="three wide blue column center aligned" style="min-height: 100%">
-                    <i>Comp deadline:</i>
-                    <i>August 14 2018</i>
-                    <div class="ui divider"></div>
-                    <i>Phase deadline:</i>
-                    <i>April 14 2018</i>
-                    <div class="ui divider"></div>
-                    <i>17 participants</i>
+                <i>Comp deadline:</i>
+                <i>August 14 2018</i>
+                <div class="ui divider"></div>
+                <i>Phase deadline:</i>
+                <i>April 14 2018</i>
+                <div class="ui divider"></div>
+                <i>17 participants</i>
             </div>
         </div>
     </div>
@@ -348,3 +369,32 @@
             border-bottom-left-radius 6px !important
     </style>
 </competition-tile>
+
+<competition-card>
+        <div class="image">
+            <img src="https://i.imgur.com/n2XUSxU.png">
+        </div>
+        <div class="content">
+            <a class="header">{ title }</a>
+            <div class="meta">
+                <span class="date">Joined in 2013</span>
+            </div>
+            <div class="description">
+                Kristy is an art director living in New York.
+            </div>
+        </div>
+        <div class="extra content">
+            <a>
+                <i class="user icon"></i>
+                22 Friends
+            </a>
+        </div>
+
+    <script>
+    </script>
+
+    <style type="text/stylus">
+        :self
+            display block
+    </style>
+</competition-card>
