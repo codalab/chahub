@@ -31,10 +31,12 @@ def query(request, version="v1"):
     # ...
 
     # Filter on dates...
-    # s = s.filter('range', created_when={
-    #     'gt': datetime.date(1988, 2, 29),
-    #     'lte': 'now'
-    # })
+    start_date = request.GET.get('start_date')
+    if start_date:
+        s = s.filter('range', created_when={
+            'gt': start_date,  # I think..
+            'lte': datetime.date.today() + datetime.timedelta(days=999)
+        })
 
     # Get results
     results = s.execute()

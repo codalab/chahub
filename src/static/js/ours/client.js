@@ -13,7 +13,7 @@ CHAHUB.api = {
         })
     },
     search: function (query) {
-        return CHAHUB.api.request('GET', URLS.API + "query/?q=" + query)
+        return CHAHUB.api.request('GET', URLS.API + "query/", $.param(query))
     },
     // ------------------------------------------------------------------------
     // Producers

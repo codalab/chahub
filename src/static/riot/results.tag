@@ -36,11 +36,11 @@
                                             </div>
                                             <div class="ui left icon input datepicker">
                                                 <i class="calendar icon"></i>
-                                                <input type="text" name="search" placeholder="Start date">
+                                                <input ref="start_date" type="text" name="search" placeholder="Start date">
                                             </div>
                                             <div class="ui left icon input datepicker">
                                                 <i class="calendar icon"></i>
-                                                <input type="text" name="search" placeholder="End date">
+                                                <input ref="end_date" type="text" name="search" placeholder="End date">
                                             </div>
                                         </div>
                                     </div>
@@ -244,7 +244,18 @@
         }
 
         self.search = function (query) {
-            query = query || self.refs.search.value
+            //query = query || self.refs.search.value
+            query = {query: query || self.refs.search.value}
+            if (self.refs.start_date.value)
+            {
+                query.start_date = self.refs.start_date.value
+            }
+            console.log(query)
+            /*
+            if (self.refs.end_date.value)
+            {
+                query.end_date = self.refs.start_date.value
+            }*/
             CHAHUB.api.search(query)
                 .done(function (data) {
                     console.log(data)
