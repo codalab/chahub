@@ -35,6 +35,7 @@ def query(request, version="v1"):
     if start_date:
         s = s.filter('range', created_when={
             'gt': start_date,  # I think..
+            "format": "yyyy-MM-dd",
             'lte': datetime.date.today() + datetime.timedelta(days=999)
         })
 

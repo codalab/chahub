@@ -36,7 +36,8 @@
                                             </div>
                                             <div class="ui left icon input datepicker">
                                                 <i class="calendar icon"></i>
-                                                <input ref="start_date" type="text" name="search" placeholder="Start date">
+                                                <input ref="start_date" type="text" name="search"
+                                                       placeholder="Start date">
                                             </div>
                                             <div class="ui left icon input datepicker">
                                                 <i class="calendar icon"></i>
@@ -85,10 +86,12 @@
 
                                 <div class="field">
                                     <div class="ui icon buttons">
-                                        <button class="ui button { positive: display_mode === 'list' }" onclick="{ set_display_mode.bind(this, 'list') }">
+                                        <button class="ui button { positive: display_mode === 'list' }"
+                                                onclick="{ set_display_mode.bind(this, 'list') }">
                                             <i class="list layout icon"></i>
                                         </button>
-                                        <button class="ui button { positive: display_mode === 'card' }" onclick="{ set_display_mode.bind(this, 'card') }">
+                                        <button class="ui button { positive: display_mode === 'card' }"
+                                                onclick="{ set_display_mode.bind(this, 'card') }">
                                             <i class="grid layout icon"></i>
                                         </button>
                                     </div>
@@ -129,10 +132,12 @@
             <div class="fourteen wide column">
                 <div class="ui stacked">
                     <!--<search-result each="{ results }"></search-result>-->
-                    <competition-tile each="{ results }" class="item" show="{ display_mode === 'list' }"></competition-tile>
+                    <competition-tile each="{ results }" class="item"
+                                      show="{ display_mode === 'list' }"></competition-tile>
 
                     <div class="ui link cards">
-                        <competition-card each="{ results }" class="ui centered card" show="{ display_mode === 'card' }"></competition-card>
+                        <competition-card each="{ results }" class="ui centered card"
+                                          show="{ display_mode === 'card' }"></competition-card>
                     </div>
                     <div show="{ results.length == 0 }">
                         <i>No results found...</i>
@@ -184,6 +189,21 @@
             // Template stuff
             $('.datepicker').calendar({
                 type: 'date',
+                formatter: {
+                    date: function (date, settings) {
+                        if (!date) return '';
+                        var day = date.getDate() + '';
+                        if (day.length < 2) {
+                            day = '0' + day;
+                        }
+                        var month = (date.getMonth() + 1) + '';
+                        if (month.length < 2) {
+                            month = '0' + month;
+                        }
+                        var year = date.getFullYear();
+                        return year + '-' + month + '-' + day;
+                    }
+                },
                 popupOptions: {
                     position: 'bottom left',
                     lastResort: 'bottom left',
@@ -245,9 +265,8 @@
 
         self.search = function (query) {
             //query = query || self.refs.search.value
-            query = {query: query || self.refs.search.value}
-            if (self.refs.start_date.value)
-            {
+            query = {q: self.refs.search.value}
+            if (self.refs.start_date.value) {
                 query.start_date = self.refs.start_date.value
             }
             console.log(query)
@@ -398,24 +417,24 @@
 </competition-tile>
 
 <competition-card>
-        <div class="image">
-            <img src="https://i.imgur.com/n2XUSxU.png">
+    <div class="image">
+        <img src="https://i.imgur.com/n2XUSxU.png">
+    </div>
+    <div class="content">
+        <a class="header">{ title }</a>
+        <div class="meta">
+            <span class="date">Joined in 2013</span>
         </div>
-        <div class="content">
-            <a class="header">{ title }</a>
-            <div class="meta">
-                <span class="date">Joined in 2013</span>
-            </div>
-            <div class="description">
-                Kristy is an art director living in New York.
-            </div>
+        <div class="description">
+            Kristy is an art director living in New York.
         </div>
-        <div class="extra content">
-            <a>
-                <i class="user icon"></i>
-                22 Friends
-            </a>
-        </div>
+    </div>
+    <div class="extra content">
+        <a>
+            <i class="user icon"></i>
+            22 Friends
+        </a>
+    </div>
 
     <script>
     </script>
