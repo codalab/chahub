@@ -32,11 +32,24 @@ def query(request, version="v1"):
 
     # Filter on dates...
     start_date = request.GET.get('start_date')
-    if start_date:
+    end_date = request.GET.get('end_date')
+    if start_date and end_date:
+        s = s.filter('range', created_when={
+            'gte': start_date,  # I think..
+            "format": "yyyy-MM-dd",
+            'lte': end_date
+        })
+    elif start_date:
         s = s.filter('range', created_when={
             'gt': start_date,  # I think..
             "format": "yyyy-MM-dd",
             'lte': datetime.date.today() + datetime.timedelta(days=999)
+        })
+    elif end_date:
+        s = s.filter('range', created_when={
+            'gte': datetime.date.today() - datetime.timedelta(days=999),
+            "format": "yyyy-MM-dd",
+            'lt': end_date
         })
 
     # Get results
