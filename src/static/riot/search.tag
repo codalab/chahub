@@ -6,7 +6,7 @@
             </div>
             <div class="item column three wide right aligned">
                 <div class="ui input inverted">
-                    <div class="ui inverted blue button">Create Competition</div>
+                    <!--<div class="ui inverted blue button">Create Competition</div>-->
                 </div>
             </div>
         </div>
@@ -26,7 +26,10 @@
     <div class="ui grid container">
         <div class="row">
             <div class="column center aligned">
-                <h1 style="font-size: 128px;">Chahub</h1>
+                <h1 class="ui header gigantic">
+                    Chahub
+                    <div class="sub header">open-source platform with code submission</div>
+                </h1>
             </div>
         </div>
         <div class="row">
