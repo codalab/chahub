@@ -30,6 +30,29 @@ def query(request, version="v1"):
     # Do filters
     # ...
 
+    date_flags = request.GET.get('date_flags')
+
+    if date_flags:
+        print("We received date_flags and they are {}".format(date_flags))
+        if date_flags == "active":
+            # Do something
+            print("We have date flags for active")
+        if date_flags == "last_month":
+            # Do something
+            s = s.filter('range', created_when={
+                'gt': datetime.date.today() - datetime.timedelta(days=30),  # I think..
+                "format": "yyyy-MM-dd",
+                'lte': datetime.date.today()
+            })
+        if date_flags == "last_year":
+            # Do something
+            s = s.filter('range', created_when={
+                'gt': datetime.date.today() - datetime.timedelta(days=365),  # I think..
+                "format": "yyyy-MM-dd",
+                'lte': datetime.date.today()
+            })
+        # ELSE DO NOTHING
+
     # Filter on dates...
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')

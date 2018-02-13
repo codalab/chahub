@@ -13,7 +13,7 @@
                         <div class="ui form">
                             <div class="inline fields">
                                 <div class="field">
-                                    <div id="time-range" class="ui floating labeled icon dropdown button">
+                                    <div id="time-range" class="ui floating labeled icon dropdown button" onkeydown="{ input_updated }">
                                         <i class="filter icon"></i>
                                         <span class="text">Any time</span>
                                         <div class="menu">
@@ -270,10 +270,21 @@
             if (self.refs.start_date.value) {
                 query.start_date = self.refs.start_date.value
             }
-            console.log(query)
             if (self.refs.end_date.value)
             {
                 query.end_date = self.refs.end_date.value
+            }
+
+            var temp_dropdown_list_value = $(".ui.dropdown").dropdown('get value')[0]
+
+            // Grab our value above, check if it's empty, set to null. If not empty, send the value away.
+            if (temp_dropdown_list_value !== "")
+            {
+                query.date_flags = temp_dropdown_list_value
+            }
+            else
+            {
+                query.date_flags = null
             }
 
             CHAHUB.api.search(query)
