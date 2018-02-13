@@ -42,3 +42,9 @@ class Phase(models.Model):
 
 class Submission(models.Model):
     phase = models.ForeignKey(Phase, on_delete=models.CASCADE, related_name='submissions')
+
+
+class CompetitionParticipant(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='participants',
+                             on_delete=models.SET_NULL)
+    competition = models.ForeignKey(Competition, related_name='participants', on_delete=models.CASCADE)
