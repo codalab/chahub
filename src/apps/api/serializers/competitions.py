@@ -3,7 +3,13 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from api.serializers.producers import ProducerSerializer
-from competitions.models import Competition, Phase, Submission
+from competitions.models import Competition, Phase, Submission, CompetitionParticipant
+
+
+class CompetitionParticipantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompetitionParticipant
+        fields = ('competition', 'user')
 
 
 class PhaseSerializer(WritableNestedModelSerializer):
@@ -32,6 +38,7 @@ class CompetitionSerializer(WritableNestedModelSerializer):
     # Also, Producer in this case comes from serializer context
     producer = ProducerSerializer(required=False, validators=[])
     phases = PhaseSerializer(many=True)
+    participants = CompetitionParticipantSerializer(many=True, read_only=True)
 
     class Meta:
         model = Competition
@@ -45,6 +52,8 @@ class CompetitionSerializer(WritableNestedModelSerializer):
             'logo',
             'url',
             'phases',
+            'participants',
+            'description',
         )
         validators = []
         extra_kwargs = {

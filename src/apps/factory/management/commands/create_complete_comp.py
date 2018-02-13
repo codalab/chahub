@@ -32,6 +32,12 @@ class Command(BaseCommand):
             help='Title of the competition',
         )
         parser.add_argument(
+            '--desc',
+            type=str,
+            dest='desc',
+            help='Description of the competition',
+        )
+        parser.add_argument(
             '--num-phases',
             type=int,
             dest='num-phases',
@@ -48,11 +54,20 @@ class Command(BaseCommand):
         # Init specific vars
         temp_user = None  # Email of creator
         temp_title = None  # Title of Comp
+        temp_desc = None
         new_comp = None  # Init this so we can check if we actually got it
 
         # If we have a title inputed, set our title to that
         if options['title']:
             temp_title = options['title']
+        else:
+            temp_title = "Competition {}".format(uuid.uuid4())
+
+        if options['desc']:
+            temp_desc = options['desc']
+        else:
+            temp_desc = "A description for competition {}".format(temp_title)
+
 
         # If we are given a user
         if options['owner']:
@@ -73,6 +88,7 @@ class Command(BaseCommand):
                 created_by=temp_user.username,
                 producer=None,
                 remote_id=999,
+                description=temp_desc,
             )
             new_comp.save()
             print(colored('Succesfully created competition {}'.format(new_comp.pk), 'green'))

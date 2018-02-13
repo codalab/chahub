@@ -132,7 +132,7 @@
             <div class="fourteen wide column">
                 <div class="ui stacked">
                     <!--<search-result each="{ results }"></search-result>-->
-                    <competition-tile each="{ results }" class="item"
+                    <competition-tile each="{ results }" data="{ this }" class="item"
                                       show="{ display_mode === 'list' }"></competition-tile>
 
                     <div class="ui link cards">
@@ -279,6 +279,8 @@
 
             var sort_filters = $("#sort-filters").dropdown('get value')
 
+            console.log(sort_filters)
+
             var time_range_flags = $("#time-filters").dropdown('get value')
 
             // Grab our value above, check if it's empty, set to null. If not empty, send the value away.
@@ -298,12 +300,10 @@
 
             if (sort_filters)
             {
-                query.sort_filters = sort_filters
+
             }
             else
-            {
-                query.sort_filters = null
-            }
+
 
             CHAHUB.api.search(query)
                 .done(function (data) {
@@ -392,13 +392,12 @@
                             {title}
                         </h1>
                         <p style="font-size: 14px">
-                            A competition description
                             {description}
                         </p>
                     </div>
                     <div class="four wide right justify left align column">
                         <div align="right" class="content">
-                            <i>Organized by: <b>Someone</b></i>
+                            <i>Organized by: <b>{created_by}</b></i>
                         </div>
                     </div>
                 </div>
@@ -426,12 +425,19 @@
                 <i>Phase deadline:</i>
                 <i>April 14 2018</i>
                 <div class="ui divider"></div>
-                <i>17 participants</i>
+                <i>Participants: {part_count}</i>
             </div>
         </div>
     </div>
 
     <script>
+        var self = this;
+
+        self.one('mount', function () {
+            //self.update_producers()
+            self.part_count = opts.data.participants.length
+            self.update()
+        })
     </script>
 
     <style type="text/stylus">
