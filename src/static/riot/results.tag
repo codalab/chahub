@@ -13,7 +13,7 @@
                         <div class="ui form">
                             <div class="inline fields">
                                 <div class="field">
-                                    <div id="time-range" class="ui floating labeled icon dropdown button" onkeydown="{ input_updated }">
+                                    <div id="time-filters" class="ui floating labeled icon dropdown button" onkeydown="{ input_updated }">
                                         <i class="filter icon"></i>
                                         <span class="text">Any time</span>
                                         <div class="menu">
@@ -48,7 +48,7 @@
                                 </div>
 
                                 <div class="field">
-                                    <div class="ui floating labeled icon dropdown multiple button">
+                                    <div id="atrr-filters" class="ui floating labeled icon dropdown multiple button">
                                         <i class="filter icon"></i>
                                         <span class="text">Attributes (select many)</span>
                                         <div class="menu">
@@ -56,10 +56,10 @@
                                                 <i class="tags icon"></i>
                                                 Competition filters
                                             </div>
-                                            <div class="item">
+                                            <div data-value="comps_im_in" class="item">
                                                 I'm in
                                             </div>
-                                            <div class="item">
+                                            <div data-value="not_closed" class="item">
                                                 Has not finished
                                             </div>
                                         </div>
@@ -67,17 +67,17 @@
                                 </div>
 
                                 <div class="field">
-                                    <div class="ui floating labeled icon dropdown button">
+                                    <div id="sort-filters" class="ui floating labeled icon dropdown button">
                                         <i class="filter icon"></i>
                                         <span class="text">Sorted by</span>
                                         <div class="menu">
-                                            <div class="item">
+                                            <div data-value="sort-deadline" class="item">
                                                 Next deadline
                                             </div>
-                                            <div class="item">
+                                            <div data-value="sort-prize" class="item">
                                                 Prize amount
                                             </div>
-                                            <div class="item">
+                                            <div data-value="sort-parts" class="item">
                                                 Number of participants
                                             </div>
                                         </div>
@@ -275,16 +275,34 @@
                 query.end_date = self.refs.end_date.value
             }
 
-            var temp_dropdown_list_value = $(".ui.dropdown").dropdown('get value')[0]
+            var attr_filters = $("#atrr-filters").dropdown('get value')
+
+            var sort_filters = $("#sort-filters").dropdown('get value')
+
+            var time_range_flags = $("#time-filters").dropdown('get value')
 
             // Grab our value above, check if it's empty, set to null. If not empty, send the value away.
-            if (temp_dropdown_list_value !== "")
+            if (time_range_flags !== "")
             {
-                query.date_flags = temp_dropdown_list_value
+                query.date_flags = time_range_flags
             }
             else
             {
                 query.date_flags = null
+            }
+
+            if (typeof attr_filters !== 'undefined' && attr_filters.length > 0)
+            {
+                query.attr_filters = attr_filters
+            }
+
+            if (sort_filters)
+            {
+                query.sort_filters = sort_filters
+            }
+            else
+            {
+                query.sort_filters = null
             }
 
             CHAHUB.api.search(query)

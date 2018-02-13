@@ -30,8 +30,15 @@ def query(request, version="v1"):
     # Do filters
     # ...
 
-    date_flags = request.GET.get('date_flags')
+    sort_filters = request.GET.get('sort_filters')
+    if sort_filters:
+        print(sort_filters)
 
+    attr_filters = request.GET.get('attr_filters')
+    if attr_filters and len(attr_filters) > 0:
+        print(attr_filters)
+
+    date_flags = request.GET.get('date_flags')
     if date_flags:
         print("We received date_flags and they are {}".format(date_flags))
         if date_flags == "active":
