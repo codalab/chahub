@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from api.serializers.competitions import CompetitionSerializer
-from competitions.models import Competition
+from competitions.models import Competition, CompetitionParticipant
 
 
 @api_view(['GET'])
@@ -32,13 +32,7 @@ def query(request, version="v1"):
 
     sort_filters = request.GET.get('sort_filters')
     if sort_filters:
-        if sort_filters == "comps_im_in":
-            s = s.filter("term", participants=request.user)
         print(sort_filters)
-
-    attr_filters = request.GET.get('attr_filters')
-    if attr_filters and len(attr_filters) > 0:
-        print(attr_filters)
 
     date_flags = request.GET.get('date_flags')
     if date_flags:
@@ -108,6 +102,17 @@ def query(request, version="v1"):
 
     comp_ids = [r.meta["id"] for r in results]
     comps = Competition.objects.filter(id__in=comp_ids)
+
+    # Filter by attributes
+    attr_filters = request.GET.get('attr_filters')
+    if attr_filters and len(attr_filters) > 0:
+        if 'not_closed' in attr_filters:
+            # Filtering by a propery, not an attribute.
+            comps = [x for x in comps if x.is_active]
+        if request.user.is_authenticated and not request.user.is_anonymous:
+            if 'comps_im_in' in attr_filters:
+                comps.filter(participants__user__in=[request.user]).exclude(participants__isnull=True)
+
     data["results"] = [CompetitionSerializer(c).data for c in comps]
 
     # OLD WAY THAT WORKS!
