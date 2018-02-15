@@ -11,6 +11,7 @@ class Competition(models.Model):
     created_when = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=256)
     description = models.TextField(null=True, blank=True)
+    end = models.DateField(null=True, blank=True)
 
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True)
     remote_id = models.PositiveIntegerField()
@@ -22,6 +23,18 @@ class Competition(models.Model):
         unique_together = ('remote_id', 'producer')
 
     def save(self, *args, **kwargs):
+        # Calculate our end-date
+        # If more than one phase
+        if len(self.phases.all()) > 1:
+            # Order all by end date, grab the last and set our comp end date to that end date
+            self.end = self.phases.all().order_by('end').last().end.date()
+        # Else we only have on
+        elif len(self.phases.all()) == 1:
+            # Set our end date to our first phase
+            self.end = self.phases.first().end.date()
+            # Else?: Do nothing. we don't need to set the field for now.
+
+        # Send off our data
         from api.serializers.competitions import CompetitionSerializer
         Group("updates").send({
             "text": json.dumps({

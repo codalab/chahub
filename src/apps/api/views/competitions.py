@@ -1,11 +1,13 @@
 from channels import Group
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
 from rest_framework.viewsets import ModelViewSet
 
 from api.authenticators import ProducerAuthentication
 from api.permissions import ProducerPermission
 from api.serializers import competitions as serializers
-from competitions.models import Competition, Phase, Submission
-
+from competitions.models import Competition
 
 
 class CompetitionViewSet(ModelViewSet):

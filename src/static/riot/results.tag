@@ -279,8 +279,6 @@
 
             var sort_filters = $("#sort-filters").dropdown('get value')
 
-            console.log(sort_filters)
-
             var time_range_flags = $("#time-filters").dropdown('get value')
 
             // Grab our value above, check if it's empty, set to null. If not empty, send the value away.
@@ -420,7 +418,7 @@
             </div>
             <div class="three wide blue column center aligned" style="min-height: 100%">
                 <i>Comp deadline:</i>
-                <i>August 14 2018</i>
+                <i>{end}</i>
                 <div class="ui divider"></div>
                 <i>Phase deadline:</i>
                 <i>April 14 2018</i>
@@ -438,6 +436,7 @@
             self.part_count = opts.data.participants.length
             self.update()
         })
+
     </script>
 
     <style type="text/stylus">
