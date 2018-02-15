@@ -59,6 +59,12 @@ class Competition(models.Model):
         else:
             return False
 
+    def get_active_phase_end(self):
+        for phase in self.phases.all():
+            if phase.is_active:
+                return str(phase.end.date())
+        return "None"
+
     def get_current_phase(self, *args, **kwargs):
         all_phases = self.phases.all().order_by('start')
         phase_iterator = iter(all_phases)

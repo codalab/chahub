@@ -421,7 +421,7 @@
                 <i>{end}</i>
                 <div class="ui divider"></div>
                 <i>Phase deadline:</i>
-                <i>April 14 2018</i>
+                <i>{get_active_phase_end}</i>
                 <div class="ui divider"></div>
                 <i>Participants: {part_count}</i>
             </div>
