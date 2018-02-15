@@ -1,8 +1,10 @@
 import json
 
+import datetime
 from channels import Group
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 
 class Competition(models.Model):
@@ -46,6 +48,31 @@ class Competition(models.Model):
         })
         return super().save(*args, **kwargs)
 
+    @property
+    def is_active(self):
+        if self.end is None:
+            return True
+        elif type(self.end) is datetime.datetime.date:
+            return True if self.end is None else self.end > timezone.now().date()
+        elif type(self.end) is datetime.datetime:
+            return True if self.end is None else self.end > timezone.now()
+        else:
+            return False
+
+    def get_current_phase(self, *args, **kwargs):
+        all_phases = self.phases.all().order_by('start')
+        phase_iterator = iter(all_phases)
+        active_phase = None
+        for phase in phase_iterator:
+            # Get an active phase that isn't also never-ending, unless we don't have any active_phases
+            if phase.is_active:
+                if active_phase is None:
+                    active_phase = phase
+                elif not phase.phase_never_ends:
+                    active_phase = phase
+                    break
+        return active_phase
+
 
 class Phase(models.Model):
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE, related_name='phases')
@@ -54,6 +81,23 @@ class Phase(models.Model):
     end = models.DateTimeField(null=True, blank=True)
     name = models.CharField(max_length=256)
     description = models.TextField(null=True, blank=True)
+    never_ends = models.BooleanField(default=False)
+
+    @property
+    def is_active(self):
+        """ Returns true when this phase of the competition is on-going. """
+        if self.never_ends:
+            return True
+        else:
+            next_phase = self.competition.phases.filter(index=self.index + 1)
+            if (next_phase is not None) and (len(next_phase) > 0):
+                # there is a phase following this phase, thus this phase is active if the current date
+                # is between the start of this phase and the start of the next phase
+                return self.start <= timezone.now() and (timezone.now() < next_phase[0].start)
+            else:
+                # there is no phase following this phase, thus this phase is active if the current data
+                # is after the start date of this phase and the competition is "active"
+                return self.start <= timezone.now() and self.competition.is_active
 
 
 class Submission(models.Model):

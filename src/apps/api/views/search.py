@@ -32,6 +32,8 @@ def query(request, version="v1"):
 
     sort_filters = request.GET.get('sort_filters')
     if sort_filters:
+        if sort_filters == "comps_im_in":
+            s = s.filter("term", participants=request.user)
         print(sort_filters)
 
     attr_filters = request.GET.get('attr_filters')

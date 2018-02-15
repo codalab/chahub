@@ -30,14 +30,17 @@ class Command(BaseCommand):
         for i in range(count):
             try:
                 # Setup a temp user
-                temp_username = uuid.uuid4()
+                temp_username = str(uuid.uuid4())
                 temp_email = "{}.mailinator.com".format(temp_username)
                 temp_name = "Bot_{}".format(temp_username)
                 temp_user = CodalabUser.objects.create(username=temp_username, name=temp_name, email=temp_email)
 
+                temp_title = "New Competition_{}".format(str(uuid.uuid4()))
+                temp_desc = temp_title + "'s description"
                 # Setup a new comp
                 new_comp = Competition.objects.create(
-                    title="Competition {}".format(uuid.uuid4()),
+                    title=temp_title,
+                    description=temp_desc,
                     created_by=temp_user.username,
                     remote_id=999
                 )

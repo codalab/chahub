@@ -23,6 +23,7 @@ class PhaseSerializer(WritableNestedModelSerializer):
             'end',
             'name',
             'description',
+            'is_active',
         )
 
 
@@ -56,7 +57,8 @@ class CompetitionSerializer(WritableNestedModelSerializer):
             'participants',
             'description',
             'end',
-            'admins'
+            'admins',
+            'is_active'
         )
         validators = []
         extra_kwargs = {
