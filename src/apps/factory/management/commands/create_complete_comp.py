@@ -116,6 +116,7 @@ class Command(BaseCommand):
                 remote_id=999,
                 description=temp_desc,
             )
+            new_comp.created_when = timezone.now() + datetime.timedelta(days=random.randint(-465, 465))
             new_comp.save()
             print(colored('Succesfully created competition {}'.format(new_comp.pk), 'green'))
         except:
