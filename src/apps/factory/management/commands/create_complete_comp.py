@@ -56,6 +56,18 @@ class Command(BaseCommand):
             dest='num-admins',
             help='How many admins to create',
         )
+        parser.add_argument(
+            '--random-participants',
+            type=bool,
+            dest='rand-parts',
+            help='Enter true for a random amount of participants. Still requires `num-parts`.',
+        )
+        parser.add_argument(
+            '--random-admins',
+            type=bool,
+            dest='rand-admins',
+            help='Enter true for a random amount of admins. Still requires `num-admins`.',
+        )
 
     def handle(self, *args, **options):
         # Init specific vars
@@ -66,7 +78,10 @@ class Command(BaseCommand):
         temp_admin_count = None
 
         if options['num-admins']:
-            temp_admin_count = options['num-admins']
+            if options['rand-admins']:
+                temp_admin_count = random.randint(0, 7)
+            else:
+                temp_admin_count = options['num-admins']
 
         # If we have a title inputed, set our title to that
         if options['title']:
@@ -182,9 +197,19 @@ class Command(BaseCommand):
 
         # Create `other` participants
         if options['num-parts']:
+            temp_part_count = None
+            if options['rand-parts']:
+                # Just a random range of participants
+                if temp_admin_count:
+                    temp_part_count = random.randint(temp_admin_count, 57)
+                else:
+                    temp_part_count = random.randint(3, 57)
+            else:
+                temp_part_count = options['num-parts']
+            print("Creating {0} participants and {1} admins...".format(temp_part_count, temp_admin_count))
             try:
                 print(colored('Number of participants arg received. Creating fake participants.', 'yellow'))
-                for i in tqdm(range(options['num-parts']), ncols=100):
+                for i in tqdm(range(temp_part_count), ncols=100):
 
                     # Append a bit of UUID to help us get uniques
                     temp_bot_username = "{0}_{1}_{2}".format(fake.user_name(), str(uuid.uuid4())[0:8], str(uuid.uuid4())[0:8])
