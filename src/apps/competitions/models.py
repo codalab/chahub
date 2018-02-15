@@ -19,6 +19,8 @@ class Competition(models.Model):
     logo = models.URLField(null=True, blank=True)
     url = models.URLField()
 
+    admins = models.ManyToManyField('CompetitionParticipant', related_name='admins')
+
     class Meta:
         unique_together = ('remote_id', 'producer')
 
@@ -62,3 +64,9 @@ class CompetitionParticipant(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='participants',
                              on_delete=models.SET_NULL)
     competition = models.ForeignKey(Competition, related_name='participants', on_delete=models.CASCADE)
+
+    def __unicode__(self):
+        return str(self.user.username)
+
+    def __str__(self):
+        return str(self.user.username)

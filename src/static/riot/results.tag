@@ -411,7 +411,7 @@
                         <div class="content">
                             Tags: <b>Beginner</b>, <b>AutoML</b>
                             <br>
-                            Admins: <b>tthomas63</b>
+                            Admins: <b each="{admin in admins}">{admin}; </b>
                         </div>
                     </div>
                 </div>
@@ -432,7 +432,6 @@
         var self = this;
 
         self.one('mount', function () {
-            //self.update_producers()
             self.part_count = opts.data.participants.length
             self.update()
         })

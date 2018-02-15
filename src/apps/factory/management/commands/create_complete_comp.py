@@ -1,4 +1,5 @@
 import datetime
+import random
 import uuid
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -49,6 +50,12 @@ class Command(BaseCommand):
             dest='num-parts',
             help='How many participants to create',
         )
+        parser.add_argument(
+            '--num-admins',
+            type=int,
+            dest='num-admins',
+            help='How many admins to create',
+        )
 
     def handle(self, *args, **options):
         # Init specific vars
@@ -56,6 +63,10 @@ class Command(BaseCommand):
         temp_title = None  # Title of Comp
         temp_desc = None
         new_comp = None  # Init this so we can check if we actually got it
+        temp_admin_count = None
+
+        if options['num-admins']:
+            temp_admin_count = options['num-admins']
 
         # If we have a title inputed, set our title to that
         if options['title']:
@@ -119,7 +130,7 @@ class Command(BaseCommand):
                     )
                     # Increment our dates for the next phase by 1 month.
                     temp_phase_start_date = temp_phase_end_date
-                    temp_phase_end_date += datetime.timedelta(days=30)
+                    temp_phase_end_date += datetime.timedelta(random.randint(7, 45))
 
                 except:
                     print(colored("Failed to create phase. An exception has occured.", 'red'))
@@ -136,7 +147,7 @@ class Command(BaseCommand):
                     competition=new_comp,
                     index=0,
                     start=timezone.now(),
-                    end=timezone.now() + datetime.timedelta(days=30),
+                    end=timezone.now() + datetime.timedelta(random.randint(7, 45)),
                 )
 
                 print(
@@ -184,10 +195,16 @@ class Command(BaseCommand):
                                                           email=temp_bot_email)
 
                     # Grab our succesfully made user
-                    CompetitionParticipant.objects.create(
+                    new_bot_part = CompetitionParticipant.objects.create(
                         competition=new_comp,
                         user=temp_bot
                     )
+
+                    if temp_admin_count:
+                        if temp_admin_count > 0:
+                            new_comp.admins.add(new_bot_part)
+                            new_comp.save()
+                            temp_admin_count -= 1
                 print(
                     colored("Successfully created all participants")
                 )

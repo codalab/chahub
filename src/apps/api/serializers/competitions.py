@@ -39,6 +39,7 @@ class CompetitionSerializer(WritableNestedModelSerializer):
     producer = ProducerSerializer(required=False, validators=[])
     phases = PhaseSerializer(many=True)
     participants = CompetitionParticipantSerializer(many=True, read_only=True)
+    admins = serializers.StringRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Competition
@@ -54,7 +55,8 @@ class CompetitionSerializer(WritableNestedModelSerializer):
             'phases',
             'participants',
             'description',
-            'end'
+            'end',
+            'admins'
         )
         validators = []
         extra_kwargs = {
