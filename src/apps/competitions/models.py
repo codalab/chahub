@@ -31,11 +31,13 @@ class Competition(models.Model):
         # If more than one phase
         if len(self.phases.all()) > 1:
             # Order all by end date, grab the last and set our comp end date to that end date
-            self.end = self.phases.all().order_by('end').last().end.date()
+            if self.phases.all().order_by('end').last().end:
+                self.end = self.phases.all().order_by('end').last().end.date()
         # Else we only have on
         elif len(self.phases.all()) == 1:
             # Set our end date to our first phase
-            self.end = self.phases.first().end.date()
+            if self.phases.first().end:
+                self.end = self.phases.first().end.date()
             # Else?: Do nothing. we don't need to set the field for now.
 
         # Send off our data
