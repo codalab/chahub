@@ -84,17 +84,12 @@ class CompetitionSerializer(WritableNestedModelSerializer):
                                                     producer__id=self.context['producer'].id)
         except ObjectDoesNotExist:
             temp_instance = None
-
         # If we have an existing instance from this producer
         #  with the same remote_id, update it instead of making a new one
         if temp_instance:
-            print("We're updating an existing object!")
-
             # Return the updated instance
-            return self.update(temp_instance.first(), validated_data)
+            return self.update(temp_instance, validated_data)
         else:
-            print("We're just creating a new object.")
-
             # Get the new instance
             new_instance = super(CompetitionSerializer, self).create(validated_data)
             # Set the producer
