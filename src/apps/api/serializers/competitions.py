@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -76,6 +77,31 @@ class CompetitionSerializer(WritableNestedModelSerializer):
         # if 'context' in kwargs and 'producer' in kwargs['context']:
             # self.fields['producer'].default = kwargs['context']['producer']
             # self.initial_data["producer"] = kwargs["context"]["producer"]
+
+    def create(self, validated_data):
+        try:
+            temp_instance = Competition.objects.get(remote_id=validated_data['remote_id'],
+                                                    producer__id=self.context['producer'].id)
+        except ObjectDoesNotExist:
+            temp_instance = None
+
+        # If we have an existing instance from this producer
+        #  with the same remote_id, update it instead of making a new one
+        if temp_instance:
+            print("We're updating an existing object!")
+
+            # Return the updated instance
+            return self.update(temp_instance.first(), validated_data)
+        else:
+            print("We're just creating a new object.")
+
+            # Get the new instance
+            new_instance = super(CompetitionSerializer, self).create(validated_data)
+            # Set the producer
+            new_instance.producer = self.context['producer']
+            # Save it again and return it
+            new_instance.save()
+            return new_instance
 
     def validate_producer(self, producer):
         context_producer = self.context.get(producer)
