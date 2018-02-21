@@ -11,7 +11,7 @@ class Competition(models.Model):
     # created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     created_by = models.TextField()
     created_when = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=256)
+    title = models.TextField()
     description = models.TextField(null=True, blank=True)
     end = models.DateField(null=True, blank=True)
 
