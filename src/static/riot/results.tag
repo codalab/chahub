@@ -48,25 +48,6 @@
                                 </div>
 
                                 <div class="field">
-                                    <div id="atrr-filters" class="ui floating labeled icon dropdown multiple button">
-                                        <i class="filter icon"></i>
-                                        <span class="text">Attributes (select many)</span>
-                                        <div class="menu">
-                                            <div class="header">
-                                                <i class="tags icon"></i>
-                                                Competition filters
-                                            </div>
-                                            <div data-value="comps_im_in" class="item">
-                                                I'm in
-                                            </div>
-                                            <div data-value="not_closed" class="item">
-                                                Has not finished
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="field">
                                     <div id="sort-filters" class="ui floating labeled icon dropdown button">
                                         <i class="filter icon"></i>
                                         <span class="text">Sorted by</span>
@@ -275,8 +256,6 @@
                 query.end_date = self.refs.end_date.value
             }
 
-            var attr_filters = $("#atrr-filters").dropdown('get value')
-
             var sort_filters = $("#sort-filters").dropdown('get value')
 
             var time_range_flags = $("#time-filters").dropdown('get value')
@@ -289,11 +268,6 @@
             else
             {
                 query.date_flags = null
-            }
-
-            if (typeof attr_filters !== 'undefined' && attr_filters.length > 0)
-            {
-                query.attr_filters = attr_filters
             }
 
             if (sort_filters)
