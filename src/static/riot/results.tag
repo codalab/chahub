@@ -85,7 +85,7 @@
             </div>
             <div class="item column three wide">
                 <div class="ui input">
-                    <div class="ui inverted blue button">Create Competition</div>
+                    <!--<div class="ui inverted blue button">Create Competition</div>-->
                 </div>
             </div>
         </div>
