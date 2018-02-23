@@ -18,6 +18,9 @@
     <!-- Semantic -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
     <!-- Datepicker -->
     <link rel="stylesheet" href="{% static "css/calendar.min.css" %}">
     <script src="{% static "js/calendar.min.js" %}"></script>
@@ -40,24 +43,12 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="{% static "js/reconnecting-websocket.min.js" %}"></script>
 
-
-
-
-
     {% block extra_head %}
     {% endblock %}
 </head>
 <body>
 
-
-<div class="ui grid container">
-    <div class="row">
-        <div class="column wide sixteen">
-            <app></app>
-        </div>
-    </div>
-</div>
-
+<app></app>
 
 <script>
     // Load in URLs or other django generated goodies
@@ -72,7 +63,5 @@
 
 {% block extra_body %}
 {% endblock %}
-
-
 </body>
 </html>
