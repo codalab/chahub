@@ -113,7 +113,7 @@
             <div class="fourteen wide column">
                 <div class="ui stacked">
                     <!--<search-result each="{ results }"></search-result>-->
-                    <competition-tile style="margin-bottom: 2vh !important;" each="{ results }" data="{ this }" class="item"
+                    <competition-tile style="margin-bottom: 5vh !important;" each="{ results }" data="{ this }" class="item"
                                       show="{ display_mode === 'list' }"></competition-tile>
 
                     <div class="ui link cards">
