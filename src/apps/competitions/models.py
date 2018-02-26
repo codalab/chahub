@@ -13,7 +13,7 @@ class Competition(models.Model):
     created_when = models.DateTimeField(auto_now_add=True)
     title = models.TextField()
     description = models.TextField(null=True, blank=True)
-    end = models.DateField(null=True, blank=True)
+    end = models.DateTimeField(null=True, blank=True)
 
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True)
     remote_id = models.PositiveIntegerField()
@@ -23,22 +23,25 @@ class Competition(models.Model):
 
     admins = models.ManyToManyField('CompetitionParticipant', related_name='admins')
 
+    participant_count = models.IntegerField(default=0)
+
     class Meta:
         unique_together = ('remote_id', 'producer')
 
     def save(self, *args, **kwargs):
         # Calculate our end-date
         # If more than one phase
-        if len(self.phases.all()) > 1:
-            # Order all by end date, grab the last and set our comp end date to that end date
-            if self.phases.all().order_by('end').last().end:
-                self.end = self.phases.all().order_by('end').last().end.date()
-        # Else we only have on
-        elif len(self.phases.all()) == 1:
-            # Set our end date to our first phase
-            if self.phases.first().end:
-                self.end = self.phases.first().end.date()
-            # Else?: Do nothing. we don't need to set the field for now.
+        if not self.end:
+            if len(self.phases.all()) > 1:
+                # Order all by end date, grab the last and set our comp end date to that end date
+                if self.phases.all().order_by('end').last().end:
+                    self.end = self.phases.all().order_by('end').last().end.date()
+            # Else we only have on
+            elif len(self.phases.all()) == 1:
+                # Set our end date to our first phase
+                if self.phases.first().end:
+                    self.end = self.phases.first().end.date()
+                # Else?: Do nothing. we don't need to set the field for now.
 
         # Send off our data
         from api.serializers.competitions import CompetitionSerializer
@@ -49,6 +52,12 @@ class Competition(models.Model):
             }),
         })
         return super().save(*args, **kwargs)
+
+    def get_comp_date_deadline(self):
+        if self.end:
+            return str(self.end.date())
+        else:
+            return "Unknown"
 
     @property
     def is_active(self):
@@ -66,7 +75,7 @@ class Competition(models.Model):
             if phase.is_active:
                 if phase.end:
                     return str(phase.end.date())
-        return "None"
+        return "Unknown"
 
     def get_current_phase(self, *args, **kwargs):
         all_phases = self.phases.all().order_by('start')

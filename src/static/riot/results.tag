@@ -352,9 +352,9 @@
     <div class="ui grid">
         <div class="ui middle aligned attached message stretched row main-wrapper">
             <div class="four wide column">
-                <div class="ui square bordered small image">
-                    <img src="https://i.imgur.com/n2XUSxU.png">
-                    <!--<img src="{ logo }">-->
+                <div align="center" class="">
+                    <!--<img src="https://i.imgur.com/n2XUSxU.png">-->
+                    <img class="comp-tile-image" src="{ logo }">
                 </div>
             </div>
             <div class="nine wide column">
@@ -388,16 +388,17 @@
                             Admins: <b each="{admin in admins}">{admin}; </b>
                         </div>
                     </div>
+                    <a class="ui blue button" href="{url}">Participate!</a>
                 </div>
             </div>
             <div class="three wide blue column center aligned" style="min-height: 100%">
                 <i>Comp deadline:</i>
-                <i>{end}</i>
+                <i>{get_comp_date_deadline}</i>
                 <div class="ui divider"></div>
                 <i>Phase deadline:</i>
                 <i>{get_active_phase_end}</i>
                 <div class="ui divider"></div>
-                <i>Participants: {part_count}</i>
+                <i>Participants: {participant_count}</i>
             </div>
         </div>
     </div>
@@ -406,10 +407,13 @@
         var self = this;
 
         self.one('mount', function () {
+            if (opts.data.logo === null)
+            {
+                opts.data.logo = "/static/img/img-wireframe.png"
+            }
             self.part_count = opts.data.participants.length
             self.update()
         })
-
     </script>
 
     <style type="text/stylus">
@@ -421,6 +425,13 @@
             border-left 5px solid lightgreen
             border-top-left-radius 6px !important
             border-bottom-left-radius 6px !important
+
+        .comp-tile-image
+            max-height 150px
+            max-width 150px
+            border 1px lightgray solid
+            border-radius 5px
+
     </style>
 </competition-tile>
 
