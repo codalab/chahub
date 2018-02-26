@@ -113,7 +113,7 @@
             <div class="fourteen wide column">
                 <div class="ui stacked">
                     <!--<search-result each="{ results }"></search-result>-->
-                    <competition-tile style="margin-bottom: 4vh !important;" each="{ results }" data="{ this }" class="item"
+                    <competition-tile style="margin-bottom: 2vh !important;" each="{ results }" data="{ this }" class="item"
                                       show="{ display_mode === 'list' }"></competition-tile>
 
                     <div class="ui link cards">
@@ -256,8 +256,6 @@
                 query.end_date = self.refs.end_date.value
             }
 
-            var sort_filters = $("#sort-filters").dropdown('get value')
-
             var time_range_flags = $("#time-filters").dropdown('get value')
 
             // Grab our value above, check if it's empty, set to null. If not empty, send the value away.
@@ -269,13 +267,6 @@
             {
                 query.date_flags = null
             }
-
-            if (sort_filters)
-            {
-
-            }
-            else
-
 
             CHAHUB.api.search(query)
                 .done(function (data) {

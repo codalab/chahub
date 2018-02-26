@@ -30,10 +30,6 @@ def query(request, version="v1"):
     # Do filters
     # ...
 
-    sort_filters = request.GET.get('sort_filters')
-    if sort_filters:
-        print(sort_filters)
-
     date_flags = request.GET.get('date_flags')
     if date_flags:
         print("We received date_flags and they are {}".format(date_flags))
