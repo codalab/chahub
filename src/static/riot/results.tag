@@ -83,11 +83,11 @@
                 </div>
 
             </div>
-            <div class="item column three wide">
+            <!--<div class="item column three wide">
                 <div class="ui input">
-                    <!--<div class="ui inverted blue button">Create Competition</div>-->
+                    <!--<div class="ui inverted blue button">Create Competition</div>
                 </div>
-            </div>
+            </div>-->
         </div>
         <!--<div class="item">
             <div class="ui icon input">
@@ -113,7 +113,7 @@
             <div class="fourteen wide column">
                 <div class="ui stacked">
                     <!--<search-result each="{ results }"></search-result>-->
-                    <competition-tile each="{ results }" data="{ this }" class="item"
+                    <competition-tile style="margin-bottom: 4vh !important;" each="{ results }" data="{ this }" class="item"
                                       show="{ display_mode === 'list' }"></competition-tile>
 
                     <div class="ui link cards">
@@ -325,8 +325,8 @@
 </search-results>
 
 <search-result class="item">
-    <div class="image">
-        <!--<img src="https://semantic-ui.com/images/wireframe/image.png">-->
+    <!--<div class="image">
+        <!--<img src="https://semantic-ui.com/images/wireframe/image.png">
         <img src="{ logo }">
     </div>
     <div class="content">
@@ -344,16 +344,16 @@
                 <i class="right chevron icon"></i>
             </div>
         </div>
-    </div>
+    </div>-->
 </search-result>
 
 <competition-tile>
 
-    <div class="ui grid">
+    <!--<div class="ui grid">
         <div class="ui middle aligned attached message stretched row main-wrapper">
             <div class="four wide column">
                 <div align="center" class="">
-                    <!--<img src="https://i.imgur.com/n2XUSxU.png">-->
+                    <!--<img src="https://i.imgur.com/n2XUSxU.png">
                     <img class="comp-tile-image" src="{ logo }">
                 </div>
             </div>
@@ -376,7 +376,7 @@
                 <div class="ui row">
                     <div class="sixteen wide column">
                         <div class="content">
-                            <!--Tags?-->
+
                         </div>
                     </div>
                 </div>
@@ -398,6 +398,28 @@
                 <i>Phase deadline:</i>
                 <i>{get_active_phase_end}</i>
                 <div class="ui divider"></div>
+                <i>Participants: {participant_count}</i>
+            </div>
+        </div>
+    </div>-->
+
+    <div class="ui grid">
+        <div class="ui middle aligned message row">
+            <div align="center" class="two wide column">
+                <img src="{logo}" class="comp-tile-image">
+            </div>
+            <div class="ten wide column">
+                <div>
+                    <h3 class="ui header">{title}</h3>
+                </div>
+                <div>
+                    <p>{description}</p>
+                </div>
+                <div>
+                    <i>Ends: {get_comp_date_deadline}</i>
+                </div>
+            </div>
+            <div class="four wide right aligned column">
                 <i>Participants: {participant_count}</i>
             </div>
         </div>
@@ -427,8 +449,8 @@
             border-bottom-left-radius 6px !important
 
         .comp-tile-image
-            max-height 150px
-            max-width 150px
+            max-height 100px !important
+            max-width 100px !important
             border 1px lightgray solid
             border-radius 5px
 
