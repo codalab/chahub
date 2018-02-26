@@ -32,10 +32,6 @@ def query(request, version="v1"):
 
     date_flags = request.GET.get('date_flags')
     if date_flags:
-        print("We received date_flags and they are {}".format(date_flags))
-        if date_flags == "active":
-            # Do something
-            print("We have date flags for active")
         if date_flags == "last_month":
             # Do something
             s = s.filter('range', created_when={
@@ -97,7 +93,12 @@ def query(request, version="v1"):
     #     print(model_class.objects.filter(id__in=ids))
 
     comp_ids = [r.meta["id"] for r in results]
+
     comps = Competition.objects.filter(id__in=comp_ids)
+
+    # If we're filtering by active, return only active
+    if date_flags and date_flags == "active":
+        comps = (comp for comp in comps if comp.is_active)
 
     data["results"] = [CompetitionSerializer(c).data for c in comps]
 
