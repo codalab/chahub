@@ -1,4 +1,4 @@
-from django_elasticsearch_dsl import DocType, Index, StringField
+from django_elasticsearch_dsl import DocType, Index, StringField, fields
 from .models import Competition
 
 competitions = Index('competitions')
@@ -31,12 +31,15 @@ class CompetitionDocument(DocType):
         model = Competition
 
         # The fields of the model you want to be indexed in Elasticsearch
-        fields = [
-            'title',
-            'created_when',
-        ]
+        # fields = [
+        #     'title',
+        #     'created_when',
+        # ]
 
-    created_by = StringField()
+    created_by = fields.TextField(attr="created_by")
+    title = fields.TextField(attr="title")
+    description = fields.TextField(attr="description")
+    html_data = fields.TextField(attr="html_data")
 
     def prepare_created_by(self, instance):
         return instance.created_by

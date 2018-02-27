@@ -24,6 +24,7 @@ class Competition(models.Model):
     admins = models.ManyToManyField('CompetitionParticipant', related_name='admins')
 
     participant_count = models.IntegerField(default=0)
+    html_data = models.TextField(default="")
 
     class Meta:
         unique_together = ('remote_id', 'producer')
