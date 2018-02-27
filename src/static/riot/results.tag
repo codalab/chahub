@@ -1,7 +1,7 @@
 <search-results>
     <div id="particle_header" class="ui top">
         <div class="ui grid container menu-holder">
-            <div class="item column thirteen wide">
+            <div class="centered column twelve wide">
                 <div class="ui grid">
                     <div class="row search-wrapper">
                         <div class="ui icon input">
@@ -110,15 +110,30 @@
         </div>
 
         <div id="results_container" class="row centered">
-            <div class="fourteen wide column">
+            <div class="twelve wide column" style="padding: 0;" show="{ display_mode === 'list' }">
                 <div class="ui stacked">
                     <!--<search-result each="{ results }"></search-result>-->
-                    <competition-tile style="margin-bottom: 5vh !important;" each="{ results }" data="{ this }" class="item"
-                                      show="{ display_mode === 'list' }"></competition-tile>
+                    <div id="result_header" style="background-color: #efefef; padding: 10px;">
+                        <h3 class="ui inverted">{ results.length } results</h3>
+                    </div>
+                    <div class="ui celled list" style="margin: 0;">
+                        <competition-tile each="{ results }" class="item"></competition-tile>
+                    </div>
 
                     <div class="ui link cards">
                         <competition-card each="{ results }" class="ui centered card"
                                           show="{ display_mode === 'card' }"></competition-card>
+                    </div>
+                </div>
+            </div>
+            <div class="sixteen wide column" show="{ display_mode === 'card' }">
+                <div class="ui stacked">
+                    <!--<search-result each="{ results }"></search-result>-->
+                    <div id="result_header" style="background-color: #efefef; padding: 10px; margin-bottom: 20px;">
+                        <h3 class="ui inverted">{ results.length } results</h3>
+                    </div>
+                    <div class="ui link cards">
+                        <competition-card each="{ results }" class="ui centered card"></competition-card>
                     </div>
                     <div show="{ results.length == 0 }">
                         <i>No results found...</i>
@@ -251,20 +266,17 @@
             if (self.refs.start_date.value) {
                 query.start_date = self.refs.start_date.value
             }
-            if (self.refs.end_date.value)
-            {
+            if (self.refs.end_date.value) {
                 query.end_date = self.refs.end_date.value
             }
 
             var time_range_flags = $("#time-filters").dropdown('get value')
 
             // Grab our value above, check if it's empty, set to null. If not empty, send the value away.
-            if (time_range_flags !== "")
-            {
+            if (time_range_flags !== "") {
                 query.date_flags = time_range_flags
             }
-            else
-            {
+            else {
                 query.date_flags = null
             }
 
@@ -394,8 +406,8 @@
         </div>
     </div>-->
 
-    <div class="ui grid">
-        <div class="ui middle aligned message row">
+    <!--<div class="ui grid">
+        <div class="ui middle aligned row">
             <div align="center" class="two wide column">
                 <img src="{logo}" class="comp-tile-image">
             </div>
@@ -414,36 +426,31 @@
                 <i>Participants: {participant_count}</i>
             </div>
         </div>
+    </div>-->
+    <img class="ui avatar image" src="/static/img/img-wireframe.png">
+    <div class="content">
+        <div class="header">{title}</div>
+        {description}
+    </div>
+
+    <div class="right floated content">
+        <i>Participants: {participant_count}</i>
     </div>
 
     <script>
-        var self = this;
+        var self = this
 
-        self.one('mount', function () {
-            if (opts.data.logo === null)
-            {
-                opts.data.logo = "/static/img/img-wireframe.png"
-            }
-            self.part_count = opts.data.participants.length
+        /*self.one('mount', function () {
+            self.participant_count = opts.data.participants.length
             self.update()
-        })
+        })*/
     </script>
 
     <style type="text/stylus">
         :scope
             display block
-            margin-bottom 35px !important
-
-        .main-wrapper
-            border-left 5px solid lightgreen
-            border-top-left-radius 6px !important
-            border-bottom-left-radius 6px !important
-
-        .comp-tile-image
-            max-height 100px !important
-            max-width 100px !important
-            border 1px lightgray solid
-            border-radius 5px
+            padding 10px 0 !important
+            //margin-bottom 35px !important
 
     </style>
 </competition-tile>
