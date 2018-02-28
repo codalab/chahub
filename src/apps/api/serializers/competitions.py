@@ -63,6 +63,7 @@ class CompetitionSerializer(WritableNestedModelSerializer):
             'get_active_phase_end',
             'participant_count',
             'get_comp_date_deadline',
+            'get_comp_date_start',
             'html_data'
         )
         validators = []

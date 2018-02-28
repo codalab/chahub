@@ -60,6 +60,12 @@ class Competition(models.Model):
         else:
             return "Unknown"
 
+    def get_comp_date_start(self):
+        if self.created_when:
+            return str(self.created_when.date())
+        else:
+            return "Unknown"
+
     @property
     def is_active(self):
         if self.end is None:

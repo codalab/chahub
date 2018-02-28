@@ -25,10 +25,10 @@
                                                 Active
                                             </div>
                                             <div class="item" data-value="past_month">
-                                                Started past month
+                                                Created this month
                                             </div>
                                             <div class="item" data-value="past_year">
-                                                Started past year
+                                                Created this year
                                             </div>
                                             <div class="divider"></div>
                                             <div class="header">
@@ -110,7 +110,7 @@
         </div>
 
         <div id="results_container" class="row centered">
-            <div class="fourteen wide column" style="padding: 0;" show="{ display_mode === 'list' }">
+            <div class="twelve wide column" style="padding: 0;" show="{ display_mode === 'list' }">
                 <div class="ui stacked">
                     <!--<search-result each="{ results }"></search-result>-->
                     <div id="result_header" style="background-color: #efefef; padding: 10px;">
@@ -187,8 +187,7 @@
                 type: 'date',
                 formatter: {
                     date: function (date, settings) {
-                        dt = luxon.DateTime.fromJSDate(date).toISO()
-                        return dt
+                        return luxon.DateTime.fromJSDate(date).toISODate()
                     }
                 },
                 popupOptions: {
@@ -342,100 +341,37 @@
 
 <competition-tile>
 
-    <!--<div class="ui grid">
-        <div class="ui middle aligned attached message stretched row main-wrapper">
-            <div class="four wide column">
-                <div align="center" class="">
-                    <!--<img src="https://i.imgur.com/n2XUSxU.png">
-                    <img class="comp-tile-image" src="{ logo }">
+    <div onclick="{redirect_to_url}" class="content">
+        <div class="ui grid">
+            <div class="ui row">
+                <div align="center" class="one wide column">
+                    <img class="ui avatar image" src="{logo}">
                 </div>
-            </div>
-            <div class="nine wide column">
-                <div class="ui row">
-                    <div class="twelve wide column">
-                        <h1 class="ui large header">
-                            {title}
-                        </h1>
-                        <p style="font-size: 14px">
-                            {description}
-                        </p>
-                    </div>
-                    <div class="four wide right justify left align column">
-                        <div align="right" class="content">
-                            <i>Organized by: <b>{created_by}</b></i>
-                        </div>
+                <div class="eight wide left aligned column">
+                    <div class="header">{title}</div>
+                    <i class="comp-description">{description}</i>
+                </div>
+                <div class="two wide column">
+                    <i>{created_by}</i>
+                </div>
+                <div class="three wide right aligned column">
+                    <i style="font-size: 12px !important;">{get_comp_date_start}<br>through<br>{get_comp_date_deadline}</i>
+                </div>
+                <div class="two wide column">
+                    <div class="ui blue label">
+                        <i class="user icon"></i> {participant_count}
                     </div>
                 </div>
-                <div class="ui row">
-                    <div class="sixteen wide column">
-                        <div class="content">
-
-                        </div>
-                    </div>
-                </div>
-                <div class="ui row">
-                    <div class="sixteen wide column">
-                        <div class="content">
-                            Tags: <b>Beginner</b>, <b>AutoML</b>
-                            <br>
-                            Admins: <b each="{admin in admins}">{admin}; </b>
-                        </div>
-                    </div>
-                    <a class="ui blue button" href="{url}">Participate!</a>
-                </div>
-            </div>
-            <div class="three wide blue column center aligned" style="min-height: 100%">
-                <i>Comp deadline:</i>
-                <i>{get_comp_date_deadline}</i>
-                <div class="ui divider"></div>
-                <i>Phase deadline:</i>
-                <i>{get_active_phase_end}</i>
-                <div class="ui divider"></div>
-                <i>Participants: {participant_count}</i>
             </div>
         </div>
-    </div>-->
-
-    <!--<div class="ui grid">
-        <div class="ui middle aligned row">
-            <div align="center" class="two wide column">
-                <img src="{logo}" class="comp-tile-image">
-            </div>
-            <div class="ten wide column">
-                <div>
-                    <h3 class="ui header">{title}</h3>
-                </div>
-                <div>
-                    <p>{description}</p>
-                </div>
-                <div>
-                    <i>Ends: {get_comp_date_deadline}</i>
-                </div>
-            </div>
-            <div class="four wide right aligned column">
-                <i>Participants: {participant_count}</i>
-            </div>
-        </div>
-    </div>-->
-    <!--<img class="ui avatar image" src="/static/img/img-wireframe.png">-->
-    <img class="ui avatar image" src="{logo}">
-    <div class="content">
-        <div class="header">{title}</div>
-        {description} <p class="end-date">{end}</p>
-    </div>
-
-    <div class="right floated content">
-        <a href="{url}" class="ui mini blue button">Participate</a>
-        <i>Participants: {participant_count}</i>
     </div>
 
     <script>
         var self = this
 
-        /*self.one('mount', function () {
-            self.participant_count = opts.data.participants.length
-            self.update()
-        })*/
+        self.redirect_to_url = function() {
+            window.open(self.url,'_blank');
+        }
     </script>
 
     <style type="text/stylus">
@@ -443,9 +379,19 @@
             display block
             padding 10px 0 !important
             //margin-bottom 35px !important
+            overflow hidden
+
+            :hover
+                background-color rgb(245,245,245)
+
+        .comp-description
+            color #808080
 
         .end-date
             font-size 10px
+
+        .tile-hovered
+            background-color lightgray !important
 
     </style>
 </competition-tile>

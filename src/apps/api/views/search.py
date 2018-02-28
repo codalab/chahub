@@ -36,14 +36,16 @@ def query(request, version="v1"):
         if date_flags == "last_month":
             # Do something
             s = s.filter('range', created_when={
-                'gt': datetime.date.today() - datetime.timedelta(days=30),  # I think..
-                'lte': datetime.date.today()
+                'gte': datetime.date.today().month,  # I think..
+                'lte': datetime.date.today().month,
+                'format': "mm"
             })
         if date_flags == "last_year":
             # Do something
             s = s.filter('range', created_when={
-                'gt': datetime.date.today() - datetime.timedelta(days=365),  # I think..
-                'lte': datetime.date.today()
+                'gte': datetime.date.today().year,
+                'lte': datetime.date.today().year,
+                'format': "yyyy"
             })
         # ELSE DO NOTHING
 
@@ -57,7 +59,6 @@ def query(request, version="v1"):
     if end_date:
         date_args['lte'] = end_date
     if date_args:
-        date_args["format"] = "yyyy-MM-dd"
         s = s.filter('range', created_when=date_args)
 
     # Old way to do start/end date
