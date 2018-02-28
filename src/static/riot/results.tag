@@ -110,7 +110,7 @@
         </div>
 
         <div id="results_container" class="row centered">
-            <div class="twelve wide column" style="padding: 0;" show="{ display_mode === 'list' }">
+            <div class="fourteen wide column" style="padding: 0;" show="{ display_mode === 'list' }">
                 <div class="ui stacked">
                     <!--<search-result each="{ results }"></search-result>-->
                     <div id="result_header" style="background-color: #efefef; padding: 10px;">
@@ -187,17 +187,9 @@
                 type: 'date',
                 formatter: {
                     date: function (date, settings) {
-                        if (!date) return '';
-                        var day = date.getDate() + '';
-                        if (day.length < 2) {
-                            day = '0' + day;
-                        }
-                        var month = (date.getMonth() + 1) + '';
-                        if (month.length < 2) {
-                            month = '0' + month;
-                        }
-                        var year = date.getFullYear();
-                        return year + '-' + month + '-' + day;
+                        dt = luxon.DateTime.fromJSDate(date).toISO()
+                        console.log(dt)
+                        return dt
                     }
                 },
                 popupOptions: {

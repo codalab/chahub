@@ -106,7 +106,10 @@ class Phase(models.Model):
     def is_active(self):
         """ Returns true when this phase of the competition is on-going. """
         if self.never_ends:
-            return True
+            if self.start and self.end:
+                return self.start < timezone.now() < self.end
+            else:
+                return True
         else:
             next_phase = self.competition.phases.filter(index=self.index + 1)
             if (next_phase is not None) and (len(next_phase) > 0):

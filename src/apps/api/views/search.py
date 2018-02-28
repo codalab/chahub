@@ -37,14 +37,12 @@ def query(request, version="v1"):
             # Do something
             s = s.filter('range', created_when={
                 'gt': datetime.date.today() - datetime.timedelta(days=30),  # I think..
-                "format": "yyyy-MM-dd",
                 'lte': datetime.date.today()
             })
         if date_flags == "last_year":
             # Do something
             s = s.filter('range', created_when={
                 'gt': datetime.date.today() - datetime.timedelta(days=365),  # I think..
-                "format": "yyyy-MM-dd",
                 'lte': datetime.date.today()
             })
         # ELSE DO NOTHING
@@ -52,24 +50,32 @@ def query(request, version="v1"):
     # Filter on dates...
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
-    if start_date and end_date:
-        s = s.filter('range', created_when={
-            'gte': start_date,  # I think..
-            "format": "yyyy-MM-dd",
-            'lte': end_date
-        })
-    elif start_date:
-        s = s.filter('range', created_when={
-            'gt': start_date,  # I think..
-            "format": "yyyy-MM-dd",
-            'lte': datetime.date.today() + datetime.timedelta(days=999)
-        })
-    elif end_date:
-        s = s.filter('range', created_when={
-            'gte': datetime.date.today() - datetime.timedelta(days=999),
-            "format": "yyyy-MM-dd",
-            'lt': end_date
-        })
+
+    date_args = {}
+    if start_date:
+        date_args['gte'] = start_date
+    if end_date:
+        date_args['lte'] = end_date
+    if date_args:
+        date_args["format"] = "yyyy-MM-dd"
+        s = s.filter('range', created_when=date_args)
+
+    # Old way to do start/end date
+    # if start_date and end_date:
+    #     s = s.filter('range', created_when={
+    #         'gte': start_date,  # I think..
+    #         'lte': end_date
+    #     })
+    # elif start_date:
+    #     s = s.filter('range', created_when={
+    #         'gt': start_date,  # I think..
+    #         'lte': datetime.date.today() + datetime.timedelta(days=999)
+    #     })
+    # elif end_date:
+    #     s = s.filter('range', created_when={
+    #         'gte': datetime.date.today() - datetime.timedelta(days=999),
+    #         'lt': end_date
+    #     })
 
     # Get results
     results = s.execute()
