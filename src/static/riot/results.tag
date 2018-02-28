@@ -427,13 +427,15 @@
             </div>
         </div>
     </div>-->
-    <img class="ui avatar image" src="/static/img/img-wireframe.png">
+    <!--<img class="ui avatar image" src="/static/img/img-wireframe.png">-->
+    <img class="ui avatar image" src="{logo}">
     <div class="content">
         <div class="header">{title}</div>
-        {description}
+        {description} <p class="end-date">{end}</p>
     </div>
 
     <div class="right floated content">
+        <a href="{url}" class="ui mini blue button">Participate</a>
         <i>Participants: {participant_count}</i>
     </div>
 
@@ -451,6 +453,9 @@
             display block
             padding 10px 0 !important
             //margin-bottom 35px !important
+
+        .end-date
+            font-size 10px
 
     </style>
 </competition-tile>

@@ -18,7 +18,7 @@ class Competition(models.Model):
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True)
     remote_id = models.PositiveIntegerField()
 
-    logo = models.URLField(null=True, blank=True)
+    logo = models.URLField(default="/static/img/img-wireframe.png")
     url = models.URLField()
 
     admins = models.ManyToManyField('CompetitionParticipant', related_name='admins')
@@ -32,17 +32,17 @@ class Competition(models.Model):
     def save(self, *args, **kwargs):
         # Calculate our end-date
         # If more than one phase
-        if not self.end:
-            if len(self.phases.all()) > 1:
-                # Order all by end date, grab the last and set our comp end date to that end date
-                if self.phases.all().order_by('end').last().end:
-                    self.end = self.phases.all().order_by('end').last().end.date()
-            # Else we only have on
-            elif len(self.phases.all()) == 1:
-                # Set our end date to our first phase
-                if self.phases.first().end:
-                    self.end = self.phases.first().end.date()
-                # Else?: Do nothing. we don't need to set the field for now.
+        # if not self.end:
+        #     if len(self.phases.all()) > 1:
+        #         # Order all by end date, grab the last and set our comp end date to that end date
+        #         if self.phases.all().order_by('end').last().end:
+        #             self.end = self.phases.all().order_by('end').last().end.date()
+        #     # Else we only have on
+        #     elif len(self.phases.all()) == 1:
+        #         # Set our end date to our first phase
+        #         if self.phases.first().end:
+        #             self.end = self.phases.first().end.date()
+        #         # Else?: Do nothing. we don't need to set the field for now.
 
         # Send off our data
         from api.serializers.competitions import CompetitionSerializer
