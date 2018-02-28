@@ -188,7 +188,6 @@
                 formatter: {
                     date: function (date, settings) {
                         dt = luxon.DateTime.fromJSDate(date).toISO()
-                        console.log(dt)
                         return dt
                     }
                 },
@@ -274,7 +273,6 @@
 
             CHAHUB.api.search(query)
                 .done(function (data) {
-                    console.log(data)
                     self.update({
                         results: data.results,
                         suggestions: data.suggestions
