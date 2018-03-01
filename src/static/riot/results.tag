@@ -382,7 +382,8 @@
             overflow hidden
 
             :hover
-                background-color rgb(245,245,245)
+                background-color rgba(245, 245, 245, 0.1)
+                cursor pointer
 
         .comp-description
             color #808080

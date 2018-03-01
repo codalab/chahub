@@ -1,6 +1,6 @@
 <app>
     <router>
-        <route path="/">
+        <route path="/..">
             <search-results></search-results>
         </route>
     </router>
