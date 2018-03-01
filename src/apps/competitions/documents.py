@@ -29,17 +29,10 @@ competitions.settings(
 class CompetitionDocument(DocType):
     class Meta:
         model = Competition
-
-        # The fields of the model you want to be indexed in Elasticsearch
-        # fields = [
-        #     'title',
-        #     'created_when',
-        # ]
-
     created_by = fields.TextField(attr="created_by")
     title = fields.TextField(attr="title")
     description = fields.TextField(attr="description")
-    html_data = fields.TextField(attr="html_data")
+    html_text = fields.TextField(attr="html_text")
 
     def prepare_created_by(self, instance):
         return instance.created_by

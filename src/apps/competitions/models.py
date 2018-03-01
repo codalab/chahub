@@ -24,26 +24,12 @@ class Competition(models.Model):
     admins = models.ManyToManyField('CompetitionParticipant', related_name='admins')
 
     participant_count = models.IntegerField(default=0)
-    html_data = models.TextField(default="")
+    html_text = models.TextField(default="")
 
     class Meta:
         unique_together = ('remote_id', 'producer')
 
     def save(self, *args, **kwargs):
-        # Calculate our end-date
-        # If more than one phase
-        # if not self.end:
-        #     if len(self.phases.all()) > 1:
-        #         # Order all by end date, grab the last and set our comp end date to that end date
-        #         if self.phases.all().order_by('end').last().end:
-        #             self.end = self.phases.all().order_by('end').last().end.date()
-        #     # Else we only have on
-        #     elif len(self.phases.all()) == 1:
-        #         # Set our end date to our first phase
-        #         if self.phases.first().end:
-        #             self.end = self.phases.first().end.date()
-        #         # Else?: Do nothing. we don't need to set the field for now.
-
         # Send off our data
         from api.serializers.competitions import CompetitionSerializer
         Group("updates").send({
@@ -54,13 +40,13 @@ class Competition(models.Model):
         })
         return super().save(*args, **kwargs)
 
-    def get_comp_date_deadline(self):
+    def deadline(self):
         if self.end:
             return str(self.end.date())
         else:
             return "Unknown"
 
-    def get_comp_date_start(self):
+    def start_date(self):
         if self.created_when:
             return str(self.created_when.date())
         else:
@@ -85,18 +71,22 @@ class Competition(models.Model):
         return "Unknown"
 
     def get_current_phase(self, *args, **kwargs):
-        all_phases = self.phases.all().order_by('start')
-        phase_iterator = iter(all_phases)
-        active_phase = None
-        for phase in phase_iterator:
-            # Get an active phase that isn't also never-ending, unless we don't have any active_phases
-            if phase.is_active:
-                if active_phase is None:
-                    active_phase = phase
-                elif not phase.phase_never_ends:
-                    active_phase = phase
-                    break
-        return active_phase
+        for phase in self.phases.all().order_by('start'):
+            if phase.is_active or phase.never_ends:
+                return phase
+
+        # all_phases = self.phases.all().order_by('start')
+        # phase_iterator = iter(all_phases)
+        # active_phase = None
+        # for phase in phase_iterator:
+        #     # Get an active phase that isn't also never-ending, unless we don't have any active_phases
+        #     if phase.is_active:
+        #         if active_phase is None:
+        #             active_phase = phase
+        #         elif not phase.phase_never_ends:
+        #             active_phase = phase
+        #             break
+        # return active_phase
 
 
 class Phase(models.Model):

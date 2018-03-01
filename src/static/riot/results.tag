@@ -355,7 +355,7 @@
                     <i>{created_by}</i>
                 </div>
                 <div class="three wide right aligned column">
-                    <i style="font-size: 12px !important;">{get_comp_date_start}<br>through<br>{get_comp_date_deadline}</i>
+                    <i style="font-size: 12px !important;">{start_date}<br>through<br>{deadline}</i>
                 </div>
                 <div class="two wide column">
                     <div class="ui blue label">
