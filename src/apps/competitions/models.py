@@ -45,7 +45,7 @@ class Competition(models.Model):
         if self.end:
             return str(self.end.date())
         else:
-            return "Unknown"
+            return "N/A"
 
     @property
     def start_date(self):
@@ -53,6 +53,17 @@ class Competition(models.Model):
             return str(self.created_when.date())
         else:
             return "Unknown"
+
+    @property
+    def phase_deadlines(self):
+        if len(self.phases.all()) > 0:
+            for phase in self.phases.all():
+                if phase.is_active and not phase.never_ends:
+                    if phase.start and phase.end:
+                        return "{0} to {1}".format(phase.start.date(), phase.end.date())
+            return "N/A"
+        else:
+            return "N/A"
 
     @property
     def is_active(self):

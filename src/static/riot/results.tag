@@ -350,12 +350,14 @@
                 <div class="eight wide left aligned column">
                     <div class="header">{title}</div>
                     <i class="comp-description">{description}</i>
+                    <br>
+                    <i style="font-size: 12px !important;">start:{start_date}<br>end:{deadline}</i>
                 </div>
                 <div class="two wide column">
                     <!--<i>{created_by}</i>-->
                 </div>
-                <div class="three wide right aligned column">
-                    <i style="font-size: 12px !important;">{start_date}<br>through<br>{deadline}</i>
+                <div class="three wide middle aligned column">
+                    <i style="font-size: 10px !important;">{phase_deadlines}</i>
                 </div>
                 <div class="two wide column">
                     <div class="ui blue label">
