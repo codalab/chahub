@@ -29,6 +29,7 @@ competitions.settings(
 class CompetitionDocument(DocType):
     class Meta:
         model = Competition
+
     created_by = fields.TextField(attr="created_by")
     title = fields.TextField(attr="title")
     description = fields.TextField(attr="description")

@@ -40,12 +40,14 @@ class Competition(models.Model):
         })
         return super().save(*args, **kwargs)
 
+    @property
     def deadline(self):
         if self.end:
             return str(self.end.date())
         else:
             return "Unknown"
 
+    @property
     def start_date(self):
         if self.created_when:
             return str(self.created_when.date())
@@ -74,19 +76,6 @@ class Competition(models.Model):
         for phase in self.phases.all().order_by('start'):
             if phase.is_active or phase.never_ends:
                 return phase
-
-        # all_phases = self.phases.all().order_by('start')
-        # phase_iterator = iter(all_phases)
-        # active_phase = None
-        # for phase in phase_iterator:
-        #     # Get an active phase that isn't also never-ending, unless we don't have any active_phases
-        #     if phase.is_active:
-        #         if active_phase is None:
-        #             active_phase = phase
-        #         elif not phase.phase_never_ends:
-        #             active_phase = phase
-        #             break
-        # return active_phase
 
 
 class Phase(models.Model):

@@ -61,23 +61,6 @@ def query(request, version="v1"):
     if date_args:
         s = s.filter('range', created_when=date_args)
 
-    # Old way to do start/end date
-    # if start_date and end_date:
-    #     s = s.filter('range', created_when={
-    #         'gte': start_date,  # I think..
-    #         'lte': end_date
-    #     })
-    # elif start_date:
-    #     s = s.filter('range', created_when={
-    #         'gt': start_date,  # I think..
-    #         'lte': datetime.date.today() + datetime.timedelta(days=999)
-    #     })
-    # elif end_date:
-    #     s = s.filter('range', created_when={
-    #         'gte': datetime.date.today() - datetime.timedelta(days=999),
-    #         'lt': end_date
-    #     })
-
     # Get results
     results = s.execute()
 
