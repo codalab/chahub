@@ -352,7 +352,7 @@
                     <i class="comp-description">{description}</i>
                 </div>
                 <div class="two wide column">
-                    <i>{created_by}</i>
+                    <!--<i>{created_by}</i>-->
                 </div>
                 <div class="three wide right aligned column">
                     <i style="font-size: 12px !important;">{start_date}<br>through<br>{deadline}</i>
