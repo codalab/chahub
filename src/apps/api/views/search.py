@@ -64,6 +64,7 @@ def query(request, version="v1"):
     if end_date:
         date_args['lte'] = end_date
     if date_args:
+        date_args['format'] = 'date_optional_time'
         s = s.filter('range', created_when=date_args)
 
     # Get results

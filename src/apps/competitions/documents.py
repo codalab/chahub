@@ -35,6 +35,8 @@ class CompetitionDocument(DocType):
     description = fields.TextField(attr="description")
     html_text = fields.TextField(attr="html_text")
 
+    created_when = fields.DateField(attr="created_when")
+
     def prepare_created_by(self, instance):
         return instance.created_by
 
