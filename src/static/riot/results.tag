@@ -358,7 +358,7 @@
         </div>
     </div>
     <div class="right float">
-        <div class="ui red label tooltip" style="background-color: #db28289e!important;" data-content="Deadline of the current phase">
+        <div class="ui red label tooltip" style="background-color: #db28289e;" data-content="Deadline of the current phase">
             <i class="alarm icon"></i> May 5th, 2018
         </div>
         <div class="ui blue label tooltip" data-content="Participant count">
