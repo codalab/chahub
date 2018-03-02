@@ -32,12 +32,12 @@ class Competition(models.Model):
     def save(self, *args, **kwargs):
         # Send off our data
         from api.serializers.competitions import CompetitionSerializer
-        Group("updates").send({
-            "text": json.dumps({
-                "type": "competition_update",
-                "data": CompetitionSerializer(self).data
-            }),
-        })
+        # Group("updates").send({
+        #     "text": json.dumps({
+        #         "type": "competition_update",
+        #         "data": CompetitionSerializer(self).data
+        #     }),
+        # })
         return super().save(*args, **kwargs)
 
     @property
