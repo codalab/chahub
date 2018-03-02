@@ -341,8 +341,8 @@
 
 <competition-tile onclick="{redirect_to_url}">
 
-    <div class="ui circular tiny image">
-        <img src="{logo}">
+    <div>
+        <img class="ui avatar image" src="{logo}">
     </div>
     <div class="content">
         <div class="header">
