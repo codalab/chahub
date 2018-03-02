@@ -32,12 +32,12 @@ class Competition(models.Model):
     def save(self, *args, **kwargs):
         # Send off our data
         from api.serializers.competitions import CompetitionSerializer
-        # Group("updates").send({
-        #     "text": json.dumps({
-        #         "type": "competition_update",
-        #         "data": CompetitionSerializer(self).data
-        #     }),
-        # })
+        Group("updates").send({
+            "text": json.dumps({
+                "type": "competition_update",
+                "data": CompetitionSerializer(self).data
+            }),
+        })
         return super().save(*args, **kwargs)
 
     # @property
@@ -48,14 +48,14 @@ class Competition(models.Model):
     @property
     def start(self):
         # Not really the start date, just when the competition was created...
-        return self.created_when
+        return self.created_when.isoformat()
 
     @property
     def current_phase_deadline(self):
         for phase in self.phases.all():
             if phase.is_active and not phase.never_ends:
                 if phase.start and phase.end:
-                    return phase.end
+                    return phase.end.isoformat()
 
     @property
     def is_active(self):
@@ -72,7 +72,7 @@ class Competition(models.Model):
         for phase in self.phases.all():
             if phase.is_active:
                 if phase.end:
-                    return str(phase.end.date())
+                    return phase.end.date().isoformat()
 
     def get_current_phase(self, *args, **kwargs):
         for phase in self.phases.all().order_by('start'):
