@@ -341,10 +341,10 @@
 
 <competition-tile onclick="{redirect_to_url}">
     <div class="right floated content">
-        <div class="ui red label">
-            <i class="alarm icon"></i> May 5th, 2018 deadline
+        <div class="ui red label tooltip" data-content="Deadline of the current phase">
+            <i class="alarm icon"></i> May 5th, 2018
         </div>
-        <div class="ui blue label">
+        <div class="ui blue label tooltip" data-content="Participant count">
             <i class="user icon"></i> {participant_count}
         </div>
     </div>
@@ -392,6 +392,10 @@
 
     <script>
         var self = this
+
+        self.on("mount", function() {
+            $(".tooltip", self.root).popup()
+        })
 
         self.redirect_to_url = function () {
             window.open(self.url, '_blank');

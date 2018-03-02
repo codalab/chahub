@@ -51,7 +51,6 @@ window.delay = (function () {
  Dates
  ----------------------------------------------------------------------------*/
 var pretty_date = function(date_string) {
-    console.log(date_string)
     if(!!date_string) {
         return luxon.DateTime.fromISO(date_string).toLocaleString(luxon.DateTime.DATE_FULL)
     } else {
