@@ -116,7 +116,7 @@
                     <div id="result_header" style="background-color: #efefef; padding: 10px;">
                         <h3 class="ui inverted">{ results.length } results</h3>
                     </div>
-                    <div class="ui middle aligned celled list" style="margin: 0;">
+                    <div class="ui middle aligned compact divided link items">
                         <competition-tile each="{ results }" class="item"></competition-tile>
                     </div>
 
@@ -340,7 +340,25 @@
 </search-result>
 
 <competition-tile onclick="{redirect_to_url}">
-    <div class="right floated content">
+
+    <div class="ui tiny image">
+        <img src="{logo}">
+    </div>
+    <div class="content">
+        <div class="header">
+            {title}
+        </div>
+        <div class="description" style="color: #808080;">
+            <!--<p style="font-size: .9em; color: #808080;">{description}</p>-->
+            <p style="font-size: .8em;">
+                {pretty_date(start_date)}
+                <virtual if="{end}">
+                    - {pretty_date(end)}
+                </virtual>
+            </p>
+        </div>
+    </div>
+    <div class="right float">
         <div class="ui red label tooltip" data-content="Deadline of the current phase">
             <i class="alarm icon"></i> May 5th, 2018
         </div>
@@ -348,17 +366,7 @@
             <i class="user icon"></i> {participant_count}
         </div>
     </div>
-    <img class="ui avatar image" src="{logo}">
-    <div class="content">
-        <div class="header">{title}</div>
-        <p style="font-size: .9em; color: #808080;">{description}</p>
-        <p style="font-size: .8em;">
-            {pretty_date(start_date)}
-            <virtual if="{end}">
-                - {pretty_date(end)}
-            </virtual>
-        </p>
-    </div>
+
 
     <!--<div class="ui grid">
         <div class="ui row">
@@ -393,7 +401,7 @@
     <script>
         var self = this
 
-        self.on("mount", function() {
+        self.on("mount", function () {
             $(".tooltip", self.root).popup()
         })
 
