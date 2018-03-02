@@ -101,6 +101,7 @@ def query(request, version="v1"):
     #     data["results"].append({key: result[key] for key in result})
 
     if 'suggest' in results:
-        data["suggestions"] = [s.to_dict() for s in results.suggest['suggestions'][0].options]
+        if len(results.suggest['suggestions']) > 0:
+            data["suggestions"] = [s.to_dict() for s in results.suggest['suggestions'][0].options]
 
     return Response(data)

@@ -4,7 +4,10 @@
             <div class="centered column twelve wide">
                 <div class="ui grid">
                     <div class="row search-wrapper">
-                        <div class="ui icon input">
+                        <div class="ui left action right icon input">
+                            <button class="ui red icon button" onclick="{ clear_search }">
+                                <i class="delete icon"></i>
+                            </button>
                             <input type="text" placeholder="Search..." ref="search" onkeydown="{ input_updated }">
                             <i class="search icon"></i>
                         </div>
@@ -247,6 +250,14 @@
             delay(function () {
                 self.search()
             }, 100)
+        }
+
+        self.clear_search = function() {
+            self.refs.search.value = ''
+
+            // CLEAR DATES AND SUCH ???
+
+            self.search()
         }
 
         self.search = function (query) {
