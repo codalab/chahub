@@ -342,7 +342,7 @@
 <competition-tile onclick="{redirect_to_url}">
 
     <div class="ui tiny image">
-        <img src="{logo}">
+        <img src="{logo}" style="max-height: 42px; width: auto; margin: 0 auto;">
     </div>
     <div class="content">
         <div class="header">
