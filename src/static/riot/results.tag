@@ -350,7 +350,7 @@
         <div class="description" style="color: #808080;">
             <!--<p style="font-size: .9em; color: #808080;">{description}</p>-->
             <p style="font-size: .8em;">
-                {pretty_date(start_date)}
+                {pretty_date(start)}
                 <virtual if="{end}">
                     - {pretty_date(end)}
                 </virtual>
@@ -358,8 +358,11 @@
         </div>
     </div>
     <div class="right float">
-        <div class="ui red label tooltip" style="background-color: #db28289e;" data-content="Deadline of the current phase">
-            <i class="alarm icon"></i> May 5th, 2018
+        <div class="ui red label tooltip"
+             style="background-color: #db28289e;"
+             data-content="Deadline of the current phase"
+             show="{current_phase_deadline}">
+            <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
         </div>
         <div class="ui blue label tooltip" data-content="Participant count">
             <i class="user icon"></i> {participant_count}
