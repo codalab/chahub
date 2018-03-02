@@ -23,7 +23,10 @@ def query(request, version="v1"):
     if query:
         # Do keyword search
         # s = s.query("match_phrase_prefix", title=query)
-        s = s.query("multi_match", query=query, type="phrase_prefix", fields=["title^3", "description", "html_text"])
+        s = s.query("multi_match", query=query, type="best_fields", fuzziness=2,
+                    fields=["title^3", "description",
+                            "html_text",
+                            "created_by"])
         s = s.highlight('title', fragment_size=50)
         s = s.suggest('suggestions', query, term={'field': 'title'})
         # s = s.slop(1)
