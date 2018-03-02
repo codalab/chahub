@@ -116,7 +116,7 @@
                     <div id="result_header" style="background-color: #efefef; padding: 10px;">
                         <h3 class="ui inverted">{ results.length } results</h3>
                     </div>
-                    <div class="ui celled list" style="margin: 0;">
+                    <div class="ui middle aligned celled list" style="margin: 0;">
                         <competition-tile each="{ results }" class="item"></competition-tile>
                     </div>
 
@@ -251,26 +251,26 @@
 
         self.search = function (query) {
             //query = query || self.refs.search.value
-            query = {q: self.refs.search.value}
+            var filters = {q: query || self.refs.search.value}
 
             if (self.refs.start_date.value) {
-                query.start_date = self.refs.start_date.value
+                filters.start_date = self.refs.start_date.value
             }
             if (self.refs.end_date.value) {
-                query.end_date = self.refs.end_date.value
+                filters.end_date = self.refs.end_date.value
             }
 
             var time_range_flags = $("#time-filters").dropdown('get value')
 
             // Grab our value above, check if it's empty, set to null. If not empty, send the value away.
             if (time_range_flags !== "") {
-                query.date_flags = time_range_flags
+                filters.date_flags = time_range_flags
             }
             else {
-                query.date_flags = null
+                filters.date_flags = null
             }
 
-            CHAHUB.api.search(query)
+            CHAHUB.api.search(filters)
                 .done(function (data) {
                     self.update({
                         results: data.results,
@@ -339,40 +339,62 @@
     </div>-->
 </search-result>
 
-<competition-tile>
+<competition-tile onclick="{redirect_to_url}">
+    <div class="right floated content">
+        <div class="ui red label">
+            <i class="alarm icon"></i> May 5th, 2018 deadline
+        </div>
+        <div class="ui blue label">
+            <i class="user icon"></i> {participant_count}
+        </div>
+    </div>
+    <img class="ui avatar image" src="{logo}">
+    <div class="content">
+        <div class="header">{title}</div>
+        <p style="font-size: .9em; color: #808080;">{description}</p>
+        <p style="font-size: .8em;">
+            {pretty_date(start_date)}
+            <virtual if="{end}">
+                - {pretty_date(end)}
+            </virtual>
+        </p>
+    </div>
 
-    <div onclick="{redirect_to_url}" class="content">
-        <div class="ui grid">
-            <div class="ui row">
-                <div align="center" class="one wide column">
-                    <img class="ui avatar image" src="{logo}">
-                </div>
-                <div class="eight wide left aligned column">
-                    <div class="header">{title}</div>
-                    <i class="comp-description">{description}</i>
-                    <br>
-                    <i style="font-size: 12px !important;">start:{start_date}<br>end:{deadline}</i>
-                </div>
-                <div class="two wide column">
-                    <!--<i>{created_by}</i>-->
-                </div>
-                <div class="three wide middle aligned column">
-                    <i style="font-size: 10px !important;">{phase_deadlines}</i>
-                </div>
-                <div class="two wide column">
-                    <div class="ui blue label">
-                        <i class="user icon"></i> {participant_count}
-                    </div>
+    <!--<div class="ui grid">
+        <div class="ui row">
+            <div align="center" class="one wide column">
+                <img class="ui avatar image" src="{logo}">
+            </div>
+            <div class="eight wide left aligned column">
+                <div class="header">{title}</div>
+                <i class="comp-description">{description}</i>
+                <br>
+                <i style="font-size: 12px !important;">
+                    {pretty_date(start_date)}
+                    <virtual if="{end}">
+                        - {pretty_date(end)}
+                    </virtual>
+                </i>
+            </div>
+            <div class="two wide column">
+                <!--<i>{created_by}</i>
+            </div>
+            <div class="three wide middle aligned column">
+                <i style="font-size: 10px !important;">{pretty_date(phase_deadlines)}</i>
+            </div>
+            <div class="two wide column">
+                <div class="ui blue label">
+                    <i class="user icon"></i> {participant_count}
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
     <script>
         var self = this
 
-        self.redirect_to_url = function() {
-            window.open(self.url,'_blank');
+        self.redirect_to_url = function () {
+            window.open(self.url, '_blank');
         }
     </script>
 
@@ -380,22 +402,11 @@
         :scope
             display block
             padding 10px 0 !important
-            //margin-bottom 35px !important
             overflow hidden
 
             :hover
                 background-color rgba(245, 245, 245, 0.1)
                 cursor pointer
-
-        .comp-description
-            color #808080
-
-        .end-date
-            font-size 10px
-
-        .tile-hovered
-            background-color lightgray !important
-
     </style>
 </competition-tile>
 

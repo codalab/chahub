@@ -44,15 +44,11 @@ class Competition(models.Model):
     def deadline(self):
         if self.end:
             return str(self.end.date())
-        else:
-            return "N/A"
 
     @property
     def start_date(self):
         if self.created_when:
             return str(self.created_when.date())
-        else:
-            return "Unknown"
 
     @property
     def phase_deadlines(self):
@@ -61,9 +57,6 @@ class Competition(models.Model):
                 if phase.is_active and not phase.never_ends:
                     if phase.start and phase.end:
                         return "{0} to {1}".format(phase.start.date(), phase.end.date())
-            return "N/A"
-        else:
-            return "N/A"
 
     @property
     def is_active(self):
@@ -81,7 +74,6 @@ class Competition(models.Model):
             if phase.is_active:
                 if phase.end:
                     return str(phase.end.date())
-        return "Unknown"
 
     def get_current_phase(self, *args, **kwargs):
         for phase in self.phases.all().order_by('start'):
