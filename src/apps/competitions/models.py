@@ -40,23 +40,22 @@ class Competition(models.Model):
         })
         return super().save(*args, **kwargs)
 
-    @property
-    def deadline(self):
-        if self.end:
-            return str(self.end.date())
+    # @property
+    # def deadline(self):
+    #     if self.end:
+    #         return self.end.date()
 
     @property
-    def start_date(self):
-        if self.created_when:
-            return str(self.created_when.date())
+    def start(self):
+        # Not really the start date, just when the competition was created...
+        return self.created_when
 
     @property
-    def phase_deadlines(self):
-        if len(self.phases.all()) > 0:
-            for phase in self.phases.all():
-                if phase.is_active and not phase.never_ends:
-                    if phase.start and phase.end:
-                        return "{0} to {1}".format(phase.start.date(), phase.end.date())
+    def current_phase_deadline(self):
+        for phase in self.phases.all():
+            if phase.is_active and not phase.never_ends:
+                if phase.start and phase.end:
+                    return phase.end
 
     @property
     def is_active(self):
