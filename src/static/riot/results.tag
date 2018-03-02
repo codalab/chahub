@@ -340,9 +340,8 @@
 </search-result>
 
 <competition-tile onclick="{redirect_to_url}">
-
     <div>
-        <img class="ui avatar image" src="{logo}">
+        <img class="ui avatar image" style="margin-right: 10px;" src="{logo}">
     </div>
     <div class="content">
         <div class="header">
@@ -413,12 +412,6 @@
     <style type="text/stylus">
         :scope
             display block
-            padding 10px 0 !important
-            overflow hidden
-
-            :hover
-                background-color rgba(245, 245, 245, 0.1)
-                cursor pointer
     </style>
 </competition-tile>
 
