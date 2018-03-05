@@ -37,6 +37,8 @@ class CompetitionDocument(DocType):
 
     created_when = fields.DateField(attr="created_when")
 
+    # TODO: add "active" boolean field so we can add this to queries and not have a special case
+
     def prepare_created_by(self, instance):
         return instance.created_by
 

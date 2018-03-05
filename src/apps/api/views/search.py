@@ -16,9 +16,11 @@ def query(request, version="v1"):
     if 'q' not in request.GET:
         return Response()
 
+    SIZE = 100
+
     query = request.GET.get('q')
     client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
-    s = Search(using=client).extra(size=100)
+    s = Search(using=client).extra(size=SIZE)
 
     if query:
         # Do keyword search
@@ -95,9 +97,17 @@ def query(request, version="v1"):
 
     comps = Competition.objects.filter(id__in=comp_ids)
 
-    # If we're filtering by active, return only active
-    if date_flags and date_flags == "active":
-        comps = (comp for comp in comps if comp.is_active)
+    # data["results"] = [CompetitionSerializer(c).data for c in comps]
+
+    # WE NEED THE ABOVE SO WE CAN ACTUALLY DO THIS OPERATION
+    if len(comps) == 0:
+        data['show_default_results'] = True
+        comps = Competition.objects.all()[:SIZE]
+    else:
+        # If we're filtering by active, return only active
+        if date_flags and date_flags == "active":
+            comps = (comp for comp in comps if comp.is_active)
+        data["show_default_results"] = False
 
     data["results"] = [CompetitionSerializer(c).data for c in comps]
 

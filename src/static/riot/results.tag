@@ -40,12 +40,12 @@
                                             <div class="header">
                                                 Date range
                                             </div>
-                                            <div class="ui left icon input datepicker">
+                                            <div class="ui left icon input datepicker" data-calendar-type="start">
                                                 <i class="calendar icon"></i>
                                                 <input ref="start_date" type="text" name="search"
                                                        placeholder="Start date">
                                             </div>
-                                            <div class="ui left icon input datepicker">
+                                            <div class="ui left icon input datepicker" data-calendar-type="end">
                                                 <i class="calendar icon"></i>
                                                 <input ref="end_date" type="text" name="search" placeholder="End date">
                                             </div>
@@ -114,14 +114,26 @@
 
             </div>
         </div>
-
         <div id="results_container" class="row centered">
             <div class="twelve wide column" style="padding: 0;" show="{ display_mode === 'list' }">
                 <div class="ui stacked">
                     <!--<search-result each="{ results }"></search-result>-->
-                    <div id="result_header" style="background-color: #efefef; padding: 10px;">
-                        <h3 class="ui inverted">{ results.length } results</h3>
-                    </div>
+                    <!--<div id="result_header" style="background-color: #efefef; padding: 10px;">-->
+                        <!--<h3 hide="{ show_default_results === 'true'}" class="ui inverted">{ results.length } results</h3>-->
+                        <div class="ui message" show="{!show_default_results}">
+                            <div class="header">
+                                {results.length}
+                            </div>
+                            Results
+                        </div>
+                        <div class="ui warning message" show="{show_default_results}">
+                            <!--<i class="close icon"></i>-->
+                            <div class="header">
+                                No results found for query!
+                            </div>
+                            Here are some suggestions
+                        </div>
+                    <!--</div>-->
                     <div class="ui middle aligned compact divided link items">
                         <competition-tile each="{ results }" class="item"></competition-tile>
                     </div>
@@ -175,6 +187,8 @@
         var self = this
         self.results = []
         self.display_mode = 'list'
+        self.start_date = null
+        self.end_date = null
 
         self.on('mount', function () {
             /*$(self.refs.search_wrapper).dropdown({
@@ -200,6 +214,47 @@
                     position: 'bottom left',
                     lastResort: 'bottom left',
                     hideOnScroll: false
+                },
+                onChange: function(date, text, mode) {
+                    // figure out if end date or if start date
+                    // set start/end dates
+                    /*if (self.refs.start_date.value) {
+                        filters.start_date = self.refs.start_date.value
+                    }
+                    if (self.refs.end_date.value) {
+                        filters.end_date = self.refs.end_date.value
+                    }*/
+
+                    if(this.dataset.calendarType === 'start') {
+                        self.start_date = text
+                    }
+
+                    if(this.dataset.calendarType === 'end') {
+                        self.end_date = text
+                    }
+
+                    console.log("Yay calendar changed")
+                    if (self.start_date && self.end_date){
+                        var temp_string = self.start_date + ' - ' + self.end_date
+                        console.log(temp_string)
+                        $("#time-filters").dropdown('set text', temp_string)
+                    }
+                    else if (self.start_date){
+                        var temp_string = 'Starting From: ' +  self.start_date
+                        console.log(temp_string)
+                        $("#time-filters").dropdown('set text', temp_string)
+                    }
+                    else if (self.end_date){
+                        var temp_string = 'End By: ' + self.end_date
+                        console.log(temp_string)
+                        $("#time-filters").dropdown('set text', temp_string)
+                    }
+
+                    //
+
+                    //this.dropdown('set text', 'the formatted text string')
+
+                    // self.update()
                 }
             })
             $(".ui.dropdown").dropdown()
@@ -252,7 +307,7 @@
         self.input_updated = function () {
             delay(function () {
                 self.search()
-            }, 100)
+            }, 250)
         }
 
         self.clear_search = function() {
@@ -294,7 +349,8 @@
                 .done(function (data) {
                     self.update({
                         results: data.results,
-                        suggestions: data.suggestions
+                        suggestions: data.suggestions,
+                        show_default_results: data.show_default_results
                     })
                 })
         }
@@ -368,6 +424,7 @@
             {title}
         </div>
         <p style="font-size: .9em; color: #808080;">{description}</p>
+        <p style="font-size: .8em; color: rgba(0,0,255, 0.6);">{url}</p>
         <div class="description" style="color: #808080;">
             <!--<p style="font-size: .9em; color: #808080;">{description}</p>-->
             <p style="font-size: .8em;">
@@ -428,8 +485,8 @@
             $(".tooltip", self.root).popup()
 
             if (self.description) {
-                if (self.description.length > 75){
-                    self.description = self.description.substr(0, 75) + "..."
+                if (self.description.length > 250){
+                    self.description = self.description.substr(0, 250) + "..."
                     self.update()
                 }
             }
@@ -443,6 +500,9 @@
     <style type="text/stylus">
         :scope
             display block
+
+        p
+            line-height .8em !important
     </style>
 </competition-tile>
 
