@@ -509,7 +509,7 @@
             display block
 
         p
-            line-height .8em !important
+            line-height .9em !important
     </style>
 </competition-tile>
 
