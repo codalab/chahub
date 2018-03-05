@@ -18,12 +18,15 @@
                                 <div class="field">
                                     <div id="time-filters" class="ui floating labeled icon dropdown button" onkeydown="{ input_updated }">
                                         <i class="filter icon"></i>
-                                        <span class="text">Any time</span>
+                                        <span class="text">Any Time</span>
                                         <div class="menu">
                                             <div class="header">
                                                 Timeframe
                                             </div>
                                             <div class="divider"></div>
+                                            <div class="active item" data-value="any_time">
+                                                Any Time
+                                            </div>
                                             <div class="item" data-value="active">
                                                 Active
                                             </div>
@@ -275,7 +278,13 @@
 
             // Grab our value above, check if it's empty, set to null. If not empty, send the value away.
             if (time_range_flags !== "") {
-                filters.date_flags = time_range_flags
+                if (time_range_flags === "any_time"){
+                    filters.date_flags = null
+                }
+                else
+                {
+                   filters.date_flags = time_range_flags
+                }
             }
             else {
                 filters.date_flags = null
