@@ -312,6 +312,13 @@
 
         self.clear_search = function() {
             self.refs.search.value = ''
+            self.start_date = ''
+            self.end_date = ''
+            self.refs.start_date.value = ''
+            self.refs.end_date.value = ''
+            $("#time-filters").dropdown('set text', 'Any Time')
+            $("#time-filters").dropdown('restore defaults');
+
 
             // CLEAR DATES AND SUCH ???
 
