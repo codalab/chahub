@@ -492,8 +492,8 @@
             $(".tooltip", self.root).popup()
 
             if (self.description) {
-                if (self.description.length > 250){
-                    self.description = self.description.substr(0, 250) + "..."
+                if (self.description.length > 100){
+                    self.description = self.description.substr(0, 100) + "..."
                     self.update()
                 }
             }
