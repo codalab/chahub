@@ -28,7 +28,7 @@ def query(request, version="v1"):
             query=query,
             type="best_fields",
             fuzziness=2,
-            fields=["title^3", "description", "html_text", "created_by"])
+            fields=["title^3", "description^2", "html_text", "created_by"])
         s = s.highlight('title', fragment_size=50)
         s = s.suggest('suggestions', query, term={'field': 'title'})
         # s = s.slop(1)
@@ -38,18 +38,20 @@ def query(request, version="v1"):
 
     date_flags = request.GET.get('date_flags')
     if date_flags:
-        if date_flags == "last_month":
+        if date_flags == "past_month":
+            str_date = "{}||/M".format(datetime.date.today().strftime('%m'))
             # Do something
             s = s.filter('range', created_when={
-                'gte': datetime.date.today().month,  # I think..
-                'lte': datetime.date.today().month,
+                'gte': str_date,  # I think..
+                'lte': str_date,
                 'format': "mm"
             })
-        if date_flags == "last_year":
+        if date_flags == "past_year":
+            str_date = "{}||/y".format(datetime.date.today().strftime('%Y'))
             # Do something
             s = s.filter('range', created_when={
-                'gte': datetime.date.today().year,
-                'lte': datetime.date.today().year,
+                'gte': str_date,
+                'lte': str_date,
                 'format': "yyyy"
             })
         # ELSE DO NOTHING

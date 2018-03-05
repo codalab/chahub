@@ -358,6 +358,7 @@
         <div class="header">
             {title}
         </div>
+        <p style="font-size: .9em; color: #808080;">{description}</p>
         <div class="description" style="color: #808080;">
             <!--<p style="font-size: .9em; color: #808080;">{description}</p>-->
             <p style="font-size: .8em;">
@@ -416,6 +417,13 @@
 
         self.on("mount", function () {
             $(".tooltip", self.root).popup()
+
+            if (self.description) {
+                if (self.description.length > 75){
+                    self.description = self.description.substr(0, 75) + "..."
+                    self.update()
+                }
+            }
         })
 
         self.redirect_to_url = function () {
