@@ -91,7 +91,7 @@ def query(request, version="v1"):
     # for model_class, ids in model_queries.items():
     #     print(model_class.objects.filter(id__in=ids))
 
-    comp_ids = [r.meta["id"] for r in results]
+    comp_ids = [r.meta["id"] for r in results if r.meta["id"].isdigit()]
 
     comps = Competition.objects.filter(id__in=comp_ids)
 
