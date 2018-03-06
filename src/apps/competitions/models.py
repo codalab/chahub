@@ -14,6 +14,7 @@ class Competition(models.Model):
     title = models.TextField()
     description = models.TextField(null=True, blank=True)
     end = models.DateTimeField(null=True, blank=True)
+    prize = models.PositiveIntegerField(null=True, blank=True)
 
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True)
     remote_id = models.PositiveIntegerField()
@@ -52,6 +53,8 @@ class Competition(models.Model):
 
     @property
     def current_phase_deadline(self):
+        # TODO: We may need to have a celery task that updates ElasticSearch deadlines. We can't do sorting by deadline when we get a bunch of competitions.
+        # Could save this as a property on the model
         for phase in self.phases.all():
             if phase.is_active and not phase.never_ends:
                 if phase.start and phase.end:

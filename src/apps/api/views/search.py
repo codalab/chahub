@@ -1,6 +1,7 @@
 import datetime
 
 from django.conf import settings
+from django.utils.timezone import now
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 
@@ -8,7 +9,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from api.serializers.competitions import CompetitionSerializer
-from competitions.models import Competition, CompetitionParticipant
+from competitions.models import Competition, CompetitionParticipant, Phase
 
 
 @api_view(['GET'])
@@ -19,12 +20,12 @@ def query(request, version="v1"):
     SIZE = 100
 
     query = request.GET.get('q')
+    sorting = request.GET.get('sorting')
+    date_flags = request.GET.get('date_flags')
     client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
     s = Search(using=client).extra(size=SIZE)
 
     if query:
-        # Do keyword search
-        # s = s.query("match_phrase_prefix", title=query)
         s = s.query(
             "multi_match",
             query=query,
@@ -34,12 +35,8 @@ def query(request, version="v1"):
         )
         s = s.highlight('title', fragment_size=50)
         s = s.suggest('suggestions', query, term={'field': 'title'})
-        # s = s.slop(1)
 
     # Do filters
-    # ...
-
-    date_flags = request.GET.get('date_flags')
     if date_flags == "this_month":
         s = s.filter('range', created_when={
             'gte': "now/M",
@@ -94,6 +91,14 @@ def query(request, version="v1"):
     else:
         comps = Competition.objects.filter(id__in=comp_ids)
         data["showing_default_results"] = False
+
+    if sorting == 'participant_count':
+        comps = comps.order_by('-participant_count')
+    elif sorting == 'prize':
+        comps = comps.order_by('-prize')
+    elif sorting == 'deadline':
+        phases = Phase.objects.filter(competition_id__in=comp_ids, end__gte=now()).select_related('competition')
+        comps = (phase.competition for phase in phases)
 
     if date_flags and date_flags == "active":
         comps = (comp for comp in comps if comp.is_active)

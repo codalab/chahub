@@ -16,8 +16,8 @@
                         <div class="ui form">
                             <div class="inline fields">
                                 <div class="field">
-                                    <div id="time-filters" class="ui floating labeled icon dropdown button">
-                                        <i class="filter icon"></i>
+                                    <div ref="time_filter" class="ui floating labeled icon dropdown button">
+                                        <i class="calendar icon"></i>
                                         <span class="text">Any Time</span>
                                         <div class="menu">
                                             <div class="header">
@@ -54,17 +54,17 @@
                                 </div>
 
                                 <div class="field">
-                                    <div id="sort-filters" class="ui floating labeled icon dropdown button">
+                                    <div ref="sort_filter" class="ui floating labeled icon dropdown button">
                                         <i class="filter icon"></i>
                                         <span class="text">Sorted by</span>
                                         <div class="menu">
-                                            <div data-value="sort-deadline" class="item">
+                                            <div data-value="deadline" class="item">
                                                 Next deadline
                                             </div>
-                                            <div data-value="sort-prize" class="item">
+                                            <div data-value="prize" class="item">
                                                 Prize amount
                                             </div>
-                                            <div data-value="sort-parts" class="item">
+                                            <div data-value="participant_count" class="item">
                                                 Number of participants
                                             </div>
                                         </div>
@@ -125,7 +125,7 @@
                     </div>-->
                     <div class="ui warning message" show="{showing_default_results}">
                         <div class="header">
-                            No results found for "{refs.search.value}"
+                            No results found
                         </div>
                         Try broadening your search
                     </div>
@@ -231,17 +231,17 @@
 
                     if (self.start_date && self.end_date){
                         var temp_string = self.start_date + ' through ' + self.end_date
-                        $("#time-filters").dropdown('set text', temp_string)
+                        $(self.refs.time_filter).dropdown('set text', temp_string)
                         self.search()
                     }
                     else if (self.start_date){
                         var temp_string = 'Starting From: ' +  self.start_date
-                        $("#time-filters").dropdown('set text', temp_string)
+                        $(self.refs.time_filter).dropdown('set text', temp_string)
                         self.search()
                     }
                     else if (self.end_date){
                         var temp_string = 'End By: ' + self.end_date
-                        $("#time-filters").dropdown('set text', temp_string)
+                        $(self.refs.time_filter).dropdown('set text', temp_string)
                         self.search()
                     }
 
@@ -252,10 +252,12 @@
                     // self.update()
                 }
             })
-            $(".ui.dropdown").dropdown()
-            $("#time-filters").dropdown('setting', 'onChange', function(){
-                self.search()
-            });
+            $(".ui.dropdown").dropdown({
+                onChange: function(selection){
+                    self.search()
+                }
+            })
+            //$(self.refs.time_filter).dropdown('setting', 'onChange', self.search);
 
             // Search handling
             $(self.refs.search_wrapper).search({
@@ -314,11 +316,11 @@
             self.end_date = ''
             self.refs.start_date.value = ''
             self.refs.end_date.value = ''
-            $("#time-filters").dropdown('set text', 'Any Time')
-            $("#time-filters").dropdown('restore defaults');
+            $(self.refs.time_filter).dropdown('set text', 'Any Time')
+            $(self.refs.time_filter).dropdown('restore defaults');
 
 
-            // CLEAR DATES AND SUCH ???
+            // TODO: CLEAR DATES AND SUCH ???
 
             self.search()
         }
@@ -335,9 +337,11 @@
                 filters.end_date = self.refs.end_date.value
             }
 
-            var time_range_flags = $("#time-filters").dropdown('get value')
+            filters.date_flags = $(self.refs.time_filter).dropdown('get value')
+            filters.sorting = $(self.refs.sort_filter).dropdown('get value')
+            console.log(filters)
 
-            // Grab our value above, check if it's empty, set to null. If not empty, send the value away.
+            /*// Grab our value above, check if it's empty, set to null. If not empty, send the value away.
             if (time_range_flags !== "") {
                 if (time_range_flags === "any_time"){
                     filters.date_flags = null
@@ -349,7 +353,7 @@
             }
             else {
                 filters.date_flags = null
-            }
+            }*/
 
             CHAHUB.api.search(filters)
                 .done(function (data) {
