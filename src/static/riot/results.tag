@@ -510,7 +510,7 @@
             .description
                 margin-top 0 !important
                 color #808080 !important
-                font-size .9em
+                font-size .9em !important
 
             p
                 line-height 1.1em !important
