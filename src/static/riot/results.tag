@@ -423,7 +423,7 @@
 
 <competition-tile onclick="{redirect_to_url}">
     <div>
-        <img class="ui avatar image" style="margin-right: 2em;" src="{logo}">
+        <img class="ui avatar image" style="margin: 1em;" src="{logo}">
     </div>
     <div class="content">
         <div class="header">
