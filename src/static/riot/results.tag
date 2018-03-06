@@ -233,21 +233,20 @@
                         self.end_date = text
                     }
 
-                    console.log("Yay calendar changed")
                     if (self.start_date && self.end_date){
-                        var temp_string = self.start_date + ' - ' + self.end_date
-                        console.log(temp_string)
+                        var temp_string = self.start_date + ' through ' + self.end_date
                         $("#time-filters").dropdown('set text', temp_string)
+                        self.search()
                     }
                     else if (self.start_date){
                         var temp_string = 'Starting From: ' +  self.start_date
-                        console.log(temp_string)
                         $("#time-filters").dropdown('set text', temp_string)
+                        self.search()
                     }
                     else if (self.end_date){
                         var temp_string = 'End By: ' + self.end_date
-                        console.log(temp_string)
                         $("#time-filters").dropdown('set text', temp_string)
+                        self.search()
                     }
 
                     //
@@ -329,6 +328,7 @@
         }
 
         self.search = function (query) {
+            //console.log("Search was called.")
             //query = query || self.refs.search.value
             var filters = {q: query || self.refs.search.value}
 
