@@ -8,7 +8,7 @@
                             <button class="ui red icon button" onclick="{ clear_search }">
                                 <i class="delete icon"></i>
                             </button>
-                            <input type="text" placeholder="Search..." ref="search" onkeydown="{ input_updated }">
+                            <input type="text" placeholder="Search..." ref="search" onkeyup="{ input_updated }">
                             <i class="search icon"></i>
                         </div>
                     </div>
@@ -125,9 +125,9 @@
                     </div>-->
                     <div class="ui warning message" show="{show_default_results}">
                         <div class="header">
-                            No results found for query!
+                            No results found for "{refs.search.value}"
                         </div>
-                        Here are some suggestions
+                        Try broadening your search
                     </div>
 
                     <div class="ui middle aligned compact divided link items">

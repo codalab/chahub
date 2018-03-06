@@ -29,7 +29,7 @@ def query(request, version="v1"):
             "multi_match",
             query=query,
             type="best_fields",
-            fuzziness=2,
+            fuzziness=1,
             fields=["title^3", "description^2", "html_text", "created_by"]
         )
         s = s.highlight('title', fragment_size=50)
