@@ -433,7 +433,7 @@
             <p>{description}</p>
         </div>
         <div class="extra" style="margin-top: 0;">
-            {url}<br>
+            <span style="font-size: .8em; color: rgba(0,0,255, 0.6);">{url}</span>
             <span style="font-size: .8em;">
                 {pretty_date(start)}
                 <virtual if="{end}">
