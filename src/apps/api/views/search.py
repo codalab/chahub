@@ -30,7 +30,8 @@ def query(request, version="v1"):
             query=query,
             type="best_fields",
             fuzziness=2,
-            fields=["title^3", "description^2", "html_text", "created_by"])
+            fields=["title^3", "description^2", "html_text", "created_by"]
+        )
         s = s.highlight('title', fragment_size=50)
         s = s.suggest('suggestions', query, term={'field': 'title'})
         # s = s.slop(1)
@@ -39,28 +40,18 @@ def query(request, version="v1"):
     # ...
 
     date_flags = request.GET.get('date_flags')
-    if date_flags:
-        if date_flags == "past_month":
-            str_date = "{}||/M".format(datetime.date.today().strftime('%m'))
-            print(str_date)
-            # Do something
-            s = s.filter('range', created_when={
-                'gte': str_date,  # I think..
-                'lte': str_date,
-                'format': "MM"
-            })
-        if date_flags == "past_year":
-            str_date = "{}||/y".format(datetime.date.today().strftime('%Y'))
-            print(str_date)
-            # Do something
-            s = s.filter('range', created_when={
-                'gte': str_date,
-                'lte': str_date,
-                'format': "yyyy"
-            })
-        # ELSE DO NOTHING
+    if date_flags == "this_month":
+        s = s.filter('range', created_when={
+            'gte': "now/M",
+            'lte': "now/M",
+        })
+    if date_flags == "this_year":
+        s = s.filter('range', created_when={
+            'gte': "now/y",
+            'lte': "now/y",
+        })
 
-    # Filter on dates...
+    # Filter on specified start/end range
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
 

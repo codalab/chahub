@@ -30,10 +30,10 @@
                                             <div class="item" data-value="active">
                                                 Active
                                             </div>
-                                            <div class="item" data-value="past_month">
+                                            <div class="item" data-value="this_month">
                                                 Created this month
                                             </div>
-                                            <div class="item" data-value="past_year">
+                                            <div class="item" data-value="this_year">
                                                 Created this year
                                             </div>
                                             <div class="divider"></div>
