@@ -440,14 +440,14 @@
                     - {pretty_date(end)}
                 </virtual>
             </span>
+            <div class="ui right floated blue mini label tooltip" data-content="Participant count">
+                <i class="user icon"></i> {participant_count}
+            </div>
             <div class="ui right floated red mini label tooltip"
                  style="background-color: #db28289e;"
                  data-content="Deadline of the current phase"
                  show="{current_phase_deadline}">
                 <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
-            </div>
-            <div class="ui right floated blue mini label tooltip" data-content="Participant count">
-                <i class="user icon"></i> {participant_count}
             </div>
         </div>
     </div>
