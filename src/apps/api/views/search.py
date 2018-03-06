@@ -88,25 +88,17 @@ def query(request, version="v1"):
 
     comp_ids = [r.meta["id"] for r in results if r.meta["id"].isdigit()]
 
-    comps = Competition.objects.filter(id__in=comp_ids)
-
-    # data["results"] = [CompetitionSerializer(c).data for c in comps]
-
-    # WE NEED THE ABOVE SO WE CAN ACTUALLY DO THIS OPERATION
-    if len(comps) == 0:
-        data['show_default_results'] = True
+    if not comp_ids:
         comps = Competition.objects.all()[:SIZE]
+        data['showing_default_results'] = True
     else:
-        # If we're filtering by active, return only active
-        if date_flags and date_flags == "active":
-            comps = (comp for comp in comps if comp.is_active)
-        data["show_default_results"] = False
+        comps = Competition.objects.filter(id__in=comp_ids)
+        data["showing_default_results"] = False
+
+    if date_flags and date_flags == "active":
+        comps = (comp for comp in comps if comp.is_active)
 
     data["results"] = [CompetitionSerializer(c).data for c in comps]
-
-    # OLD WAY THAT WORKS!
-    # for result in results:
-    #     data["results"].append({key: result[key] for key in result})
 
     if 'suggest' in results:
         if len(results.suggest['suggestions']) > 0:

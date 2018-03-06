@@ -117,13 +117,13 @@
         <div id="results_container" class="row centered">
             <div class="twelve wide column" style="padding: 0;" show="{ display_mode === 'list' }">
                 <div class="ui stacked">
-                    <!--<div class="ui message" show="{!show_default_results}">
+                    <!--<div class="ui message" show="{!showing_default_results}">
                         <div class="header">
                             {results.length}
                         </div>
                         Results
                     </div>-->
-                    <div class="ui warning message" show="{show_default_results}">
+                    <div class="ui warning message" show="{showing_default_results}">
                         <div class="header">
                             No results found for "{refs.search.value}"
                         </div>
@@ -356,7 +356,7 @@
                     self.update({
                         results: data.results,
                         suggestions: data.suggestions,
-                        show_default_results: data.show_default_results
+                        showing_default_results: data.showing_default_results
                     })
                 })
         }
