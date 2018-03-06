@@ -30,6 +30,9 @@ class Competition(models.Model):
     class Meta:
         unique_together = ('remote_id', 'producer')
 
+    def __str__(self):
+        return self.title
+
     def save(self, *args, **kwargs):
         # Send off our data
         from api.serializers.competitions import CompetitionSerializer
@@ -91,6 +94,9 @@ class Phase(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField(null=True, blank=True)
     never_ends = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.competition.title} - {self.name}"
 
     @property
     def is_active(self):

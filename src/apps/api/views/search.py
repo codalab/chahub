@@ -25,7 +25,7 @@ def query(request, version="v1"):
     client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
     s = Search(using=client).extra(size=SIZE)
 
-    if query:
+    if query and query != ' ':
         s = s.query(
             "multi_match",
             query=query,
@@ -85,23 +85,28 @@ def query(request, version="v1"):
 
     comp_ids = [r.meta["id"] for r in results if r.meta["id"].isdigit()]
 
-    if not comp_ids:
-        comps = Competition.objects.all()[:SIZE]
-        data['showing_default_results'] = True
-    else:
+    if comp_ids:
         comps = Competition.objects.filter(id__in=comp_ids)
         data["showing_default_results"] = False
 
-    if sorting == 'participant_count':
-        comps = comps.order_by('-participant_count')
-    elif sorting == 'prize':
-        comps = comps.order_by('-prize')
-    elif sorting == 'deadline':
-        phases = Phase.objects.filter(competition_id__in=comp_ids, end__gte=now()).select_related('competition')
-        comps = (phase.competition for phase in phases)
+        if sorting == 'participant_count':
+            comps = comps.order_by('-participant_count')
+        elif sorting == 'prize':
+            comps = comps.order_by('-prize')
+        elif sorting == 'deadline':
+            phases = Phase.objects.filter(
+                competition_id__in=comp_ids,
+                end__gte=now()
+            )
+            phases = phases.order_by('end').select_related('competition')
+            comps = (phase.competition for phase in phases)
 
-    if date_flags and date_flags == "active":
-        comps = (comp for comp in comps if comp.is_active)
+        if date_flags and date_flags == "active":
+            comps = (comp for comp in comps if comp.is_active)
+    else:
+
+        comps = Competition.objects.all()[:SIZE]
+        data['showing_default_results'] = True
 
     data["results"] = [CompetitionSerializer(c).data for c in comps]
 
