@@ -16,7 +16,7 @@
                         <div class="ui form">
                             <div class="inline fields">
                                 <div class="field">
-                                    <div id="time-filters" class="ui floating labeled icon dropdown button" onkeydown="{ input_updated }">
+                                    <div id="time-filters" class="ui floating labeled icon dropdown button">
                                         <i class="filter icon"></i>
                                         <span class="text">Any Time</span>
                                         <div class="menu">
@@ -258,6 +258,9 @@
                 }
             })
             $(".ui.dropdown").dropdown()
+            $("#time-filters").dropdown('setting', 'onChange', function(){
+                self.search()
+            });
 
             // Search handling
             $(self.refs.search_wrapper).search({
