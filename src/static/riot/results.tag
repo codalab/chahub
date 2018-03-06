@@ -130,8 +130,8 @@
                         Try broadening your search
                     </div>
 
-                    <div class="ui middle aligned compact divided link items">
-                        <competition-tile each="{ results }" class="item"></competition-tile>
+                    <div class="ui middle aligned compact divided link items" style="margin-top: 0;">
+                        <competition-tile each="{ results }" class="item" style="padding: .5em 0;"></competition-tile>
                     </div>
 
                     <div class="ui link cards">
@@ -429,27 +429,26 @@
         <div class="header">
             {title}
         </div>
-        <p style="font-size: .9em; color: #808080;">{description}</p>
-        <p style="font-size: .8em; color: rgba(0,0,255, 0.6);">{url}</p>
-        <div class="description" style="color: #808080;">
-            <!--<p style="font-size: .9em; color: #808080;">{description}</p>-->
-            <p style="font-size: .8em;">
+        <div class="description">
+            <p>{description}</p>
+        </div>
+        <div class="extra" style="margin-top: 0;">
+            {url}<br>
+            <span style="font-size: .8em;">
                 {pretty_date(start)}
                 <virtual if="{end}">
                     - {pretty_date(end)}
                 </virtual>
-            </p>
-        </div>
-    </div>
-    <div class="right float">
-        <div class="ui red label tooltip"
-             style="background-color: #db28289e;"
-             data-content="Deadline of the current phase"
-             show="{current_phase_deadline}">
-            <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
-        </div>
-        <div class="ui blue label tooltip" data-content="Participant count">
-            <i class="user icon"></i> {participant_count}
+            </span>
+            <div class="ui right floated red mini label tooltip"
+                 style="background-color: #db28289e;"
+                 data-content="Deadline of the current phase"
+                 show="{current_phase_deadline}">
+                <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
+            </div>
+            <div class="ui right floated blue mini label tooltip" data-content="Participant count">
+                <i class="user icon"></i> {participant_count}
+            </div>
         </div>
     </div>
 
@@ -507,8 +506,13 @@
         :scope
             display block
 
-        p
-            line-height .9em !important
+        .content
+            .description
+                margin-top 0 !important
+                color #808080 !important
+
+            p
+                line-height 1.1em !important
     </style>
 </competition-tile>
 
