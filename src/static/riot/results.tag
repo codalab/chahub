@@ -117,23 +117,19 @@
         <div id="results_container" class="row centered">
             <div class="twelve wide column" style="padding: 0;" show="{ display_mode === 'list' }">
                 <div class="ui stacked">
-                    <!--<search-result each="{ results }"></search-result>-->
-                    <!--<div id="result_header" style="background-color: #efefef; padding: 10px;">-->
-                        <!--<h3 hide="{ show_default_results === 'true'}" class="ui inverted">{ results.length } results</h3>-->
-                        <div class="ui message" show="{!show_default_results}">
-                            <div class="header">
-                                {results.length}
-                            </div>
-                            Results
+                    <!--<div class="ui message" show="{!show_default_results}">
+                        <div class="header">
+                            {results.length}
                         </div>
-                        <div class="ui warning message" show="{show_default_results}">
-                            <!--<i class="close icon"></i>-->
-                            <div class="header">
-                                No results found for query!
-                            </div>
-                            Here are some suggestions
+                        Results
+                    </div>-->
+                    <div class="ui warning message" show="{show_default_results}">
+                        <div class="header">
+                            No results found for query!
                         </div>
-                    <!--</div>-->
+                        Here are some suggestions
+                    </div>
+
                     <div class="ui middle aligned compact divided link items">
                         <competition-tile each="{ results }" class="item"></competition-tile>
                     </div>
