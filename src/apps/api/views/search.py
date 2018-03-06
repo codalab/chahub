@@ -42,14 +42,16 @@ def query(request, version="v1"):
     if date_flags:
         if date_flags == "past_month":
             str_date = "{}||/M".format(datetime.date.today().strftime('%m'))
+            print(str_date)
             # Do something
             s = s.filter('range', created_when={
                 'gte': str_date,  # I think..
                 'lte': str_date,
-                'format': "mm"
+                'format': "MM"
             })
         if date_flags == "past_year":
             str_date = "{}||/y".format(datetime.date.today().strftime('%Y'))
+            print(str_date)
             # Do something
             s = s.filter('range', created_when={
                 'gte': str_date,
