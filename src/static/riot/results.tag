@@ -8,7 +8,7 @@
                             <button class="ui red icon button" onclick="{ clear_search }">
                                 <i class="delete icon"></i>
                             </button>
-                            <input type="text" placeholder="Search..." ref="search" onkeyup="{ input_updated }">
+                            <input type="text" placeholder="Search..." ref="search" onkeypress="{ input_updated }">
                             <i class="search icon"></i>
                         </div>
                     </div>
@@ -111,7 +111,9 @@
     <div class="ui stackable grid container">
         <div class="row centered">
             <div class="twelve wide column">
-
+                <div class="ui active centered inline loader"
+                     show="{loading}"
+                     style="margin: 20px auto;"></div>
             </div>
         </div>
         <div id="results_container" class="row centered">
@@ -356,10 +358,13 @@
             else {
                 filters.date_flags = null
             }*/
+            self.loading = true
+            self.update()
 
             CHAHUB.api.search(filters)
                 .done(function (data) {
                     self.update({
+                        loading: false,
                         results: data.results,
                         suggestions: data.suggestions,
                         showing_default_results: data.showing_default_results
