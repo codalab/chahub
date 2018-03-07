@@ -56,8 +56,11 @@
                                 <div class="field">
                                     <div ref="sort_filter" class="ui floating labeled icon dropdown button">
                                         <i class="filter icon"></i>
-                                        <span class="text">Sorted by</span>
+                                        <span class="text">Sort by relevance</span>
                                         <div class="menu">
+                                            <div class="item">
+                                                Sort by relevance
+                                            </div>
                                             <div data-value="deadline" class="item">
                                                 Next deadline
                                             </div>
@@ -255,7 +258,7 @@
                 }
             })
             $(".ui.dropdown").dropdown({
-                onChange: function(selection){
+                onChange: function(v1, v2, v3, v4){
                     self.search()
                 }
             })
@@ -320,7 +323,7 @@
             self.refs.end_date.value = ''
             $(self.refs.time_filter).dropdown('set text', 'Any time')
             $(self.refs.time_filter).dropdown('restore defaults');
-            $(self.refs.sort_filter).dropdown('set text', 'Sorted by')
+            $(self.refs.sort_filter).dropdown('set text', 'Sort by relevance')
             $(self.refs.sort_filter).dropdown('restore defaults');
 
 
