@@ -258,7 +258,7 @@
                 }
             })
             $(".ui.dropdown").dropdown({
-                onChange: function(v1, v2, v3, v4){
+                onChange: function(){
                     self.search()
                 }
             })
