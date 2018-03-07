@@ -8,7 +8,7 @@
                             <button class="ui red icon button" onclick="{ clear_search }">
                                 <i class="delete icon"></i>
                             </button>
-                            <input type="text" placeholder="Search..." ref="search" onkeypress="{ input_updated }">
+                            <input type="text" placeholder="Search..." ref="search" onkeydown="{ input_updated }">
                             <i class="search icon"></i>
                         </div>
                     </div>
