@@ -27,6 +27,11 @@ class SearchView(APIView):
         date_flags = request.GET.get('date_flags')
         client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
         s = Search(using=client).extra(size=SIZE)
+        data = {
+            "results": [],
+            "suggestions": [],
+            "showing_default_results": False,
+        }
 
         if query and query != ' ':
             s = s.query(
@@ -67,10 +72,7 @@ class SearchView(APIView):
         # Get results
         results = s.execute()
 
-        data = {
-            "results": [],
-            "suggestions": []
-        }
+
 
         # Sort out results into each class type, then query to get each of those models
         # model_queries = {}
@@ -87,30 +89,29 @@ class SearchView(APIView):
         #     print(model_class.objects.filter(id__in=ids))
 
         comp_ids = [r.meta["id"] for r in results if r.meta["id"].isdigit()]
-
+        competitions = []
         if comp_ids:
-            comps = Competition.objects.filter(id__in=comp_ids)
-            data["showing_default_results"] = False
-
+            competitions = Competition.objects.filter(id__in=comp_ids)
             if sorting == 'participant_count':
-                comps = comps.order_by('-participant_count')
+                competitions = competitions.order_by('-participant_count')
             elif sorting == 'prize':
-                comps = comps.order_by('-prize')
+                competitions = competitions.order_by('-prize')
             elif sorting == 'deadline':
                 phases = Phase.objects.filter(
                     competition_id__in=comp_ids,
                     end__gte=now()
                 )
                 phases = phases.order_by('end').select_related('competition')
-                comps = (phase.competition for phase in phases)
+                competitions = [phase.competition for phase in phases]
 
             if date_flags and date_flags == "active":
-                comps = (comp for comp in comps if comp.is_active)
-        else:
-            comps = Competition.objects.all()[:SIZE]
+                competitions = [comp for comp in competitions if comp.is_active]
+
+        if not competitions:
+            competitions = Competition.objects.all()[:SIZE]
             data['showing_default_results'] = True
 
-        data["results"] = [CompetitionSimpleSearchSerializer(c).data for c in comps]
+        data["results"] = [CompetitionSimpleSearchSerializer(c).data for c in competitions]
 
         if 'suggest' in results:
             if len(results.suggest['suggestions']) > 0:
