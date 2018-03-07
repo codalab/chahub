@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from rest_framework_extensions.cache.decorators import cache_response
 
 from api.caching import QueryParamsKeyConstructor
-from api.serializers.competitions import CompetitionSerializer
+from api.serializers.competitions import CompetitionSerializer, CompetitionSimpleSearchSerializer
 from competitions.models import Competition, CompetitionParticipant, Phase
 
 
@@ -107,11 +107,10 @@ class SearchView(APIView):
             if date_flags and date_flags == "active":
                 comps = (comp for comp in comps if comp.is_active)
         else:
-
             comps = Competition.objects.all()[:SIZE]
             data['showing_default_results'] = True
 
-        data["results"] = [CompetitionSerializer(c).data for c in comps]
+        data["results"] = [CompetitionSimpleSearchSerializer(c).data for c in comps]
 
         if 'suggest' in results:
             if len(results.suggest['suggestions']) > 0:

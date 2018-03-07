@@ -34,6 +34,27 @@ class SubmissionSerializer(serializers.ModelSerializer):
         fields = ('phase',)
 
 
+class CompetitionSimpleSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Competition
+        fields = (
+            'id',
+            'remote_id',
+            'title',
+            'created_by',
+            'created_when',
+            'logo',
+            'url',
+            'description',
+            'end',
+            'is_active',
+            'participant_count',
+            'start',
+            'current_phase_deadline',
+            'prize',
+        )
+
+
 class CompetitionSerializer(WritableNestedModelSerializer):
     # Stop the "uniqueness" validation, we want to be able to update already
     # existing models
@@ -60,7 +81,7 @@ class CompetitionSerializer(WritableNestedModelSerializer):
             'end',
             'admins',
             'is_active',
-            'get_active_phase_end',
+            # 'get_active_phase_end',
             'participant_count',
             'start',
             'html_text',

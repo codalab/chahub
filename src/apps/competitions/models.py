@@ -74,11 +74,11 @@ class Competition(models.Model):
         else:
             return False
 
-    def get_active_phase_end(self):
-        for phase in self.phases.all():
-            if phase.is_active:
-                if phase.end:
-                    return phase.end.date().isoformat()
+    # def get_active_phase_end(self):
+    #     for phase in self.phases.all():
+    #         if phase.is_active:
+    #             if phase.end:
+    #                 return phase.end.date().isoformat()
 
     def get_current_phase(self, *args, **kwargs):
         for phase in self.phases.all().order_by('start'):
