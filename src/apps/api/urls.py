@@ -20,7 +20,7 @@ urlpatterns = [
     # Docs are on /api/schema
     # url(f'^', include('drf_openapi.urls')),
 
-    url('query/', search.query),
+    url('query/', search.SearchView.as_view()),
     url('my_profile/', profiles.GetMyProfile.as_view()),
 
     url('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
