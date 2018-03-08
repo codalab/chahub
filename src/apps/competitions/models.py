@@ -22,7 +22,7 @@ class Competition(models.Model):
     logo = models.URLField(default="/static/img/img-wireframe.png")
     url = models.URLField()
 
-    admins = models.ManyToManyField('CompetitionParticipant', related_name='admins')
+    admins = models.ManyToManyField('CompetitionParticipant', related_name='admins', blank=True)
 
     participant_count = models.IntegerField(default=0)
     html_text = models.TextField(default="")

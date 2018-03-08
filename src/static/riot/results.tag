@@ -114,12 +114,12 @@
     <div class="ui stackable grid container">
         <div class="row centered">
             <div class="twelve wide column">
-                <div class="ui active centered inline loader"
-                     show="{loading}"
-                     style="margin: 20px auto;"></div>
+                <!-- for spacing/something later -->
             </div>
         </div>
-        <div id="results_container" class="row centered">
+        <div id="results_container" class="row centered {loading: loading}">
+            <div class="ui active loader" show="{loading}"></div>
+
             <div class="twelve wide column" style="padding: 0;" show="{ display_mode === 'list' }">
                 <div class="ui stacked">
                     <!--<div class="ui message" show="{!showing_default_results}">
@@ -384,6 +384,16 @@
 
             .input
                 width 100%
+
+        .loading
+            opacity .5
+
+        .loader
+            position absolute
+            top 25% !important
+            left 0
+            bottom 0
+            right 0
     </style>
 </search-results>
 
