@@ -38,7 +38,7 @@ class SearchView(APIView):
                 "multi_match",
                 query=query,
                 type="best_fields",
-                fuzziness=1,
+                # fuzziness=1,
                 fields=["title^3", "description", "html_text", "created_by"]
             )
             # s = s.highlight('title', fragment_size=50)
