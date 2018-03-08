@@ -1,6 +1,7 @@
 import datetime
 
 from django.conf import settings
+from django.db.models import Case, When
 from django.utils.timezone import now
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
@@ -69,11 +70,6 @@ class SearchView(APIView):
             date_args['format'] = 'date_optional_time'
             s = s.filter('range', created_when=date_args)
 
-        # Get results
-        results = s.execute()
-
-
-
         # Sort out results into each class type, then query to get each of those models
         # model_queries = {}
         # for r in results:
@@ -88,35 +84,52 @@ class SearchView(APIView):
         # for model_class, ids in model_queries.items():
         #     print(model_class.objects.filter(id__in=ids))
 
+        if date_flags and date_flags == "active":
+            s = s.filter('term', is_active=True)
+
+        if sorting == 'participant_count':
+            s = s.sort('-participant_count')
+        elif sorting == 'prize':
+            s = s.sort('-prize')
+        elif sorting == 'deadline':
+            s = s.sort('current_phase_deadline')
+
+        # Get results
+        results = s.execute()
+
         comp_ids = [r.meta["id"] for r in results if r.meta["id"].isdigit()]
         competitions = []
         if comp_ids:
-            competitions = Competition.objects.filter(id__in=comp_ids)
-            if sorting == 'participant_count':
-                competitions = competitions.order_by('-participant_count')
-            elif sorting == 'prize':
-                competitions = competitions.order_by('-prize')
-            elif sorting == 'deadline':
-                phases = Phase.objects.filter(
-                    competition_id__in=comp_ids,
-                    end__gte=now()
-                )
-                phases = phases.order_by('end').select_related('competition')
-                competitions = [phase.competition for phase in phases]
-            else:
-                # TODO: This is horribly inefficient.. need to make this sort like a real engineer would!
-                # default sorting for relevance -- we have to get database objects but they
-                # aren't in the order we received comp_ids, yet
-                new_sorted_competitions = []
-                for id in comp_ids:
-                    for competition in competitions:
-                        if id == str(competition.id):
-                            new_sorted_competitions.append(competition)
-                            break
-                competitions = new_sorted_competitions
+            # Magic
+            preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(comp_ids)])
+            competitions = Competition.objects.filter(pk__in=comp_ids).order_by(preserved)
 
-            if date_flags and date_flags == "active":
-                competitions = [comp for comp in competitions if comp.is_active]
+            # competitions = Competition.objects.filter(id__in=comp_ids)
+            # # if sorting == 'participant_count':
+            # #     competitions = competitions.order_by('-participant_count')
+            # # elif sorting == 'prize':
+            # #     competitions = competitions.order_by('-prize')
+            # # elif sorting == 'deadline':
+            # #     phases = Phase.objects.filter(
+            # #         competition_id__in=comp_ids,
+            # #         end__gte=now()
+            # #     )
+            # #     phases = phases.order_by('end').select_related('competition')
+            # #     competitions = [phase.competition for phase in phases]
+            # # else:
+            # # TODO: This is horribly inefficient.. need to make this sort like a real engineer would!
+            # # default sorting for relevance -- we have to get database objects but they
+            # # aren't in the order we received comp_ids, yet
+            # new_sorted_competitions = []
+            # for id in comp_ids:
+            #     for competition in competitions:
+            #         if id == str(competition.id):
+            #             new_sorted_competitions.append(competition)
+            #             break
+            # competitions = new_sorted_competitions
+            #
+            # # if date_flags and date_flags == "active":
+            # #     competitions = [comp for comp in competitions if comp.is_active]
 
         if not competitions:
             competitions = Competition.objects.all()[:SIZE]

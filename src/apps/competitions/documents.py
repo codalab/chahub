@@ -30,10 +30,15 @@ class CompetitionDocument(DocType):
     class Meta:
         model = Competition
 
-    created_by = fields.TextField(attr="created_by")
-    title = fields.TextField(attr="title")
-    description = fields.TextField(attr="description")
-    html_text = fields.TextField(attr="html_text")
+    created_by = fields.TextField(attr='created_by')
+    title = fields.TextField(attr='title')
+    description = fields.TextField(attr='description')
+    html_text = fields.TextField(attr='html_text')
+
+    participant_count = fields.IntegerField(attr='participant_count')
+    is_active = fields.BooleanField(attr='is_active')
+    prize = fields.IntegerField(attr='prize')
+    current_phase_deadline = fields.DateField(attr='current_phase_deadline')
 
     created_when = fields.DateField(attr="created_when")
 
