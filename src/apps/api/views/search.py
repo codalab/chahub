@@ -100,7 +100,7 @@ class SearchView(APIView):
         comp_ids = [r.meta["id"] for r in results if r.meta["id"].isdigit()]
         competitions = []
         if comp_ids:
-            # Magic
+            # The below preserves the ordering elastic search gives us
             preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(comp_ids)])
             competitions = Competition.objects.filter(pk__in=comp_ids).order_by(preserved)
 
