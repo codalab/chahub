@@ -39,10 +39,10 @@ class SearchView(APIView):
                 query=query,
                 type="best_fields",
                 fuzziness=1,
-                fields=["title^3", "description^2", "html_text", "created_by"]
+                fields=["title^3", "description", "html_text", "created_by"]
             )
-            s = s.highlight('title', fragment_size=50)
-            s = s.suggest('suggestions', query, term={'field': 'title'})
+            # s = s.highlight('title', fragment_size=50)
+            # s = s.suggest('suggestions', query, term={'field': 'title'})
 
         # Do filters
         if date_flags == "this_month":
