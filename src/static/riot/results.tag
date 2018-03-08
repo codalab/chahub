@@ -430,6 +430,7 @@
         </div>
         <div class="description">
             <p>{description}</p>
+            {get_current_phase}
         </div>
         <div class="extra" style="margin-top: 0;">
             <span style="font-size: .8em; color: rgba(0,0,255, 0.6);">{url}</span>

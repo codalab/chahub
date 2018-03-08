@@ -128,7 +128,7 @@ class Command(BaseCommand):
 
             # Init a timeframe of a month long for phases
             temp_phase_start_date = timezone.now()
-            temp_phase_end_date = timezone.now() + datetime.timedelta(days=30)
+            temp_phase_end_date = timezone.now() + datetime.timedelta(minutes=3)
 
             for i in tqdm(range(options['num-phases']), ncols=100):
                 # Init Phase specific vars
@@ -146,7 +146,7 @@ class Command(BaseCommand):
                     )
                     # Increment our dates for the next phase by 1 month.
                     temp_phase_start_date = temp_phase_end_date
-                    temp_phase_end_date += datetime.timedelta(random.randint(7, 45))
+                    temp_phase_end_date += datetime.timedelta(minutes=random.randint(1, 5))
 
                 except:
                     print(colored("Failed to create phase. An exception has occured.", 'red'))
@@ -163,7 +163,7 @@ class Command(BaseCommand):
                     competition=new_comp,
                     index=0,
                     start=timezone.now(),
-                    end=timezone.now() + datetime.timedelta(random.randint(7, 45)),
+                    end=timezone.now() + datetime.timedelta(minutes=random.randint(1, 5)),
                 )
 
                 print(

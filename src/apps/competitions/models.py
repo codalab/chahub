@@ -80,10 +80,11 @@ class Competition(models.Model):
     #             if phase.end:
     #                 return phase.end.date().isoformat()
 
+    @property
     def get_current_phase(self, *args, **kwargs):
         for phase in self.phases.all().order_by('start'):
             if phase.is_active or phase.never_ends:
-                return phase
+                return phase.index
 
 
 class Phase(models.Model):
