@@ -21,7 +21,7 @@ class SearchView(APIView):
                 query=query,
                 type="best_fields",
                 fuzziness='auto',
-                fields=["title^3", "description", "html_text", "created_by"]
+                fields=["title^5", "description", "html_text", "created_by"]
             )
             # s = s.highlight('title', fragment_size=50)
             # s = s.suggest('suggestions', query, term={'field': 'title'})
