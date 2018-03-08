@@ -104,6 +104,7 @@ class SearchView(APIView):
                 phases = phases.order_by('end').select_related('competition')
                 competitions = [phase.competition for phase in phases]
             else:
+                # TODO: This is horribly inefficient.. need to make this sort like a real engineer would!
                 # default sorting for relevance -- we have to get database objects but they
                 # aren't in the order we received comp_ids, yet
                 new_sorted_competitions = []
