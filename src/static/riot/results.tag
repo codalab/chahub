@@ -190,6 +190,7 @@
         self.display_mode = 'list'
         self.start_date = null
         self.end_date = null
+        self.old_filters = {}
 
         self.on('mount', function () {
             /*$(self.refs.search_wrapper).dropdown({
@@ -217,15 +218,6 @@
                     hideOnScroll: false
                 },
                 onChange: function(date, text, mode) {
-                    // figure out if end date or if start date
-                    // set start/end dates
-                    /*if (self.refs.start_date.value) {
-                        filters.start_date = self.refs.start_date.value
-                    }
-                    if (self.refs.end_date.value) {
-                        filters.end_date = self.refs.end_date.value
-                    }*/
-
                     if(this.dataset.calendarType === 'start') {
                         self.start_date = text
                     }
@@ -237,24 +229,17 @@
                     if (self.start_date && self.end_date){
                         var temp_string = self.start_date + ' through ' + self.end_date
                         $(self.refs.time_filter).dropdown('set text', temp_string)
-                        self.search()
                     }
                     else if (self.start_date){
                         var temp_string = 'Starting From: ' +  self.start_date
                         $(self.refs.time_filter).dropdown('set text', temp_string)
-                        self.search()
                     }
                     else if (self.end_date){
                         var temp_string = 'End By: ' + self.end_date
                         $(self.refs.time_filter).dropdown('set text', temp_string)
-                        self.search()
                     }
 
-                    //
-
-                    //this.dropdown('set text', 'the formatted text string')
-
-                    // self.update()
+                    self.search()
                 }
             })
             $(".ui.dropdown").dropdown({
@@ -333,8 +318,6 @@
         }
 
         self.search = function (query) {
-            //console.log("Search was called.")
-            //query = query || self.refs.search.value
             var filters = {q: query || self.refs.search.value}
 
             if (self.refs.start_date.value) {
@@ -346,21 +329,13 @@
 
             filters.date_flags = $(self.refs.time_filter).dropdown('get value')
             filters.sorting = $(self.refs.sort_filter).dropdown('get value')
-            console.log(filters)
 
-            /*// Grab our value above, check if it's empty, set to null. If not empty, send the value away.
-            if (time_range_flags !== "") {
-                if (time_range_flags === "any_time"){
-                    filters.date_flags = null
-                }
-                else
-                {
-                   filters.date_flags = time_range_flags
-                }
+            if(JSON.stringify(self.old_filters) === JSON.stringify(filters)) {
+                return
+            } else {
+                self.old_filters = filters
             }
-            else {
-                filters.date_flags = null
-            }*/
+            
             self.loading = true
             self.update()
 
