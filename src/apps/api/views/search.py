@@ -103,6 +103,16 @@ class SearchView(APIView):
                 )
                 phases = phases.order_by('end').select_related('competition')
                 competitions = [phase.competition for phase in phases]
+            else:
+                # default sorting for relevance -- we have to get database objects but they
+                # aren't in the order we received comp_ids, yet
+                new_sorted_competitions = []
+                for id in comp_ids:
+                    for competition in competitions:
+                        if id == str(competition.id):
+                            new_sorted_competitions.append(competition)
+                            break
+                competitions = new_sorted_competitions
 
             if date_flags and date_flags == "active":
                 competitions = [comp for comp in competitions if comp.is_active]
