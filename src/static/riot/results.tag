@@ -136,13 +136,13 @@
                     </div>
 
                     <div class="ui middle aligned compact divided link items" style="margin-top: 0;">
-                        <competition-tile each="{ results }" class="item" style="padding: .5em 0;"></competition-tile>
+                        <competition-tile each="{ results }" no-reorder class="item" style="padding: .5em 0;"></competition-tile>
                     </div>
 
-                    <div class="ui link cards">
+                    <!--<div class="ui link cards">
                         <competition-card each="{ results }" class="ui centered card"
                                           show="{ display_mode === 'card' }"></competition-card>
-                    </div>
+                    </div>-->
                 </div>
             </div>
             <div class="sixteen wide column" show="{ display_mode === 'card' }">
