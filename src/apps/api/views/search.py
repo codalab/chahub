@@ -1,8 +1,5 @@
-import datetime
-
 from django.conf import settings
 from django.db.models import Case, When
-from django.utils.timezone import now
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 
@@ -11,31 +8,15 @@ from rest_framework.views import APIView
 from rest_framework_extensions.cache.decorators import cache_response
 
 from api.caching import QueryParamsKeyConstructor
-from api.serializers.competitions import CompetitionSerializer, CompetitionSimpleSearchSerializer
-from competitions.models import Competition, CompetitionParticipant, Phase
+from api.serializers.competitions import CompetitionSimpleSearchSerializer
+from competitions.models import Competition
 
 
 class SearchView(APIView):
-    @cache_response(key_func=QueryParamsKeyConstructor(), timeout=60)
-    def get(self, request, version="v1"):
-        if 'q' not in request.GET:
-            return Response()
 
-        SIZE = 20
-
-        query = request.GET.get('q')
-        sorting = request.GET.get('sorting')
-        date_flags = request.GET.get('date_flags')
-        client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
-        s = Search(using=client).extra(size=SIZE)
-        data = {
-            "results": [],
-            "suggestions": [],
-            "showing_default_results": False,
-        }
-
+    def _search(self, search, query):
         if query and query != ' ':
-            s = s.query(
+            search = search.query(
                 "multi_match",
                 query=query,
                 type="best_fields",
@@ -44,57 +25,72 @@ class SearchView(APIView):
             )
             # s = s.highlight('title', fragment_size=50)
             # s = s.suggest('suggestions', query, term={'field': 'title'})
+        return search
 
-        # Do filters
+    def _filter(self, search, date_flags, start, end):
+        # This month/this year
         if date_flags == "this_month":
-            s = s.filter('range', created_when={
+            search = search.filter('range', created_when={
                 'gte': "now/M",
                 'lte': "now/M",
             })
         if date_flags == "this_year":
-            s = s.filter('range', created_when={
+            search = search.filter('range', created_when={
                 'gte': "now/y",
                 'lte': "now/y",
             })
 
-        # Filter on specified start/end range
-        start_date = request.GET.get('start_date')
-        end_date = request.GET.get('end_date')
-
+        # Start/end range
         date_args = {}
-        if start_date:
-            date_args['gte'] = start_date
-        if end_date:
-            date_args['lte'] = end_date
+        if start:
+            date_args['gte'] = start
+        if end:
+            date_args['lte'] = end
         if date_args:
             date_args['format'] = 'date_optional_time'
-            s = s.filter('range', created_when=date_args)
+            search = search.filter('range', created_when=date_args)
 
-        # Sort out results into each class type, then query to get each of those models
-        # model_queries = {}
-        # for r in results:
-        #     # import ipdb; ipdb.set_trace()
-        #     ## model_class = r._doc_type.model
-        #     # model_class = s._doc_type_map.get(r.meta.doc_type)
-        #     # print(s._doc_type_map)
-        #     # if model_class not in model_queries:
-        #     #     model_queries[model_class] = []
-        #     # model_queries[model_class].append(r.meta["id"])
-        #
-        # for model_class, ids in model_queries.items():
-        #     print(model_class.objects.filter(id__in=ids))
-
+        # Active competitions, ones with submissions in the last 30 days
         if date_flags and date_flags == "active":
-            s = s.filter('term', is_active=True)
+            search = search.filter('term', is_active=True)
+        return search
 
+    def _sort(self, search, sorting):
         if sorting == 'participant_count':
-            s = s.sort('-participant_count')
+            search = search.sort('-participant_count')
         elif sorting == 'prize':
-            s = s.sort('-prize')
+            search = search.sort('-prize')
         elif sorting == 'deadline':
-            s = s.sort('current_phase_deadline')
+            search = search.sort('current_phase_deadline')
+        return search
 
-        # Get results
+
+    @cache_response(key_func=QueryParamsKeyConstructor(), timeout=60)
+    def get(self, request, version="v1"):
+        if 'q' not in request.GET:
+            return Response()
+
+        SIZE = 20
+
+        # Get search data
+        query = request.GET.get('q')
+        sorting = request.GET.get('sorting')
+        date_flags = request.GET.get('date_flags')
+        start = request.GET.get('start_date')
+        end = request.GET.get('end_date')
+        client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
+        s = Search(using=client).extra(size=SIZE)
+        data = {
+            "results": [],
+            "showing_default_results": False,
+        }
+
+        # Do search/filtering/sorting
+        s = self._search(s, query)
+        s = self._filter(s, date_flags, start, end)
+        s = self._sort(s, sorting)
+
+        # Get results and prepare them
         results = s.execute()
 
         comp_ids = [r.meta["id"] for r in results if r.meta["id"].isdigit()]
@@ -104,41 +100,10 @@ class SearchView(APIView):
             preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(comp_ids)])
             competitions = Competition.objects.filter(pk__in=comp_ids).order_by(preserved)
 
-            # competitions = Competition.objects.filter(id__in=comp_ids)
-            # # if sorting == 'participant_count':
-            # #     competitions = competitions.order_by('-participant_count')
-            # # elif sorting == 'prize':
-            # #     competitions = competitions.order_by('-prize')
-            # # elif sorting == 'deadline':
-            # #     phases = Phase.objects.filter(
-            # #         competition_id__in=comp_ids,
-            # #         end__gte=now()
-            # #     )
-            # #     phases = phases.order_by('end').select_related('competition')
-            # #     competitions = [phase.competition for phase in phases]
-            # # else:
-            # # TODO: This is horribly inefficient.. need to make this sort like a real engineer would!
-            # # default sorting for relevance -- we have to get database objects but they
-            # # aren't in the order we received comp_ids, yet
-            # new_sorted_competitions = []
-            # for id in comp_ids:
-            #     for competition in competitions:
-            #         if id == str(competition.id):
-            #             new_sorted_competitions.append(competition)
-            #             break
-            # competitions = new_sorted_competitions
-            #
-            # # if date_flags and date_flags == "active":
-            # #     competitions = [comp for comp in competitions if comp.is_active]
-
         if not competitions:
             competitions = Competition.objects.all()[:SIZE]
             data['showing_default_results'] = True
 
         data["results"] = [CompetitionSimpleSearchSerializer(c).data for c in competitions]
-
-        if 'suggest' in results:
-            if len(results.suggest['suggestions']) > 0:
-                data["suggestions"] = [s.to_dict() for s in results.suggest['suggestions'][0].options]
 
         return Response(data)
