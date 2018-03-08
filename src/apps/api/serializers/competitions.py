@@ -52,6 +52,7 @@ class CompetitionSimpleSearchSerializer(serializers.ModelSerializer):
             'start',
             'current_phase_deadline',
             'prize',
+            'get_current_phase',
         )
 
 
