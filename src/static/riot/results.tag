@@ -432,6 +432,9 @@
             <div class="ui right floated blue mini label tooltip" data-content="Participant count">
                 <i class="user icon"></i> {participant_count}
             </div>
+            <div class="ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
+                <i class="yellow trophy icon"></i> {prize}
+            </div>
             <div class="ui right floated red mini label tooltip"
                  style="background-color: #db28289e;"
                  data-content="Deadline of the current phase"
