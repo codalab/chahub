@@ -20,7 +20,7 @@ class SearchView(APIView):
         if 'q' not in request.GET:
             return Response()
 
-        SIZE = 100
+        SIZE = 20
 
         query = request.GET.get('q')
         sorting = request.GET.get('sorting')
