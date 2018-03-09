@@ -53,22 +53,29 @@ class SearchView(APIView):
         return search
 
     def _sort(self, search, sorting, query):
+        sort_params = []
+        if query:
+            sort_params.append('_score')
         if sorting == 'participant_count':
-            if query:
-                search = search.sort('_score', '-participant_count')
-            else:
-                search = search.sort('-participant_count')
+            # if query:
+            #     search = search.sort('_score', '-participant_count')
+            # else:
+            #     search = search.sort('-participant_count')
+            sort_params.append('-participant_count')
         elif sorting == 'prize':
-            if query:
-                search = search.sort('_score', '-prize')
-            else:
-                search = search.sort('-prize')
+            # if query:
+            #     search = search.sort('_score', '-prize')
+            # else:
+            #     search = search.sort('-prize')
+            sort_params.append('-prize')
         elif sorting == 'deadline':
-            if query:
-                search = search.sort('_score', 'current_phase_deadline')
-            else:
-                search = search.sort('current_phase_deadline')
-        return search
+            # if query:
+            #     search = search.sort('_score', 'current_phase_deadline')
+            # else:
+            #     search = search.sort('current_phase_deadline')
+            sort_params.append('current_phase_deadline')
+        # search = search.sort(*sort_params)
+        return search.sort(*sort_params)
 
 
     @cache_response(key_func=QueryParamsKeyConstructor(), timeout=60)
