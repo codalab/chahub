@@ -94,6 +94,13 @@ class SearchView(APIView):
         # Get results and prepare them
         results = s.execute()
 
+        if not results:
+            data["showing_default_results"] = True
+            s = Search(using=client)
+            s = s.extra(size=SIZE)
+            s = s.source(excludes=["html_text"])
+            results = s.execute()
+
         data["results"] = [hit.to_dict() for hit in results]
 
         # print(results)
