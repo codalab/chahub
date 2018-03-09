@@ -52,13 +52,22 @@ class SearchView(APIView):
             search = search.filter('term', is_active=True)
         return search
 
-    def _sort(self, search, sorting):
+    def _sort(self, search, sorting, query):
         if sorting == 'participant_count':
-            search = search.sort('_score', '-participant_count')
+            if query:
+                search = search.sort('_score', '-participant_count')
+            else:
+                search = search.sort('-participant_count')
         elif sorting == 'prize':
-            search = search.sort('_score', '-prize')
+            if query:
+                search = search.sort('_score', '-prize')
+            else:
+                search = search.sort('-prize')
         elif sorting == 'deadline':
-            search = search.sort('_score', 'current_phase_deadline')
+            if query:
+                search = search.sort('_score', 'current_phase_deadline')
+            else:
+                search = search.sort('current_phase_deadline')
         return search
 
 
@@ -89,7 +98,7 @@ class SearchView(APIView):
         # Do search/filtering/sorting
         s = self._search(s, query)
         s = self._filter(s, date_flags, start, end)
-        s = self._sort(s, sorting)
+        s = self._sort(s, sorting, query)
 
         # Get results and prepare them
         results = s.execute()
