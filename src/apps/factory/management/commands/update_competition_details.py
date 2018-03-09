@@ -27,9 +27,10 @@ class Command(BaseCommand):
 
         for comp in tqdm(Competition.objects.all()):
             try:
-                if (comp.current_phase_deadline != comp.get_current_phase_deadline()) or (comp.is_active != comp.get_is_active()):
-                    comp.current_phase_deadline = comp.get_current_phase_deadline()
-                    comp.is_active = comp.get_is_active()
+                old_deadline, old_is_active = comp.current_phase_deadline, comp.is_active
+                comp.current_phase_deadline = comp.get_current_phase_deadline()
+                comp.is_active = comp.get_is_active()
+                if comp.is_active != old_is_active or comp.current_phase_deadline != old_deadline:
                     comp.save()
                     print("Updating competition: {}".format(comp.pk))
             except:
