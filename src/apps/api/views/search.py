@@ -80,7 +80,7 @@ class SearchView(APIView):
         client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
         s = Search(using=client)
         s = s.extra(size=SIZE)
-        s = s.source(exclude=["html_text"])
+        s = s.source(excludes=["html_text"])
         data = {
             "results": [],
             "showing_default_results": False,

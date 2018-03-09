@@ -490,7 +490,6 @@
 
         self.on("mount", function () {
             $(".tooltip", self.root).popup()
-
             /*if (self.description) {
                 if (self.description.length > 75){
                     self.description = self.description.substr(0, 75) + "..."
