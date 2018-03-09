@@ -54,11 +54,11 @@ class SearchView(APIView):
 
     def _sort(self, search, sorting):
         if sorting == 'participant_count':
-            search = search.sort('-participant_count', '_score')
+            search = search.sort('_score', '-participant_count')
         elif sorting == 'prize':
-            search = search.sort('-prize', '_score')
+            search = search.sort('_score', '-prize')
         elif sorting == 'deadline':
-            search = search.sort('current_phase_deadline', '_score')
+            search = search.sort('_score', 'current_phase_deadline')
         return search
 
 
