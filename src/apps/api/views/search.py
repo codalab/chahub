@@ -53,8 +53,8 @@ class SearchView(APIView):
         return search
 
     def _sort(self, search, sorting, query):
-        # Make a positional list with `_score` as the first entry if we have a valid query.
-        # Then tack on whatever field we sort by
+        # Make a positional list with `_score`(relevancy ranking of keyword search) as the first entry if we
+        # have a valid query. Then tack on whatever field we sort by
         sort_params = ['_score'] if query else []
         if sorting == 'participant_count':
             sort_params.append('-participant_count')
