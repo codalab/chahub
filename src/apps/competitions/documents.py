@@ -30,6 +30,7 @@ class CompetitionDocument(DocType):
     class Meta:
         model = Competition
 
+    remote_id = fields.IntegerField(attr='remote_id')
     created_by = fields.TextField(attr='created_by')
     title = fields.TextField(attr='title')
     description = fields.TextField(attr='description')
@@ -39,8 +40,11 @@ class CompetitionDocument(DocType):
     is_active = fields.BooleanField(attr='is_active')
     prize = fields.IntegerField(attr='prize')
     current_phase_deadline = fields.DateField(attr='current_phase_deadline')
+    url = fields.TextField(attr='url')
+    logo = fields.TextField(attr='logo')
 
-    created_when = fields.DateField(attr="created_when")
+    start = fields.DateField(attr="start")
+    end = fields.DateField(attr="end")
 
     # TODO: add "active" boolean field so we can add this to queries and not have a special case
 

@@ -11,6 +11,7 @@ class Competition(models.Model):
     # created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     created_by = models.TextField()
     created_when = models.DateTimeField(auto_now_add=True)
+    start = models.DateTimeField(null=True, blank=True)
     title = models.TextField()
     description = models.TextField(null=True, blank=True)
     end = models.DateTimeField(null=True, blank=True)
@@ -48,11 +49,6 @@ class Competition(models.Model):
     # def deadline(self):
     #     if self.end:
     #         return self.end.date()
-
-    @property
-    def start(self):
-        # Not really the start date, just when the competition was created...
-        return self.created_when.isoformat()
 
     @property
     def current_phase_deadline(self):
