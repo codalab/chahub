@@ -28,6 +28,9 @@ class Competition(models.Model):
     participant_count = models.IntegerField(default=0)
     html_text = models.TextField(default="")
 
+    current_phase_deadline = models.DateTimeField(blank=True, null=True)
+    is_active = models.BooleanField(default=False)
+
     class Meta:
         unique_together = ('remote_id', 'producer')
 
@@ -36,6 +39,8 @@ class Competition(models.Model):
 
     def save(self, *args, **kwargs):
         # Send off our data
+        self.current_phase_deadline = self.get_current_phase_deadline()
+        self.is_active = self.get_is_active()
         from api.serializers.competitions import CompetitionSerializer
         Group("updates").send({
             "text": json.dumps({
@@ -50,17 +55,16 @@ class Competition(models.Model):
     #     if self.end:
     #         return self.end.date()
 
-    @property
-    def current_phase_deadline(self):
+    def get_current_phase_deadline(self):
         # TODO: We may need to have a celery task that updates ElasticSearch deadlines. We can't do sorting by deadline when we get a bunch of competitions.
         # Could save this as a property on the model
         for phase in self.phases.all():
             if phase.is_active and not phase.never_ends:
                 if phase.start and phase.end:
                     return phase.end.isoformat()
+        return None
 
-    @property
-    def is_active(self):
+    def get_is_active(self):
         if self.end is None:
             return True
         elif type(self.end) is datetime.datetime.date:
