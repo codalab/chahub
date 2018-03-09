@@ -390,7 +390,7 @@
 
         .loader
             position absolute
-            top 250px !important
+            top 50px !important
             left 0
             bottom 0
             right 0
