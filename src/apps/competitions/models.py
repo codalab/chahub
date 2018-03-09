@@ -39,8 +39,6 @@ class Competition(models.Model):
 
     def save(self, *args, **kwargs):
         # Send off our data
-        self.current_phase_deadline = self.get_current_phase_deadline()
-        self.is_active = self.get_is_active()
         from api.serializers.competitions import CompetitionSerializer
         Group("updates").send({
             "text": json.dumps({
