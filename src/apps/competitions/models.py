@@ -61,7 +61,7 @@ class Competition(models.Model):
         for phase in self.phases.all():
             if phase.is_active and not phase.never_ends:
                 if phase.start and phase.end:
-                    if phase.end.date().year >= datetime.date.today().year
+                    if phase.end.year >= datetime.date.today().year:
                         return phase.end.isoformat()
         return None
 
