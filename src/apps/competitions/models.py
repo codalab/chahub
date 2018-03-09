@@ -115,7 +115,10 @@ class Phase(models.Model):
 
 
 class Submission(models.Model):
+    remote_id = models.PositiveIntegerField()
     phase = models.ForeignKey(Phase, on_delete=models.CASCADE, related_name='submissions')
+    submitted_at = models.DateTimeField()
+    participant = models.TextField()
 
 
 class CompetitionParticipant(models.Model):

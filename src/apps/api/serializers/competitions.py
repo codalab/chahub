@@ -29,9 +29,34 @@ class PhaseSerializer(WritableNestedModelSerializer):
 
 
 class SubmissionSerializer(serializers.ModelSerializer):
+    competition = serializers.IntegerField(min_value=1, write_only=True, required=True)
+    phase_index = serializers.IntegerField(min_value=1, write_only=True, required=True)
+
     class Meta:
         model = Submission
-        fields = ('phase',)
+        fields = (
+            'remote_id',
+            'competition',  # on write only
+            'phase_index',  # on write this is the phase index within the competition, NOT a PK
+            'submitted_at',
+            'participant',
+        )
+
+    def validate(self, attrs):
+        competition = Competition.objects.get(
+            remote_id=attrs.pop('competition'),
+            producer=self.context.get('producer')
+        )
+        attrs['phase'] = competition.phases.get(index=attrs.pop('phase_index'))
+        return attrs
+
+    def create(self, validated_data):
+        instance, _ = Submission.objects.update_or_create(
+            remote_id=validated_data.pop('remote_id'),
+            phase=validated_data.pop('phase'),
+            defaults=validated_data
+        )
+        return instance
 
 
 class CompetitionSerializer(WritableNestedModelSerializer):

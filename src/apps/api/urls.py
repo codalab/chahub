@@ -8,8 +8,9 @@ from .views import competitions, data, profiles, search
 
 
 router = SimpleRouter()
-router.register('competitions', competitions.CompetitionViewSet)
 router.register('producers', ProducerViewSet)
+router.register('competitions', competitions.CompetitionViewSet)
+router.register('submissions', competitions.SubmissionViewSet)
 
 API_PREFIX = "v1"
 
