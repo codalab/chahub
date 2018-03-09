@@ -2,6 +2,8 @@ from channels import Group
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from api.authenticators import ProducerAuthentication
@@ -21,24 +23,15 @@ class CompetitionViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        # TODO: Handle this in serializer
         context['producer'] = self.request.user
-
         return context
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response({}, status=status.HTTP_201_CREATED, headers=headers)
 
 
 #
