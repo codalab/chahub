@@ -74,6 +74,25 @@
                                     </div>
                                 </div>
 
+                                <div class="field">
+                                    <div ref="producer_filter" class="ui floating labeled icon dropdown button">
+                                        <i class="filter icon"></i>
+                                        <span class="text">Any Producer</span>
+                                        <div class="menu">
+                                            <div class="header">
+                                                Producer
+                                            </div>
+                                            <div class="divider"></div>
+                                            <div class="active item" data-value="any_producer">
+                                                Any Producer
+                                            </div>
+                                            <virtual each="{PRODUCERS}">
+                                                <div class="item" data-value="{id}">{url}</div>
+                                            </virtual>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!--<div class="field">
                                     <div class="ui icon buttons">
                                         <button class="ui button { positive: display_mode === 'list' }"
@@ -306,10 +325,12 @@
             self.end_date = ''
             self.refs.start_date.value = ''
             self.refs.end_date.value = ''
-            $(self.refs.time_filter).dropdown('set text', 'Any time')
+            //$(self.refs.time_filter).dropdown('set text', 'Any time')
             $(self.refs.time_filter).dropdown('restore defaults');
-            $(self.refs.sort_filter).dropdown('set text', 'Sort by relevance')
+            //$(self.refs.sort_filter).dropdown('set text', 'Sort by relevance')
             $(self.refs.sort_filter).dropdown('restore defaults');
+            $(self.refs.producer_filter).dropdown('restore defaults');
+            //$(self.refs.producer_filter).dropdown('set text', 'Any Producer')
 
 
             // TODO: CLEAR DATES AND SUCH ???
@@ -329,6 +350,7 @@
 
             filters.date_flags = $(self.refs.time_filter).dropdown('get value')
             filters.sorting = $(self.refs.sort_filter).dropdown('get value')
+            filters.producer = $(self.refs.producer_filter).dropdown('get value')
 
             if(JSON.stringify(self.old_filters) === JSON.stringify(filters)) {
                 return

@@ -30,21 +30,27 @@ class CompetitionDocument(DocType):
     class Meta:
         model = Competition
 
-    remote_id = fields.IntegerField(attr='remote_id')
-    created_by = fields.TextField(attr='created_by')
-    title = fields.TextField(attr='title')
-    description = fields.TextField(attr='description')
-    html_text = fields.TextField(attr='html_text')
+    remote_id = fields.IntegerField()
+    created_by = fields.TextField()
+    title = fields.TextField()
+    description = fields.TextField()
+    html_text = fields.TextField()
 
-    participant_count = fields.IntegerField(attr='participant_count')
-    is_active = fields.BooleanField(attr='is_active')
-    prize = fields.IntegerField(attr='prize')
-    current_phase_deadline = fields.DateField(attr='current_phase_deadline')
-    url = fields.TextField(attr='url')
-    logo = fields.TextField(attr='logo')
+    participant_count = fields.IntegerField()
+    is_active = fields.BooleanField()
+    prize = fields.IntegerField()
+    current_phase_deadline = fields.DateField()
+    url = fields.TextField()
+    logo = fields.TextField()
 
-    start = fields.DateField(attr="start")
-    end = fields.DateField(attr="end")
+    start = fields.DateField()
+    end = fields.DateField()
+
+    producer = fields.ObjectField(properties={
+        'id': fields.IntegerField(),
+        'url': fields.TextField(),
+        'name': fields.TextField()
+    })
 
     # TODO: add "active" boolean field so we can add this to queries and not have a special case
 

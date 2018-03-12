@@ -24,7 +24,7 @@ class SearchView(APIView):
             # s = s.suggest('suggestions', query, term={'field': 'title'})
         return search
 
-    def _filter(self, search, date_flags, start, end):
+    def _filter(self, search, date_flags, start, end, producer):
         # This month/this year
         if date_flags == "this_month":
             search = search.filter('range', start={
@@ -50,6 +50,8 @@ class SearchView(APIView):
         # Active competitions, ones with submissions in the last 30 days
         if date_flags and date_flags == "active":
             search = search.filter('term', is_active=True)
+        if producer and producer != "any_producer":
+            search = search.filter('term', producer__id=producer)
         return search
 
     def _sort(self, search, sorting, query):
@@ -77,6 +79,7 @@ class SearchView(APIView):
         date_flags = request.GET.get('date_flags')
         start = request.GET.get('start_date')
         end = request.GET.get('end_date')
+        producer = request.GET.get('producer')
 
         # Setup ES connection, excluding HTML text from our results
         client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
@@ -90,7 +93,7 @@ class SearchView(APIView):
 
         # Do search/filtering/sorting
         s = self._search(s, query)
-        s = self._filter(s, date_flags, start, end)
+        s = self._filter(s, date_flags, start, end, producer)
         s = self._sort(s, sorting, query)
 
         # Get results and prepare them
