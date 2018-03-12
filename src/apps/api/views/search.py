@@ -71,7 +71,7 @@ class SearchView(APIView):
         if 'q' not in request.GET:
             return Response()
 
-        SIZE = 20
+        SIZE = 35
 
         # Get search data
         query = request.GET.get('q')
