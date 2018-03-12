@@ -325,12 +325,9 @@
             self.end_date = ''
             self.refs.start_date.value = ''
             self.refs.end_date.value = ''
-            //$(self.refs.time_filter).dropdown('set text', 'Any time')
             $(self.refs.time_filter).dropdown('restore defaults');
-            //$(self.refs.sort_filter).dropdown('set text', 'Sort by relevance')
             $(self.refs.sort_filter).dropdown('restore defaults');
             $(self.refs.producer_filter).dropdown('restore defaults');
-            //$(self.refs.producer_filter).dropdown('set text', 'Any Producer')
 
 
             // TODO: CLEAR DATES AND SUCH ???
