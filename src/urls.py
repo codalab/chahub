@@ -8,6 +8,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 
+from competitions.models import Competition
 from producers.models import Producer
 
 urlpatterns = [
@@ -42,11 +43,12 @@ class IndexView(TemplateView):
         context = {}
         context['producer_data'] = []
         for producer in Producer.objects.all():
-            context['producer_data'].append({
-                'id': producer.id,
-                'name': producer.name,
-                'url': producer.url
-            })
+            if len(Competition.objects.filter(producer=producer)) > 0:
+                context['producer_data'].append({
+                    'id': producer.id,
+                    'name': producer.name,
+                    'url': producer.url
+                })
 
         context['producer_data'] = json.dumps(context['producer_data'])
         return context
