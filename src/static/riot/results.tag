@@ -1,6 +1,12 @@
 <search-results>
     <div id="particle_header" class="ui top">
         <div class="ui grid container menu-holder">
+            <div class="item column four wide">
+                <!--<div class="ui input">-->
+                    <!--<div class="ui inverted blue button">Create Competition</div>-->
+                <img style="width: 300px; height: 100px;" src="static/img/temp_chahub_logo.png">
+                <!--</div>-->
+            </div>
             <div class="centered column twelve wide">
                 <div class="ui grid">
                     <div class="row search-wrapper">
@@ -111,11 +117,6 @@
                 </div>
 
             </div>
-            <!--<div class="item column three wide">
-                <div class="ui input">
-                    <!--<div class="ui inverted blue button">Create Competition</div>
-                </div>
-            </div>-->
         </div>
         <!--<div class="item">
             <div class="ui icon input">
