@@ -1,12 +1,7 @@
 <search-results>
     <div id="particle_header" class="ui top">
+        <img id="brand_logo" src="static/img/temp_chahub_logo.png">
         <div class="ui grid container menu-holder">
-            <div class="four wide column">
-                <!--<div class="ui input">-->
-                    <!--<div class="ui inverted blue button">Create Competition</div>-->
-                <img style="width: 300px; height: 100px;" src="static/img/temp_chahub_logo.png">
-                <!--</div>-->
-            </div>
             <div class="centered column twelve wide">
                 <div class="ui grid">
                     <div class="row search-wrapper">
@@ -392,6 +387,13 @@
                 bottom 0
                 z-index -1
                 background rgba(22, 12, 160, 0.9)
+
+        #brand_logo
+            height 48px
+            position absolute
+            top 10px
+            cursor pointer
+            filter brightness(0) invert(1)
 
         #results_container
             min-height 375px
