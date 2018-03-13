@@ -87,14 +87,14 @@
                                 <div class="field">
                                     <div ref="producer_filter" class="ui floating labeled icon dropdown button">
                                         <i class="globe icon"></i>
-                                        <span class="text">Any Producer</span>
+                                        <span class="text">Any producer</span>
                                         <div class="menu">
                                             <div class="header">
                                                 Producer
                                             </div>
                                             <div class="divider"></div>
                                             <div class="active item" data-value="any_producer">
-                                                Any Producer
+                                                Any producer
                                             </div>
                                             <virtual each="{PRODUCERS}">
                                                 <div class="item" data-value="{id}">{url}</div>
