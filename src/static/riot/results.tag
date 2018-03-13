@@ -1,7 +1,7 @@
 <search-results>
     <div id="particle_header" class="ui top">
         <div class="ui grid container menu-holder">
-            <div class="item column four wide">
+            <div class="four wide column">
                 <!--<div class="ui input">-->
                     <!--<div class="ui inverted blue button">Create Competition</div>-->
                 <img style="width: 300px; height: 100px;" src="static/img/temp_chahub_logo.png">
@@ -64,7 +64,11 @@
                                         <i class="filter icon"></i>
                                         <span class="text">Sort by relevance</span>
                                         <div class="menu">
-                                            <div class="item">
+                                            <div class="header">
+                                                Sorting
+                                            </div>
+                                            <div class="divider"></div>
+                                            <div class="active item">
                                                 Sort by relevance
                                             </div>
                                             <div data-value="deadline" class="item">
@@ -82,7 +86,7 @@
 
                                 <div class="field">
                                     <div ref="producer_filter" class="ui floating labeled icon dropdown button">
-                                        <i class="filter icon"></i>
+                                        <i class="globe icon"></i>
                                         <span class="text">Any Producer</span>
                                         <div class="menu">
                                             <div class="header">
@@ -115,7 +119,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
         <!--<div class="item">
