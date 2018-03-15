@@ -48,11 +48,6 @@ class Competition(models.Model):
         })
         return super().save(*args, **kwargs)
 
-    # @property
-    # def deadline(self):
-    #     if self.end:
-    #         return self.end.date()
-
     def get_current_phase_deadline(self):
         # TODO: We may need to have a celery task that updates ElasticSearch deadlines. We can't do sorting by deadline when we get a bunch of competitions.
         # Could save this as a property on the model
@@ -72,12 +67,6 @@ class Competition(models.Model):
             return True if self.end is None else self.end > timezone.now()
         else:
             return False
-
-    # def get_active_phase_end(self):
-    #     for phase in self.phases.all():
-    #         if phase.is_active:
-    #             if phase.end:
-    #                 return phase.end.date().isoformat()
 
     def get_current_phase(self, *args, **kwargs):
         for phase in self.phases.all().order_by('start'):

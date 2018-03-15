@@ -107,20 +107,4 @@ class SearchView(APIView):
             results = s.execute()
 
         data["results"] = [hit.to_dict() for hit in results]
-
-        # print(results)
-        #
-        # comp_ids = [r.meta["id"] for r in results if r.meta["id"].isdigit()]
-        # competitions = []
-        # if comp_ids:
-        #     # The below preserves the ordering elastic search gives us
-        #     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(comp_ids)])
-        #     competitions = Competition.objects.filter(pk__in=comp_ids).order_by(preserved)
-        #
-        # if not competitions:
-        #     competitions = Competition.objects.all()[:SIZE]
-        #     data['showing_default_results'] = True
-        #
-        # data["results"] = [CompetitionSimpleSearchSerializer(c).data for c in competitions]
-
         return Response(data)
