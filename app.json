@@ -20,6 +20,7 @@
   "addons": [
     "heroku-postgresql",
     "searchbox:starter",
+    "scheduler:standard",
     {
       "plan": "heroku-redis:hobby-dev",
       "options": {
