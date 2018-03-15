@@ -31,6 +31,7 @@ THIRD_PARTY_APPS = (
     # 'rest_framework_swagger',
     # 'drf_openapi',
     'whitenoise',
+    'channels',
     'oauth2_provider',
     'corsheaders',
     'django_elasticsearch_dsl',
@@ -42,6 +43,9 @@ OUR_APPS = (
     'datasets',
     'pages',
     'profiles',
+    'sockets',
+    'producers',
+    'factory',
 )
 INSTALLED_APPS = THIRD_PARTY_APPS + OUR_APPS
 
@@ -157,6 +161,17 @@ SOCIAL_AUTH_USER_MODEL = 'profiles.User'
 # =============================================================================
 DEBUG = os.environ.get('DEBUG', True)
 
+if DEBUG:
+    INSTALLED_APPS += ('debug_toolbar',)
+    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+    # SHOW_TOOLBAR_CALLBACK = f'{__name__}.show_toolbar_handler'
+    INTERNAL_IPS = ('127.0.0.1',)
+
+
+# TODO: Fix this, not working... does not fire for some reason
+# def show_toolbar_handler(request):
+#     return True
+
 
 # =============================================================================
 # Database
@@ -192,13 +207,16 @@ else:
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        # 'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         # 'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
     'DEFAULT_VERSION': 'v1',
+}
+REST_FRAMEWORK_EXTENSIONS = {
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60 * 15
 }
 
 FILE_UPLOAD_HANDLERS = ["django.core.files.uploadhandler.TemporaryFileUploadHandler", ]
@@ -223,6 +241,26 @@ OAUTH2_PROVIDER = {
 ELASTICSEARCH_DSL = {
     'default': {
         'hosts': [os.environ.get('SEARCHBOX_SSL_URL', 'localhost:9200')]
+    },
+}
+
+
+# =============================================================================
+# Sockets / Channels
+# =============================================================================
+CHANNEL_BACKEND = os.environ.get('CHANNEL_BACKEND', "asgiref.inmemory.ChannelLayer")
+CHANNEL_CONFIG = {}
+
+if CHANNEL_BACKEND != "asgiref.inmemory.ChannelLayer":
+    # If we're not using debug backend, setup extra things for Redis
+    CHANNEL_CONFIG["hosts"] = (os.environ.get('REDIS_URL', 'redis://localhost:6379'),)
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": CHANNEL_BACKEND,
+        "CONFIG": CHANNEL_CONFIG,
+        "ROUTING": "sockets.routing.channel_routing",
     },
 }
 

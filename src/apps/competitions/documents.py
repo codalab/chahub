@@ -1,4 +1,4 @@
-from django_elasticsearch_dsl import DocType, Index, StringField
+from django_elasticsearch_dsl import DocType, Index, StringField, fields
 from .models import Competition
 
 competitions = Index('competitions')
@@ -8,18 +8,54 @@ competitions.settings(
 )
 
 
+# class ModelDocMixin():
+#     """
+#     This mixin provides some utility function for documents,
+#     simplifying access to related model information.
+#     """
+#     @property
+#     def pk(self):
+#         return self.meta["id"]
+#
+#     def get_model_class(self):
+#         # return self.get_queryset().model
+#         return self._doc_type.model
+#
+#     def get_model_instance(self):
+#         return self.get_queryset().get(pk=self.pk)
+
+
 @competitions.doc_type
 class CompetitionDocument(DocType):
     class Meta:
         model = Competition
 
-        # The fields of the model you want to be indexed in Elasticsearch
-        fields = [
-            'title',
-            'created_when',
-        ]
+    remote_id = fields.IntegerField()
+    created_by = fields.TextField()
+    title = fields.TextField()
+    description = fields.TextField()
+    html_text = fields.TextField()
 
-    created_by = StringField()
+    participant_count = fields.IntegerField()
+    is_active = fields.BooleanField()
+    prize = fields.IntegerField()
+    current_phase_deadline = fields.DateField()
+    url = fields.TextField()
+    logo = fields.TextField()
+
+    start = fields.DateField()
+    end = fields.DateField()
+
+    producer = fields.ObjectField(properties={
+        'id': fields.IntegerField(),
+        'url': fields.TextField(),
+        'name': fields.TextField()
+    })
+
+    # TODO: add "active" boolean field so we can add this to queries and not have a special case
 
     def prepare_created_by(self, instance):
-        return instance.created_by.username if instance.created_by else ""
+        return instance.created_by
+
+        # We are using a regular string for created_by right now, used to be a user instance
+        # return instance.created_by.username if instance.created_by else ""

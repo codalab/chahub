@@ -3,6 +3,9 @@
 
  header/background
  */
+body
+    //padding-top 30px
+
 #bg
     z-index -1
     background rgba(22, 12, 160, 0.9)
@@ -11,6 +14,9 @@
     bottom 0
     left 0
     right 0
+
+.menu-holder
+    margin 0 !important
 
 #header
     background transparent
@@ -89,6 +95,18 @@
 .secondary.pointing.menu .toc.item
     display none
 
+
+
+/* --------------------------------------------------------------------------------------
+ toastr
+ */
+.toast
+  opacity 1 !important
+
+#toast-container > div
+  opacity 1 !important
+
+
 /* --------------------------------------------------------------------------------------
  mobile
  */
@@ -129,3 +147,13 @@
 .ui.floating.dropdown > .menu {
     margin-top: 0.1em !important;
 }
+
+/* --------------------------------------------------------------------------------------
+ Header
+ */
+h1.header.gigantic
+    font-size 128px
+
+    .sub.header
+        margin-top -20px
+        font-size 1.2rem

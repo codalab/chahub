@@ -4,13 +4,29 @@
     "postdeploy": "bin/init_staging"
   },
   "env": {
-    "USE_SSL": "True"
+    "USE_SSL": "True",
+    "CHANNEL_BACKEND": "asgi_redis.RedisChannelLayer"
   },
   "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
   },
   "addons": [
     "heroku-postgresql",
-    "searchbox:starter"
+    "searchbox:starter",
+    "scheduler:standard",
+    {
+      "plan": "heroku-redis:hobby-dev",
+      "options": {
+        "maxmemory_policy": "volatile-lru"
+      }
+    }
   ],
   "buildpacks": [
     {
