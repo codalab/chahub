@@ -20,7 +20,13 @@
   "addons": [
     "heroku-postgresql",
     "searchbox:starter",
-    "heroku-redis"
+    "scheduler:standard",
+    {
+      "plan": "heroku-redis:hobby-dev",
+      "options": {
+        "maxmemory_policy": "volatile-lru"
+      }
+    }
   ],
   "buildpacks": [
     {

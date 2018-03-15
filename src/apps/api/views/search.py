@@ -1,72 +1,110 @@
-import datetime
-
 from django.conf import settings
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_extensions.cache.decorators import cache_response
 
-from api.serializers.competitions import CompetitionSerializer
-from competitions.models import Competition
+from api.caching import QueryParamsKeyConstructor
 
 
-@api_view(['GET'])
-def query(request, version="v1"):
-    if 'q' not in request.GET:
-        return Response()
+class SearchView(APIView):
 
-    query = request.GET.get('q')
-    client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
-    s = Search(using=client)
+    def _search(self, search, query):
+        if query and query != ' ':
+            search = search.query(
+                "multi_match",
+                query=query,
+                type="best_fields",
+                fuzziness='auto',
+                fields=["title^5", "description^3", "html_text^2", "created_by"]
+            )
+            # s = s.highlight('title', fragment_size=50)
+            # s = s.suggest('suggestions', query, term={'field': 'title'})
+        return search
 
-    if query:
-        # Do keyword search
-        s = s.query("match_phrase_prefix", title=query)
-        s = s.highlight('title', fragment_size=50)
-        s = s.suggest('suggestions', query, term={'field': 'title'})
-        # s = s.slop(1)
+    def _filter(self, search, date_flags, start, end, producer):
+        # This month/this year
+        if date_flags == "this_month":
+            search = search.filter('range', start={
+                'gte': "now/M",
+                'lte': "now/M",
+            })
+        if date_flags == "this_year":
+            search = search.filter('range', start={
+                'gte': "now/y",
+                'lte': "now/y",
+            })
 
-    # Do filters
-    # ...
+        # Start/end range
+        date_args = {}
+        if start:
+            date_args['gte'] = start
+        if end:
+            date_args['lte'] = end
+        if date_args:
+            date_args['format'] = 'date_optional_time'
+            search = search.filter('range', start=date_args)
 
-    # Filter on dates...
-    # s = s.filter('range', created_when={
-    #     'gt': datetime.date(1988, 2, 29),
-    #     'lte': 'now'
-    # })
+        # Active competitions, ones with submissions in the last 30 days
+        if date_flags and date_flags == "active":
+            search = search.filter('term', is_active=True)
+        if producer and producer != "any_producer":
+            search = search.filter('term', producer__id=producer)
+        return search
 
-    # Get results
-    results = s.execute()
+    def _sort(self, search, sorting, query):
+        # Make a positional list with `_score`(relevancy ranking of keyword search) as the first entry if we
+        # have a valid query. Then tack on whatever field we sort by
+        sort_params = ['_score'] if query else []
+        if sorting == 'participant_count':
+            sort_params.append('-participant_count')
+        elif sorting == 'prize':
+            sort_params.append('-prize')
+        elif sorting == 'deadline':
+            sort_params.append('current_phase_deadline')
+        return search.sort(*sort_params)
 
-    data = {
-        "results": [],
-        "suggestions": []
-    }
+    @cache_response(key_func=QueryParamsKeyConstructor(), timeout=60)
+    def get(self, request, version="v1"):
+        if 'q' not in request.GET:
+            return Response()
 
-    # Sort out results into each class type, then query to get each of those models
-    # model_queries = {}
-    # for r in results:
-    #     # import ipdb; ipdb.set_trace()
-    #     ## model_class = r._doc_type.model
-    #     # model_class = s._doc_type_map.get(r.meta.doc_type)
-    #     # print(s._doc_type_map)
-    #     # if model_class not in model_queries:
-    #     #     model_queries[model_class] = []
-    #     # model_queries[model_class].append(r.meta["id"])
-    #
-    # for model_class, ids in model_queries.items():
-    #     print(model_class.objects.filter(id__in=ids))
+        SIZE = 35
 
-    comp_ids = [r.meta["id"] for r in results]
-    comps = Competition.objects.filter(id__in=comp_ids)
-    data["results"] = [CompetitionSerializer(c).data for c in comps]
+        # Get search data
+        query = request.GET.get('q')
+        sorting = request.GET.get('sorting')
+        date_flags = request.GET.get('date_flags')
+        start = request.GET.get('start_date')
+        end = request.GET.get('end_date')
+        producer = request.GET.get('producer')
 
-    # OLD WAY THAT WORKS!
-    # for result in results:
-    #     data["results"].append({key: result[key] for key in result})
+        # Setup ES connection, excluding HTML text from our results
+        client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
+        s = Search(using=client)
+        s = s.extra(size=SIZE)
+        s = s.source(excludes=["html_text"])
+        data = {
+            "results": [],
+            "showing_default_results": False,
+        }
 
-    if 'suggest' in results:
-        data["suggestions"] = [s.to_dict() for s in results.suggest['suggestions'][0].options]
+        # Do search/filtering/sorting
+        s = self._search(s, query)
+        s = self._filter(s, date_flags, start, end, producer)
+        s = self._sort(s, sorting, query)
 
-    return Response(data)
+        # Get results and prepare them
+        results = s.execute()
+
+        if not results:
+            data["showing_default_results"] = True
+            s = Search(using=client)
+            s = s.extra(size=SIZE)
+            s = s.source(excludes=["html_text"])
+            results = s.execute()
+
+        data["results"] = [hit.to_dict() for hit in results]
+        return Response(data)

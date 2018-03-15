@@ -8,8 +8,9 @@ from .views import competitions, data, profiles, search
 
 
 router = SimpleRouter()
-router.register('competitions', competitions.CompetitionViewSet)
 router.register('producers', ProducerViewSet)
+router.register('competitions', competitions.CompetitionViewSet)
+router.register('submissions', competitions.SubmissionViewSet)
 
 API_PREFIX = "v1"
 
@@ -20,7 +21,7 @@ urlpatterns = [
     # Docs are on /api/schema
     # url(f'^', include('drf_openapi.urls')),
 
-    url('query/', search.query),
+    url('query/', search.SearchView.as_view()),
     url('my_profile/', profiles.GetMyProfile.as_view()),
 
     url('api-auth/', include('rest_framework.urls', namespace='rest_framework')),

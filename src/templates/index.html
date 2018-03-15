@@ -1,4 +1,5 @@
 {% load static %}
+{% load producer_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -24,6 +25,7 @@
     <!-- Datepicker -->
     <link rel="stylesheet" href="{% static "css/calendar.min.css" %}">
     <script src="{% static "js/calendar.min.js" %}"></script>
+    <script src="{% static "js/luxon.js" %}"></script>
 
     <script src="{% static "js/riot-route.js" %}"></script>
     <script src="{% static "js/jquery.form.serializer.js" %}"></script>
@@ -58,10 +60,34 @@
         },
         API: "/api/v1/"
     }
+    PRODUCERS = JSON.parse({{ producer_data|to_js }})
 </script>
 
+<div class="ui horizontal divided tiny list" style="padding: 10px;">
+    <div class="item">
+        <div class="content">
+            <i>Chahub is a service of <a href="http://codalab.org/">Codalab</a></i>
+        </div>
+    </div>
+    <div class="item">
+        <div class="content">
+            <a href="https://github.com/codalab/codalab/issues" target="_blank">Join us on Github</a>
+        </div>
+    </div>
+    <div class="item">
+        <div class="content">
+            <a href="https://github.com/codalab/codalab/wiki/Project_About_CodaLab">About</a>
+        </div>
+    </div>
+    <div class="item">
+        <div class="content">
+            <a href="https://github.com/codalab/codalab/wiki/Privacy" target="_blank">Privacy and Terms</a>
+        </div>
+    </div>
+</div>
 
 {% block extra_body %}
 {% endblock %}
+
 </body>
 </html>

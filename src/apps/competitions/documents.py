@@ -1,4 +1,4 @@
-from django_elasticsearch_dsl import DocType, Index, StringField
+from django_elasticsearch_dsl import DocType, Index, StringField, fields
 from .models import Competition
 
 competitions = Index('competitions')
@@ -30,13 +30,29 @@ class CompetitionDocument(DocType):
     class Meta:
         model = Competition
 
-        # The fields of the model you want to be indexed in Elasticsearch
-        fields = [
-            'title',
-            'created_when',
-        ]
+    remote_id = fields.IntegerField()
+    created_by = fields.TextField()
+    title = fields.TextField()
+    description = fields.TextField()
+    html_text = fields.TextField()
 
-    created_by = StringField()
+    participant_count = fields.IntegerField()
+    is_active = fields.BooleanField()
+    prize = fields.IntegerField()
+    current_phase_deadline = fields.DateField()
+    url = fields.TextField()
+    logo = fields.TextField()
+
+    start = fields.DateField()
+    end = fields.DateField()
+
+    producer = fields.ObjectField(properties={
+        'id': fields.IntegerField(),
+        'url': fields.TextField(),
+        'name': fields.TextField()
+    })
+
+    # TODO: add "active" boolean field so we can add this to queries and not have a special case
 
     def prepare_created_by(self, instance):
         return instance.created_by

@@ -45,6 +45,7 @@ OUR_APPS = (
     'profiles',
     'sockets',
     'producers',
+    'factory',
 )
 INSTALLED_APPS = THIRD_PARTY_APPS + OUR_APPS
 
@@ -160,6 +161,17 @@ SOCIAL_AUTH_USER_MODEL = 'profiles.User'
 # =============================================================================
 DEBUG = os.environ.get('DEBUG', True)
 
+if DEBUG:
+    INSTALLED_APPS += ('debug_toolbar',)
+    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+    # SHOW_TOOLBAR_CALLBACK = f'{__name__}.show_toolbar_handler'
+    INTERNAL_IPS = ('127.0.0.1',)
+
+
+# TODO: Fix this, not working... does not fire for some reason
+# def show_toolbar_handler(request):
+#     return True
+
 
 # =============================================================================
 # Database
@@ -202,6 +214,9 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
     'DEFAULT_VERSION': 'v1',
+}
+REST_FRAMEWORK_EXTENSIONS = {
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60 * 15
 }
 
 FILE_UPLOAD_HANDLERS = ["django.core.files.uploadhandler.TemporaryFileUploadHandler", ]
