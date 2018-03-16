@@ -88,11 +88,11 @@
                                                 Producer
                                             </div>
                                             <div class="divider"></div>
-                                            <div class="active item" data-value="any_producer">
+                                            <div class="active item">
                                                 Any producer
                                             </div>
                                             <virtual each="{PRODUCERS}">
-                                                <div class="item" data-value="{id}">{url}</div>
+                                                <div class="item" data-value="{id}">{name}</div>
                                             </virtual>
                                         </div>
                                     </div>
