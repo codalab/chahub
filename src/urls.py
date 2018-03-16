@@ -6,6 +6,7 @@ from django.urls import path, re_path
 from django.conf.urls import include
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.generic import TemplateView
 
 from competitions.models import Competition
@@ -52,5 +53,9 @@ class IndexView(TemplateView):
 
         context['producer_data'] = json.dumps(context['producer_data'])
         return context
+
+    @xframe_options_exempt
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 urlpatterns += [re_path(r'.*', IndexView.as_view())]

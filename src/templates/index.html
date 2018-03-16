@@ -1,6 +1,4 @@
 {% load static %}
-{% load producer_tags %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,7 +58,7 @@
         },
         API: "/api/v1/"
     }
-    PRODUCERS = JSON.parse({{ producer_data|to_js }})
+    PRODUCERS = JSON.parse("{{ producer_data|escapejs }}")
 </script>
 
 <div class="ui horizontal divided tiny list" style="padding: 10px;">
