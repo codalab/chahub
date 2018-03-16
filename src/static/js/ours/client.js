@@ -13,6 +13,7 @@ CHAHUB.api = {
         })
     },
     search: function (query) {
+        route('/?' + $.param(query))
         return CHAHUB.api.request('GET', URLS.API + "query/?" + $.param(query))
     },
     // ------------------------------------------------------------------------

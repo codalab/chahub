@@ -54,6 +54,7 @@ class IndexView(TemplateView):
         context['producer_data'] = json.dumps(context['producer_data'])
         return context
 
+    # I don't think we'll use this in an iframe, but just-in-case
     @xframe_options_exempt
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
