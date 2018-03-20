@@ -20,7 +20,7 @@ class Competition(models.Model):
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True)
     remote_id = models.PositiveIntegerField()
 
-    logo = models.URLField(default="/static/img/img-wireframe.png")
+    logo = models.URLField(null=True, blank=True, default="/static/img/img-wireframe.png")
     url = models.URLField()
 
     admins = models.ManyToManyField('CompetitionParticipant', related_name='admins', blank=True)
