@@ -59,6 +59,7 @@ class Competition(models.Model):
         return None
 
     def get_is_active(self):
+        # TODO: Check submission count from last 30 days
         if self.end is None:
             return True
         elif type(self.end) is datetime.datetime.date:
