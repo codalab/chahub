@@ -337,9 +337,9 @@
             self.refs.search.value = ''
             self.refs.start_date.value = ''
             self.refs.end_date.value = ''
-            $(self.refs.time_filter).dropdown('restore defaults');
-            $(self.refs.sort_filter).dropdown('restore defaults');
-            $(self.refs.producer_filter).dropdown('restore defaults');
+            $(self.refs.time_filter).dropdown('restore defaults')
+            $(self.refs.sort_filter).dropdown('restore defaults')
+            $(self.refs.producer_filter).dropdown('restore defaults')
 
             self.search()
         }
@@ -354,7 +354,7 @@
 
             // We may not have a producer so grab preset one from page load if so
             filters.producer = $(self.refs.producer_filter).dropdown('get value')
-            if(!!filters.producer && self.preset_producer) {
+            if(!filters.producer && self.preset_producer) {
                 filters.producer = self.preset_producer
             }
 
