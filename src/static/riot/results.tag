@@ -63,7 +63,7 @@
                                                 Sorting
                                             </div>
                                             <div class="divider"></div>
-                                            <div class="active item">
+                                            <div class="active item" data-value="">
                                                 Sort by relevance
                                             </div>
                                             <div data-value="deadline" class="item">
@@ -79,7 +79,7 @@
                                     </div>
                                 </div>
 
-                                <div class="field">
+                                <div class="field" show="{!disallow_producer_selection}">
                                     <div ref="producer_filter" class="ui floating labeled icon dropdown button">
                                         <i class="globe icon"></i>
                                         <span class="text">Any producer</span>
@@ -88,7 +88,7 @@
                                                 Producer
                                             </div>
                                             <div class="divider"></div>
-                                            <div class="active item">
+                                            <div class="active item" data-value="">
                                                 Any producer
                                             </div>
                                             <virtual each="{PRODUCERS}">
@@ -206,8 +206,6 @@
         var self = this
         self.results = []
         self.display_mode = 'list'
-        self.start_date = null
-        self.end_date = null
         self.old_filters = {}
 
         self.on('mount', function () {
@@ -236,26 +234,7 @@
                     hideOnScroll: false
                 },
                 onChange: function(date, text, mode) {
-                    if(this.dataset.calendarType === 'start') {
-                        self.start_date = text
-                    }
-
-                    if(this.dataset.calendarType === 'end') {
-                        self.end_date = text
-                    }
-
-                    if (self.start_date && self.end_date){
-                        var temp_string = self.start_date + ' through ' + self.end_date
-                        $(self.refs.time_filter).dropdown('set text', temp_string)
-                    }
-                    else if (self.start_date){
-                        var temp_string = 'Starting From: ' +  self.start_date
-                        $(self.refs.time_filter).dropdown('set text', temp_string)
-                    }
-                    else if (self.end_date){
-                        var temp_string = 'End By: ' + self.end_date
-                        $(self.refs.time_filter).dropdown('set text', temp_string)
-                    }
+                    self.set_time_dropdown_text()
 
                     self.search()
                 }
@@ -300,12 +279,47 @@
             });
         })
 
+        self.set_time_dropdown_text = function() {
+            /*if(this.dataset.calendarType === 'start') {
+                self.refs.start_date.value = text
+            }
+
+            if(this.dataset.calendarType === 'end') {
+                self.refs.end_date.value = text
+            }*/
+
+            if (self.refs.start_date.value && self.refs.end_date.value){
+                var temp_string = self.refs.start_date.value + ' through ' + self.refs.end_date.value
+                $(self.refs.time_filter).dropdown('set text', temp_string)
+            }
+            else if (self.refs.start_date.value){
+                var temp_string = 'Starting from ' +  self.refs.start_date.value
+                $(self.refs.time_filter).dropdown('set text', temp_string)
+            }
+            else if (self.refs.end_date.value){
+                var temp_string = 'End by ' + self.refs.end_date.value
+                $(self.refs.time_filter).dropdown('set text', temp_string)
+            }
+        }
+
 
         self.on('route', function () {
             var params = route.query()
 
             // On page load set search bar to search and execute search if we were given a query
             self.refs.search.value = params.q || ''
+
+            // Initialize time drop down values and then force it to update
+            self.refs.start_date.value = params.start_date || ''
+            self.refs.end_date.value = params.end_date || ''
+
+
+            self.set_time_dropdown_text()
+
+            // Call change on dropdown to force it to run its nice OnChange which sets text n shit
+            // Do this AFTER setting the local variables like self.refs.start_date.value, self.refs.end_date.value, etc.
+
+            self.disallow_producer_selection = params.disallow_producer_selection
             self.search()
 
             // Focus on search
@@ -320,16 +334,11 @@
 
         self.clear_search = function() {
             self.refs.search.value = ''
-            self.start_date = ''
-            self.end_date = ''
             self.refs.start_date.value = ''
             self.refs.end_date.value = ''
             $(self.refs.time_filter).dropdown('restore defaults');
             $(self.refs.sort_filter).dropdown('restore defaults');
             $(self.refs.producer_filter).dropdown('restore defaults');
-
-
-            // TODO: CLEAR DATES AND SUCH ???
 
             self.search()
         }
@@ -337,13 +346,8 @@
         self.search = function (query) {
             var filters = {q: query || self.refs.search.value}
 
-            if (self.refs.start_date.value) {
-                filters.start_date = self.refs.start_date.value
-            }
-            if (self.refs.end_date.value) {
-                filters.end_date = self.refs.end_date.value
-            }
-
+            filters.start_date = self.refs.start_date.value || ''
+            filters.end_date = self.refs.end_date.value || ''
             filters.date_flags = $(self.refs.time_filter).dropdown('get value')
             filters.sorting = $(self.refs.sort_filter).dropdown('get value')
             filters.producer = $(self.refs.producer_filter).dropdown('get value')
@@ -479,48 +483,11 @@
         </div>
     </div>
 
-
-    <!--<div class="ui grid">
-        <div class="ui row">
-            <div align="center" class="one wide column">
-                <img class="ui avatar image" src="{logo}">
-            </div>
-            <div class="eight wide left aligned column">
-                <div class="header">{title}</div>
-                <i class="comp-description">{description}</i>
-                <br>
-                <i style="font-size: 12px !important;">
-                    {pretty_date(start_date)}
-                    <virtual if="{end}">
-                        - {pretty_date(end)}
-                    </virtual>
-                </i>
-            </div>
-            <div class="two wide column">
-                <!--<i>{created_by}</i>
-            </div>
-            <div class="three wide middle aligned column">
-                <i style="font-size: 10px !important;">{pretty_date(phase_deadlines)}</i>
-            </div>
-            <div class="two wide column">
-                <div class="ui blue label">
-                    <i class="user icon"></i> {participant_count}
-                </div>
-            </div>
-        </div>
-    </div>-->
-
     <script>
         var self = this
 
         self.on("mount", function () {
             $(".tooltip", self.root).popup()
-            /*if (self.description) {
-                if (self.description.length > 75){
-                    self.description = self.description.substr(0, 75) + "..."
-                    self.update()
-                }
-            }*/
         })
 
         self.redirect_to_url = function () {

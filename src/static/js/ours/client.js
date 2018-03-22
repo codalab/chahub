@@ -12,9 +12,15 @@ CHAHUB.api = {
             dataType: 'json'
         })
     },
-    search: function (query) {
-        route('/?' + $.param(query))
-        return CHAHUB.api.request('GET', URLS.API + "query/?" + $.param(query))
+    search: function (filters) {
+        // get existing params and update them with the filters
+        var params = route.query()
+        Object.assign(params, filters)
+        // Remove any unused params so our URL stays pretty
+        dict_remove_empty_values(params)
+        // Add query params to URL
+        route('/?' + $.param(params))
+        return CHAHUB.api.request('GET', URLS.API + "query/?" + $.param(params))
     },
     // ------------------------------------------------------------------------
     // Producers

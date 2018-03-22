@@ -1,6 +1,7 @@
 /* ----------------------------------------------------------------------------
  CSRF wrapper for ajax
  ----------------------------------------------------------------------------*/
+
 // using jQuery
 function getCookie(name) {
     var cookieValue = null;
@@ -17,11 +18,14 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
 var csrftoken = getCookie('csrftoken');
+
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
+
 $.ajaxSetup({
     beforeSend: function (xhr, settings) {
         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -50,10 +54,17 @@ window.delay = (function () {
 /* ----------------------------------------------------------------------------
  Dates
  ----------------------------------------------------------------------------*/
-var pretty_date = function(date_string) {
-    if(!!date_string) {
+var pretty_date = function (date_string) {
+    if (!!date_string) {
         return luxon.DateTime.fromISO(date_string).toLocaleString(luxon.DateTime.DATE_FULL)
     } else {
         return ''
     }
+}
+
+/* ----------------------------------------------------------------------------
+ Dict helpers
+ ----------------------------------------------------------------------------*/
+function dict_remove_empty_values(obj) {
+    Object.keys(obj).forEach((key) => (obj[key] == null || obj[key] === '') && delete obj[key])
 }
