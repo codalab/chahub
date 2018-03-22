@@ -313,13 +313,14 @@
             self.refs.start_date.value = params.start_date || ''
             self.refs.end_date.value = params.end_date || ''
 
-
             self.set_time_dropdown_text()
 
             // Call change on dropdown to force it to run its nice OnChange which sets text n shit
             // Do this AFTER setting the local variables like self.refs.start_date.value, self.refs.end_date.value, etc.
 
+            self.preset_producer = params.producer
             self.disallow_producer_selection = params.disallow_producer_selection
+
             self.search()
 
             // Focus on search
@@ -350,7 +351,12 @@
             filters.end_date = self.refs.end_date.value || ''
             filters.date_flags = $(self.refs.time_filter).dropdown('get value')
             filters.sorting = $(self.refs.sort_filter).dropdown('get value')
+
+            // We may not have a producer so grab preset one from page load if so
             filters.producer = $(self.refs.producer_filter).dropdown('get value')
+            if(!!filters.producer && self.preset_producer) {
+                filters.producer = self.preset_producer
+            }
 
             if(JSON.stringify(self.old_filters) === JSON.stringify(filters)) {
                 return
