@@ -126,7 +126,5 @@ class CompetitionSerializer(WritableNestedModelSerializer):
         if temp_instance:
             return self.update(temp_instance, validated_data)
         else:
-            new_instance = super(CompetitionSerializer, self).create(validated_data)
-            new_instance.producer = self.context['producer']
-            new_instance.save()
-            return new_instance
+            validated_data['producer'] = self.context['producer']
+            return super(CompetitionSerializer, self).create(validated_data)
