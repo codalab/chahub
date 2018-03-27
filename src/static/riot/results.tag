@@ -25,7 +25,7 @@
                                                 Timeframe
                                             </div>
                                             <div class="divider"></div>
-                                            <div class="active item" data-value="any_time">
+                                            <div class="active item" data-value="">
                                                 Any time
                                             </div>
                                             <div class="item" data-value="active">
@@ -85,11 +85,11 @@
                                         <span class="text">Any producer</span>
                                         <div class="menu">
                                             <div class="header">
-                                                Producer
+                                                Provider
                                             </div>
                                             <div class="divider"></div>
                                             <div class="active item" data-value="">
-                                                Any producer
+                                                Any provider
                                             </div>
                                             <virtual each="{PRODUCERS}">
                                                 <div class="item" data-value="{id}">{name}</div>
@@ -309,16 +309,30 @@
             // On page load set search bar to search and execute search if we were given a query
             self.refs.search.value = params.q || ''
 
-            // Initialize time drop down values and then force it to update
-            self.refs.start_date.value = params.start_date || ''
-            self.refs.end_date.value = params.end_date || ''
+            // TODO: set time_filter dropdown selected value
+            // TODO: set sort dropdown selected value
+            // TODO: set producer dropdown selected value
 
-            self.set_time_dropdown_text()
+            // Date flags and ranges
+            if(params.date_flags) {
+                $(self.refs.time_filter).dropdown('set selected', params.date_flags)
+            } else {
+                // If no date flags, maybe we have a date range?
+                // Initialize time range values and then force it to update
+                self.refs.start_date.value = params.start_date || ''
+                self.refs.end_date.value = params.end_date || ''
 
-            // Call change on dropdown to force it to run its nice OnChange which sets text n shit
-            // Do this AFTER setting the local variables like self.refs.start_date.value, self.refs.end_date.value, etc.
+                // Do this AFTER setting the local variables like self.refs.start_date.value, self.refs.end_date.value, etc.
+                // so it can set the proper dropdown text
+                self.set_time_dropdown_text()
+            }
 
-            self.preset_producer = params.producer
+            // Sorting
+            $(self.refs.sort_filter).dropdown('set selected', params.sorting)
+
+            // Producers
+            $(self.refs.producer_filter).dropdown('set selected', params.producer)
+            // For iframes we might want to hide producer selection
             self.disallow_producer_selection = params.disallow_producer_selection
 
             self.search()
@@ -337,9 +351,9 @@
             self.refs.search.value = ''
             self.refs.start_date.value = ''
             self.refs.end_date.value = ''
-            $(self.refs.time_filter).dropdown('restore defaults')
-            $(self.refs.sort_filter).dropdown('restore defaults')
-            $(self.refs.producer_filter).dropdown('restore defaults')
+            $(self.refs.time_filter).dropdown('set selected', '')
+            $(self.refs.sort_filter).dropdown('set selected', '')
+            $(self.refs.producer_filter).dropdown('set selected', '')
 
             self.search()
         }
@@ -354,16 +368,13 @@
 
             // We may not have a producer so grab preset one from page load if so
             filters.producer = $(self.refs.producer_filter).dropdown('get value')
-            if(!filters.producer && self.preset_producer) {
-                filters.producer = self.preset_producer
-            }
 
+            // If our filters are the same as before, just return
             if(JSON.stringify(self.old_filters) === JSON.stringify(filters)) {
                 return
-            } else {
-                self.old_filters = filters
             }
             
+            self.old_filters = filters
             self.loading = true
             self.update()
 
