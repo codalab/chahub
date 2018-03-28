@@ -485,6 +485,12 @@
                     - {pretty_date(end)}
                 </virtual>
             </span>
+            <span style="font-size: .8em; color: rgba(0,0,0,235)">
+                Organizer: <virtual>{created_by}</virtual>
+            </span>
+            <span style="font-size: .8em; color: rgba(155,155,155,35)">
+                Created: <virtual>{pretty_date(created_when)}</virtual>
+            </span>
             <div class="ui right floated blue mini label tooltip" data-content="Participant count">
                 <i class="user icon"></i> {participant_count}
             </div>
