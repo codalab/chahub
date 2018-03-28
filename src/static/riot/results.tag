@@ -373,7 +373,7 @@
             if(JSON.stringify(self.old_filters) === JSON.stringify(filters)) {
                 return
             }
-            
+
             self.old_filters = filters
             self.loading = true
             self.update()
@@ -484,25 +484,22 @@
                 <virtual if="{end}">
                     - {pretty_date(end)}
                 </virtual>
+
+                by {created_by}
+                @ {pretty_date(created_when)}
+                <div class="ui right floated blue mini label tooltip" data-content="Participant count">
+                    <i class="user icon"></i> {participant_count}
+                </div>
+                <div class="ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
+                    <i class="yellow trophy icon"></i> {prize}
+                </div>
+                <div class="ui right floated red mini label tooltip"
+                     style="background-color: #db28289e;"
+                     data-content="Deadline of the current phase"
+                     show="{current_phase_deadline}">
+                    <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
+                </div>
             </span>
-            <span style="font-size: .8em; color: rgba(0,0,0,235)">
-                Organizer: <virtual>{created_by}</virtual>
-            </span>
-            <span style="font-size: .8em; color: rgba(155,155,155,35)">
-                Created: <virtual>{pretty_date(created_when)}</virtual>
-            </span>
-            <div class="ui right floated blue mini label tooltip" data-content="Participant count">
-                <i class="user icon"></i> {participant_count}
-            </div>
-            <div class="ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
-                <i class="yellow trophy icon"></i> {prize}
-            </div>
-            <div class="ui right floated red mini label tooltip"
-                 style="background-color: #db28289e;"
-                 data-content="Deadline of the current phase"
-                 show="{current_phase_deadline}">
-                <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
-            </div>
         </div>
     </div>
 
