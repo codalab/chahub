@@ -13,7 +13,7 @@
                             <i class="search icon"></i>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="centered row">
                         <div class="ui form">
                             <div class="inline fields">
                                 <div class="field">
