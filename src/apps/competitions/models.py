@@ -37,16 +37,16 @@ class Competition(models.Model):
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        # Send off our data
-        from api.serializers.competitions import CompetitionSerializer
-        Group("updates").send({
-            "text": json.dumps({
-                "type": "competition_update",
-                "data": CompetitionSerializer(self).data
-            }),
-        })
-        return super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # Send off our data
+    #     from api.serializers.competitions import CompetitionSerializer
+    #     Group("updates").send({
+    #         "text": json.dumps({
+    #             "type": "competition_update",
+    #             "data": CompetitionSerializer(self).data
+    #         }),
+    #     })
+    #     return super().save(*args, **kwargs)
 
     def get_current_phase_deadline(self):
         # TODO: We may need to have a celery task that updates ElasticSearch deadlines. We can't do sorting by deadline when we get a bunch of competitions.
