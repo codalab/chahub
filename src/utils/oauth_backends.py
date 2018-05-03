@@ -1,7 +1,7 @@
 from social_core.backends.oauth import BaseOAuth2
 
 
-BASE_URL = "https://competitions-v2-staging-pr-17.herokuapp.com"
+BASE_URL = "https://codalabchahub.herokuapp.com"
 
 
 class CodalabOAuth2(BaseOAuth2):
