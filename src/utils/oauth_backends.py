@@ -1,7 +1,8 @@
+from django.conf import settings
 from social_core.backends.oauth import BaseOAuth2
 
 
-BASE_URL = "https://codalabchahub.herokuapp.com"
+BASE_URL = settings.CHAHUB_BASE_URL
 
 
 class CodalabOAuth2(BaseOAuth2):
