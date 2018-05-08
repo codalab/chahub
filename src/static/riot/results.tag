@@ -303,7 +303,7 @@
         }
 
 
-        self.on('route', function () {
+        self.one('route', function () {
             var params = route.query()
 
             // On page load set search bar to search and execute search if we were given a query
