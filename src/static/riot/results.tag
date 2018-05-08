@@ -127,6 +127,9 @@
                 <div class="ui primary button">Create Competition</div>
             </div>
         </div>-->
+        <div show="{AUTHENTICATED}" class="item"><a class="ui inverted button" href="{LOGOUT_URL}">Logout</a></div>
+        <div hide="{AUTHENTICATED}" class="item"><a class="ui inverted button" href="/accounts/login/">Login</a></div>
+        <a href="{SIGNUP_URL}" class="ui inverted button">Sign-up</a>
     </div>
 
     <div class="ui stackable grid container">
