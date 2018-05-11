@@ -8,7 +8,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.generic import TemplateView
+from elasticsearch import Elasticsearch
+from elasticsearch_dsl import Search
 
+from api.views.search import SearchView
 from competitions.models import Competition
 from producers.models import Producer
 
@@ -50,13 +53,15 @@ class IndexView(TemplateView):
                     'name': producer.name,
                     'url': producer.url
                 })
-
         context['producer_data'] = json.dumps(context['producer_data'])
+        # Call our default sort helper function
+        context['default_search_results'] = json.dumps(SearchView._default_search())
         return context
 
     # I don't think we'll use this in an iframe, but just-in-case
     @xframe_options_exempt
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
+
 
 urlpatterns += [re_path(r'.*', IndexView.as_view())]

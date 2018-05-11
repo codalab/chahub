@@ -383,9 +383,16 @@
 
             CHAHUB.api.search(filters)
                 .done(function (data) {
+                    var tmp_results = []
+                    if (data.showing_default_results === true){
+                        tmp_results = DEFAULT_SEARCH_RESULTS
+                    }
+                    else{
+                        tmp_results = data.results
+                    }
                     self.update({
                         loading: false,
-                        results: data.results,
+                        results: tmp_results,
                         suggestions: data.suggestions,
                         showing_default_results: data.showing_default_results
                     })

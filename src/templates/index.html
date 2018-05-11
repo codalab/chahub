@@ -60,6 +60,7 @@
         API: "/api/v1/"
     }
     PRODUCERS = JSON.parse("{{ producer_data|escapejs }}")
+    DEFAULT_SEARCH_RESULTS = JSON.parse("{{ default_search_results|escapejs }}")
 
     LOGIN_URL = "{% url "login" %}"
     console.log(LOGIN_URL)

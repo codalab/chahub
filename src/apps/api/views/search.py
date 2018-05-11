@@ -11,6 +11,16 @@ from api.caching import QueryParamsKeyConstructor
 
 class SearchView(APIView):
 
+    @staticmethod
+    def _default_search(client=None):
+        if not client:
+            client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
+        s = Search(using=client)
+        s = s.extra(size=35)
+        s = s.source(excludes=["html_text"])
+        results = s.execute()
+        return [hit.to_dict() for hit in results]
+
     @cache_response(key_func=QueryParamsKeyConstructor(), timeout=60)
     def get(self, request, version="v1"):
         SIZE = 35
@@ -41,14 +51,10 @@ class SearchView(APIView):
         # Get results and prepare them
         results = s.execute()
 
+        # if not results:
         if not results:
-            data["showing_default_results"] = True
-            s = Search(using=client)
-            s = s.extra(size=SIZE)
-            s = s.source(excludes=["html_text"])
-            results = s.execute()
+            data['results'] = SearchView._default_search(client=client)
 
-        data["results"] = [hit.to_dict() for hit in results]
         return Response(data)
 
     def _search(self, search, query):
