@@ -62,14 +62,6 @@
     PRODUCERS = JSON.parse("{{ producer_data|escapejs }}")
     DEFAULT_SEARCH_RESULTS = JSON.parse("{{ default_search_results|escapejs }}")
 
-    LOGIN_URL = "{% url "login" %}"
-    console.log(LOGIN_URL)
-    LOGOUT_URL = "{% url "logout" %}"
-    console.log(LOGOUT_URL)
-    SIGNUP_URL = "{% url "profiles:signup" %}"
-
-    AUTHENTICATED = ("{{ user.is_authenticated }}" == 'True');
-    console.log(AUTHENTICATED)
 </script>
 
 <div class="ui horizontal divided tiny list" style="padding: 10px;">

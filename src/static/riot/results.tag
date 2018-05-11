@@ -127,9 +127,6 @@
                 <div class="ui primary button">Create Competition</div>
             </div>
         </div>-->
-        <div show="{AUTHENTICATED}" class="item"><a class="ui inverted button" href="{LOGOUT_URL}">Logout</a></div>
-        <div hide="{AUTHENTICATED}" class="item"><a class="ui inverted button" href="/accounts/login/">Login</a></div>
-        <a href="{SIGNUP_URL}" class="ui inverted button">Sign-up</a>
     </div>
 
     <div class="ui stackable grid container">
@@ -384,10 +381,9 @@
             CHAHUB.api.search(filters)
                 .done(function (data) {
                     var tmp_results = []
-                    if (data.showing_default_results === true){
+                    if (data.showing_default_results === true) {
                         tmp_results = DEFAULT_SEARCH_RESULTS
-                    }
-                    else{
+                    } else {
                         tmp_results = data.results
                     }
                     self.update({
