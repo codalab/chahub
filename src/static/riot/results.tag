@@ -209,6 +209,13 @@
         self.old_filters = {}
 
         self.on('mount', function () {
+            if (self.results.length === 0){
+                self.results = DEFAULT_SEARCH_RESULTS
+                self.update()
+            }
+
+            //console.log(DEFAULT_SEARCH_RESULTS)
+            //console.log(self.results)
             /*$(self.refs.search_wrapper).dropdown({
 
 
@@ -257,7 +264,7 @@
                             suggestions: data.suggestions
                         })
 
-                        // Handle SemanticUI stuff
+                        // Handle SemanticUI suggestion stuff
                         var response = {
                             results: []
                         };
@@ -335,7 +342,7 @@
             // For iframes we might want to hide producer selection
             self.disallow_producer_selection = params.disallow_producer_selection
 
-            self.search()
+            //self.search()
 
             // Focus on search
             self.refs.search.focus()
@@ -380,15 +387,10 @@
 
             CHAHUB.api.search(filters)
                 .done(function (data) {
-                    var tmp_results = []
-                    if (data.showing_default_results === true) {
-                        tmp_results = DEFAULT_SEARCH_RESULTS
-                    } else {
-                        tmp_results = data.results
-                    }
+
                     self.update({
                         loading: false,
-                        results: tmp_results,
+                        results: data.results,
                         suggestions: data.suggestions,
                         showing_default_results: data.showing_default_results
                     })

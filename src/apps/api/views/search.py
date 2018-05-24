@@ -54,7 +54,7 @@ class SearchView(APIView):
         # if not results:
         if not results:
             data['results'] = SearchView._default_search(client=client)
-
+            data["showing_default_results"] = True
         return Response(data)
 
     def _search(self, search, query):
