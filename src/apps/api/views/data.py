@@ -52,3 +52,4 @@ class DataViewSet(ListAPIView, CreateAPIView, RetrieveAPIView, DestroyAPIView, G
 class DataGroupViewSet(ModelViewSet):
     queryset = DataGroup.objects.all()
     serializer_class = serializers.DataGroupSerializer
+    permission_classes = (IsAuthenticated,)
