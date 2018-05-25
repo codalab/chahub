@@ -90,6 +90,7 @@ class CompetitionSerializer(WritableNestedModelSerializer):
             'html_text',
             'current_phase_deadline',
             'prize',
+            'created_when',
         )
         validators = []
         extra_kwargs = {
@@ -119,14 +120,10 @@ class CompetitionSerializer(WritableNestedModelSerializer):
                 remote_id=validated_data['remote_id'],
                 producer__id=self.context['producer'].id
             )
-        except ObjectDoesNotExist:
-            temp_instance = None
-        # If we have an existing instance from this producer
-        # with the same remote_id, update it instead of making a new one
-        if temp_instance:
             return self.update(temp_instance, validated_data)
-        else:
-            new_instance = super(CompetitionSerializer, self).create(validated_data)
-            new_instance.producer = self.context['producer']
-            new_instance.save()
-            return new_instance
+        except ObjectDoesNotExist:
+            # We need to set inital data and validated_data in order to pass drf_writeable_nested. Without this
+            # We get an intergrity violation, null.
+            self.initial_data['producer'] = self.context['producer'].__dict__
+            validated_data['producer'] = self.context['producer']
+            return super(CompetitionSerializer, self).create(validated_data)

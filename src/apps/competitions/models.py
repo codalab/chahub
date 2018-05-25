@@ -17,7 +17,7 @@ class Competition(models.Model):
     end = models.DateTimeField(null=True, blank=True)
     prize = models.PositiveIntegerField(null=True, blank=True)
 
-    producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True)
+    producer = models.ForeignKey('producers.Producer', on_delete=models.DO_NOTHING)
     remote_id = models.PositiveIntegerField()
 
     logo = models.URLField(null=True, blank=True, default="/static/img/img-wireframe.png")

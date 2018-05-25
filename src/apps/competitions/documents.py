@@ -45,6 +45,7 @@ class CompetitionDocument(DocType):
 
     start = fields.DateField()
     end = fields.DateField()
+    created_when = fields.DateField()
 
     producer = fields.ObjectField(properties={
         'id': fields.IntegerField(),
