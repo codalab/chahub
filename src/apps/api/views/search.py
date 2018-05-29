@@ -37,6 +37,7 @@ class SearchView(APIView):
         s = self._search(s, query)
         s = self._filter(s, date_flags, start, end, producer)
         s = self._sort(s, sorting, query)
+        s = s.filter('term', published=True)
 
         # Get results and prepare them
         results = s.execute()
@@ -46,6 +47,7 @@ class SearchView(APIView):
             s = Search(using=client)
             s = s.extra(size=SIZE)
             s = s.source(excludes=["html_text"])
+            s = s.filter('term', published=True)
             results = s.execute()
 
         data["results"] = [hit.to_dict() for hit in results]
