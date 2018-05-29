@@ -90,6 +90,7 @@ class CompetitionSerializer(WritableNestedModelSerializer):
             'html_text',
             'current_phase_deadline',
             'prize',
+            'published'
         )
         validators = []
         extra_kwargs = {
