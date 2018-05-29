@@ -13,8 +13,6 @@ class SearchView(APIView):
 
     @cache_response(key_func=QueryParamsKeyConstructor(), timeout=60)
     def get(self, request, version="v1"):
-        SIZE = 35
-
         # Get search data
         query = request.GET.get('q', '')
         sorting = request.GET.get('sorting')
@@ -24,10 +22,7 @@ class SearchView(APIView):
         producer = request.GET.get('producer')
 
         # Setup ES connection, excluding HTML text from our results
-        client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
-        s = Search(using=client)
-        s = s.extra(size=SIZE)
-        s = s.source(excludes=["html_text"])
+        s = self._get_search_client()
         data = {
             "results": [],
             "showing_default_results": False,
@@ -37,21 +32,26 @@ class SearchView(APIView):
         s = self._search(s, query)
         s = self._filter(s, date_flags, start, end, producer)
         s = self._sort(s, sorting, query)
-        s = s.filter('term', published=True)
 
         # Get results and prepare them
         results = s.execute()
 
         if not results:
             data["showing_default_results"] = True
-            s = Search(using=client)
-            s = s.extra(size=SIZE)
-            s = s.source(excludes=["html_text"])
+            s = self._get_search_client()
             s = s.filter('term', published=True)
             results = s.execute()
 
         data["results"] = [hit.to_dict() for hit in results]
         return Response(data)
+
+    def _get_search_client(self, size=35):
+        client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
+        s = Search(using=client)
+        s = s.extra(size=size)
+        s = s.filter('term', published=True)
+        s = s.source(excludes=["html_text"])
+        return s
 
     def _search(self, search, query):
         if query and query != ' ':
