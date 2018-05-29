@@ -353,7 +353,9 @@
             self.refs.end_date.value = ''
             $(self.refs.time_filter).dropdown('set selected', '')
             $(self.refs.sort_filter).dropdown('set selected', '')
-            $(self.refs.producer_filter).dropdown('set selected', '')
+            if (!self.disallow_producer_selection){
+                $(self.refs.producer_filter).dropdown('set selected', '')
+            }
 
             self.search()
         }
