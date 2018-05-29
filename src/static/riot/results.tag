@@ -98,6 +98,10 @@
                                     </div>
                                 </div>
 
+                                <div class="field" show="{!disallow_producer_selection}">
+                                    <button class="ui green medium button" onclick="{ copy_url_to_clipboard }">Copy Search Results</button>
+                                </div>
+
                                 <!--<div class="field">
                                     <div class="ui icon buttons">
                                         <button class="ui button { positive: display_mode === 'list' }"
@@ -207,6 +211,18 @@
         self.results = []
         self.display_mode = 'list'
         self.old_filters = {}
+
+        self.copy_url_to_clipboard = function () {
+            // Create a dummy input, set the value to our current URL
+            var dummy = document.createElement('input'),
+            text = window.location.href;
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            // Select and copy, then remove the dummy input
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+        }
 
         self.on('mount', function () {
             /*$(self.refs.search_wrapper).dropdown({
