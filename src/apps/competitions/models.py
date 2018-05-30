@@ -31,6 +31,8 @@ class Competition(models.Model):
     current_phase_deadline = models.DateTimeField(blank=True, null=True)
     is_active = models.BooleanField(default=False)
 
+    published = models.BooleanField(default=False)
+
     class Meta:
         unique_together = ('remote_id', 'producer')
 
