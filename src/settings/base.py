@@ -315,5 +315,3 @@ elif STORAGE_IS_AZURE:
 else:
     BundleStorage = StorageClass()
     PublicStorage = StorageClass()
-
-CHAHUB_BASE_URL = os.environ.get('CHAHUB_BASE_URL', 'https://codalabchahub.herokuapp.com')
