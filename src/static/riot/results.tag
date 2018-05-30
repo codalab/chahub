@@ -98,8 +98,12 @@
                                     </div>
                                 </div>
 
-                                <div class="field" show="{!disallow_producer_selection}">
-                                    <button class="ui green medium button" onclick="{ copy_url_to_clipboard }">Copy Search Results</button>
+                                <div class="field">
+                                    <!--<button class="ui green medium button" onclick="{ copy_url_to_clipboard }">Copy Search Results</button>-->
+                                    <button class="ui green medium labeled icon button" id="facebookShareLink">
+                                        <i class="facebook icon"></i>
+                                        Share
+                                    </button>
                                 </div>
 
                                 <!--<div class="field">
@@ -207,24 +211,20 @@
     </div>
 
     <script>
+
         var self = this
         self.results = []
         self.display_mode = 'list'
         self.old_filters = {}
 
-        self.copy_url_to_clipboard = function () {
-            // Create a dummy input, set the value to our current URL
-            var dummy = document.createElement('input'),
-            text = window.location.href;
-            document.body.appendChild(dummy);
-            dummy.value = text;
-            // Select and copy, then remove the dummy input
-            dummy.select();
-            document.execCommand('copy');
-            document.body.removeChild(dummy);
-        }
 
         self.on('mount', function () {
+            $("#facebookShareLink").on("click", function () {
+                var text = String(window.location.href)
+                window.open("https://www.facebook.com/sharer/sharer.php?u=" + text, "pop", "width=600, height=400, scrollbars=no");
+                return false;
+            });
+
             /*$(self.refs.search_wrapper).dropdown({
 
 
