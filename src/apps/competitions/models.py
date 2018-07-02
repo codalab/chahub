@@ -9,7 +9,7 @@ from django.utils import timezone
 
 class Competition(models.Model):
     # created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
-    created_by = models.TextField()
+    created_by = models.TextField(null=True, blank=True)
     created_when = models.DateTimeField(auto_now_add=True)
     start = models.DateTimeField(null=True, blank=True)
     title = models.TextField()
@@ -18,7 +18,7 @@ class Competition(models.Model):
     prize = models.PositiveIntegerField(null=True, blank=True)
 
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True)
-    remote_id = models.PositiveIntegerField()
+    remote_id = models.PositiveIntegerField(null=True, blank=True)
 
     logo = models.URLField(null=True, blank=True, default="/static/img/img-wireframe.png")
     url = models.URLField()
@@ -26,7 +26,7 @@ class Competition(models.Model):
     admins = models.ManyToManyField('CompetitionParticipant', related_name='admins', blank=True)
 
     participant_count = models.IntegerField(default=0)
-    html_text = models.TextField(default="")
+    html_text = models.TextField(default="", null=True, blank=True)
 
     current_phase_deadline = models.DateTimeField(blank=True, null=True)
     is_active = models.BooleanField(default=False)
