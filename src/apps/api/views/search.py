@@ -11,6 +11,48 @@ from api.caching import QueryParamsKeyConstructor
 
 class SearchView(APIView):
 
+    @cache_response(key_func=QueryParamsKeyConstructor(), timeout=60)
+    def get(self, request, version="v1"):
+        # Get search data
+        query = request.GET.get('q', '')
+        sorting = request.GET.get('sorting')
+        date_flags = request.GET.get('date_flags')
+        start = request.GET.get('start_date')
+        end = request.GET.get('end_date')
+        producer = request.GET.get('producer')
+
+        # Setup ES connection, excluding HTML text from our results
+        s = self._get_search_client()
+        data = {
+            "results": [],
+            "showing_default_results": False,
+        }
+
+        # Do search/filtering/sorting
+        s = self._search(s, query)
+        s = self._filter(s, date_flags, start, end, producer)
+        s = self._sort(s, sorting, query)
+
+        # Get results and prepare them
+        results = s.execute()
+
+        if not results:
+            data["showing_default_results"] = True
+            s = self._get_search_client()
+            s = s.filter('term', published=True)
+            results = s.execute()
+
+        data["results"] = [hit.to_dict() for hit in results]
+        return Response(data)
+
+    def _get_search_client(self, size=35):
+        client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
+        s = Search(using=client)
+        s = s.extra(size=size)
+        s = s.filter('term', published=True)
+        s = s.source(excludes=["html_text"])
+        return s
+
     def _search(self, search, query):
         if query and query != ' ':
             search = search.query(
@@ -50,7 +92,7 @@ class SearchView(APIView):
         # Active competitions, ones with submissions in the last 30 days
         if date_flags and date_flags == "active":
             search = search.filter('term', is_active=True)
-        if producer and producer != "any_producer":
+        if producer:
             search = search.filter('term', producer__id=producer)
         return search
 
@@ -65,46 +107,3 @@ class SearchView(APIView):
         elif sorting == 'deadline':
             sort_params.append('current_phase_deadline')
         return search.sort(*sort_params)
-
-    @cache_response(key_func=QueryParamsKeyConstructor(), timeout=60)
-    def get(self, request, version="v1"):
-        if 'q' not in request.GET:
-            return Response()
-
-        SIZE = 35
-
-        # Get search data
-        query = request.GET.get('q')
-        sorting = request.GET.get('sorting')
-        date_flags = request.GET.get('date_flags')
-        start = request.GET.get('start_date')
-        end = request.GET.get('end_date')
-        producer = request.GET.get('producer')
-
-        # Setup ES connection, excluding HTML text from our results
-        client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
-        s = Search(using=client)
-        s = s.extra(size=SIZE)
-        s = s.source(excludes=["html_text"])
-        data = {
-            "results": [],
-            "showing_default_results": False,
-        }
-
-        # Do search/filtering/sorting
-        s = self._search(s, query)
-        s = self._filter(s, date_flags, start, end, producer)
-        s = self._sort(s, sorting, query)
-
-        # Get results and prepare them
-        results = s.execute()
-
-        if not results:
-            data["showing_default_results"] = True
-            s = Search(using=client)
-            s = s.extra(size=SIZE)
-            s = s.source(excludes=["html_text"])
-            results = s.execute()
-
-        data["results"] = [hit.to_dict() for hit in results]
-        return Response(data)

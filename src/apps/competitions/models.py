@@ -9,7 +9,7 @@ from django.utils import timezone
 
 class Competition(models.Model):
     # created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
-    created_by = models.TextField()
+    created_by = models.TextField(null=True, blank=True)
     created_when = models.DateTimeField(auto_now_add=True)
     start = models.DateTimeField(null=True, blank=True)
     title = models.TextField()
@@ -18,18 +18,20 @@ class Competition(models.Model):
     prize = models.PositiveIntegerField(null=True, blank=True)
 
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True)
-    remote_id = models.PositiveIntegerField()
+    remote_id = models.PositiveIntegerField(null=True, blank=True)
 
-    logo = models.URLField(default="/static/img/img-wireframe.png")
+    logo = models.URLField(null=True, blank=True, default="/static/img/img-wireframe.png")
     url = models.URLField()
 
     admins = models.ManyToManyField('CompetitionParticipant', related_name='admins', blank=True)
 
     participant_count = models.IntegerField(default=0)
-    html_text = models.TextField(default="")
+    html_text = models.TextField(default="", null=True, blank=True)
 
     current_phase_deadline = models.DateTimeField(blank=True, null=True)
     is_active = models.BooleanField(default=False)
+
+    published = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('remote_id', 'producer')
@@ -37,16 +39,16 @@ class Competition(models.Model):
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        # Send off our data
-        from api.serializers.competitions import CompetitionSerializer
-        Group("updates").send({
-            "text": json.dumps({
-                "type": "competition_update",
-                "data": CompetitionSerializer(self).data
-            }),
-        })
-        return super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # Send off our data
+    #     from api.serializers.competitions import CompetitionSerializer
+    #     Group("updates").send({
+    #         "text": json.dumps({
+    #             "type": "competition_update",
+    #             "data": CompetitionSerializer(self).data
+    #         }),
+    #     })
+    #     return super().save(*args, **kwargs)
 
     def get_current_phase_deadline(self):
         # TODO: We may need to have a celery task that updates ElasticSearch deadlines. We can't do sorting by deadline when we get a bunch of competitions.
@@ -59,6 +61,7 @@ class Competition(models.Model):
         return None
 
     def get_is_active(self):
+        # TODO: Check submission count from last 30 days
         if self.end is None:
             return True
         elif type(self.end) is datetime.datetime.date:

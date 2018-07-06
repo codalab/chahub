@@ -25,7 +25,7 @@
                                                 Timeframe
                                             </div>
                                             <div class="divider"></div>
-                                            <div class="active item" data-value="any_time">
+                                            <div class="active item" data-value="">
                                                 Any time
                                             </div>
                                             <div class="item" data-value="active">
@@ -63,7 +63,7 @@
                                                 Sorting
                                             </div>
                                             <div class="divider"></div>
-                                            <div class="active item">
+                                            <div class="active item" data-value="">
                                                 Sort by relevance
                                             </div>
                                             <div data-value="deadline" class="item">
@@ -79,17 +79,17 @@
                                     </div>
                                 </div>
 
-                                <div class="field">
+                                <div class="field" show="{!disallow_producer_selection}">
                                     <div ref="producer_filter" class="ui floating labeled icon dropdown button">
                                         <i class="globe icon"></i>
                                         <span class="text">Any producer</span>
                                         <div class="menu">
                                             <div class="header">
-                                                Producer
+                                                Provider
                                             </div>
                                             <div class="divider"></div>
-                                            <div class="active item">
-                                                Any producer
+                                            <div class="active item" data-value="">
+                                                Any provider
                                             </div>
                                             <virtual each="{PRODUCERS}">
                                                 <div class="item" data-value="{id}">{name}</div>
@@ -206,8 +206,6 @@
         var self = this
         self.results = []
         self.display_mode = 'list'
-        self.start_date = null
-        self.end_date = null
         self.old_filters = {}
 
         self.on('mount', function () {
@@ -236,26 +234,7 @@
                     hideOnScroll: false
                 },
                 onChange: function(date, text, mode) {
-                    if(this.dataset.calendarType === 'start') {
-                        self.start_date = text
-                    }
-
-                    if(this.dataset.calendarType === 'end') {
-                        self.end_date = text
-                    }
-
-                    if (self.start_date && self.end_date){
-                        var temp_string = self.start_date + ' through ' + self.end_date
-                        $(self.refs.time_filter).dropdown('set text', temp_string)
-                    }
-                    else if (self.start_date){
-                        var temp_string = 'Starting From: ' +  self.start_date
-                        $(self.refs.time_filter).dropdown('set text', temp_string)
-                    }
-                    else if (self.end_date){
-                        var temp_string = 'End By: ' + self.end_date
-                        $(self.refs.time_filter).dropdown('set text', temp_string)
-                    }
+                    self.set_time_dropdown_text()
 
                     self.search()
                 }
@@ -300,12 +279,62 @@
             });
         })
 
+        self.set_time_dropdown_text = function() {
+            /*if(this.dataset.calendarType === 'start') {
+                self.refs.start_date.value = text
+            }
 
-        self.on('route', function () {
+            if(this.dataset.calendarType === 'end') {
+                self.refs.end_date.value = text
+            }*/
+
+            if (self.refs.start_date.value && self.refs.end_date.value){
+                var temp_string = self.refs.start_date.value + ' through ' + self.refs.end_date.value
+                $(self.refs.time_filter).dropdown('set text', temp_string)
+            }
+            else if (self.refs.start_date.value){
+                var temp_string = 'Starting from ' +  self.refs.start_date.value
+                $(self.refs.time_filter).dropdown('set text', temp_string)
+            }
+            else if (self.refs.end_date.value){
+                var temp_string = 'End by ' + self.refs.end_date.value
+                $(self.refs.time_filter).dropdown('set text', temp_string)
+            }
+        }
+
+
+        self.one('route', function () {
             var params = route.query()
 
             // On page load set search bar to search and execute search if we were given a query
             self.refs.search.value = params.q || ''
+
+            // TODO: set time_filter dropdown selected value
+            // TODO: set sort dropdown selected value
+            // TODO: set producer dropdown selected value
+
+            // Date flags and ranges
+            if(params.date_flags) {
+                $(self.refs.time_filter).dropdown('set selected', params.date_flags)
+            } else {
+                // If no date flags, maybe we have a date range?
+                // Initialize time range values and then force it to update
+                self.refs.start_date.value = params.start_date || ''
+                self.refs.end_date.value = params.end_date || ''
+
+                // Do this AFTER setting the local variables like self.refs.start_date.value, self.refs.end_date.value, etc.
+                // so it can set the proper dropdown text
+                self.set_time_dropdown_text()
+            }
+
+            // Sorting
+            $(self.refs.sort_filter).dropdown('set selected', params.sorting)
+
+            // Producers
+            $(self.refs.producer_filter).dropdown('set selected', params.producer)
+            // For iframes we might want to hide producer selection
+            self.disallow_producer_selection = params.disallow_producer_selection
+
             self.search()
 
             // Focus on search
@@ -320,16 +349,13 @@
 
         self.clear_search = function() {
             self.refs.search.value = ''
-            self.start_date = ''
-            self.end_date = ''
             self.refs.start_date.value = ''
             self.refs.end_date.value = ''
-            $(self.refs.time_filter).dropdown('restore defaults');
-            $(self.refs.sort_filter).dropdown('restore defaults');
-            $(self.refs.producer_filter).dropdown('restore defaults');
-
-
-            // TODO: CLEAR DATES AND SUCH ???
+            $(self.refs.time_filter).dropdown('set selected', '')
+            $(self.refs.sort_filter).dropdown('set selected', '')
+            if (!self.disallow_producer_selection){
+                $(self.refs.producer_filter).dropdown('set selected', '')
+            }
 
             self.search()
         }
@@ -337,23 +363,20 @@
         self.search = function (query) {
             var filters = {q: query || self.refs.search.value}
 
-            if (self.refs.start_date.value) {
-                filters.start_date = self.refs.start_date.value
-            }
-            if (self.refs.end_date.value) {
-                filters.end_date = self.refs.end_date.value
-            }
-
+            filters.start_date = self.refs.start_date.value || ''
+            filters.end_date = self.refs.end_date.value || ''
             filters.date_flags = $(self.refs.time_filter).dropdown('get value')
             filters.sorting = $(self.refs.sort_filter).dropdown('get value')
+
+            // We may not have a producer so grab preset one from page load if so
             filters.producer = $(self.refs.producer_filter).dropdown('get value')
 
+            // If our filters are the same as before, just return
             if(JSON.stringify(self.old_filters) === JSON.stringify(filters)) {
                 return
-            } else {
-                self.old_filters = filters
             }
             
+            self.old_filters = filters
             self.loading = true
             self.update()
 
@@ -447,7 +470,7 @@
 
 <competition-tile onclick="{redirect_to_url}">
     <div class="ui tiny image" style="width: 40px;">
-        <img src="{logo}" style="margin-left: 1em; width: 3em; height: 3em;" class="ui avatar image">
+        <img src="{logo}" style="margin-left: 1em; max-width: 3em; max-height: 3em;" class="ui avatar image">
     </div>
     <div class="content">
         <div class="header">
@@ -479,48 +502,11 @@
         </div>
     </div>
 
-
-    <!--<div class="ui grid">
-        <div class="ui row">
-            <div align="center" class="one wide column">
-                <img class="ui avatar image" src="{logo}">
-            </div>
-            <div class="eight wide left aligned column">
-                <div class="header">{title}</div>
-                <i class="comp-description">{description}</i>
-                <br>
-                <i style="font-size: 12px !important;">
-                    {pretty_date(start_date)}
-                    <virtual if="{end}">
-                        - {pretty_date(end)}
-                    </virtual>
-                </i>
-            </div>
-            <div class="two wide column">
-                <!--<i>{created_by}</i>
-            </div>
-            <div class="three wide middle aligned column">
-                <i style="font-size: 10px !important;">{pretty_date(phase_deadlines)}</i>
-            </div>
-            <div class="two wide column">
-                <div class="ui blue label">
-                    <i class="user icon"></i> {participant_count}
-                </div>
-            </div>
-        </div>
-    </div>-->
-
     <script>
         var self = this
 
         self.on("mount", function () {
             $(".tooltip", self.root).popup()
-            /*if (self.description) {
-                if (self.description.length > 75){
-                    self.description = self.description.substr(0, 75) + "..."
-                    self.update()
-                }
-            }*/
         })
 
         self.redirect_to_url = function () {

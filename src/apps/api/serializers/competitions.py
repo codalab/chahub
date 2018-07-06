@@ -64,7 +64,7 @@ class CompetitionSerializer(WritableNestedModelSerializer):
     # existing models
     # Also, Producer in this case comes from serializer context
     producer = ProducerSerializer(required=False, validators=[])
-    phases = PhaseSerializer(many=True)
+    phases = PhaseSerializer(required=False, many=True)
     participants = CompetitionParticipantSerializer(many=True, read_only=True)
     admins = serializers.StringRelatedField(many=True, read_only=True)
 
@@ -90,6 +90,7 @@ class CompetitionSerializer(WritableNestedModelSerializer):
             'html_text',
             'current_phase_deadline',
             'prize',
+            'published'
         )
         validators = []
         extra_kwargs = {
@@ -116,7 +117,7 @@ class CompetitionSerializer(WritableNestedModelSerializer):
     def create(self, validated_data):
         try:
             temp_instance = Competition.objects.get(
-                remote_id=validated_data['remote_id'],
+                remote_id=validated_data.get('remote_id'),
                 producer__id=self.context['producer'].id
             )
         except ObjectDoesNotExist:

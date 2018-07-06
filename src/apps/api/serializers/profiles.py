@@ -12,5 +12,6 @@ class MyProfileSerializer(ModelSerializer):
             'username',
             'name',
             'email',
-            'bio'
+            'bio',
+            'id',
         )
