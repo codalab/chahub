@@ -1,8 +1,8 @@
 <search-results>
     <div id="particle_header" class="ui top">
         <img id="brand_logo" src="static/img/temp_chahub_logo.png">
-        <a hide="{USER_AUTHENTICATED}" style="margin-top: 30px; margin-left: 90vw" href="/accounts/login/" class="ui large red button">LOGIN</a>
-        <a show="{USER_AUTHENTICATED}" style="margin-top: 30px; margin-left: 90vw" href="/accounts/logout/" class="ui large red button">LOGOUT</a>
+        <a hide="{USER_AUTHENTICATED}" style="float: right; margin: 15px 15px 0 0;" href="/accounts/login/" class="ui large red button">LOGIN</a>
+        <a show="{USER_AUTHENTICATED}" style="float: right; margin: 15px 15px 0 0;" href="/accounts/logout/" class="ui large red button">LOGOUT</a>
         <div class="ui grid container menu-holder">
             <div class="centered column twelve wide">
                 <div class="ui grid">
