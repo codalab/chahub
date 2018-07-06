@@ -159,7 +159,7 @@ SOCIAL_AUTH_USER_MODEL = 'profiles.User'
 # =============================================================================
 # Debugging
 # =============================================================================
-DEBUG = os.environ.get('DEBUG', True)
+DEBUG = os.environ.get('DEBUG', False)
 
 if DEBUG:
     INSTALLED_APPS += ('debug_toolbar',)
