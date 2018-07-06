@@ -8,3 +8,5 @@ mkdir -p src/static/generated/
 # Generate frontend files
 npm run build-stylus
 npm run build-riot
+
+python manage.py collectstatic --noinput
