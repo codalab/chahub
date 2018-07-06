@@ -26,6 +26,18 @@ $(document).ready(function () {
      Sockets
      */
     var ws_protocol = window.location.protocol == 'https:' ? 'wss' : 'ws'
+
+
+
+
+
+
+
+
+
+
+    // @@@@@@@@ Disabling sockets for now! @@@@@@@@
+    /*
     var socket = new ReconnectingWebSocket(ws_protocol + '://' + window.location.host + '/')
 
 
@@ -57,6 +69,7 @@ $(document).ready(function () {
         CHAHUB.events.trigger(update_message.type, update_message.data)
     }
     window.socket = socket
+    */
 
 
     /*-----------------------------------------------------------------------------
