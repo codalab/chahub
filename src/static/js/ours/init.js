@@ -67,5 +67,5 @@ $(document).ready(function () {
     riot.mount('*')
 
     // Make the URLs in riotjs router start from / instead of the default #
-    route.base('/')
+    // route.base('/')
 })

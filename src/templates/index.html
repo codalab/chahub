@@ -60,6 +60,7 @@
         API: "/api/v1/"
     }
     PRODUCERS = JSON.parse("{{ producer_data|escapejs }}")
+    USER_AUTHENTICATED = ("{{ user.is_authenticated }}" === "True")
 </script>
 
 <div class="ui horizontal divided tiny list" style="padding: 10px;">
