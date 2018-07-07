@@ -24,3 +24,9 @@ _NOTE: Todo!_
 Add this buildpack:
 
 https://github.com/heroku/heroku-buildpack-pgbouncer
+
+Set these ENV vars:
+
+```
+WHITENOISE_ROOT=
+```
