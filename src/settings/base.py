@@ -28,8 +28,7 @@ THIRD_PARTY_APPS = (
     'django.contrib.postgres',
 
     'rest_framework',
-    # 'rest_framework_swagger',
-    # 'drf_openapi',
+    'drf_yasg',
     'whitenoise',
     'channels',
     'oauth2_provider',
