@@ -1,207 +1,132 @@
 <search-results>
-    <div id="particle_header" class="ui top">
-        <img id="brand_logo" src="static/img/temp_chahub_logo.png">
-        <a hide="{USER_AUTHENTICATED}" style="float: right; margin: 15px 15px 0 0;" href="/accounts/login/" class="ui large red button">LOGIN</a>
-        <a show="{USER_AUTHENTICATED}" style="float: right; margin: 15px 15px 0 0;" href="/accounts/logout/" class="ui large red button">LOGOUT</a>
-        <div class="ui grid container menu-holder">
-            <div class="centered column twelve wide">
-                <div class="ui grid">
-                    <div class="row search-wrapper">
-                        <div class="ui left action right icon input">
-                            <button class="ui red icon button" onclick="{ clear_search }">
-                                <i class="delete icon"></i>
-                            </button>
-                            <input type="text" placeholder="Search..." ref="search" onkeydown="{ input_updated }">
-                            <i class="search icon"></i>
+    <div id="particle_header" class="ui stackable centered grid top">
+        <div class="ui row">
+            <div class="one wide tablet four wide computer column">
+                <!--<img class="ui image desktop-only" id="brand_logo" src="static/img/temp_chahub_logo.png">-->
+                <img class="ui image" id="brand_logo_mobile" src="static/img/temp_chahub_logo.png">
+            </div>
+            <div class="two wide tablet eight wide computer column">
+                <div class="ui double stackable centered grid">
+                    <div class="centered row">
+                        <div class="search-wrapper column">
+                            <div class="ui left action right icon input">
+                                <button class="ui red icon button" onclick="{ clear_search }">
+                                    <i class="delete icon"></i>
+                                </button>
+                                <input type="text" placeholder="Search..." ref="search" onkeydown="{ input_updated }">
+                                <i class="search icon"></i>
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="ui form">
-                            <div class="inline fields">
-                                <div class="field">
-                                    <div ref="time_filter" class="ui floating labeled icon dropdown button">
+                    <div class="centered row">
+                        <div class="one wide tablet four wide computer center aligned column">
+                            <div ref="time_filter" class="ui tiny labeled icon dropdown button">
+                                <i class="calendar icon"></i>
+                                <span class="text">Any time</span>
+                                <div class="menu">
+                                    <div class="header">
+                                        Timeframe
+                                    </div>
+                                    <div class="divider"></div>
+                                    <div class="active item" data-value="">
+                                        Any time
+                                    </div>
+                                    <div class="item" data-value="active">
+                                        Active
+                                    </div>
+                                    <div class="item" data-value="this_month">
+                                        Created this month
+                                    </div>
+                                    <div class="item" data-value="this_year">
+                                        Created this year
+                                    </div>
+                                    <div class="divider"></div>
+                                    <div class="header">
+                                        Date range
+                                    </div>
+                                    <div class="ui left icon input datepicker" data-calendar-type="start">
                                         <i class="calendar icon"></i>
-                                        <span class="text">Any time</span>
-                                        <div class="menu">
-                                            <div class="header">
-                                                Timeframe
-                                            </div>
-                                            <div class="divider"></div>
-                                            <div class="active item" data-value="">
-                                                Any time
-                                            </div>
-                                            <div class="item" data-value="active">
-                                                Active
-                                            </div>
-                                            <div class="item" data-value="this_month">
-                                                Created this month
-                                            </div>
-                                            <div class="item" data-value="this_year">
-                                                Created this year
-                                            </div>
-                                            <div class="divider"></div>
-                                            <div class="header">
-                                                Date range
-                                            </div>
-                                            <div class="ui left icon input datepicker" data-calendar-type="start">
-                                                <i class="calendar icon"></i>
-                                                <input ref="start_date" type="text" name="search"
-                                                       placeholder="Start date">
-                                            </div>
-                                            <div class="ui left icon input datepicker" data-calendar-type="end">
-                                                <i class="calendar icon"></i>
-                                                <input ref="end_date" type="text" name="search" placeholder="End date">
-                                            </div>
-                                        </div>
+                                        <input ref="start_date" type="text" name="search"
+                                               placeholder="Start date">
+                                    </div>
+                                    <div class="ui left icon input datepicker" data-calendar-type="end">
+                                        <i class="calendar icon"></i>
+                                        <input ref="end_date" type="text" name="search" placeholder="End date">
                                     </div>
                                 </div>
+                            </div>
+                        </div>
 
-                                <div class="field">
-                                    <div ref="sort_filter" class="ui floating labeled icon dropdown button">
-                                        <i class="filter icon"></i>
-                                        <span class="text">Sort by relevance</span>
-                                        <div class="menu">
-                                            <div class="header">
-                                                Sorting
-                                            </div>
-                                            <div class="divider"></div>
-                                            <div class="active item" data-value="">
-                                                Sort by relevance
-                                            </div>
-                                            <div data-value="deadline" class="item">
-                                                Next deadline
-                                            </div>
-                                            <div data-value="prize" class="item">
-                                                Prize amount
-                                            </div>
-                                            <div data-value="participant_count" class="item">
-                                                Number of participants
-                                            </div>
-                                        </div>
+                        <div class="one wide tablet four wide computer center aligned column">
+                            <div ref="sort_filter" class="ui tiny labeled icon dropdown button">
+                                <i class="filter icon"></i>
+                                <span class="text">Relevance</span>
+                                <div class="menu">
+                                    <div class="header">
+                                        Sorting
+                                    </div>
+                                    <div class="divider"></div>
+                                    <div class="active item" data-value="">
+                                        Relevance
+                                    </div>
+                                    <div data-value="deadline" class="item">
+                                        Deadline
+                                    </div>
+                                    <div data-value="prize" class="item">
+                                        Prize Amount
+                                    </div>
+                                    <div data-value="participant_count" class="item">
+                                        Participant Count
                                     </div>
                                 </div>
+                            </div>
+                        </div>
 
-                                <div class="field" show="{!disallow_producer_selection}">
-                                    <div ref="producer_filter" class="ui floating labeled icon dropdown button">
-                                        <i class="globe icon"></i>
-                                        <span class="text">Any producer</span>
-                                        <div class="menu">
-                                            <div class="header">
-                                                Provider
-                                            </div>
-                                            <div class="divider"></div>
-                                            <div class="active item" data-value="">
-                                                Any provider
-                                            </div>
-                                            <virtual each="{PRODUCERS}">
-                                                <div class="item" data-value="{id}">{name}</div>
-                                            </virtual>
-                                        </div>
+                        <div class="one wide tablet four wide computer center aligned column"
+                             show="{!disallow_producer_selection}">
+                            <div ref="producer_filter" class="ui tiny labeled icon dropdown button">
+                                <i class="globe icon"></i>
+                                <span class="text">All</span>
+                                <div class="menu">
+                                    <div class="header">
+                                        Provider
                                     </div>
+                                    <div class="divider"></div>
+                                    <div class="active item" data-value="">
+                                        All
+                                    </div>
+                                    <virtual each="{PRODUCERS}">
+                                        <div class="item" data-value="{id}">{name}</div>
+                                    </virtual>
                                 </div>
-
-                                <!--<div class="field">
-                                    <div class="ui icon buttons">
-                                        <button class="ui button { positive: display_mode === 'list' }"
-                                                onclick="{ set_display_mode.bind(this, 'list') }">
-                                            <i class="list layout icon"></i>
-                                        </button>
-                                        <button class="ui button { positive: display_mode === 'card' }"
-                                                onclick="{ set_display_mode.bind(this, 'card') }">
-                                            <i class="grid layout icon"></i>
-                                        </button>
-                                    </div>
-                                </div>-->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!--<div class="item">
-            <div class="ui icon input">
-                <input type="text" placeholder="Search...">
-                <i class="search icon"></i>
+            <div class="one wide tablet four wide computer center aligned column">
+                <a hide="{USER_AUTHENTICATED}" style="" href="/accounts/login/"
+                   class="ui red button">LOGIN</a>
+                <a show="{USER_AUTHENTICATED}" style="" href="/accounts/logout/"
+                   class="ui red button">LOGOUT</a>
             </div>
         </div>
-        <div class="right item">
-            <div class="ui input">
-                <div class="ui primary button">Create Competition</div>
-            </div>
-        </div>-->
     </div>
-
-    <div class="ui stackable grid container">
-        <div class="row centered">
-            <div class="twelve wide column">
-                <!-- for spacing/something later -->
-            </div>
-        </div>
-        <div id="results_container" class="row centered {loading: loading}">
-            <div class="ui active loader" show="{loading}"></div>
-
-            <div class="twelve wide column" style="padding: 0;" show="{ display_mode === 'list' }">
-                <div class="ui stacked">
-                    <!--<div class="ui message" show="{!showing_default_results}">
-                        <div class="header">
-                            {results.length}
-                        </div>
-                        Results
-                    </div>-->
-                    <div class="ui warning message" show="{showing_default_results}">
-                        <div class="header">
-                            No results found
-                        </div>
-                        Try broadening your search
+    <div class="ui centered grid">
+        <div class="fourteen wide tablet eight wide computer column">
+            <div class="ui stacked">
+                <div class="ui warning message" show="{showing_default_results}">
+                    <div class="header">
+                        No results found
                     </div>
-
-                    <div class="ui middle aligned compact divided link items" style="margin-top: 0;">
-                        <competition-tile each="{ results }" no-reorder class="item" style="padding: .5em 0;"></competition-tile>
-                    </div>
-
-                    <!--<div class="ui link cards">
-                        <competition-card each="{ results }" class="ui centered card"
-                                          show="{ display_mode === 'card' }"></competition-card>
-                    </div>-->
+                    Try broadening your search
                 </div>
-            </div>
-            <div class="sixteen wide column" show="{ display_mode === 'card' }">
-                <div class="ui stacked">
-                    <!--<search-result each="{ results }"></search-result>-->
-                    <div id="result_header" style="background-color: #efefef; padding: 10px; margin-bottom: 20px;">
-                        <h3 class="ui inverted">{ results.length } results</h3>
-                    </div>
-                    <div class="ui link cards">
-                        <competition-card each="{ results }" class="ui centered card"></competition-card>
-                    </div>
-                    <div show="{ results.length == 0 }">
-                        <i>No results found...</i>
-                    </div>
+                <div class="ui middle aligned compact divided link items" style="margin-top: 0;">
+                    <competition-tile each="{ results }" no-reorder class="item"
+                                      style="padding: .5em 0;"></competition-tile>
                 </div>
             </div>
         </div>
-
-        <!--<div class="row centered">
-            <div class="twelve wide column right aligned">
-                <div class="ui pagination menu right aligned">
-                    <a class="active item">
-                        1
-                    </a>
-                    <div class="disabled item">
-                        ...
-                    </div>
-                    <a class="item">
-                        10
-                    </a>
-                    <a class="item">
-                        11
-                    </a>
-                    <a class="item">
-                        12
-                    </a>
-                </div>
-            </div>
-        </div>-->
     </div>
 
     <script>
@@ -400,6 +325,50 @@
     </script>
 
     <style type="text/stylus">
+
+        .content-desktop {
+            display: block;
+        }
+
+        .content-mobile {
+            display: none;
+        }
+
+        @media screen and (max-width: 768px) {
+
+            .content-desktop {
+                display: none;
+            }
+
+            .content-mobile {
+                display: block;
+            }
+
+        }
+
+        /*
+        //medium+ screen sizes
+        @media (min-width: 992px) {
+            .desktop-only {
+                display: block !important;
+            }
+        }
+
+        //small screen sizes
+        @media (max-width: 991px) {
+            .mobile-only {
+                display: block !important;
+            }
+
+            .desktop-only {
+                display: none !important;
+            }
+        }*/
+
+        .ui.grid
+            @media screen and (max-width: 640px)
+                margin 0rem !important
+
         .ui.top
             // This is for the particles js animations to fit to this
             position relative
@@ -420,6 +389,9 @@
             cursor pointer
             filter brightness(0) invert(1)
 
+        #brand_logo_mobile
+            filter brightness(0) invert(1)
+
         #results_container
             min-height 375px
 
@@ -433,7 +405,10 @@
             padding-bottom 0 !important
 
             .input
-                width 100%
+                width 100% !important
+            @media screen and (max-width: 640px)
+                .input
+                    width 40%
 
         .loading
             opacity .5
