@@ -60,4 +60,4 @@ class IndexView(TemplateView):
         return super().get(request, *args, **kwargs)
 
 # urlpatterns += [re_path(r'.*', IndexView.as_view())]
-urlpatterns += [re_path(r'', IndexView.as_view())]
+urlpatterns += [re_path(r'^$', IndexView.as_view())]
