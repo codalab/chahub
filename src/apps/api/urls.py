@@ -19,12 +19,11 @@ router.register('submissions', competitions.SubmissionViewSet)
 # Documentation details
 schema_view = get_schema_view(
    openapi.Info(
-      title="Snippets API",
+      title="Chahub API",
       default_version='v1',
-      description="Test description",
-      terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="contact@snippets.local"),
-      license=openapi.License(name="BSD License"),
+      description="Chahub is a platform for machine learning resources, like competitions, test sets, and example solutions",
+      contact=openapi.Contact(email="info@codalab.org"),
+      license=openapi.License(name="MIT License"),
    ),
    validators=['flex', 'ssv'],
    public=True,
