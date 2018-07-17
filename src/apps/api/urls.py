@@ -42,5 +42,5 @@ urlpatterns = [
     url(r'^$', schema_view.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui'),
 
     # Optionally, use "redoc" style
-    # url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=None), name='schema-redoc'),
+    url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=None), name='schema-redoc'),
 ]
