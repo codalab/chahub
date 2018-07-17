@@ -19,8 +19,8 @@
                         </div>
                     </div>
                     <div class="centered row">
-                        <div class="one wide tablet four wide computer center aligned column">
-                            <div ref="time_filter" class="ui tiny labeled icon dropdown button">
+                        <div id="mobile-friendly-column" class="one wide tablet four wide computer center aligned column">
+                            <div id="mobile-friendly-button" ref="time_filter" class="ui tiny labeled icon dropdown button">
                                 <i class="calendar icon"></i>
                                 <span class="text">Any time</span>
                                 <div class="menu">
@@ -57,8 +57,8 @@
                             </div>
                         </div>
 
-                        <div class="one wide tablet four wide computer center aligned column">
-                            <div ref="sort_filter" class="ui tiny labeled icon dropdown button">
+                        <div id="mobile-friendly-column" class="one wide tablet four wide computer center aligned column">
+                            <div id="mobile-friendly-button" ref="sort_filter" class="ui tiny labeled icon dropdown button">
                                 <i class="filter icon"></i>
                                 <span class="text">Relevance</span>
                                 <div class="menu">
@@ -82,9 +82,9 @@
                             </div>
                         </div>
 
-                        <div class="one wide tablet four wide computer center aligned column"
+                        <div id="mobile-friendly-column" class="one wide tablet four wide computer center aligned column"
                              show="{!disallow_producer_selection}">
-                            <div ref="producer_filter" class="ui tiny labeled icon dropdown button">
+                            <div id="mobile-friendly-button" ref="producer_filter" class="ui tiny labeled icon dropdown button">
                                 <i class="globe icon"></i>
                                 <span class="text">All</span>
                                 <div class="menu">
@@ -105,15 +105,15 @@
                 </div>
             </div>
             <div class="one wide tablet four wide computer center aligned column">
-                <a hide="{USER_AUTHENTICATED}" style="" href="/accounts/login/"
+                <a id="login-button" hide="{USER_AUTHENTICATED}" style="" href="/accounts/login/"
                    class="ui red button">LOGIN</a>
-                <a show="{USER_AUTHENTICATED}" style="" href="/accounts/logout/"
+                <a id="login-button" show="{USER_AUTHENTICATED}" style="" href="/accounts/logout/"
                    class="ui red button">LOGOUT</a>
             </div>
         </div>
     </div>
-    <div class="ui centered grid">
-        <div class="fourteen wide tablet eight wide computer column">
+    <div id="mobile-grid" class="ui centered grid">
+        <div id="mobile" class="sixteen wide tablet eight wide computer column">
             <div class="ui stacked">
                 <div class="ui warning message" show="{showing_default_results}">
                     <div class="header">
@@ -121,9 +121,13 @@
                     </div>
                     Try broadening your search
                 </div>
-                <div class="ui middle aligned compact divided link items" style="margin-top: 0;">
+                <div class="ui middle aligned compact divided link items content-desktop" style="margin-top: 0;">
                     <competition-tile each="{ results }" no-reorder class="item"
                                       style="padding: .5em 0;"></competition-tile>
+                </div>
+                <div class="ui middle aligned compact link items content-mobile" style="margin-top: -1;">
+                    <competition-mobile-tile each="{ results }" no-reorder class="item"
+                                      style="padding: -1em;"></competition-mobile-tile>
                 </div>
             </div>
         </div>
@@ -346,6 +350,28 @@
 
         }
 
+        #mobile-grid
+            margin 0 !important
+
+        #login-button
+            @media screen and (max-width: 768px)
+                margin-top -5vh !important
+
+        #mobile-friendly-button
+            @media screen and (max-width: 768px)
+                margin-top 0 !important
+                margin-bottom 0 !important
+                width 33vw !important
+
+        #mobile-friendly-column
+            @media screen and (max-width: 768px)
+                padding-top 0 !important
+                padding-bottom 1vh
+
+        #mobile
+            @media screen and (min-width: 768px)
+                margin-top 2.5vh !important
+
         /*
         //medium+ screen sizes
         @media (min-width: 992px) {
@@ -367,7 +393,7 @@
 
         .ui.grid
             @media screen and (max-width: 640px)
-                margin 0rem !important
+                margin 0 !important
 
         .ui.top
             // This is for the particles js animations to fit to this
@@ -406,9 +432,16 @@
 
             .input
                 width 100% !important
+                margin-top 5%
             @media screen and (max-width: 640px)
                 .input
                     width 40%
+                    margin-top 0%
+
+        .ui.red.button
+            margin-top 10%
+            @media screen and (max-width: 640px)
+                margin-top 0%
 
         .loading
             opacity .5
@@ -534,3 +567,113 @@
             display block
     </style>
 </competition-card>
+
+<competition-mobile-tile onclick="{redirect_to_url}">
+    <!--<h6 class="ui top attached header">
+        Dogs
+    </h6>
+    <div class="ui grid attached segment">
+        <div class="ui floating blue centered mini label tooltip" data-content="Participant count">
+            <p style="">{participant_count}</p>
+        </div>
+        <div class="ui tiny image" style="width: 40px;">
+            <img src="{logo}" style="margin-left: 1em; max-width: 3em; max-height: 3em;" class="ui avatar image">
+        </div>
+        <div class="content">
+            <div class="header">
+                {title}
+            </div>
+            <div class="description">
+                <p>{description}</p>
+            </div>
+            <div class="extra" style="margin-top: 0;">
+                <span style="font-size: .8em; color: rgba(0,0,255, 0.6);">{url}</span>
+                <span style="font-size: .8em;">
+                {pretty_date(start)}
+                <virtual if="{end}">
+                    - {pretty_date(end)}
+                </virtual>
+            </span>
+                <div class="ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
+                    <i class="yellow trophy icon"></i> {prize}
+                </div>
+                <div class="ui right floated red mini label tooltip"
+                     style="background-color: #db28289e;"
+                     data-content="Deadline of the current phase"
+                     show="{current_phase_deadline}">
+                    <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
+                </div>
+            </div>
+        </div>
+    </div>-->
+    <div class="ui attached message">
+        <div class="ui grid">
+            <div class="row">
+                <div class="ui two wide centered column" style="text-align: center;">
+                    <img src="{logo}" style="margin: 0em; max-width: 3em; max-height: 3em;"
+                         class="ui centered avatar image">
+                </div>
+                <div class="fourteen wide column">
+                    <div style="font-size: .95em;" class="header">
+                        {title}
+                    </div>
+                    <p style="font-size: .85em; color: rgba(0,0,0, 0.4);">{description}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui attached fluid segment">
+        <div class="ui floating blue centered mini label tooltip" data-content="Participant count">
+            <p style="">{participant_count}</p>
+        </div>
+        <div align="center" class="">
+            <div class="" style="margin-top: 0;">
+                <span style="font-size: .8em; color: rgba(0,0,255, 0.6);">{url}</span>
+            </div>
+            <div>
+                <span style="font-size: .8em;">
+                    {pretty_date(start)}
+                    <virtual if="{end}">
+                        - {pretty_date(end)}
+                    </virtual>
+                </span>
+            </div>
+                <div class="ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
+                    <i class="yellow trophy icon"></i> {prize}
+                </div>
+                <div class="ui right floated red mini label tooltip"
+                     style="background-color: #db28289e;"
+                     data-content="Deadline of the current phase"
+                     show="{current_phase_deadline}">
+                    <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var self = this
+
+        self.on("mount", function () {
+            $(".tooltip", self.root).popup()
+        })
+
+        self.redirect_to_url = function () {
+            window.open(self.url, '_blank');
+        }
+    </script>
+
+    <style type="text/stylus">
+        :scope
+            display block
+
+        .content
+            .description
+                margin-top 0 !important
+                color #808080 !important
+                font-size .9em !important
+
+            p
+                line-height 1.1em !important
+    </style>
+</competition-mobile-tile>
