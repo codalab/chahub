@@ -1,12 +1,9 @@
-from django.conf import settings
-from elasticsearch import Elasticsearch
-from elasticsearch_dsl import Search
-
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_extensions.cache.decorators import cache_response
 
 from api.caching import QueryParamsKeyConstructor
+from utils.search import get_search_client, get_results, get_default_search_results
 
 
 class SearchView(APIView):
@@ -22,7 +19,7 @@ class SearchView(APIView):
         producer = request.GET.get('producer')
 
         # Setup ES connection, excluding HTML text from our results
-        s = self._get_search_client()
+        s = get_search_client()
         data = {
             "results": [],
             "showing_default_results": False,
@@ -34,24 +31,18 @@ class SearchView(APIView):
         s = self._sort(s, sorting, query)
 
         # Get results and prepare them
-        results = s.execute()
+        # results = s.execute()
+        data["results"] = get_results(s)
 
-        if not results:
+        if not data["results"]:
             data["showing_default_results"] = True
-            s = self._get_search_client()
-            s = s.filter('term', published=True)
-            results = s.execute()
+            data["results"] = get_default_search_results()
 
-        data["results"] = [hit.to_dict() for hit in results]
+        # data["results"] = [hit.to_dict() for hit in results]
+        # data["results"] = get_results(s)
         return Response(data)
 
-    def _get_search_client(self, size=35):
-        client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
-        s = Search(using=client)
-        s = s.extra(size=size)
-        s = s.filter('term', published=True)
-        s = s.source(excludes=["html_text"])
-        return s
+
 
     def _search(self, search, query):
         if query and query != ' ':

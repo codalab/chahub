@@ -219,6 +219,7 @@
 
              onNoResults: function(search) {}
              })*/
+
             // header particles
             particlesJS.load('particle_header', URLS.assets.header_particles)
 
@@ -337,7 +338,12 @@
             // For iframes we might want to hide producer selection
             self.disallow_producer_selection = params.disallow_producer_selection
 
-            self.search()
+
+            if(DEFAULT_SEARCH_RESULTS) {
+                self.results = DEFAULT_SEARCH_RESULTS
+            } else {
+                self.search()
+            }
 
             // Focus on search
             self.refs.search.focus()
