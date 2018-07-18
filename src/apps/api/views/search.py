@@ -38,11 +38,7 @@ class SearchView(APIView):
             data["showing_default_results"] = True
             data["results"] = get_default_search_results()
 
-        # data["results"] = [hit.to_dict() for hit in results]
-        # data["results"] = get_results(s)
         return Response(data)
-
-
 
     def _search(self, search, query):
         if query and query != ' ':
