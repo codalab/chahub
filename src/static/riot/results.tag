@@ -99,7 +99,6 @@
                                 </div>
 
                                 <div class="field">
-                                    <!--<button class="ui green medium button" onclick="{ copy_url_to_clipboard }">Copy Search Results</button>-->
                                     <button class="ui green medium labeled icon button" id="facebookShareLink">
                                         <i class="facebook icon"></i>
                                         Share
