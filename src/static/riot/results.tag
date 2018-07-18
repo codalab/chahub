@@ -100,6 +100,13 @@
                                     </div>
                                 </div>
 
+                                <div class="field">
+                                    <button class="ui green medium labeled icon button" id="facebookShareLink">
+                                        <i class="facebook icon"></i>
+                                        Share
+                                    </button>
+                                </div>
+
                                 <!--<div class="field">
                                     <div class="ui icon buttons">
                                         <button class="ui button { positive: display_mode === 'list' }"
@@ -205,12 +212,20 @@
     </div>
 
     <script>
+
         var self = this
         self.results = []
         self.display_mode = 'list'
         self.old_filters = {}
 
         self.on('mount', function () {
+
+            $("#facebookShareLink").on("click", function () {
+                var text = String(window.location.href)
+                window.open("https://www.facebook.com/sharer/sharer.php?u=" + text, "pop", "width=600, height=400, scrollbars=no");
+                return false;
+            });
+
             /*$(self.refs.search_wrapper).dropdown({
 
 
