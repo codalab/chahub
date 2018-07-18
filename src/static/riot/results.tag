@@ -216,8 +216,8 @@
         self.display_mode = 'list'
         self.old_filters = {}
 
-
         self.on('mount', function () {
+
             $("#facebookShareLink").on("click", function () {
                 var text = String(window.location.href)
                 window.open("https://www.facebook.com/sharer/sharer.php?u=" + text, "pop", "width=600, height=400, scrollbars=no");
