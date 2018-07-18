@@ -365,17 +365,8 @@
             top -2%
             cursor pointer
             filter brightness(0) invert(1)
-            @media screen and (max-width 768px)
+            @media screen and (max-width 991px)
                 display none
-
-        #brand_logo_tablet
-            filter brightness(0) invert(1)
-            position fixed
-            width 75px
-            height 75px
-            left 1.618%
-            top 1.618%
-            cursor pointer
 
         #brand_logo_mobile
             filter brightness(0) invert(1)
@@ -385,7 +376,8 @@
             top 17%
             left 4%
             cursor pointer
-            @media screen and (min-width 769px)
+
+            @media screen and (min-width 992px)
                 display none
 
         #mobile-friendly-button
@@ -419,6 +411,9 @@
                 cursor pointer
                 text-align left
                 margin 0
+
+            @media screen and (min-width 768px)
+                    display none
 
         .loading
             opacity .5
