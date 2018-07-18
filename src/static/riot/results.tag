@@ -1,15 +1,20 @@
 <search-results>
-    <div id="particle_header" class="ui stackable centered grid top">
+    <div id="particle_header" class="ui centered grid">
         <div class="ui row">
-            <div class="one wide tablet four wide computer column">
-                <!--<img class="ui image desktop-only" id="brand_logo" src="static/img/temp_chahub_logo.png">-->
-                <img class="ui image" id="brand_logo_mobile" src="static/img/temp_chahub_logo.png">
+            <div class="one computer only wide column">
+                <img class="ui image" id="brand_logo" src="static/img/temp_chahub_logo.png">
             </div>
-            <div class="two wide tablet eight wide computer column">
-                <div class="ui double stackable centered grid">
+            <div class="one tablet only wide column">
+                <img class="ui image" id="brand_logo_tablet" src="static/img/Chahub_C.png">
+            </div>
+            <div class="one mobile only wide column">
+                <img class="ui image" id="brand_logo_mobile" src="static/img/Chahub_C.png">
+            </div>
+            <div class="fourteen wide mobile twelve wide tablet eight wide computer column">
+                <div class="ui centered grid">
                     <div class="centered row">
-                        <div class="search-wrapper column">
-                            <div class="ui left action right icon input">
+                        <div class="ui fourteen wide mobile fifteen wide search-wrapper column">
+                            <div id="searchbar" class="ui left action right icon input">
                                 <button class="ui red icon button" onclick="{ clear_search }">
                                     <i class="delete icon"></i>
                                 </button>
@@ -19,8 +24,9 @@
                         </div>
                     </div>
                     <div class="centered row">
-                        <div id="mobile-friendly-column" class="one wide tablet four wide computer center aligned column">
-                            <div id="mobile-friendly-button" ref="time_filter" class="ui tiny labeled icon dropdown button">
+                        <div id="mobile-friendly-column" class="six wide center aligned column">
+                            <div id="mobile-friendly-button" ref="time_filter"
+                                 class="ui tiny labeled icon dropdown button">
                                 <i class="calendar icon"></i>
                                 <span class="text">Any time</span>
                                 <div class="menu">
@@ -57,8 +63,9 @@
                             </div>
                         </div>
 
-                        <div id="mobile-friendly-column" class="one wide tablet four wide computer center aligned column">
-                            <div id="mobile-friendly-button" ref="sort_filter" class="ui tiny labeled icon dropdown button">
+                        <div id="mobile-friendly-column" class="five wide center aligned column">
+                            <div id="mobile-friendly-button" ref="sort_filter"
+                                 class="ui tiny labeled icon dropdown button">
                                 <i class="filter icon"></i>
                                 <span class="text">Relevance</span>
                                 <div class="menu">
@@ -82,9 +89,10 @@
                             </div>
                         </div>
 
-                        <div id="mobile-friendly-column" class="one wide tablet four wide computer center aligned column"
+                        <div id="mobile-friendly-column" class="five wide center aligned column"
                              show="{!disallow_producer_selection}">
-                            <div id="mobile-friendly-button" ref="producer_filter" class="ui tiny labeled icon dropdown button">
+                            <div id="mobile-friendly-button" ref="producer_filter"
+                                 class="ui tiny labeled icon dropdown button">
                                 <i class="globe icon"></i>
                                 <span class="text">All</span>
                                 <div class="menu">
@@ -104,16 +112,21 @@
                     </div>
                 </div>
             </div>
-            <div class="one wide tablet four wide computer center aligned column">
+            <div class="tablet computer only one wide column">
                 <a id="login-button" hide="{USER_AUTHENTICATED}" style="" href="/accounts/login/"
                    class="ui red button">LOGIN</a>
                 <a id="login-button" show="{USER_AUTHENTICATED}" style="" href="/accounts/logout/"
                    class="ui red button">LOGOUT</a>
             </div>
+            <div id="ellipses" class="mobile only one wide column">
+                <div class="ui icon button">
+                    <i class="large ellipsis vertical icon"></i>
+                </div>
+            </div>
         </div>
     </div>
     <div id="mobile-grid" class="ui centered grid">
-        <div id="mobile" class="sixteen wide tablet eight wide computer column">
+        <div id="mobile" class="fourteen wide column">
             <div class="ui stacked">
                 <div class="ui warning message" show="{showing_default_results}">
                     <div class="header">
@@ -127,7 +140,7 @@
                 </div>
                 <div class="ui middle aligned compact link items content-mobile" style="margin-top: -1;">
                     <competition-mobile-tile each="{ results }" no-reorder class="item"
-                                      style="padding: -1em;"></competition-mobile-tile>
+                                             style="padding: -1em;"></competition-mobile-tile>
                 </div>
             </div>
         </div>
@@ -164,14 +177,14 @@
                     lastResort: 'bottom left',
                     hideOnScroll: false
                 },
-                onChange: function(date, text, mode) {
+                onChange: function (date, text, mode) {
                     self.set_time_dropdown_text()
 
                     self.search()
                 }
             })
             $(".ui.dropdown").dropdown({
-                onChange: function(){
+                onChange: function () {
                     self.search()
                 }
             })
@@ -210,7 +223,7 @@
             });
         })
 
-        self.set_time_dropdown_text = function() {
+        self.set_time_dropdown_text = function () {
             /*if(this.dataset.calendarType === 'start') {
                 self.refs.start_date.value = text
             }
@@ -219,15 +232,15 @@
                 self.refs.end_date.value = text
             }*/
 
-            if (self.refs.start_date.value && self.refs.end_date.value){
+            if (self.refs.start_date.value && self.refs.end_date.value) {
                 var temp_string = self.refs.start_date.value + ' through ' + self.refs.end_date.value
                 $(self.refs.time_filter).dropdown('set text', temp_string)
             }
-            else if (self.refs.start_date.value){
-                var temp_string = 'Starting from ' +  self.refs.start_date.value
+            else if (self.refs.start_date.value) {
+                var temp_string = 'Starting from ' + self.refs.start_date.value
                 $(self.refs.time_filter).dropdown('set text', temp_string)
             }
-            else if (self.refs.end_date.value){
+            else if (self.refs.end_date.value) {
                 var temp_string = 'End by ' + self.refs.end_date.value
                 $(self.refs.time_filter).dropdown('set text', temp_string)
             }
@@ -245,7 +258,7 @@
             // TODO: set producer dropdown selected value
 
             // Date flags and ranges
-            if(params.date_flags) {
+            if (params.date_flags) {
                 $(self.refs.time_filter).dropdown('set selected', params.date_flags)
             } else {
                 // If no date flags, maybe we have a date range?
@@ -278,13 +291,13 @@
             }, 250)
         }
 
-        self.clear_search = function() {
+        self.clear_search = function () {
             self.refs.search.value = ''
             self.refs.start_date.value = ''
             self.refs.end_date.value = ''
             $(self.refs.time_filter).dropdown('set selected', '')
             $(self.refs.sort_filter).dropdown('set selected', '')
-            if (!self.disallow_producer_selection){
+            if (!self.disallow_producer_selection) {
                 $(self.refs.producer_filter).dropdown('set selected', '')
             }
 
@@ -303,10 +316,10 @@
             filters.producer = $(self.refs.producer_filter).dropdown('get value')
 
             // If our filters are the same as before, just return
-            if(JSON.stringify(self.old_filters) === JSON.stringify(filters)) {
+            if (JSON.stringify(self.old_filters) === JSON.stringify(filters)) {
                 return
             }
-            
+
             self.old_filters = filters
             self.loading = true
             self.update()
@@ -329,73 +342,7 @@
     </script>
 
     <style type="text/stylus">
-
-        .content-desktop {
-            display: block;
-        }
-
-        .content-mobile {
-            display: none;
-        }
-
-        @media screen and (max-width: 768px) {
-
-            .content-desktop {
-                display: none;
-            }
-
-            .content-mobile {
-                display: block;
-            }
-
-        }
-
-        #mobile-grid
-            margin 0 !important
-
-        #login-button
-            @media screen and (max-width: 768px)
-                margin-top -5vh !important
-
-        #mobile-friendly-button
-            @media screen and (max-width: 768px)
-                margin-top 0 !important
-                margin-bottom 0 !important
-                width 33vw !important
-
-        #mobile-friendly-column
-            @media screen and (max-width: 768px)
-                padding-top 0 !important
-                padding-bottom 1vh
-
-        #mobile
-            @media screen and (min-width: 768px)
-                margin-top 2.5vh !important
-
-        /*
-        //medium+ screen sizes
-        @media (min-width: 992px) {
-            .desktop-only {
-                display: block !important;
-            }
-        }
-
-        //small screen sizes
-        @media (max-width: 991px) {
-            .mobile-only {
-                display: block !important;
-            }
-
-            .desktop-only {
-                display: none !important;
-            }
-        }*/
-
-        .ui.grid
-            @media screen and (max-width: 640px)
-                margin 0 !important
-
-        .ui.top
+        #particle_header
             // This is for the particles js animations to fit to this
             position relative
 
@@ -408,15 +355,43 @@
                 z-index -1
                 background rgba(22, 12, 160, 0.9)
 
+        #searchbar
+            width 100%
+            margin-top 2%
+
         #brand_logo
-            height 48px
-            position absolute
-            top 10px
+            position fixed
+            width 180*1.618% px
+            height 60*1.618% px
+            left -2%
+            top -5%
             cursor pointer
             filter brightness(0) invert(1)
 
+        #brand_logo_tablet
+            filter brightness(0) invert(1)
+            position fixed
+            width 75px
+            height 75px
+            left 1.618%
+            top 1.618%
+            cursor pointer
+
+
         #brand_logo_mobile
             filter brightness(0) invert(1)
+            position fixed
+            width 42px
+            height 42px
+            left 4vw
+            top 1vw
+            cursor pointer
+
+        #mobile-friendly-button
+            max-height 30.84px
+            width 100%
+            @media screen and (max-width 450px)
+                display none
 
         #results_container
             min-height 375px
@@ -427,21 +402,26 @@
         .ui.button:hover .icon
             opacity 1
 
-        .search-wrapper
-            padding-bottom 0 !important
-
-            .input
-                width 100% !important
-                margin-top 5%
-            @media screen and (max-width: 640px)
-                .input
-                    width 40%
-                    margin-top 0%
-
         .ui.red.button
-            margin-top 10%
-            @media screen and (max-width: 640px)
-                margin-top 0%
+            margin-top 10px
+
+        #ellipses
+            position absolute
+            display flex
+            right 0
+            margin 1.44444% 4.5%
+
+
+        #ellipses .button
+            height 38px
+            width 23.5px
+
+
+        #ellipses .icon
+                display: inherit;
+                cursor: pointer;
+                text-align: left;
+                margin-left: -50%
 
         .loading
             opacity .5
@@ -638,17 +618,17 @@
                     </virtual>
                 </span>
             </div>
-                <div class="ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
-                    <i class="yellow trophy icon"></i> {prize}
-                </div>
-                <div class="ui right floated red mini label tooltip"
-                     style="background-color: #db28289e;"
-                     data-content="Deadline of the current phase"
-                     show="{current_phase_deadline}">
-                    <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
-                </div>
+            <div class="ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
+                <i class="yellow trophy icon"></i> {prize}
+            </div>
+            <div class="ui right floated red mini label tooltip"
+                 style="background-color: #db28289e;"
+                 data-content="Deadline of the current phase"
+                 show="{current_phase_deadline}">
+                <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
             </div>
         </div>
+    </div>
     </div>
 
     <script>
