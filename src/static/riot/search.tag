@@ -7,12 +7,12 @@
             <!-- We keep 1 empty column here to align the brand logo defined above this element -->
             <div class="one wide column"></div>
 
-            <div class="fourteen wide mobile twelve wide tablet eight wide computer column">
+            <div class="fourteen wide mobile twelve wide tablet nine wide computer column">
                 <div class="ui centered grid">
                     <div class="centered row">
                         <div class="ui fourteen wide mobile fifteen wide search-wrapper column">
                             <div id="searchbar" class="ui left action right icon input">
-                                <button class="ui red icon button" onclick="{ clear_search }">
+                                <button class="ui icon button" onclick="{ clear_search }">
                                     <i class="delete icon"></i>
                                 </button>
                                 <input type="text" placeholder="Search..." ref="search" onkeydown="{ input_updated }">
@@ -31,14 +31,14 @@
                             <div id="mobile-friendly-button" ref="time_filter"
                                  class="ui tiny labeled icon dropdown button">
                                 <i class="calendar icon"></i>
-                                <span class="text">Any time</span>
+                                <span class="text">Any Time</span>
                                 <div class="menu">
                                     <div class="header">
                                         Timeframe
                                     </div>
                                     <div class="divider"></div>
                                     <div class="active item" data-value="">
-                                        Any time
+                                        Any Time
                                     </div>
                                     <div class="item" data-value="active">
                                         Active
@@ -66,7 +66,7 @@
                             </div>
                         </div>
 
-                        <div id="mobile-friendly-column" class="five wide center aligned column">
+                        <div id="mobile-friendly-column" class="six wide center aligned column">
                             <div id="mobile-friendly-button" ref="sort_filter"
                                  class="ui tiny labeled icon dropdown button">
                                 <i class="filter icon"></i>
@@ -92,7 +92,7 @@
                             </div>
                         </div>
 
-                        <div id="mobile-friendly-column" class="five wide center aligned column"
+                        <div id="mobile-friendly-column" class="four wide center aligned column"
                              show="{!disallow_producer_selection}">
                             <div id="mobile-friendly-button" ref="producer_filter"
                                  class="ui tiny labeled icon dropdown button">
@@ -117,12 +117,20 @@
             </div>
             <div class="tablet computer only one wide column">
                 <a id="login-button" hide="{USER_AUTHENTICATED}" style="" href="/accounts/login/"
-                   class="ui red button">LOGIN</a>
+                   class="ui button">LOGIN</a>
                 <a id="login-button" show="{USER_AUTHENTICATED}" style="" href="/accounts/logout/"
-                   class="ui red button">LOGOUT</a>
+                   class="ui button">LOGOUT</a>
             </div>
         </div>
+        <div id="mobile_drop" class="sixteen wide mobile only column">
+            <button id="down_caret" class="ui icon button" click="{ toggle_search_options }"><i class="down caret icon"></i>Search Options</button>
+        </div>
     </div>
+
+    <div show="{ display_search_options }">
+        dix
+    </div>
+
     <div id="mobile-grid" class="ui centered grid">
         <div id="mobile" class="fourteen wide column">
             <div class="ui stacked">
@@ -149,6 +157,7 @@
         self.results = []
         self.display_mode = 'list'
         self.old_filters = {}
+        self.display_search_options = false
 
         self.on('mount', function () {
             /*$(self.refs.search_wrapper).dropdown({
@@ -220,6 +229,11 @@
                 transition: 'slide down'
             });
         })
+
+        self.toggle_search_options = function() {
+            self.display_search_options = !self.display_search_options
+            self.update()
+        }
 
         self.set_time_dropdown_text = function () {
             /*if(this.dataset.calendarType === 'start') {
@@ -343,6 +357,7 @@
         #particle_header
             // This is for the particles js animations to fit to this
             position relative
+            margin-bottom 0
 
             canvas
                 position absolute
@@ -351,29 +366,38 @@
                 left 0
                 bottom 0
                 z-index -1
-                background rgba(22, 12, 160, 0.9)
+                background rgba(19, 48, 70, 0.9)
+
+        #mobile-grid
+            margin-top 0
 
         #searchbar
             width 100%
-            margin-top 2%
+            margin-top 10px
+
+            input
+                background-color rgba(255, 255, 255, .95)
 
         #brand_logo
             position absolute
             width 180 * 1.618% px
             height 60 * 1.618% px
+            opacity .85
             left 0
             top -2%
             cursor pointer
             filter brightness(0) invert(1)
+
             @media screen and (max-width 991px)
                 display none
 
         #brand_logo_mobile
             filter brightness(0) invert(1)
+            opacity .85
             position absolute
             width 42px
             height 42px
-            top 17%
+            margin-top 9px
             left 4%
             cursor pointer
 
@@ -383,7 +407,7 @@
         #mobile-friendly-button
             max-height 30.84px
             width 100%
-            @media screen and (max-width 450px)
+            @media screen and (max-width 645px)
                 display none
 
         #results_container
@@ -392,11 +416,72 @@
         #search_wrapper .results
             margin-top 1px
 
-        .ui.button:hover .icon
-            opacity 1
+        search-results #searchbar .button
+            color #e2e2e2
+            background-color #C7402D !important
+            opacity .85
 
-        .ui.red.button
+        search-results #searchbar .button:hover
+            color #e2e2e2
+            background-color #C7402D !important
+            opacity .98
+
+        .ui.labeled.icon.button:hover > .icon, .ui.labeled.icon.buttons:hover > .button > .icon
+            color #e2e2e2
+            background-color #C7402D !important
+
+            .icon
+                color #C7402D
+
+        #mobile-friendly-button.active > i.icon
+            color #e2e2e2 !important
+            background-color #C7402D !important
+            .icon
+                color #e2e2e2 !important
+
+        #login-button
+            position relative
+            margin-left -20px
+            margin-top 11px
+
+        .ui.button
             margin-top 10px
+            color #e2e2e2
+            background-color rgba(255, 255, 255, .15)
+            font-weight 100
+
+        .ui.button:hover
+            color #3f3f3f
+            background-color rgba(255, 255, 255, .65)
+
+        #down_caret
+            color #e2e2e2
+            background-color rgba(255, 255, 255, .15)
+            font-weight 100
+            width 100%
+            height 2px
+            margin-bottom -10px
+            line-height 2px
+            border-radius 0
+            @media screen and (min-width 646px)
+                display none
+
+        #mobile_drop button:hover
+            color #3f3f3f
+            background-color rgba(255, 255, 255, .65)
+            line-height 2px
+            border-radius 0
+            @media screen and (min-width 646px)
+                display none
+
+        #mobile_drop
+            margin-bottom -13px
+            margin-top -40px
+            opacity 0.8
+            display inline
+            @media screen and (min-width 646px)
+                display none
+                height 0
 
         #ellipses
             position absolute
@@ -405,6 +490,12 @@
             .button
                 height 38px
                 width 23.5px
+                color #e2e2e2 !important
+                background-color rgba(255, 255, 255, .15) !important
+
+            .button:hover
+                color #3f3f3f !important
+                background-color rgba(255, 255, 255, .65) !important
 
             .icon
                 display inherit
@@ -413,7 +504,7 @@
                 margin 0
 
             @media screen and (min-width 768px)
-                    display none
+                display none
 
         .loading
             opacity .5

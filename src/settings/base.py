@@ -163,7 +163,6 @@ DEBUG = os.environ.get('DEBUG', True)
 if DEBUG:
     INSTALLED_APPS += ('debug_toolbar',)
     MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
-    # SHOW_TOOLBAR_CALLBACK = f'{__name__}.show_toolbar_handler'
     INTERNAL_IPS = ('127.0.0.1',)
 
 
