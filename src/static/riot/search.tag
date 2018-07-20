@@ -123,12 +123,14 @@
             </div>
         </div>
         <div id="mobile_drop" class="sixteen wide mobile only column">
-            <button id="down_caret" class="ui icon button" click="{ toggle_search_options }"><i class="down caret icon"></i>Search Options</button>
+            <button id="down_caret" class="ui icon button" click="{ toggle_search_options }"><i
+                    class="down caret icon"></i>Search Options
+            </button>
         </div>
     </div>
 
     <div show="{ display_search_options }">
-        dix
+        Search Option Buttons will display here on button-click
     </div>
 
     <div id="mobile-grid" class="ui centered grid">
@@ -230,7 +232,7 @@
             });
         })
 
-        self.toggle_search_options = function() {
+        self.toggle_search_options = function () {
             self.display_search_options = !self.display_search_options
             self.update()
         }
