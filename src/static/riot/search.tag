@@ -356,6 +356,7 @@
     </script>
 
     <style type="text/stylus">
+
         #particle_header
             // This is for the particles js animations to fit to this
             position relative
