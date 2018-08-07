@@ -7,9 +7,9 @@
             <!-- We keep 1 empty column here to align the brand logo defined above this element -->
             <div class="one wide column"></div>
 
-            <div class="fourteen wide mobile twelve wide tablet nine wide computer column">
+            <div class="eleven wide mobile twelve wide tablet nine wide computer column">
                 <div class="ui centered grid">
-                    <div class="centered row">
+                    <div class="ui centered row">
                         <div class="ui fourteen wide mobile fifteen wide search-wrapper column">
                             <div id="searchbar" class="ui left action right icon input">
                                 <button class="ui icon button" onclick="{ clear_search }">
@@ -18,9 +18,9 @@
                                 <input type="text" placeholder="Search..." ref="search" onkeydown="{ input_updated }">
                                 <i class="search icon"></i>
 
-                                <div id="ellipses" class="mobile only one wide column">
+                                <div id="bars" class="mobile only one wide column">
                                     <div class="ui icon button">
-                                        <i class="large ellipsis vertical icon"></i>
+                                        <i class="large bars icon"></i>
                                     </div>
                                 </div>
                             </div>
@@ -130,7 +130,92 @@
     </div>
 
     <div show="{ display_search_options }">
-        Search Option Buttons will display here on button-click
+        <div id="search-flex" class="ui unstackable sixteen wide grid">
+            <div id="search-options-column" class="six wide center aligned column">
+                <div id="search-options-button" ref="time_filter"
+                     class="ui tiny labeled icon dropdown button">
+                    <i class="calendar icon"></i>
+                    <span class="text">Any Time</span>
+                    <div class="menu">
+                        <div class="header">
+                            Timeframe
+                        </div>
+                        <div class="divider"></div>
+                        <div class="active item" data-value="">
+                            Any Time
+                        </div>
+                        <div class="item" data-value="active">
+                            Active
+                        </div>
+                        <div class="item" data-value="this_month">
+                            Created this month
+                        </div>
+                        <div class="item" data-value="this_year">
+                            Created this year
+                        </div>
+                        <div class="divider"></div>
+                        <div class="header">
+                            Date range
+                        </div>
+                        <div class="ui left icon input datepicker" data-calendar-type="start">
+                            <i class="calendar icon"></i>
+                            <input ref="start_date" type="text" name="search"
+                                   placeholder="Start date">
+                        </div>
+                        <div class="ui left icon input datepicker" data-calendar-type="end">
+                            <i class="calendar icon"></i>
+                            <input ref="end_date" type="text" name="search" placeholder="End date">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="search-options-column" class="six wide center aligned column">
+                <div id="search-options-button" ref="sort_filter"
+                     class="ui tiny labeled icon dropdown button">
+                    <i class="filter icon"></i>
+                    <span class="text">Relevance</span>
+                    <div class="menu">
+                        <div class="header">
+                            Sorting
+                        </div>
+                        <div class="divider"></div>
+                        <div class="active item" data-value="">
+                            Relevance
+                        </div>
+                        <div data-value="deadline" class="item">
+                            Deadline
+                        </div>
+                        <div data-value="prize" class="item">
+                            Prize Amount
+                        </div>
+                        <div data-value="participant_count" class="item">
+                            Participant Count
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="search-options-column" class="four wide center aligned column"
+                 show="{!disallow_producer_selection}">
+                <div id="search-options-button" ref="producer_filter"
+                     class="ui tiny labeled icon dropdown button">
+                    <i class="globe icon"></i>
+                    <span class="text">All</span>
+                    <div class="menu">
+                        <div class="header">
+                            Provider
+                        </div>
+                        <div class="divider"></div>
+                        <div class="active item" data-value="">
+                            All
+                        </div>
+                        <virtual each="{PRODUCERS}">
+                            <div class="item" data-value="{id}">{name}</div>
+                        </virtual>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="mobile-grid" class="ui centered grid">
@@ -413,6 +498,20 @@
             @media screen and (max-width 645px)
                 display none
 
+        #search-flex
+            display flex
+
+
+        #search-options-button
+            max-height 30.84px
+            color #a0a0a0!important
+            background-color rgba(244, 245, 246, .8)!important
+            .icon
+                background-color #C7402D !important
+                color #e2e2e2 !important
+            @media screen and (min-width 646px)
+                display none
+
         #results_container
             min-height 375px
 
@@ -486,13 +585,13 @@
                 display none
                 height 0
 
-        #ellipses
+        #bars
             position absolute
-            right -30px
+            right -50px
 
             .button
                 height 38px
-                width 23.5px
+                width 38px
                 color #e2e2e2 !important
                 background-color rgba(255, 255, 255, .15) !important
 
