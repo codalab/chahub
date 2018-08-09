@@ -49,7 +49,10 @@
 </head>
 <body>
 
-<app></app>
+<sidebar></sidebar>
+<div class="pusher">
+    <app></app>
+</div>
 
 <script>
     // Load in URLs or other django generated goodies
@@ -63,7 +66,7 @@
     USER_AUTHENTICATED = ("{{ user.is_authenticated }}" === "True")
 </script>
 
-<div class="ui horizontal divided tiny list" style="padding: 10px;">
+<div id="chafooter" class="ui horizontal divided tiny list" style="padding: 10px;">
     <div class="item">
         <div class="content">
             <i>Chahub is a service of <a href="http://codalab.org/">Codalab</a></i>
@@ -89,11 +92,33 @@
 {% block extra_body %}
 {% endblock %}
 
-<style>
-    body {
-        background: rgba(205, 218, 228, .59) !important;
-    }
-</style>
+
 
 </body>
 </html>
+
+<style>
+    body {
+        background: rgb(225, 233, 239) !important;
+    }
+
+    body.pushable > .pusher {
+        background-color: rgb(225, 233, 239) !important
+    }
+
+    body.pushable > #chafooter {
+        background-color: rgb(225, 233, 239) !important
+    }
+
+    body.pushable > html {
+        background-color: rgb(225, 233, 239);
+    }
+
+    body.pushable {
+        background-color: rgb(225, 233, 239)!important
+    }
+    .pushable > .pusher {
+        background-color: rgb(225, 233, 239) !important
+    }
+
+</style>
