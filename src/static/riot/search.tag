@@ -519,7 +519,7 @@
         #mobile-flex
             display flex
             text-align center
-            margin-top -1em
+            margin-top -25px
 
         #mobile-friendly-column
             display flex
