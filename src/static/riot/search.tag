@@ -1,246 +1,243 @@
 <search-results>
-    <div class="">
-        <div id="particle_header" class="ui centered grid">
-            <a id="login-button" hide="{USER_AUTHENTICATED}" style="" href="/accounts/login/"
-               class="ui button">LOGIN
-            </a>
-            <a id="login-button" show="{USER_AUTHENTICATED}" style="" href="/accounts/logout/"
-               class="ui button">LOGOUT
-            </a>
-            <div id="bars">
-                <div data-transition="overlay" class="ui icon button">
-                    <i class="large bars icon"></i>
-                </div>
+    <div id="particle_header" class="ui centered grid">
+        <a id="login-button" hide="{USER_AUTHENTICATED}" style="" href="/accounts/login/"
+           class="ui button">LOGIN
+        </a>
+        <a id="login-button" show="{USER_AUTHENTICATED}" style="" href="/accounts/logout/"
+           class="ui button">LOGOUT
+        </a>
+        <div id="bars">
+            <div class="ui small icon button">
+                <i class="large bars icon"></i>
             </div>
-            <div class="ui row">
-                <img id="brand_logo" src="static/img/temp_chahub_logo.png">
-                <img id="brand_logo_mobile" src="static/img/Chahub_C.png">
+        </div>
+        <div class="ui row">
+            <img id="brand_logo" src="static/img/temp_chahub_logo.png">
+            <img id="brand_logo_mobile" src="static/img/Chahub_C.png">
 
-                <!-- We keep 1 empty column here to align the brand logo defined above this element -->
-                <div class="one wide column"></div>
+            <!-- We keep 1 empty column here to align the brand logo defined above this element -->
+            <div class="one wide column"></div>
 
-                <div class="eleven wide mobile twelve wide tablet nine wide computer column">
-                    <div class="ui centered grid">
-                        <div class="ui centered row">
-                            <div class="ui sixteen wide mobile fifteen wide search-wrapper column">
-                                <div id="searchbar" class="ui left action right icon input">
-                                    <button class="ui icon button" onclick="{ clear_search }">
-                                        <i class="delete icon"></i>
-                                    </button>
-                                    <input type="text" placeholder="Search..." ref="search"
-                                           onkeydown="{ input_updated }">
-                                    <i class="search icon"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="mobile-flex" class="centered row">
-                            <div id="mobile-friendly-column" class="five wide center aligned column">
-                                <div id="mobile-friendly-button" ref="time_filter"
-                                     class="ui tiny labeled icon dropdown button">
-                                    <i class="calendar icon"></i>
-                                    <span class="text">Any Time</span>
-                                    <div class="menu">
-                                        <div class="header">
-                                            Timeframe
-                                        </div>
-                                        <div class="divider"></div>
-                                        <div class="active item" data-value="">
-                                            Any Time
-                                        </div>
-                                        <div class="item" data-value="active">
-                                            Active
-                                        </div>
-                                        <div class="item" data-value="this_month">
-                                            Created this month
-                                        </div>
-                                        <div class="item" data-value="this_year">
-                                            Created this year
-                                        </div>
-                                        <div class="divider"></div>
-                                        <div class="header">
-                                            Date range
-                                        </div>
-                                        <div class="ui left icon input datepicker" data-calendar-type="start">
-                                            <i class="calendar icon"></i>
-                                            <input ref="start_date" type="text" name="search"
-                                                   placeholder=" Start date">
-                                        </div>
-                                        <div class="ui left icon input datepicker" data-calendar-type="end">
-                                            <i class="calendar icon"></i>
-                                            <input ref="end_date" type="text" name="search" placeholder=" End date">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="mobile-friendly-column" class="six wide center aligned column">
-                                <div id="mobile-friendly-button" ref="sort_filter"
-                                     class="ui tiny labeled icon dropdown button">
-                                    <i class="filter icon"></i>
-                                    <span class="text">Relevance</span>
-                                    <div class="menu">
-                                        <div class="header">
-                                            Sorting
-                                        </div>
-                                        <div class="divider"></div>
-                                        <div class="active item" data-value="">
-                                            Relevance
-                                        </div>
-                                        <div data-value="deadline" class="item">
-                                            Deadline
-                                        </div>
-                                        <div data-value="prize" class="item">
-                                            Prize Amount
-                                        </div>
-                                        <div data-value="participant_count" class="item">
-                                            Participant Count
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="mobile-friendly-column" class="five wide center aligned column"
-                                 show="{!disallow_producer_selection}">
-                                <div id="mobile-friendly-button" ref="producer_filter"
-                                     class="ui tiny labeled icon dropdown button">
-                                    <i class="globe icon"></i>
-                                    <span class="text">All</span>
-                                    <div class="menu">
-                                        <div class="header">
-                                            Provider
-                                        </div>
-                                        <div class="divider"></div>
-                                        <div class="active item" data-value="">
-                                            All
-                                        </div>
-                                        <virtual each="{PRODUCERS}">
-                                            <div class="item" data-value="{id}">{name}</div>
-                                        </virtual>
-                                    </div>
-                                </div>
+            <div class="eleven wide mobile twelve wide tablet nine wide computer column">
+                <div class="ui centered grid">
+                    <div class="ui centered row">
+                        <div class="ui sixteen wide mobile fifteen wide search-wrapper column">
+                            <div id="searchbar" class="ui left action right icon input">
+                                <button class="ui icon button" onclick="{ clear_search }">
+                                    <i class="delete icon"></i>
+                                </button>
+                                <input type="text" placeholder="Search..." ref="search"
+                                       onkeydown="{ input_updated }">
+                                <i class="search icon"></i>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="tablet computer only one wide column">
-                </div>
-            </div>
-            <div id="mobile_drop" class="sixteen wide mobile only column">
-                <button id="down_caret" class="ui icon button" click="{ toggle_search_options }"><i
-                        class="down caret icon"></i>Search Options
-                </button>
-            </div>
-        </div>
-
-        <div show="{ display_search_options }">
-            <div id="search-flex">
-                <div id="search-options-column">
-                    <div id="search-options-button" ref="time_filter"
-                         class="ui tiny labeled icon dropdown button">
-                        <i class="calendar icon"></i>
-                        <span class="text">Any Time</span>
-                        <div class="menu">
-                            <div class="header">
-                                Timeframe
-                            </div>
-                            <div class="divider"></div>
-                            <div class="active item" data-value="">
-                                Any Time
-                            </div>
-                            <div class="item" data-value="active">
-                                Active
-                            </div>
-                            <div class="item" data-value="this_month">
-                                Created this month
-                            </div>
-                            <div class="item" data-value="this_year">
-                                Created this year
-                            </div>
-                            <div class="divider"></div>
-                            <div class="header">
-                                Date range
-                            </div>
-                            <div id="calendarstyling" class="ui left icon input datepicker"
-                                 data-calendar-type="start">
+                    <!-- Buttons below searchbar on particle header. Only seen above 646px wide screens. -->
+                    <div id="mobile-flex" class="centered row">
+                        <div id="mobile-friendly-column" class="five wide center aligned column">
+                            <div id="mobile-friendly-button" ref="time_filter"
+                                 class="ui tiny labeled icon dropdown button">
                                 <i class="calendar icon"></i>
-                                <input ref="start_date" type="text" name="search"
-                                       placeholder=" Start date">
-                            </div>
-                            <div id="calendarstyling" class="ui left icon input datepicker"
-                                 data-calendar-type="end">
-                                <i class="calendar icon white-background"></i>
-                                <input ref="end_date" type="text" name="search" placeholder=" End date">
+                                <span class="text">Any Time</span>
+                                <div class="menu">
+                                    <div class="header">
+                                        Timeframe
+                                    </div>
+                                    <div class="divider"></div>
+                                    <div class="active item" data-value="">
+                                        Any Time
+                                    </div>
+                                    <div class="item" data-value="active">
+                                        Active
+                                    </div>
+                                    <div class="item" data-value="this_month">
+                                        Created this month
+                                    </div>
+                                    <div class="item" data-value="this_year">
+                                        Created this year
+                                    </div>
+                                    <div class="divider"></div>
+                                    <div class="header">
+                                        Date range
+                                    </div>
+                                    <div class="ui left icon input datepicker" data-calendar-type="start">
+                                        <i class="calendar icon"></i>
+                                        <input ref="start_date" type="text" name="search"
+                                               placeholder=" Start date">
+                                    </div>
+                                    <div class="ui left icon input datepicker" data-calendar-type="end">
+                                        <i class="calendar icon"></i>
+                                        <input ref="end_date" type="text" name="search" placeholder=" End date">
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div id="search-options-column">
-                    <div id="search-options-button" ref="sort_filter"
-                         class="ui tiny labeled icon dropdown button">
-                        <i class="filter icon"></i>
-                        <span class="text">Relevance</span>
-                        <div class="menu">
-                            <div class="header">
-                                Sorting
-                            </div>
-                            <div class="divider"></div>
-                            <div class="active item" data-value="">
-                                Relevance
-                            </div>
-                            <div data-value="deadline" class="item">
-                                Deadline
-                            </div>
-                            <div data-value="prize" class="item">
-                                Prize Amount
-                            </div>
-                            <div data-value="participant_count" class="item">
-                                Participant Count
+                        <div id="mobile-friendly-column" class="six wide center aligned column">
+                            <div id="mobile-friendly-button" ref="sort_filter"
+                                 class="ui tiny labeled icon dropdown button">
+                                <i class="filter icon"></i>
+                                <span class="text">Relevance</span>
+                                <div class="menu">
+                                    <div class="header">
+                                        Sorting
+                                    </div>
+                                    <div class="divider"></div>
+                                    <div class="active item" data-value="">
+                                        Relevance
+                                    </div>
+                                    <div data-value="deadline" class="item">
+                                        Deadline
+                                    </div>
+                                    <div data-value="prize" class="item">
+                                        Prize Amount
+                                    </div>
+                                    <div data-value="participant_count" class="item">
+                                        Participant Count
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div id="search-options-column"
-                     show="{!disallow_producer_selection}">
-                    <div id="search-options-button" ref="producer_filter"
-                         class="ui tiny labeled icon dropdown button">
-                        <i class="globe icon"></i>
-                        <span class="text">All</span>
-                        <div class="menu">
-                            <div class="header">
-                                Provider
+                        <div id="mobile-friendly-column" class="five wide center aligned column"
+                             show="{!disallow_producer_selection}">
+                            <div id="mobile-friendly-button" ref="producer_filter"
+                                 class="ui tiny labeled icon dropdown button">
+                                <i class="globe icon"></i>
+                                <span class="text">All</span>
+                                <div class="menu">
+                                    <div class="header">
+                                        Provider
+                                    </div>
+                                    <div class="divider"></div>
+                                    <div class="active item" data-value="">
+                                        All
+                                    </div>
+                                    <virtual each="{PRODUCERS}">
+                                        <div class="item" data-value="{id}">{name}</div>
+                                    </virtual>
+                                </div>
                             </div>
-                            <div class="divider"></div>
-                            <div class="active item" data-value="">
-                                All
-                            </div>
-                            <virtual each="{PRODUCERS}">
-                                <div class="item" data-value="{id}">{name}</div>
-                            </virtual>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="tablet computer only one wide column">
+            </div>
         </div>
-
-        <div id="mobile-grid" class="ui centered grid">
-            <div id="mobile" class="fourteen wide column">
-                <div class="ui stacked">
-                    <div class="ui warning message" show="{showing_default_results}">
+        <div id="mobile_drop" class="sixteen wide mobile only column">
+            <button id="down_caret" class="ui icon button" click="{ toggle_search_options }"><i
+                    class="down caret icon"></i>Search Options
+            </button>
+        </div>
+    </div>
+    <!-- Buttons below particle header. Only seen below 646px wide screens. -->
+    <div show="{ display_search_options }">
+        <div id="search-flex">
+            <div id="search-options-column">
+                <div id="search-options-button" ref="time_filter"
+                     class="ui tiny labeled icon dropdown button">
+                    <i class="calendar icon"></i>
+                    <span class="text">Any Time</span>
+                    <div class="menu">
                         <div class="header">
-                            No results found
+                            Timeframe
                         </div>
-                        Try broadening your search
+                        <div class="divider"></div>
+                        <div class="active item" data-value="">
+                            Any Time
+                        </div>
+                        <div class="item" data-value="active">
+                            Active
+                        </div>
+                        <div class="item" data-value="this_month">
+                            Created this month
+                        </div>
+                        <div class="item" data-value="this_year">
+                            Created this year
+                        </div>
+                        <div class="divider"></div>
+                        <div class="header">
+                            Date range
+                        </div>
+                        <div id="calendarstyling" class="ui left icon input datepicker"
+                             data-calendar-type="start">
+                            <i class="calendar icon"></i>
+                            <input ref="start_date" type="text" name="search"
+                                   placeholder=" Start date">
+                        </div>
+                        <div id="calendarstyling" class="ui left icon input datepicker"
+                             data-calendar-type="end">
+                            <i class="calendar icon white-background"></i>
+                            <input ref="end_date" type="text" name="search" placeholder=" End date">
+                        </div>
                     </div>
-                    <div class="ui middle aligned compact divided link items content-desktop"
-                         style="margin-top: 0;">
-                        <competition-tile each="{ results }" no-reorder class="item"
-                                          style="padding: .5em 0;"></competition-tile>
+                </div>
+            </div>
+            <div id="search-options-column">
+                <div id="search-options-button" ref="sort_filter"
+                     class="ui tiny labeled icon dropdown button">
+                    <i class="filter icon"></i>
+                    <span class="text">Relevance</span>
+                    <div class="menu">
+                        <div class="header">
+                            Sorting
+                        </div>
+                        <div class="divider"></div>
+                        <div class="active item" data-value="">
+                            Relevance
+                        </div>
+                        <div data-value="deadline" class="item">
+                            Deadline
+                        </div>
+                        <div data-value="prize" class="item">
+                            Prize Amount
+                        </div>
+                        <div data-value="participant_count" class="item">
+                            Participant Count
+                        </div>
                     </div>
-                    <div class="ui middle aligned compact link items content-mobile" style="margin-top: -1;">
-                        <competition-mobile-tile each="{ results }" no-reorder class="item"
-                                                 style="padding: -1em;"></competition-mobile-tile>
+                </div>
+            </div>
+
+            <div id="search-options-column"
+                 show="{!disallow_producer_selection}">
+                <div id="search-options-button" ref="producer_filter"
+                     class="ui tiny labeled icon dropdown button">
+                    <i class="globe icon"></i>
+                    <span class="text">All</span>
+                    <div class="menu">
+                        <div class="header">
+                            Provider
+                        </div>
+                        <div class="divider"></div>
+                        <div class="active item" data-value="">
+                            All
+                        </div>
+                        <virtual each="{PRODUCERS}">
+                            <div class="item" data-value="{id}">{name}</div>
+                        </virtual>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mobile-grid" class="ui centered grid">
+        <div id="mobile" class="fourteen wide column">
+            <div class="ui stacked">
+                <div class="ui warning message" show="{showing_default_results}">
+                    <div class="header">
+                        No results found
+                    </div>
+                    Try broadening your search
+                </div>
+                <div class="ui middle aligned compact divided link items content-desktop"
+                     style="margin-top: 0;">
+                    <competition-tile each="{ results }" no-reorder class="item"
+                                      style="padding: .5em 0;"></competition-tile>
+                </div>
+                <div class="ui middle aligned compact link items content-mobile" style="margin-top: -1;">
+                    <competition-mobile-tile each="{ results }" no-reorder class="item"
+                                             style="padding: -1em;"></competition-mobile-tile>
                 </div>
             </div>
         </div>
@@ -289,11 +286,13 @@
                 }
             })
 
-            $('#bars').on('click', function () {
-                $('.sidebar')
-                    .sidebar('setting', 'transition', 'overlay')
-                    .sidebar('toggle')
-            })
+            // Sidebar with overlay on
+            $('.sidebar')
+                .sidebar({
+                    transition: 'overlay',
+                })
+                .sidebar('attach events', '#bars');
+
             //$(self.refs.time_filter).dropdown('setting', 'onChange', self.search);
 
             // Search handling
@@ -474,9 +473,20 @@
         #searchbar
             width 100%
             margin-top 10px
-
             input
                 background-color rgba(255, 255, 255, .95)
+                padding-right 0 !important
+
+            // stylus was messing up auto-formatting on media queries so I used standard CSS
+            @media screen and (max-width 500px) {
+                margin-left: -1em;
+            }
+            @media screen and (max-width 400px) {
+                margin-left: -1em;
+            }
+            @media screen and (max-width 350px) {
+                left: -24px;
+            }
 
         #brand_logo
             position absolute
@@ -503,6 +513,8 @@
 
             @media screen and (min-width 1101px)
                 display none
+            @media screen and (max-width 350px)
+                display none
 
         #mobile-flex
             display flex
@@ -511,13 +523,16 @@
 
         #mobile-friendly-column
             display flex
+            justify-content center
 
         #mobile-friendly-button
             width 100%
             min-width 130px
             display flex
+            justify-content center
             flex-direction column
-            flex 1 0.1em auto
+            text-align center
+
             @media screen and (max-width 645px)
                 display none
 
@@ -529,17 +544,18 @@
             width 100%
             padding 1em 0
             display flex
+            justify-content center
 
         #search-options-button
             color #5e5e5f
             border solid 1px #b9b9b9
-            min-width: 120px
+            justify-content center
             width: 95%
             margin -1em 0 0 0
             background-color rgb(244, 245, 246)
+            text-align center
             display flex
             flex-direction column
-            flex 1 0.1em auto
             .icon
                 background-color #C7402D
                 color #e2e2e2
@@ -616,6 +632,7 @@
         #mobile_drop
             margin-bottom -13px
             margin-top -40px
+            padding-right 0
             opacity 0.8
             display inline
             z-index 10
@@ -626,13 +643,14 @@
 
         #bars
             position absolute
-            top 23px
+            top 25px
             right 10px
             z-index 1000
 
             .button
                 color #e2e2e2 !important
                 background-color rgba(255, 255, 255, .15) !important
+                height 36px
 
             .button:hover
                 color #3f3f3f !important
@@ -642,6 +660,7 @@
                 display inherit
                 cursor pointer
                 margin 0
+                height 36px
 
             @media screen and (min-width 768px)
                 display none
@@ -674,7 +693,6 @@
         .ui.popup.calendar
             opacity 1 !important
             z-index 1000
-
 
     </style>
 </search-results>
