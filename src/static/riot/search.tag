@@ -6,12 +6,12 @@
         <a id="login-button" show="{USER_AUTHENTICATED}" style="" href="/accounts/logout/"
            class="ui button">LOGOUT
         </a>
-        <div id="bars">
+        <div id="hamburger_button">
             <div class="ui small icon button">
                 <i class="large bars icon"></i>
             </div>
         </div>
-        <div class="ui row">
+        <div id="top_row" class="ui row">
             <img id="brand_logo" src="static/img/temp_chahub_logo.png">
             <img id="brand_logo_mobile" src="static/img/Chahub_C.png">
 
@@ -32,108 +32,17 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Buttons below searchbar on particle header. Only seen above 646px wide screens. -->
-                    <div id="mobile-flex" class="centered row">
-                        <div id="mobile-friendly-column" class="five wide center aligned column">
-                            <div id="mobile-friendly-button" ref="time_filter"
-                                 class="ui tiny labeled icon dropdown button">
-                                <i class="calendar icon"></i>
-                                <span class="text">Any Time</span>
-                                <div class="menu">
-                                    <div class="header">
-                                        Timeframe
-                                    </div>
-                                    <div class="divider"></div>
-                                    <div class="active item" data-value="">
-                                        Any Time
-                                    </div>
-                                    <div class="item" data-value="active">
-                                        Active
-                                    </div>
-                                    <div class="item" data-value="this_month">
-                                        Created this month
-                                    </div>
-                                    <div class="item" data-value="this_year">
-                                        Created this year
-                                    </div>
-                                    <div class="divider"></div>
-                                    <div class="header">
-                                        Date range
-                                    </div>
-                                    <div class="ui left icon input datepicker" data-calendar-type="start">
-                                        <i class="calendar icon"></i>
-                                        <input ref="start_date" type="text" name="search"
-                                               placeholder=" Start date">
-                                    </div>
-                                    <div class="ui left icon input datepicker" data-calendar-type="end">
-                                        <i class="calendar icon"></i>
-                                        <input ref="end_date" type="text" name="search" placeholder=" End date">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="mobile-friendly-column" class="six wide center aligned column">
-                            <div id="mobile-friendly-button" ref="sort_filter"
-                                 class="ui tiny labeled icon dropdown button">
-                                <i class="filter icon"></i>
-                                <span class="text">Relevance</span>
-                                <div class="menu">
-                                    <div class="header">
-                                        Sorting
-                                    </div>
-                                    <div class="divider"></div>
-                                    <div class="active item" data-value="">
-                                        Relevance
-                                    </div>
-                                    <div data-value="deadline" class="item">
-                                        Deadline
-                                    </div>
-                                    <div data-value="prize" class="item">
-                                        Prize Amount
-                                    </div>
-                                    <div data-value="participant_count" class="item">
-                                        Participant Count
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="mobile-friendly-column" class="five wide center aligned column"
-                             show="{!disallow_producer_selection}">
-                            <div id="mobile-friendly-button" ref="producer_filter"
-                                 class="ui tiny labeled icon dropdown button">
-                                <i class="globe icon"></i>
-                                <span class="text">All</span>
-                                <div class="menu">
-                                    <div class="header">
-                                        Provider
-                                    </div>
-                                    <div class="divider"></div>
-                                    <div class="active item" data-value="">
-                                        All
-                                    </div>
-                                    <virtual each="{PRODUCERS}">
-                                        <div class="item" data-value="{id}">{name}</div>
-                                    </virtual>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="tablet computer only one wide column">
             </div>
         </div>
-        <div id="mobile_drop" class="sixteen wide mobile only column">
-            <button id="down_caret" class="ui icon button" click="{ toggle_search_options }"><i
-                    class="down caret icon"></i>Search Options
-            </button>
-        </div>
-    </div>
-    <!-- Buttons below particle header. Only seen below 646px wide screens. -->
-    <div show="{ display_search_options }">
-        <div id="search-flex">
-            <div id="search-options-column">
-                <div id="search-options-button" ref="time_filter"
+        <!-- Buttons below searchbar on particle header. Only seen above 646px wide screens. -->
+        <!-- This column is removed for mobile to align with top row -->
+        <div id="remove_mobile" class="ui one wide column"></div>
+        <div id="advanced_search_column" class="ui centered eleven wide mobile twelve wide tablet nine wide computer column {hide-from-mobile: !display_search_options}">
+            <div id="advanced_search_align" class="five wide center aligned column">
+                <div id="advanced_search_button" ref="time_filter"
                      class="ui tiny labeled icon dropdown button">
                     <i class="calendar icon"></i>
                     <span class="text">Any Time</span>
@@ -158,22 +67,20 @@
                         <div class="header">
                             Date range
                         </div>
-                        <div id="calendarstyling" class="ui left icon input datepicker"
-                             data-calendar-type="start">
+                        <div class="ui left icon input datepicker" data-calendar-type="start">
                             <i class="calendar icon"></i>
                             <input ref="start_date" type="text" name="search"
                                    placeholder=" Start date">
                         </div>
-                        <div id="calendarstyling" class="ui left icon input datepicker"
-                             data-calendar-type="end">
-                            <i class="calendar icon white-background"></i>
+                        <div class="ui left icon input datepicker" data-calendar-type="end">
+                            <i class="calendar icon"></i>
                             <input ref="end_date" type="text" name="search" placeholder=" End date">
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="search-options-column">
-                <div id="search-options-button" ref="sort_filter"
+            <div id="advanced_search_align" class="middle six wide center aligned column">
+                <div id="advanced_search_button" ref="sort_filter"
                      class="ui tiny labeled icon dropdown button">
                     <i class="filter icon"></i>
                     <span class="text">Relevance</span>
@@ -197,10 +104,9 @@
                     </div>
                 </div>
             </div>
-
-            <div id="search-options-column"
+            <div id="advanced_search_align" class="five wide center aligned column"
                  show="{!disallow_producer_selection}">
-                <div id="search-options-button" ref="producer_filter"
+                <div id="advanced_search_button" ref="producer_filter"
                      class="ui tiny labeled icon dropdown button">
                     <i class="globe icon"></i>
                     <span class="text">All</span>
@@ -219,8 +125,14 @@
                 </div>
             </div>
         </div>
+        <div class="advanced search ui row">
+            <div id="mobile_drop" class="sixteen wide mobile only column">
+                <button id="down_caret" class="ui icon button" click="{ toggle_search_options }"><i
+                        class="down caret icon"></i>Advanced Search
+                </button>
+            </div>
+        </div>
     </div>
-
     <div id="mobile-grid" class="ui centered grid">
         <div id="mobile" class="fourteen wide column">
             <div class="ui stacked">
@@ -291,7 +203,7 @@
                 .sidebar({
                     transition: 'overlay',
                 })
-                .sidebar('attach events', '#bars');
+                .sidebar('attach events', '#hamburger_button');
 
             //$(self.refs.time_filter).dropdown('setting', 'onChange', self.search);
 
@@ -467,8 +379,17 @@
                 z-index -1
                 background rgba(19, 48, 70, 0.9)
 
+        .advanced.search.ui.row
+            padding 0 0
+
         #mobile-grid
             margin-top 0
+
+        #remove_mobile
+            @media screen and (max-width 645px)
+                display none
+            @media screen and (min-width 768px)
+                display none
 
         #searchbar
             width 100%
@@ -516,29 +437,58 @@
             @media screen and (max-width 350px)
                 display none
 
-        #mobile-flex
+        #advanced_search_column
             display flex
             text-align center
-            margin-top -25px
+            padding-top 0
+            padding-bottom 0
+            margin 0 1.5em 0 1.5em
 
-        #mobile-friendly-column
+            @media screen and (min-width 646px)
+                padding-bottom 10px
+            @media screen and (max-width 645px)
+                width 100%!important
+
+        #advanced_search_align
             display flex
             justify-content center
-
-        #mobile-friendly-button
             width 100%
-            min-width 130px
+
+        .middle
+            margin-right 10px!important
+            margin-left 10px!important
+            @media screen and (max-width 334px)
+                margin-right 3px!important
+                margin-left 3px!important
+
+        #advanced_search_button
+            width 100%
+            min-width 120px
             display flex
             justify-content center
             flex-direction column
             text-align center
+            margin-right 0
 
+            @media screen and (max-width 390px)
+                min-width 100px
+                padding-left 2.8em!important;
+
+        .hide-from-mobile
+            //display none !important
             @media screen and (max-width 645px)
-                display none
+                display none !important
+
+
+        #top_row
+            padding-bottom 0
 
         #search-flex
             display flex
             text-align center
+            margin-top 10px
+            padding-right 10px
+            padding-left 10px
 
         #search-options-column
             width 100%
@@ -548,7 +498,7 @@
 
         #search-options-button
             color #5e5e5f
-            border solid 1px #b9b9b9
+            border solid 1px rgba(40, 40, 40, .15)
             justify-content center
             width: 95%
             margin -1em 0 0 0
@@ -559,6 +509,8 @@
             .icon
                 background-color #C7402D
                 color #e2e2e2
+                border-top-left-radius 3px
+                border-bottom-left-radius 3px
             @media screen and (min-width 646px)
                 display none
 
@@ -585,7 +537,7 @@
             .icon
                 color #C7402D
 
-        #mobile-friendly-button.active > i.icon
+        #advanced_search_button.active > i.icon
             color #e2e2e2 !important
             background-color #C7402D !important
             .icon
@@ -607,7 +559,8 @@
 
         .ui.button:hover
             color #3f3f3f
-            background-color rgba(255, 255, 255, .65)
+            .icon
+                opacity 1 !important
 
         #down_caret
             color #e2e2e2
@@ -630,8 +583,7 @@
                 display none
 
         #mobile_drop
-            margin-bottom -13px
-            margin-top -40px
+            bottom 0
             padding-right 0
             opacity 0.8
             display inline
@@ -641,7 +593,7 @@
                 display none
                 height 0
 
-        #bars
+        #hamburger_button
             position absolute
             top 25px
             right 10px
@@ -678,6 +630,7 @@
         #calendarstyling
             background-color white !important
             opacity 1 !important
+            z-index 1000
             // Buttons on calendar
             .icon
                 background-color transparent
@@ -689,10 +642,6 @@
                 border solid #e2e2e2 1px
                 border-left none
                 border-right solid #e2e2e2 1px
-
-        .ui.popup.calendar
-            opacity 1 !important
-            z-index 1000
 
     </style>
 </search-results>
