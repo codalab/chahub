@@ -19,12 +19,11 @@ router.register('submissions', competitions.SubmissionViewSet)
 # Documentation details
 schema_view = get_schema_view(
    openapi.Info(
-      title="Snippets API",
+      title="Chahub API",
       default_version='v1',
-      description="Test description",
-      terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="contact@snippets.local"),
-      license=openapi.License(name="BSD License"),
+      description="Chahub is a platform for machine learning resources, like competitions, test sets, and example solutions",
+      contact=openapi.Contact(email="info@codalab.org"),
+      license=openapi.License(name="MIT License"),
    ),
    validators=['flex', 'ssv'],
    public=True,
@@ -40,7 +39,8 @@ urlpatterns = [
 
     # Docs
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'),
-    url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui'),
-    url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=None), name='schema-redoc'),
+    url(r'^$', schema_view.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui'),
 
+    # Optionally, use "redoc" style
+    url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=None), name='schema-redoc'),
 ]

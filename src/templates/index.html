@@ -54,18 +54,6 @@
     <app></app>
 </div>
 
-<script>
-    // Load in URLs or other django generated goodies
-    URLS = {
-        assets: {
-            header_particles: "{% static "particles/header.json" %}"
-        },
-        API: "/api/v1/"
-    }
-    PRODUCERS = JSON.parse("{{ producer_data|escapejs }}")
-    USER_AUTHENTICATED = ("{{ user.is_authenticated }}" === "True")
-</script>
-
 <div class="footer pusher">
     <div id="chafooter" class="ui horizontal divided tiny list">
         <div class="item">
@@ -90,6 +78,19 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Load in URLs or other django generated goodies
+    URLS = {
+        assets: {
+            header_particles: "{% static "particles/header.json" %}"
+        },
+        API: "/api/v1/"
+    }
+    PRODUCERS = JSON.parse("{{ producers|escapejs }}")
+    DEFAULT_SEARCH_RESULTS = JSON.parse("{{ default_search_results|escapejs }}")
+    USER_AUTHENTICATED = ("{{ user.is_authenticated }}" === "True")
+</script>
 
 {% block extra_body %}
 {% endblock %}

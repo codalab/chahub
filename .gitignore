@@ -13,3 +13,5 @@ src/static/generated/*
 src/uploads/
 
 db.sqlite
+
+.envrc

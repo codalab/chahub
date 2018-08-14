@@ -11,6 +11,7 @@ from django.views.generic import TemplateView
 
 from competitions.models import Competition
 from producers.models import Producer
+from utils.views import CacheMixin
 
 urlpatterns = [
     # Our URLS
@@ -37,21 +38,19 @@ if settings.DEBUG:
 # urlpatterns += [re_path(r'.*', TemplateView.as_view(template_name="index.html"))]
 
 
-class IndexView(TemplateView):
-    template_name = template_name='index.html'
+class IndexView(CacheMixin, TemplateView):
+    cache_timeout = 60 * 10
+    template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
-        context = {}
-        context['producer_data'] = []
-        for producer in Producer.objects.all():
-            if len(Competition.objects.filter(producer=producer)) > 0:
-                context['producer_data'].append({
-                    'id': producer.id,
-                    'name': producer.name,
-                    'url': producer.url
-                })
+        """We want to send some content to the front page before the page loads,
+        we used to have to ping the API for producer data, for example"""
+        context = super().get_context_data(**kwargs)
+        context['producers'] = json.dumps(list(Producer.objects.all().values('id', 'name', 'url')))
 
-        context['producer_data'] = json.dumps(context['producer_data'])
+        from api.views.search import get_default_search_results
+        context['default_search_results'] = json.dumps(get_default_search_results())
+
         return context
 
     # I don't think we'll use this in an iframe, but just-in-case
@@ -60,4 +59,4 @@ class IndexView(TemplateView):
         return super().get(request, *args, **kwargs)
 
 # urlpatterns += [re_path(r'.*', IndexView.as_view())]
-urlpatterns += [re_path(r'', IndexView.as_view())]
+urlpatterns += [re_path(r'^$', IndexView.as_view())]
