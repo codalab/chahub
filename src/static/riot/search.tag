@@ -40,7 +40,8 @@
         <!-- Buttons below searchbar on particle header. Only seen above 646px wide screens. -->
         <!-- This column is removed for mobile to align with top row -->
         <div id="remove_mobile" class="ui one wide column"></div>
-        <div id="advanced_search_column" class="ui centered eleven wide mobile twelve wide tablet nine wide computer column {hide-from-mobile: !display_search_options}">
+        <div id="advanced_search_column"
+             class="ui centered eleven wide mobile twelve wide tablet nine wide computer column {hide-from-mobile: !display_search_options}">
             <div id="advanced_search_align" class="five wide center aligned column">
                 <div id="advanced_search_button" ref="time_filter"
                      class="ui tiny labeled icon dropdown button">
@@ -147,10 +148,10 @@
                     <competition-tile each="{ results }" no-reorder class="item"
                                       style="padding: .5em 0;"></competition-tile>
                 </div>
-                <div class="ui middle aligned compact link items content-mobile" style="margin-top: -1;">
+                <!--<div class="ui middle aligned compact link items content-mobile" style="margin-top: -1;">
                     <competition-mobile-tile each="{ results }" no-reorder class="item"
                                              style="padding: -1em;"></competition-mobile-tile>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -240,7 +241,7 @@
                 duration: 300,
                 transition: 'slide down'
             });
-        })
+        });
 
         self.toggle_search_options = function () {
             self.display_search_options = !self.display_search_options
@@ -303,7 +304,7 @@
             // For iframes we might want to hide producer selection
             self.disallow_producer_selection = params.disallow_producer_selection
 
-            if(DEFAULT_SEARCH_RESULTS) {
+            if (DEFAULT_SEARCH_RESULTS) {
                 self.results = DEFAULT_SEARCH_RESULTS
             } else {
                 self.search()
@@ -453,7 +454,7 @@
             @media screen and (min-width 646px)
                 padding-bottom 10px
             @media screen and (max-width 645px)
-                width 100%!important
+                width 100% !important
 
         #advanced_search_align
             display flex
@@ -461,11 +462,11 @@
             width 100%
 
         .middle
-            margin-right 10px!important
-            margin-left 10px!important
+            margin-right 10px !important
+            margin-left 10px !important
             @media screen and (max-width 334px)
-                margin-right 3px!important
-                margin-left 3px!important
+                margin-right 3px !important
+                margin-left 3px !important
 
         #advanced_search_button
             width 100%
@@ -478,13 +479,12 @@
 
             @media screen and (max-width 390px)
                 min-width 100px
-                padding-left 2.8em!important;
+                padding-left 2.8em !important;
 
         .hide-from-mobile
             //display none !important
             @media screen and (max-width 645px)
                 display none !important
-
 
         #top_row
             padding-bottom 0
@@ -633,6 +633,16 @@
             bottom 0
             right 0
 
+        #participant_label
+            background-color #475e6f!important
+            border-color #475e6f!important
+            color #dfe3e5
+
+        #prize_label
+            background-color rgba(99, 84, 14, 0.68) !important
+            border-color rgba(99, 84, 14, 0.68) !important
+            color #dee2e4 !important
+
         #calendarstyling
             background-color white !important
             opacity 1 !important
@@ -693,11 +703,11 @@
                 <virtual if="{end}">
                     - {pretty_date(end)}
                 </virtual>
-            </span>
-            <div class="ui right floated blue mini label tooltip" data-content="Participant count">
+            </span><br>
+            <div id="participant_label" class="ui right floated mini label tooltip" data-content="Participant count">
                 <i class="user icon"></i> {participant_count}
             </div>
-            <div class="ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
+            <div id="prize_label" class="ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
                 <i class="yellow trophy icon"></i> {prize}
             </div>
             <div class="ui right floated red mini label tooltip"
@@ -737,7 +747,7 @@
 </competition-tile>
 
 <competition-card>
-    <div class="image">
+    <!-- <div class="image">
         <img src="https://i.imgur.com/n2XUSxU.png">
     </div>
     <div class="content">
@@ -762,7 +772,7 @@
     <style type="text/stylus">
         :self
             display block
-    </style>
+    </style>-->
 </competition-card>
 
 <competition-mobile-tile onclick="{redirect_to_url}">
@@ -802,7 +812,7 @@
                 </div>
             </div>
         </div>
-    </div>-->
+    </div>
     <div class="ui attached message">
         <div class="ui grid">
             <div class="row">
@@ -820,7 +830,7 @@
         </div>
     </div>
     <div class="ui attached fluid segment">
-        <div class="ui floating blue centered mini label tooltip" data-content="Participant count">
+        <div id="participant_label" class="ui floating centered mini label tooltip" data-content="Participant count">
             <p style="">{participant_count}</p>
         </div>
         <div align="center" class="">
@@ -835,7 +845,7 @@
                     </virtual>
                 </span>
             </div>
-            <div class="ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
+            <div id="prize_label" class="ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
                 <i class="yellow trophy icon"></i> {prize}
             </div>
             <div class="ui right floated red mini label tooltip"
@@ -846,7 +856,7 @@
             </div>
         </div>
     </div>
-    </div>
+    </div>-->
     <script>
         var self = this
 
