@@ -181,6 +181,8 @@
                         return luxon.DateTime.fromJSDate(date).toISODate()
                     }
                 },
+                startCalendar: ".datepicker[data-calendar-type='start']",
+                endCalendar: ".datepicker[data-calendar-type='end']",
                 popupOptions: {
                     position: 'bottom left',
                     lastResort: 'bottom left',
