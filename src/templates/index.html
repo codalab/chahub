@@ -49,27 +49,32 @@
 </head>
 <body>
 
-<app></app>
+<sidebar></sidebar>
+<div class="pusher">
+    <app></app>
+</div>
 
-<div class="ui horizontal divided tiny list" style="padding: 10px;">
-    <div class="item">
-        <div class="content">
-            <i>Chahub is a service of <a href="http://codalab.org/">Codalab</a></i>
+<div class="footer pusher">
+    <div id="chafooter" class="ui horizontal divided tiny list">
+        <div class="item">
+            <div class="content">
+                <i>Chahub is a service of <a href="http://codalab.org/">Codalab</a></i>
+            </div>
         </div>
-    </div>
-    <div class="item">
-        <div class="content">
-            <a href="https://github.com/codalab/codalab/issues" target="_blank">Join us on Github</a>
+        <div class="item">
+            <div class="content">
+                <a href="https://github.com/codalab/codalab/issues" target="_blank">Join us on Github</a>
+            </div>
         </div>
-    </div>
-    <div class="item">
-        <div class="content">
-            <a href="https://github.com/codalab/codalab/wiki/Project_About_CodaLab">About</a>
+        <div class="item">
+            <div class="content">
+                <a href="https://github.com/codalab/codalab/wiki/Project_About_CodaLab">About</a>
+            </div>
         </div>
-    </div>
-    <div class="item">
-        <div class="content">
-            <a href="https://github.com/codalab/codalab/wiki/Privacy" target="_blank">Privacy and Terms</a>
+        <div class="item">
+            <div class="content">
+                <a href="https://github.com/codalab/codalab/wiki/Privacy" target="_blank">Privacy and Terms</a>
+            </div>
         </div>
     </div>
 </div>
@@ -90,5 +95,39 @@
 {% block extra_body %}
 {% endblock %}
 
+
 </body>
 </html>
+
+<style>
+    body {
+        background: rgb(225, 233, 239) !important;
+    }
+
+    body.pushable > .pusher {
+        background-color: rgb(225, 233, 239) !important
+    }
+
+    .footer.pusher {
+        min-height: 0 !important;
+        z-index: unset;
+        background-color: rgb(225, 233, 239) !important;
+    }
+
+    #chafooter {
+        padding: 10px;
+        background-color: rgb(225, 233, 239) !important;
+    }
+
+    body.pushable > #chafooter {
+        background-color: rgb(225, 233, 239) !important;
+    }
+
+    body.pushable {
+        background-color: rgb(225, 233, 239) !important
+    }
+
+    .ui.uncover.sidebar {
+        z-index: 3 !important;
+    }
+</style>

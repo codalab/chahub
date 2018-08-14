@@ -4,7 +4,6 @@
             <search-results></search-results>
         </route>
     </router>
-
     <script>
         const self = this
     </script>
