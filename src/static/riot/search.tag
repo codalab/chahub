@@ -135,7 +135,7 @@
         </div>
     </div>
     <div id="mobile-grid" class="ui centered grid">
-        <div id="mobile" class="nine wide column">
+        <div id="mobile" class="sixteen wide tablet eleven wide computer column">
             <div class="ui stacked">
                 <div class="ui warning message" show="{showing_default_results}">
                     <div class="header">
