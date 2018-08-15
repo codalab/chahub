@@ -30,7 +30,7 @@ class CompetitionDocument(DocType):
     class Meta:
         model = Competition
 
-    remote_id = fields.IntegerField()
+    remote_id = fields.TextField()
     created_by = fields.TextField()
     title = fields.TextField()
     description = fields.TextField()
