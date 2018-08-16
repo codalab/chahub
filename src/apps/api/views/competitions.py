@@ -28,6 +28,11 @@ class CompetitionViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
         context['producer'] = self.request.user
         return context
 
+    def get_queryset(self):
+        qs = Competition.objects.all()
+        qs = qs.prefetch_related('phases', 'producer', 'admins', 'participants')
+        return qs
+
     def create(self, request, *args, **kwargs):
         # We're only overriding this so that we can replace the response with an empty dictionary
         # instead of sending back the huge HTML text
