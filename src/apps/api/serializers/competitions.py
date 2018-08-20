@@ -115,6 +115,9 @@ class CompetitionSerializer(WritableNestedModelSerializer):
         return producer
 
     def create(self, validated_data):
+        """
+        This creates *AND* updates based on the combination of (remote_id, producer)
+        """
         try:
             temp_instance = Competition.objects.get(
                 remote_id=validated_data.get('remote_id'),
@@ -127,7 +130,7 @@ class CompetitionSerializer(WritableNestedModelSerializer):
         if temp_instance:
             return self.update(temp_instance, validated_data)
         else:
-            new_instance = super(CompetitionSerializer, self).create(validated_data)
+            new_instance = super().create(validated_data)
             new_instance.producer = self.context['producer']
             new_instance.save()
             return new_instance

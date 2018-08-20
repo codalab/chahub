@@ -34,9 +34,11 @@ class CompetitionViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
         return qs
 
     def create(self, request, *args, **kwargs):
-        # We're only overriding this so that we can replace the response with an empty dictionary
+        # Make the serializer take many competitions at once
+        serializer = self.get_serializer(data=request.data, many=True)
+
+        # Overriding the rest of this this so that we can replace the response with an empty dictionary
         # instead of sending back the huge HTML text
-        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)

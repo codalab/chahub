@@ -31,7 +31,6 @@ class SearchView(APIView):
         s = self._sort(s, sorting, query)
 
         # Get results and prepare them
-        # results = s.execute()
         data["results"] = get_results(s)
 
         if not data["results"]:
