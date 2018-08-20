@@ -76,14 +76,14 @@ class Command(BaseCommand):
         for i in range(count):
             try:
                 # If our user is not set, create a random new one and set our user to that
-                if not temp_user:
-                    temp_username = uuid.uuid4()
+                if not options['user']:
+                    temp_username = str(uuid.uuid4())
                     temp_email = "{}.mailinator.com".format(temp_username)
                     temp_name = "Bot_{}".format(temp_username)
                     temp_user = CodalabUser.objects.create(username=temp_username, name=temp_name, email=temp_email)
 
                 # If no temp_title, generate a new one
-                if not temp_title:
+                if not options['title']:
                     temp_title = "Competition {}".format(uuid.uuid4())
 
                 # Should we generate a random date?
@@ -95,7 +95,8 @@ class Command(BaseCommand):
                 new_comp = Competition.objects.create(
                     title=temp_title,
                     created_by=temp_user.username,
-                    remote_id=999
+                    remote_id=999,
+                    published=True
                 )
                 new_comp.created_when = temp_date
                 new_comp.save()
