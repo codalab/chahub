@@ -143,10 +143,9 @@
                     </div>
                     Try broadening your search
                 </div>
-                <div class="ui middle aligned compact divided link items content-desktop"
+                <div class="ui middle aligned unstackable compact divided link items content-desktop"
                      style="margin-top: 0;">
-                    <competition-tile each="{ results }" no-reorder class="item"
-                                      style="padding: .5em 0;"></competition-tile>
+                    <competition-tile each="{ results }" no-reorder class="item"></competition-tile>
                 </div>
                 <!--<div class="ui middle aligned compact link items content-mobile" style="margin-top: -1;">
                     <competition-mobile-tile each="{ results }" no-reorder class="item"
@@ -633,16 +632,6 @@
             bottom 0
             right 0
 
-        #participant_label
-            background-color #475e6f!important
-            border-color #475e6f!important
-            color #dfe3e5
-
-        #prize_label
-            background-color rgba(99, 84, 14, 0.68) !important
-            border-color rgba(99, 84, 14, 0.68) !important
-            color #dee2e4 !important
-
         #calendarstyling
             background-color white !important
             opacity 1 !important
@@ -659,6 +648,8 @@
                 border-left none
                 border-right solid #e2e2e2 1px
 
+        competition-tile
+            padding-bottom 0!important
     </style>
 </search-results>
 
@@ -686,8 +677,8 @@
 </search-result>
 
 <competition-tile onclick="{redirect_to_url}">
-    <div class="ui tiny image" style="width: 40px;">
-        <img src="{logo}" style="margin-left: 1em; max-width: 3em; max-height: 3em;" class="ui avatar image">
+    <div class="ui tiny image">
+        <img src="{logo}" class="ui avatar image">
     </div>
     <div class="content">
         <div class="header">
@@ -697,25 +688,26 @@
             <p>{description}</p>
         </div>
         <div class="extra" style="margin-top: 0;">
-            <span style="font-size: .8em; color: rgba(0,0,255, 0.6);">{url}</span>
-            <span style="font-size: .8em;">
+            <div id="item_url">{url}</div>
+            <span id="item_date">
                 {pretty_date(start)}
                 <virtual if="{end}">
                     - {pretty_date(end)}
                 </virtual>
             </span><br>
-            <div id="participant_label" class="ui right floated mini label tooltip" data-content="Participant count">
+            <span id="participant_label" class="ui right floated mini label tooltip" data-content="Participant count">
                 <i class="user icon"></i> {participant_count}
-            </div>
-            <div id="prize_label" class="ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
+            </span>
+            <span id="prize_label" class="ui right floated mini label tooltip" data-content="Prize Amount"
+                 show="{prize}">
                 <i class="yellow trophy icon"></i> {prize}
-            </div>
-            <div class="ui right floated red mini label tooltip"
+            </span>
+            <span class="ui right floated red mini label tooltip"
                  style="background-color: #db28289e;"
                  data-content="Deadline of the current phase"
                  show="{current_phase_deadline}">
                 <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
-            </div>
+            </span>
         </div>
     </div>
 
@@ -743,6 +735,40 @@
 
             p
                 line-height 1.1em !important
+
+            @media screen and (max-width 645px)
+                padding-left 0.8em!important
+
+        .ui.avatar.image
+            max-width 3em
+
+        .ui.image
+            max-width 40px
+            display inline-grid!important
+            justify-content center
+
+        #item_url
+            font-size .8em
+            color rgba(0,0,255,0.6)
+            white-space nowrap
+            overflow hidden
+            text-overflow ellipsis
+            max-width 90vw
+            margin-bottom -6px
+
+        #item_date
+            font-size 0.8em
+
+        #participant_label
+            background-color #475e6f !important
+            border-color #475e6f !important
+            color #dfe3e5
+
+        #prize_label
+            background-color rgba(99, 84, 14, 0.68) !important
+            border-color rgba(99, 84, 14, 0.68) !important
+            color #dee2e4 !important
+            margin-bottom -10px
     </style>
 </competition-tile>
 
