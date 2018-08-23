@@ -1,9 +1,9 @@
 <search-results>
     <div id="particle_header" class="ui centered grid">
-        <a id="login-button" hide="{USER_AUTHENTICATED}" style="" href="/accounts/login/"
+        <a id="login-button" hide="{USER_AUTHENTICATED}" href="/accounts/login/"
            class="ui button">LOGIN
         </a>
-        <a id="login-button" show="{USER_AUTHENTICATED}" style="" href="/accounts/logout/"
+        <a id="login-button" show="{USER_AUTHENTICATED}" href="/accounts/logout/"
            class="ui button">LOGOUT
         </a>
         <div id="hamburger_button">
@@ -143,8 +143,7 @@
                     </div>
                     Try broadening your search
                 </div>
-                <div class="ui middle aligned unstackable compact divided link items content-desktop"
-                     style="margin-top: 0;">
+                <div class="ui middle aligned unstackable compact divided link items content-desktop">
                     <competition-tile each="{ results }" no-reorder class="item"></competition-tile>
                 </div>
                 <!--<div class="ui middle aligned compact link items content-mobile" style="margin-top: -1;">
@@ -650,6 +649,9 @@
 
         competition-tile
             padding-bottom 0!important
+
+        .content-desktop
+            margin-top 0
     </style>
 </search-results>
 
@@ -687,7 +689,7 @@
         <div class="description">
             <p>{description}</p>
         </div>
-        <div class="extra" style="margin-top: 0;">
+        <div class="extra">
             <div id="item_url">{url}</div>
             <span id="item_date">
                 {pretty_date(start)}
@@ -702,8 +704,7 @@
                  show="{prize}">
                 <i class="yellow trophy icon"></i> {prize}
             </span>
-            <span class="ui right floated red mini label tooltip"
-                 style="background-color: #db28289e;"
+            <span id="deadline_label" class="ui right floated red mini label tooltip"
                  data-content="Deadline of the current phase"
                  show="{current_phase_deadline}">
                 <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
@@ -739,6 +740,9 @@
             @media screen and (max-width 645px)
                 padding-left 0.8em!important
 
+        .extra
+            margin-top 0
+
         .ui.avatar.image
             max-width 3em
 
@@ -769,6 +773,9 @@
             border-color rgba(99, 84, 14, 0.68) !important
             color #dee2e4 !important
             margin-bottom -10px
+
+        #deadline_label
+            background-color #db28289e
     </style>
 </competition-tile>
 
