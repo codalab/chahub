@@ -7,7 +7,7 @@ from rest_framework.routers import SimpleRouter
 from api.views.producers import ProducerViewSet
 from .views import competitions, data, profiles, search
 
-
+app_name = 'api'
 API_PREFIX = "v1"
 
 # API routes
