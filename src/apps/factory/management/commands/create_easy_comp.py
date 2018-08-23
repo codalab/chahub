@@ -42,7 +42,8 @@ class Command(BaseCommand):
                     title=temp_title,
                     description=temp_desc,
                     created_by=temp_user.username,
-                    remote_id=999
+                    remote_id=999,
+                    published=True
                 )
                 new_comp.created_when = timezone.now() + datetime.timedelta(days=random.randint(-15, 15))
                 new_comp.save()
