@@ -22,6 +22,7 @@ urlpatterns = [
     # Third party
     path('api/<str:version>/', include('api.urls')),
     path('oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    path('silk/', include('silk.urls', namespace='silk')),
 
     # Django built in
     # path('accounts/', include('django.contrib.auth.urls', namespace='accounts')),

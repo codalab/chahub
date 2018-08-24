@@ -36,6 +36,7 @@ THIRD_PARTY_APPS = (
     'django_elasticsearch_dsl',
     'social_django',
     'django_extensions',
+    'silk',
 )
 OUR_APPS = (
     'competitions',
@@ -50,6 +51,7 @@ INSTALLED_APPS = THIRD_PARTY_APPS + OUR_APPS
 
 MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
+    'silk.middleware.SilkyMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -269,6 +271,12 @@ CHANNEL_LAYERS = {
     },
 }
 
+
+# =============================================================================
+# Profiler
+# =============================================================================
+# Causes silky to monitor the Python process as well
+SILKY_PYTHON_PROFILER = True
 
 # =============================================================================
 # Storage
