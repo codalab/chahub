@@ -8,6 +8,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.generic import TemplateView
+from silk.profiling.profiler import silk_profile
 
 from competitions.models import Competition
 from producers.models import Producer
@@ -56,6 +57,7 @@ class IndexView(CacheMixin, TemplateView):
 
     # I don't think we'll use this in an iframe, but just-in-case
     @xframe_options_exempt
+    @silk_profile(name='Index view')
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 

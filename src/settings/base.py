@@ -277,6 +277,7 @@ CHANNEL_LAYERS = {
 # =============================================================================
 # Causes silky to monitor the Python process as well
 SILKY_PYTHON_PROFILER = True
+SILKY_PYTHON_PROFILER_BINARY = True
 
 # =============================================================================
 # Storage
