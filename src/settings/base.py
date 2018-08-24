@@ -18,6 +18,9 @@ USE_X_FORWARDED_HOST = True
 SITE_ID = 1
 
 THIRD_PARTY_APPS = (
+    # Profiler first
+    'scout_apm.django',
+
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -269,6 +272,13 @@ CHANNEL_LAYERS = {
     },
 }
 
+
+# =============================================================================
+# Profiling
+# =============================================================================
+SCOUT_MONITOR = True
+SCOUT_KEY = os.environ.get("SCOUT_KEY")
+SCOUT_NAME = f"Chahub {os.environ.get('HEROKU_APP_NAME')}"
 
 # =============================================================================
 # Storage

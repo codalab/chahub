@@ -6,7 +6,13 @@
   "env": {
     "USE_SSL": "True",
     "CHANNEL_BACKEND": "asgi_redis.RedisChannelLayer",
-    "GUNICORN_CMD_ARGS": "--workers=10"
+    "GUNICORN_CMD_ARGS": "--workers=10",
+    "HEROKU_APP_NAME": {
+      "required": true
+    },
+    "HEROKU_PARENT_APP_NAME": {
+      "required": true
+    }
   },
   "formation": {
     "web": {
@@ -22,6 +28,7 @@
     "heroku-postgresql",
     "searchbox:starter",
     "scheduler:standard",
+    "scout:chair",
     {
       "plan": "heroku-redis:hobby-dev",
       "options": {
