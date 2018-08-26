@@ -50,7 +50,8 @@ class Competition(models.Model):
     #     return super().save(*args, **kwargs)
 
     def get_current_phase_deadline(self):
-        # TODO: We may need to have a celery task that updates ElasticSearch deadlines. We can't do sorting by deadline when we get a bunch of competitions.
+        # TODO: We may need to have a celery task that updates ElasticSearch deadlines.
+        # We can't do sorting by deadline when we get a bunch of competitions.
         # Could save this as a property on the model
         for phase in self.phases.all():
             if phase.is_active and not phase.never_ends:
