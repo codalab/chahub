@@ -18,6 +18,9 @@ USE_X_FORWARDED_HOST = True
 SITE_ID = 1
 
 THIRD_PARTY_APPS = (
+    # Profiler first
+    'scout_apm.django',
+
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -184,6 +187,9 @@ DATABASES = {
 }
 
 # Overridden by env settings
+# TODO: To properly use pgbouncer, do we need to use DATABASE_URL_PGBOUNCER?
+# It seems like we do not get the max connection problems any more with pgbouncer
+# as it's currently setup, but we should keep this env var in mind.
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
@@ -266,6 +272,13 @@ CHANNEL_LAYERS = {
     },
 }
 
+
+# =============================================================================
+# Profiling
+# =============================================================================
+SCOUT_MONITOR = True
+SCOUT_KEY = os.environ.get("SCOUT_KEY")
+SCOUT_NAME = f"Chahub {os.environ.get('HEROKU_APP_NAME')}"
 
 # =============================================================================
 # Storage
