@@ -690,13 +690,16 @@
             <p>{description}</p>
         </div>
         <div class="extra">
-            <div id="item_url">{url}</div>
+            <div class="url_date">
+            <span id="item_url">{url}</span>
+            <br id="mobile_break">
             <span id="item_date">
                 {pretty_date(start)}
                 <virtual if="{end}">
                     - {pretty_date(end)}
                 </virtual>
-            </span><br>
+            </span>
+            </div>
             <span id="participant_label" class="ui right floated mini label tooltip" data-content="Participant count">
                 <i class="user icon"></i> {participant_count}
             </span>
@@ -733,35 +736,39 @@
                 margin-top 0 !important
                 color #808080 !important
                 font-size .9em !important
-
             p
                 line-height 1.1em !important
 
             @media screen and (max-width 645px)
-                padding-left 0.8em!important
+                padding-left 0.8em !important
 
         .extra
             margin-top 0
 
         .ui.avatar.image
-            max-width 3em
+            max-width 4em
+            @media screen and (max-width 750px)
+                max-width 3em
 
         .ui.image
-            max-width 40px
-            display inline-grid!important
+            max-width 60px
+            display inline-grid !important
             justify-content center
+
 
         #item_url
             font-size .8em
-            color rgba(0,0,255,0.6)
+            color rgba(0,0,255,0.6) !important
             white-space nowrap
             overflow hidden
             text-overflow ellipsis
             max-width 90vw
-            margin-bottom -6px
+            @media screen and (max-width 750px)
+                margin-bottom -6px
 
         #item_date
             font-size 0.8em
+            color #8c8c8c !important
 
         #participant_label
             background-color #475e6f !important
@@ -772,10 +779,24 @@
             background-color rgba(99, 84, 14, 0.68) !important
             border-color rgba(99, 84, 14, 0.68) !important
             color #dee2e4 !important
-            margin-bottom -10px
+            margin-bottom 10px
+            @media screen and (max-width 750px)
+                margin-bottom -10px
 
         #deadline_label
             background-color #db28289e
+
+        .url_date
+            white-space nowrap
+            overflow hidden
+            text-overflow ellipsis
+            color rgba(0,0,255,0.6)
+            margin-bottom 10px
+
+        #mobile_break
+            display none !important
+            @media screen and (max-width 750px)
+                display block !important
     </style>
 </competition-tile>
 
