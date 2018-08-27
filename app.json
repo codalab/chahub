@@ -6,7 +6,7 @@
   "env": {
     "USE_SSL": "True",
     "CHANNEL_BACKEND": "asgi_redis.RedisChannelLayer",
-    "GUNICORN_CMD_ARGS": "--workers=10"
+    "GUNICORN_CMD_ARGS": "--workers=3"
   },
   "formation": {
     "web": {
