@@ -115,6 +115,7 @@ class Command(BaseCommand):
                 producer=None,
                 remote_id=999,
                 description=temp_desc,
+                published=True,
             )
             new_comp.created_when = timezone.now() + datetime.timedelta(days=random.randint(-465, 465))
             new_comp.save()

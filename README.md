@@ -30,3 +30,23 @@ Set these ENV vars:
 ```
 WHITENOISE_ROOT=
 ```
+
+# Production settings
+
+
+```bash
+# This environment variable passes arguments to gunicorn, tweak worker count here
+export GUNICORN_CMD_ARGS="--workers=10"
+```
+
+
+# Background tasks
+
+These tasks must be run periodically
+
+
+### Update competition `active` status and recalculate phase deadlines
+
+```bash
+python manage.py update_competition_details
+```

@@ -9,12 +9,12 @@ from competitions.models import Competition
 
 
 class Command(BaseCommand):
-    help = 'Closes the specified poll for voting'
+    help = 'A really basic command to create one random competition without args.'
 
     def handle(self, *args, **options):
         try:
             new_comp = Competition.objects.create(title="Competition {}".format(uuid.uuid4()),
-                                                  created_by="User_{}".format(uuid.uuid4()), remote_id=999)
+                                                  created_by="User_{}".format(uuid.uuid4()), remote_id=999, published=True)
             new_comp.created_when = timezone.now() + datetime.timedelta(days=random.randint(-15, 15))
             new_comp.save()
             self.stdout.write(self.style.SUCCESS('Successfully created competition "%s"' % new_comp))
