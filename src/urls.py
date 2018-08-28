@@ -38,8 +38,7 @@ if settings.DEBUG:
 # urlpatterns += [re_path(r'.*', TemplateView.as_view(template_name="index.html"))]
 
 
-class IndexView(CacheMixin, TemplateView):
-    cache_timeout = 60 * 10
+class IndexView(TemplateView):
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
@@ -48,8 +47,9 @@ class IndexView(CacheMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['producers'] = json.dumps(list(Producer.objects.all().values('id', 'name', 'url')))
 
-        from api.views.search import get_default_search_results
-        context['default_search_results'] = json.dumps(get_default_search_results())
+        if not self.request.GET:
+            from api.views.search import get_default_search_results
+            context['default_search_results'] = json.dumps(get_default_search_results())
 
         return context
 
