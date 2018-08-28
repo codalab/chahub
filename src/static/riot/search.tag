@@ -519,8 +519,6 @@
             @media screen and (min-width 646px)
                 display none
 
-        #results_container
-            min-height 375px
 
         #search_wrapper .results
             margin-top 1px
@@ -692,27 +690,29 @@
         </div>
         <div class="extra">
             <div class="mobile_linewrap">
-                <span class="url">{url}</span>
+                <span class="url"><a href="{url}">{url_short(url)}</a></span>
                 <span class="date">
                 {pretty_date(start)}
                 <virtual if="{end}">
                     - {pretty_date(end)}
                 </virtual>
             </span>
-            </div>
-            <span class="participant_label ui right floated mini label tooltip" data-content="Participant count">
+                <div class="mobile_labelwrap"></div>
+                <span class="participant_label ui right floated mini label tooltip" data-content="Participant count">
                 <i class="user icon"></i> {participant_count}
             </span>
-            <span class="prize_label ui right floated mini label tooltip" data-content="Prize Amount"
-                  show="{prize}">
+                <span class="prize_label ui right floated mini label tooltip" data-content="Prize Amount"
+                      show="{prize}">
                 <i class="yellow trophy icon"></i> {prize}
             </span>
-            <span class="deadline_label ui right floated red mini label tooltip"
-                  data-content="Deadline of the current phase"
-                  show="{current_phase_deadline}">
+                <span class="deadline_label ui right floated red mini label tooltip"
+                      data-content="Deadline of the current phase"
+                      show="{current_phase_deadline}">
                 <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
             </span>
+            </div>
         </div>
+    </div>
     </div>
 
     <script>
@@ -725,6 +725,10 @@
         self.redirect_to_url = function () {
             window.open(self.url, '_blank');
         }
+
+        self.url_short = function (url) {
+            return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
+        }
     </script>
 
     <style type="text/stylus">
@@ -735,6 +739,7 @@
             .description
                 margin-top 0 !important
                 color #808080 !important
+                display block
                 font-size .9em !important
             p
                 line-height 1.1em !important
@@ -744,7 +749,6 @@
 
         .extra
             margin-top 0
-            margin-bottom 10px !important
             @media screen and (max-width 749px)
                 margin-bottom 0 !important
 
@@ -755,9 +759,10 @@
                 overflow hidden
                 text-overflow ellipsis
                 max-width 90vw
-                @media screen and (max-width 750px)
-                    margin-bottom -6px
-                    display block !important
+                @media screen and (max-width 750px) {
+                    margin-bottom: -6px;
+                }
+                display block !important
 
             .date
                 font-size 0.8em
@@ -777,20 +782,30 @@
             background-color #475e6f !important
             border-color #475e6f !important
             color #dfe3e5 !important
+            right 0
+            margin 0 2px !important
 
         .prize_label
             background-color rgba(99, 84, 14, 0.68) !important
             border-color rgba(99, 84, 14, 0.68) !important
             color #dee2e4 !important
+            margin 0 2px !important
 
         .deadline_label
-            background-color #db28289e
+            background-color #db28289e !important
+            margin 0 2px !important
 
         .mobile_linewrap
             white-space nowrap
             overflow hidden
             text-overflow ellipsis
             color rgba(0, 0, 255, 0.6)
+            margin-bottom 5px !important
+
+        .mobile_labelwrap
+            display block
+            @media screen and (min-width 500px)
+                display inline-block
     </style>
 </competition-tile>
 
