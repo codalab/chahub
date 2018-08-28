@@ -801,6 +801,7 @@
             text-overflow ellipsis
             color rgba(0, 0, 255, 0.6)
             margin-bottom 5px !important
+            margin-right 0 !important
 
         .mobile_labelwrap
             display block
