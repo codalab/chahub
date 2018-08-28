@@ -161,6 +161,7 @@
         self.display_search_options = false
 
         self.on('mount', function () {
+
             /*$(self.refs.search_wrapper).dropdown({
 
 
@@ -692,7 +693,6 @@
         <div class="extra">
             <div class="mobile_linewrap">
                 <span class="url">{url}</span>
-                <br>
                 <span class="date">
                 {pretty_date(start)}
                 <virtual if="{end}">
@@ -757,6 +757,7 @@
                 max-width 90vw
                 @media screen and (max-width 750px)
                     margin-bottom -6px
+                    display block !important
 
             .date
                 font-size 0.8em
@@ -790,11 +791,6 @@
             overflow hidden
             text-overflow ellipsis
             color rgba(0, 0, 255, 0.6)
-            br
-                display none !important
-                @media screen and (max-width 750px)
-                    display block !important
-
     </style>
 </competition-tile>
 
