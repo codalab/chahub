@@ -42,8 +42,8 @@ $.ajaxSetup({
 //
 // Like, if you're typing in an autocomplete field it should wait until you're
 // finished typing before it sends the request
-window.delay = (function () {
-    var timer = 0;
+window.delay = (function (timer) {
+    var timer = timer || 0;
     return function (callback, ms) {
         clearTimeout(timer);
         timer = setTimeout(callback, ms);

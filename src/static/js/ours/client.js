@@ -19,7 +19,10 @@ CHAHUB.api = {
         // Remove any unused params so our URL stays pretty
         dict_remove_empty_values(params)
         // Add query params to URL
-        route('/?' + $.param(params))
+        // This causes bugs with repeating the query params over and over, so we just replaceState now
+        //route('?' + $.param(params))
+        window.history.replaceState("", "", `?${$.param(params)}`);
+
         return CHAHUB.api.request('GET', URLS.API + "query/?" + $.param(params))
     },
     // ------------------------------------------------------------------------

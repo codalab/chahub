@@ -1,11 +1,13 @@
 <search-results>
     <div id="particle_header" class="ui centered grid">
-        <a id="login-button" hide="{USER_AUTHENTICATED}" href="/accounts/login/"
-           class="ui button">LOGIN
-        </a>
-        <a id="login-button" show="{USER_AUTHENTICATED}" href="/accounts/logout/"
-           class="ui button">LOGOUT
-        </a>
+        <span hide="{ embedded }">
+            <a id="login-button" hide="{USER_AUTHENTICATED}" href="/accounts/login/"
+               class="ui button">LOGIN
+            </a>
+            <a id="login-button" show="{USER_AUTHENTICATED}" href="/accounts/logout/"
+               class="ui button">LOGOUT
+            </a>
+        </span>
         <div id="hamburger_button">
             <div class="ui small icon button">
                 <i class="large bars icon"></i>
@@ -300,6 +302,7 @@
 
             // Producers
             $(self.refs.producer_filter).dropdown('set selected', params.producer)
+
             // For iframes we might want to hide producer selection
             self.embedded = params.embedded
 
