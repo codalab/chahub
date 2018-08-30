@@ -106,7 +106,7 @@
                 </div>
             </div>
             <div id="advanced_search_align" class="five wide center aligned column"
-                 show="{!disallow_producer_selection}">
+                 show="{!embedded}">
                 <div id="advanced_search_button" ref="producer_filter"
                      class="ui tiny labeled icon dropdown button">
                     <i class="globe icon"></i>
@@ -301,7 +301,7 @@
             // Producers
             $(self.refs.producer_filter).dropdown('set selected', params.producer)
             // For iframes we might want to hide producer selection
-            self.disallow_producer_selection = params.disallow_producer_selection
+            self.embedded = params.embedded
 
             if (DEFAULT_SEARCH_RESULTS) {
                 self.results = DEFAULT_SEARCH_RESULTS
@@ -325,7 +325,7 @@
             self.refs.end_date.value = ''
             $(self.refs.time_filter).dropdown('set selected', '')
             $(self.refs.sort_filter).dropdown('set selected', '')
-            if (!self.disallow_producer_selection) {
+            if (!self.embedded) {
                 $(self.refs.producer_filter).dropdown('set selected', '')
             }
 
