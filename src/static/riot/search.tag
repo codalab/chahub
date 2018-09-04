@@ -277,7 +277,8 @@
             var params = route.query()
 
             // On page load set search bar to search and execute search if we were given a query
-            self.refs.search.value = params.q || ''
+            // Decoding the URI query for the search bar
+            self.refs.search.value = decodeURI(params.q) || ''
 
             // TODO: set time_filter dropdown selected value
             // TODO: set sort dropdown selected value
