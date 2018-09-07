@@ -184,11 +184,7 @@ DATABASES = {
 }
 
 # Overridden by env settings
-# TODO: To properly use pgbouncer, do we need to use DATABASE_URL_PGBOUNCER?
-# It seems like we do not get the max connection problems any more with pgbouncer
-# as it's currently setup, but we should keep this env var in mind.
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 
 # =============================================================================
