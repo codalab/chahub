@@ -9,12 +9,13 @@ Under construction!
 1. `cd chahub`
 1. Make a virtual environment and source into it
 1. `pip install -r requirements.dev.txt`
+1. `npm install -g npm-watch`
 
 
 ## Running it locally
 
 
-`python manage.py runserver` to start django and `npm-watch` to compile riot (javascript components) and stylus (css preprocessor)
+`python manage.py runserver` to start django which will automatically start `npm-watch` to compile riot (javascript components) and stylus (css preprocessor)
 
 
 ## Heroku installation
