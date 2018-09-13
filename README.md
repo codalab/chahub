@@ -10,6 +10,7 @@ Under construction!
 1. Make a virtual environment and source into it
 1. `pip install -r requirements.dev.txt`
 1. `npm install -g npm-watch`
+1. `brew install elasticsearch` (defaults should work)
 
 
 ## Running it locally
