@@ -1,3 +1,4 @@
+import json
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
@@ -34,15 +35,17 @@ class CompetitionViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
         return qs
 
     def create(self, request, *args, **kwargs):
-        # Make the serializer take many competitions at once
-        serializer = self.get_serializer(data=request.data, many=True)
+        """Overriding this for the following reasons:
 
-        # Overriding the rest of this this so that we can replace the response with an empty dictionary
-        # instead of sending back the huge HTML text
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response({}, status=status.HTTP_201_CREATED, headers=headers)
+        1. Returning the huge amount of HTML/etc. back by default by DRF was bad
+        2. We want to handle creating many competitions this way, and we do that
+           custom to make drf-writable-nested able to interpret everything easily"""
+        # Make the serializer take many competitions at once
+        for competition in request.data:
+            serializer = self.get_serializer(data=competition)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+        return Response({}, status=status.HTTP_201_CREATED)
 
 
 #

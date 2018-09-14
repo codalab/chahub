@@ -125,9 +125,10 @@ class CompetitionSerializer(WritableNestedModelSerializer):
             )
         except ObjectDoesNotExist:
             temp_instance = None
-        # If we have an existing instance from this producer
-        # with the same remote_id, update it instead of making a new one
+
         if temp_instance:
+            # If we have an existing instance from this producer
+            # with the same remote_id, update it instead of making a new one
             return self.update(temp_instance, validated_data)
         else:
             new_instance = super().create(validated_data)
