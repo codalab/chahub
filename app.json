@@ -6,7 +6,8 @@
   "env": {
     "USE_SSL": "True",
     "CHANNEL_BACKEND": "asgi_redis.RedisChannelLayer",
-    "GUNICORN_CMD_ARGS": "--workers=3"
+    "GUNICORN_CMD_ARGS": "--workers=3",
+    "EMAIL_BACKEND": "django.core.mail.backends.smtp.EmailBackend"
   },
   "formation": {
     "web": {

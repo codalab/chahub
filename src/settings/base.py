@@ -110,11 +110,6 @@ STATICFILES_DIRS = (
 MEDIA_URL = '/uploads/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
-EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
-
-DEFAULT_FROM_EMAIL = 'Do Not Reply <donotreply@imagefirstuniforms.com>'
-SERVER_EMAIL = 'Do Not Reply <donotreply@imagefirstuniforms.com>'
-
 LOGIN_REDIRECT_URL = '/'
 
 # AUTH_USER_MODEL = 'profiles.User'
@@ -158,6 +153,19 @@ SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'email']
 # User Models
 AUTH_USER_MODEL = 'profiles.User'
 SOCIAL_AUTH_USER_MODEL = 'profiles.User'
+
+
+# =========================================================================
+# Email
+# =========================================================================
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.sendgrid.net')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.environ.get('EMAIL_PORT', 587)
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', True)
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'CodaLab <noreply@chahub.org>')
+SERVER_EMAIL = os.environ.get('SERVER_EMAIL', 'noreply@chahub.org')
 
 
 # =============================================================================
