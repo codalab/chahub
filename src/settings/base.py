@@ -19,7 +19,7 @@ USE_X_FORWARDED_HOST = True
 ADMINS = os.environ.get('ADMINS')
 if ADMINS:
     # Admins requires a list of (<Name>, <Email>) tuples
-    ADMINS = [('Admin', a.split(',')) for a in ADMINS.split(';')]
+    ADMINS = [(a.split('@')[0], a) for a in ADMINS.split(',')]
 
 SITE_ID = 1
 
