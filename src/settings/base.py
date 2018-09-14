@@ -211,7 +211,8 @@ DATABASES = {
 }
 
 # Overridden by env settings
-DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+if os.environ.get('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 
 # =============================================================================
