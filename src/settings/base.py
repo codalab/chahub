@@ -15,6 +15,11 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 ALLOWED_HOSTS = ['*']
 USE_X_FORWARDED_HOST = True
 
+# Example ADMINS = Name,example@test.com;Name2,example2@test.com
+ADMINS = os.environ.get('ADMINS')
+if ADMINS:
+    ADMINS = [a.split(',') for a in ADMINS.split(';')]
+
 SITE_ID = 1
 
 THIRD_PARTY_APPS = (
@@ -169,6 +174,51 @@ if DEBUG:
 # TODO: Fix this, not working... does not fire for some reason
 # def show_toolbar_handler(request):
 #     return True
+
+
+
+    # =========================================================================
+    # Logging
+    # =========================================================================
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'simple': {
+                'format': '%(asctime)s %(levelname)s %(message)s'
+            },
+        },
+        'filters': {
+            'require_debug_false': {
+                '()': 'django.utils.log.RequireDebugFalse'
+            }
+        },
+        'handlers': {
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'simple',
+                'stream': sys.stdout,
+            },
+            'mail_admins': {
+                'level': 'ERROR',
+                'filters': ['require_debug_false'],
+                'class': 'django.utils.log.AdminEmailHandler'
+            }
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['console'],
+                'level': 'INFO',
+                'propagate': True,
+            },
+            'django.request': {
+                'handlers': ['mail_admins'],
+                'level': 'ERROR',
+                'propagate': True,
+            },
+        }
+    }
 
 
 # =============================================================================
