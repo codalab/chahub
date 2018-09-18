@@ -58,5 +58,6 @@ class IndexView(TemplateView):
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
+
 # urlpatterns += [re_path(r'.*', IndexView.as_view())]
-urlpatterns += [re_path(r'^$', IndexView.as_view())]
+urlpatterns += [re_path(r'^$', IndexView.as_view(), name="index")]
