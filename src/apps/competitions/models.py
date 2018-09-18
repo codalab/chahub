@@ -61,27 +61,15 @@ class Competition(models.Model):
         return None
 
     def get_is_active(self):
-        # # TODO: Check submission count from last 30 days
-        # if self.end is None:
-        #     return True
-        # elif type(self.end) is datetime.datetime.date:
-        #     return True if self.end is None else self.end > timezone.now().date()
-        # elif type(self.end) is datetime.datetime:
-        #     return True if self.end is None else self.end > timezone.now()
-        # else:
-        #     return False
-
         # If end and start are not null
         if self.start and self.end:
             # If today is in-between the start and end for the competition
             if timezone.now() > self.start and timezone.now() < self.end:
-                print("Competition has start and end date and today is in-between thsoe dates")
                 return True
         # If we only have a start
         if self.start and not self.end:
             # If today is greater than the start
             if timezone.now() > self.start:
-                print("Competition has a start but no end, and today is greater than the start date")
                 return True
         if not self.start and not self.end:
             # We have no start/end, so we'll check the submissions and see if any have occured within the past 15 days.
@@ -93,10 +81,8 @@ class Competition(models.Model):
                 comp_submissions += phase_submissions
             for submission in comp_submissions:
                 # If the submitted at date is greater than 15 days ago from now
-                if submission.submitted_at > timezone.now() - datetime.timedelta(days=15):
-                    print("Competition has neither a start or an end, but we have recent submissions.")
+                if submission.submitted_at > timezone.now() - datetime.timedelta(days=30):
                     return True
-        print("This competition does not appear active")
         return False
 
     def get_current_phase(self, *args, **kwargs):
