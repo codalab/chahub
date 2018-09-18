@@ -64,7 +64,10 @@
         assets: {
             header_particles: "{% static "particles/header.json" %}"
         },
-        API: "/api/v1/"
+        API: "/api/v1/",
+        STATIC: function (file_name) {
+            return "{% static '!-to-be-replaced-!' %}".replace('!-to-be-replaced-!', file_name)
+        }
     }
 </script>
 
