@@ -15,10 +15,10 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 ALLOWED_HOSTS = ['*']
 USE_X_FORWARDED_HOST = True
 
-# Example ADMINS = Name,example@test.com;Name2,example2@test.com
+# Example ADMINS = example@test.com,example2@test.com
 ADMINS = os.environ.get('ADMINS')
 if ADMINS:
-    # Admins requires a list of (<Name>, <Email>) tuples
+    # turns above example into [('example', 'example@test.com'),('example2', 'example2@test.com')]
     ADMINS = [(a.split('@')[0], a) for a in ADMINS.split(',')]
 
 SITE_ID = 1
@@ -112,6 +112,7 @@ MEDIA_URL = '/uploads/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 # AUTH_USER_MODEL = 'profiles.User'
 
