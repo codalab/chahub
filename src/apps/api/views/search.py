@@ -83,13 +83,17 @@ class SearchView(APIView):
         return search
 
     def _sort(self, search, sorting, query):
-        # Make a positional list with `_score`(relevancy ranking of keyword search) as the first entry if we
-        # have a valid query. Then tack on whatever field we sort by
-        sort_params = ['_score'] if query else []
+        # Make an empty list for our parameters
+        sort_params = []
         if sorting == 'participant_count':
             sort_params.append('-participant_count')
         elif sorting == 'prize':
             sort_params.append('-prize')
         elif sorting == 'deadline':
             sort_params.append('current_phase_deadline')
+
+        # If '_score' is the first sort parameter, the participant sorting gets overridden and the results are mostly
+        # relevancy based instead of being based on whatever sorting we desire. Append it last here.
+        if query:
+            sort_params.append('_score')
         return search.sort(*sort_params)
