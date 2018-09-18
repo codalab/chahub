@@ -9,9 +9,7 @@ from django.contrib import admin
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.generic import TemplateView
 
-from competitions.models import Competition
 from producers.models import Producer
-from utils.views import CacheMixin
 
 urlpatterns = [
     # Our URLS
