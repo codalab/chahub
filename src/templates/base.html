@@ -18,10 +18,12 @@
     <!-- Semantic -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
     <!-- Datepicker -->
     <link rel="stylesheet" href="{% static "css/calendar.min.css" %}">
     <script src="{% static "js/calendar.min.js" %}"></script>
-
     <script src="{% static "js/luxon.js" %}"></script>
 
     <script src="{% static "js/riot-route.js" %}"></script>
@@ -44,19 +46,75 @@
 
     {% block extra_head %}
     {% endblock %}
+
+    <style>
+        body {
+            background: rgb(255, 255, 255) !important;
+        }
+
+        body.pushable > .pusher {
+            background: rgb(255, 255, 255) !important;
+        }
+
+        .footer.pusher {
+            min-height: 0 !important;
+            z-index: unset;
+            background: rgb(255, 255, 255) !important;
+        }
+
+        #chafooter {
+            padding: 10px;
+            background: rgb(255, 255, 255) !important;
+        }
+
+        body.pushable > #chafooter {
+            background: rgb(255, 255, 255) !important;
+        }
+
+        body.pushable {
+            background: rgb(255, 255, 255) !important;
+        }
+
+        .ui.uncover.sidebar {
+            z-index: 3 !important;
+        }
+    </style>
 </head>
 <body>
 
+{% block content %}
 
-<div class="ui grid container">
-    <div class="row">
-        <div class="column wide sixteen">
-            {% block content %}
-            {% endblock %}
+{% endblock %}
+
+<div class="footer pusher">
+    <div id="chafooter" class="ui horizontal divided tiny list">
+        <div class="item">
+            <div class="content">
+                <i>Chahub is a service of <a href="http://codalab.org/">Codalab</a></i>
+            </div>
+        </div>
+        <div class="item">
+            <div class="content">
+                <a href="https://github.com/codalab/codalab/issues" target="_blank">Join us on Github</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="content">
+                <a href="{% url 'api:docs' 'v1' %}" target="_blank">API</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="content">
+                <a href="https://github.com/codalab/codalab/wiki/Project_About_CodaLab">About</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="content">
+                <a href="https://github.com/codalab/codalab/wiki/Privacy" target="_blank">Privacy and Terms</a>
+            </div>
         </div>
     </div>
 </div>
-
 
 <script>
     // Load in URLs or other django generated goodies
@@ -64,11 +122,15 @@
         assets: {
             header_particles: "{% static "particles/header.json" %}"
         },
-        API: "/api/v1/",
-        STATIC: function (file_name) {
-            return "{% static '!-to-be-replaced-!' %}".replace('!-to-be-replaced-!', file_name)
-        }
+        API: "/api/v1/"
     }
+    PRODUCERS = JSON.parse("{{ producers|escapejs }}")
+    {% if default_search_results %}
+        DEFAULT_SEARCH_RESULTS = JSON.parse("{{ default_search_results|escapejs }}")
+    {% else %}
+        DEFAULT_SEARCH_RESULTS = undefined
+    {% endif %}
+    USER_AUTHENTICATED = ("{{ user.is_authenticated }}" === "True")
 </script>
 
 {% block extra_body %}
