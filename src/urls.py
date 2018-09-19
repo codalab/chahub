@@ -8,17 +8,16 @@ from django.contrib import admin
 
 urlpatterns = [
     path('', include('pages.urls')),
+    path('api/<str:version>/', include('api.urls', namespace='api')),
     path('profiles/', include('profiles.urls', namespace='profiles')),
     path('producers/', include('producers.urls', namespace='producers')),
 
-    # Third party
-    path('api/<str:version>/', include('api.urls')),
-    path('oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-
     # Django built in
-    # path('accounts/', include('django.contrib.auth.urls', namespace='accounts')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
+
+    # Third party
+    path('oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('social/', include('social_django.urls', namespace='social')),
 ]
 
