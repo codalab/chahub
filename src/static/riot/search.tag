@@ -660,10 +660,10 @@
 
         .content-desktop
             margin 10px auto !important
-            max-width 1250px
+            max-width 1750px
 
         .ultrawide
-            max-width 1250px
+            max-width 1750px
 
     </style>
 </search-results>
@@ -773,10 +773,13 @@
                 overflow hidden
                 text-overflow ellipsis
                 max-width 90vw
+                display block !important
+                @media screen and (min-width 1921px)
+                    margin-bottom: 10px;
+                    overflow: visible;
                 @media screen and (max-width 750px) {
                     margin-bottom: -6px;
                 }
-                display block !important
 
             .date
                 font-size 0.8em
@@ -834,7 +837,15 @@
 
         @media screen and (min-width 1921px)
             *
-                font-size 1.12rem
+                font-size 1.15rem !important
+            .header
+                font-size 1.6rem !important
+
+        @media screen and (min-width 2200px)
+            *
+                font-size 1.4rem !important
+            .header
+                font-size 1.8rem !important
     </style>
 </competition-tile>
 
