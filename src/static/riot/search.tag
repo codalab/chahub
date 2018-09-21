@@ -20,7 +20,7 @@
             <!-- We keep 1 empty column here to align the brand logo defined above this element -->
             <div class="one wide column"></div>
 
-            <div class="eleven wide mobile twelve wide tablet nine wide computer column">
+            <div class="eleven wide mobile twelve wide tablet nine wide computer ultrawide column">
                 <div class="ui centered grid">
                     <div class="ui centered row">
                         <div class="ui sixteen wide mobile fifteen wide search-wrapper column">
@@ -43,7 +43,7 @@
         <!-- This column is removed for mobile to align with top row -->
         <div id="remove_mobile" class="ui one wide column"></div>
         <div id="advanced_search_column"
-             class="ui centered eleven wide mobile twelve wide tablet nine wide computer column {hide-from-mobile: !display_search_options}">
+             class="ui ultrawide centered eleven wide mobile twelve wide tablet nine wide computer {hide-from-mobile: !display_search_options} column">
             <div id="advanced_search_align" class="five wide center aligned column">
                 <div id="advanced_search_button" ref="time_filter"
                      class="ui tiny labeled icon dropdown button">
@@ -130,8 +130,8 @@
         </div>
         <div class="advanced search ui row">
             <div id="mobile_drop" class="sixteen wide mobile only column">
-                <button id="down_caret" class="ui icon button" click="{ toggle_search_options }"><i
-                        class="down caret icon"></i>Advanced Search
+                <button id="down_caret" class="ui icon button" onclick="{ toggle_search_options }"><i
+                        class="{up: display_search_options}{down: !display_search_options} caret icon"></i>Advanced Search
                 </button>
             </div>
         </div>
@@ -486,6 +486,9 @@
                 min-width 100px
                 padding-left 2.8em !important;
 
+            @media screen and (min-width 1921px)
+                font-size 1.12rem
+
         .hide-from-mobile
             //display none !important
             @media screen and (max-width 645px)
@@ -656,7 +659,12 @@
             padding-bottom 0 !important
 
         .content-desktop
-            margin-top 0
+            margin 10px auto !important
+            max-width 1250px
+
+        .ultrawide
+            max-width 1250px
+
     </style>
 </search-results>
 
@@ -778,11 +786,15 @@
             max-width 4em
             @media screen and (max-width 750px)
                 max-width 3em
+            @media screen and (min-width 1921px)
+                max-width 8em
 
         .ui.image
             max-width 60px
             display inline-grid !important
             justify-content center
+            @media screen and (min-width 1921px)
+                max-width 240px
 
         .participant_label
             background-color #475e6f !important
@@ -790,16 +802,22 @@
             color #dfe3e5 !important
             right 0
             margin 0 2px !important
+            @media screen and (min-width 1921px)
+                font-size 0.95rem !important
 
         .prize_label
             background-color rgba(99, 84, 14, 0.68) !important
             border-color rgba(99, 84, 14, 0.68) !important
             color #dee2e4 !important
             margin 0 2px !important
+            @media screen and (min-width 1921px)
+                font-size 0.95rem !important
 
         .deadline_label
             background-color #db28289e !important
             margin 0 2px !important
+            @media screen and (min-width 1921px)
+                font-size 0.95rem !important
 
         .mobile_linewrap
             white-space nowrap
@@ -813,6 +831,10 @@
             display block
             @media screen and (min-width 500px)
                 display inline-block
+
+        @media screen and (min-width 1921px)
+            *
+                font-size 1.12rem
     </style>
 </competition-tile>
 
