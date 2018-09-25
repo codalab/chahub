@@ -24,7 +24,13 @@ jobs:
       - image: circleci/python:3.6-jessie-browsers
     steps:
       - checkout
+      - restore_cache:
+          key: chahub-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}
       - run: sudo pip install -r requirements.dev.txt
+      - save_cache:
+          key: codalab-{{ .Branch }}-{{ checksum "codalab/requirements/common.txt" }}
+          paths:
+          - "~/.cache/pip"
       - run: py.test
       - run: flake8 src/ --ignore E501
 
