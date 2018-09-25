@@ -1,3 +1,5 @@
+from time import sleep
+
 import traceback
 from django.core.management.base import BaseCommand
 from termcolor import colored
@@ -29,4 +31,5 @@ class Command(BaseCommand):
             except:
                 traceback.print_exc()
                 print(colored("Failed to save/update competition.", 'red'))
+            sleep(.25)
         print(colored("Competition details finished updating.", 'green'))
