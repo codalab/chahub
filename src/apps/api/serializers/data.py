@@ -1,6 +1,5 @@
 from django.conf import settings
 from rest_framework import serializers
-from rest_framework.fields import FileField
 
 from datasets.models import Data, DataGroup
 
@@ -40,7 +39,6 @@ class DataSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data["created_by"] = self.context['request'].user
         return super().create(validated_data)
-
 
 
 class DataGroupSerializer(serializers.ModelSerializer):
