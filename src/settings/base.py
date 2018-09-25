@@ -44,6 +44,7 @@ THIRD_PARTY_APPS = (
     'django_extensions',
 )
 OUR_APPS = (
+    'api',
     'competitions',
     'datasets',
     'pages',
@@ -66,7 +67,7 @@ MIDDLEWARE = (
     'corsheaders.middleware.CorsMiddleware',
 )
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'base_urls'
 
 TEMPLATES = [
     {

@@ -8,7 +8,7 @@ from django.contrib import admin
 
 urlpatterns = [
     path('', include('pages.urls')),
-    path('api/<str:version>/', include('api.urls', namespace='api')),
+    path('api/<str:version>/', include('api.urls')),
     path('profiles/', include('profiles.urls', namespace='profiles')),
     path('producers/', include('producers.urls', namespace='producers')),
 
