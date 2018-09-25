@@ -420,6 +420,9 @@
             @media screen and (max-width 350px) {
                 left: -24px;
             }
+            @media screen and (min-width 2560px) {
+                font-size: 1.4rem;
+            }
 
         #brand_logo
             position absolute
@@ -433,6 +436,12 @@
 
             @media screen and (max-width 1100px)
                 display none
+
+            @media screen and (min-width 2560px)
+                width 40em
+                height 12.5em
+                left: -32px;
+                top: -10px;
 
         #brand_logo_mobile
             filter brightness(0) invert(1)
@@ -486,8 +495,12 @@
                 min-width 100px
                 padding-left 2.8em !important;
 
-            @media screen and (min-width 1921px)
-                font-size 1.12rem
+            @media screen and (min-width 2560px)
+                font-size 1.4rem
+
+        .ui.dropdown .menu > .item
+            @media screen and (min-width 2560px)
+                font-size 1.4rem
 
         .hide-from-mobile
             //display none !important
@@ -528,7 +541,6 @@
             @media screen and (min-width 646px)
                 display none
 
-
         #search_wrapper .results
             margin-top 1px
 
@@ -562,6 +574,8 @@
             z-index 1000
             @media screen and (max-width 767px)
                 display none
+            @media screen and (min-width 2560px)
+                font-size 1.4rem
 
         .ui.button
             margin-top 10px
@@ -659,12 +673,12 @@
             padding-bottom 0 !important
 
         .content-desktop
-            margin 10px auto !important
-            max-width 1750px
+            margin 15px auto !important
+            max-width 1350px
 
-        .ultrawide
-            max-width 1750px
-
+            @media screen and (min-width 2560px)
+                margin 30px auto !important
+                max-width 1750px
     </style>
 </search-results>
 
@@ -774,7 +788,7 @@
                 text-overflow ellipsis
                 max-width 90vw
                 display block !important
-                @media screen and (min-width 1921px)
+                @media screen and (min-width 2560px)
                     margin-bottom: 10px;
                     overflow: visible;
                 @media screen and (max-width 750px) {
@@ -789,14 +803,14 @@
             max-width 4em
             @media screen and (max-width 750px)
                 max-width 3em
-            @media screen and (min-width 1921px)
+            @media screen and (min-width 2560px)
                 max-width 8em
 
         .ui.image
             max-width 60px
             display inline-grid !important
             justify-content center
-            @media screen and (min-width 1921px)
+            @media screen and (min-width 2560px)
                 max-width 240px
 
         .participant_label
@@ -805,22 +819,16 @@
             color #dfe3e5 !important
             right 0
             margin 0 2px !important
-            @media screen and (min-width 1921px)
-                font-size 0.95rem !important
 
         .prize_label
             background-color rgba(99, 84, 14, 0.68) !important
             border-color rgba(99, 84, 14, 0.68) !important
             color #dee2e4 !important
             margin 0 2px !important
-            @media screen and (min-width 1921px)
-                font-size 0.95rem !important
 
         .deadline_label
             background-color #db28289e !important
             margin 0 2px !important
-            @media screen and (min-width 1921px)
-                font-size 0.95rem !important
 
         .mobile_linewrap
             white-space nowrap
@@ -830,22 +838,23 @@
             margin-bottom 5px !important
             margin-right 0 !important
 
+        .label
+            @media screen and (min-width 2560px)
+                font-size 1.2rem !important
+
         .mobile_labelwrap
             display block
             @media screen and (min-width 500px)
                 display inline-block
 
-        @media screen and (min-width 1921px)
+        @media screen and (min-width 2560px)
             *
-                font-size 1.15rem !important
-            .header
-                font-size 1.6rem !important
+                font-size 1.5rem !important
 
-        @media screen and (min-width 2200px)
-            *
-                font-size 1.4rem !important
             .header
-                font-size 1.8rem !important
+                font-size 2rem !important
+
+
     </style>
 </competition-tile>
 
