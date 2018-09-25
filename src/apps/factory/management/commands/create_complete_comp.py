@@ -94,7 +94,6 @@ class Command(BaseCommand):
         else:
             temp_desc = "A description for competition {}".format(temp_title)
 
-
         # If we are given a user
         if options['owner']:
             # Try to grab them and say whether we found them, alert on fail

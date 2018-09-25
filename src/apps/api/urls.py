@@ -5,7 +5,7 @@ from rest_framework import permissions
 from rest_framework.routers import SimpleRouter
 
 from api.views.producers import ProducerViewSet
-from .views import competitions, data, profiles, search
+from .views import competitions, profiles, search
 
 app_name = 'api'
 API_PREFIX = "v1"
@@ -18,16 +18,16 @@ router.register('submissions', competitions.SubmissionViewSet)
 
 # Documentation details
 schema_view = get_schema_view(
-   openapi.Info(
-      title="Chahub API",
-      default_version='v1',
-      description="Chahub is a platform for machine learning resources, like competitions, test sets, and example solutions",
-      contact=openapi.Contact(email="info@codalab.org"),
-      license=openapi.License(name="MIT License"),
-   ),
-   validators=['flex', 'ssv'],
-   public=True,
-   permission_classes=(permissions.AllowAny,),
+    openapi.Info(
+        title="Chahub API",
+        default_version='v1',
+        description="Chahub is a platform for machine learning resources, like competitions, test sets, and example solutions",
+        contact=openapi.Contact(email="info@codalab.org"),
+        license=openapi.License(name="MIT License"),
+    ),
+    validators=['flex', 'ssv'],
+    public=True,
+    permission_classes=(permissions.AllowAny,),
 )
 
 urlpatterns = [
