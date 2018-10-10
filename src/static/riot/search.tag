@@ -130,7 +130,7 @@
         </div>
         <div class="advanced search ui row">
             <div id="mobile_drop" class="sixteen wide mobile only column">
-                <button id="down_caret" class="ui icon button" click="{ toggle_search_options }"><i
+                <button id="down_caret" class="ui icon button" onclick="{ toggle_search_options }"><i
                         class="down caret icon"></i>Advanced Search
                 </button>
             </div>
