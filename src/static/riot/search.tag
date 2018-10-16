@@ -20,7 +20,7 @@
             <!-- We keep 1 empty column here to align the brand logo defined above this element -->
             <div class="one wide column"></div>
 
-            <div class="eleven wide mobile twelve wide tablet nine wide computer column">
+            <div class="eleven wide mobile twelve wide tablet nine wide computer ultrawide column">
                 <div class="ui centered grid">
                     <div class="ui centered row">
                         <div class="ui sixteen wide mobile fifteen wide search-wrapper column">
@@ -43,7 +43,7 @@
         <!-- This column is removed for mobile to align with top row -->
         <div id="remove_mobile" class="ui one wide column"></div>
         <div id="advanced_search_column"
-             class="ui centered eleven wide mobile twelve wide tablet nine wide computer column {hide-from-mobile: !display_search_options}">
+             class="ui ultrawide centered eleven wide mobile twelve wide tablet nine wide computer {hide-from-mobile: !display_search_options} column">
             <div id="advanced_search_align" class="five wide center aligned column">
                 <div id="advanced_search_button" ref="time_filter"
                      class="ui tiny labeled icon dropdown button">
@@ -131,7 +131,7 @@
         <div class="advanced search ui row">
             <div id="mobile_drop" class="sixteen wide mobile only column">
                 <button id="down_caret" class="ui icon button" onclick="{ toggle_search_options }"><i
-                        class="down caret icon"></i>Advanced Search
+                        class="{up: display_search_options}{down: !display_search_options} caret icon"></i>Advanced Search
                 </button>
             </div>
         </div>
@@ -420,6 +420,9 @@
             @media screen and (max-width 350px) {
                 left: -24px;
             }
+            @media screen and (min-width 2560px) {
+                font-size: 1.4rem;
+            }
 
         #brand_logo
             position absolute
@@ -433,6 +436,12 @@
 
             @media screen and (max-width 1100px)
                 display none
+
+            @media screen and (min-width 2560px)
+                width 40em
+                height 12.5em
+                left: -32px;
+                top: -10px;
 
         #brand_logo_mobile
             filter brightness(0) invert(1)
@@ -486,6 +495,13 @@
                 min-width 100px
                 padding-left 2.8em !important;
 
+            @media screen and (min-width 2560px)
+                font-size 1.4rem
+
+        .ui.dropdown .menu > .item
+            @media screen and (min-width 2560px)
+                font-size 1.4rem
+
         .hide-from-mobile
             //display none !important
             @media screen and (max-width 645px)
@@ -525,7 +541,6 @@
             @media screen and (min-width 646px)
                 display none
 
-
         #search_wrapper .results
             margin-top 1px
 
@@ -559,6 +574,8 @@
             z-index 1000
             @media screen and (max-width 767px)
                 display none
+            @media screen and (min-width 2560px)
+                font-size 1.4rem
 
         .ui.button
             margin-top 10px
@@ -656,7 +673,12 @@
             padding-bottom 0 !important
 
         .content-desktop
-            margin-top 0
+            margin 15px auto !important
+            max-width 1350px
+
+            @media screen and (min-width 2560px)
+                margin 30px auto !important
+                max-width 1750px
     </style>
 </search-results>
 
@@ -765,10 +787,13 @@
                 overflow hidden
                 text-overflow ellipsis
                 max-width 90vw
+                display block !important
+                @media screen and (min-width 2560px)
+                    margin-bottom: 10px;
+                    overflow: visible;
                 @media screen and (max-width 750px) {
                     margin-bottom: -6px;
                 }
-                display block !important
 
             .date
                 font-size 0.8em
@@ -778,11 +803,15 @@
             max-width 4em
             @media screen and (max-width 750px)
                 max-width 3em
+            @media screen and (min-width 2560px)
+                max-width 8em
 
         .ui.image
             max-width 60px
             display inline-grid !important
             justify-content center
+            @media screen and (min-width 2560px)
+                max-width 240px
 
         .participant_label
             background-color #475e6f !important
@@ -809,10 +838,23 @@
             margin-bottom 5px !important
             margin-right 0 !important
 
+        .label
+            @media screen and (min-width 2560px)
+                font-size 1.2rem !important
+
         .mobile_labelwrap
             display block
             @media screen and (min-width 500px)
                 display inline-block
+
+        @media screen and (min-width 2560px)
+            *
+                font-size 1.5rem !important
+
+            .header
+                font-size 2rem !important
+
+
     </style>
 </competition-tile>
 
