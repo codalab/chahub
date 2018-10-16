@@ -1,4 +1,4 @@
-from django_elasticsearch_dsl import DocType, Index, StringField, fields
+from django_elasticsearch_dsl import DocType, Index, fields
 from .models import Competition
 
 competitions = Index('competitions')

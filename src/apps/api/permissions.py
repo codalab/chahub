@@ -12,23 +12,6 @@ class ProducerPermission(permissions.BasePermission):
         else:
             # The ProducerAuthentication class sets request.user to Producer,
 
-
-
-
-
-
-
-
-
-
             # TODO: Check object permissions, should only be able to work on non existant objects or objects where producer == producer!!!
-
-
-
-
-
-
-
-
 
             return isinstance(request.user, Producer)
