@@ -14,7 +14,7 @@ echo "from django.contrib.auth import get_user_model; User = get_user_model(); U
 # Make a couple of simple fake competitions
 # python manage.py create_comp --number 13 --user admin@admin.com --random 1
 
-python manage.py create_competition --amount 13 --fill-all-details True --fail-on-exception True
+python manage.py create_competition --amount 3 --fill-all-details True --fail-on-exception True
 
 # Rebuild elasticsearch indexes if we need to
 echo "Y" | python manage.py search_index --rebuild

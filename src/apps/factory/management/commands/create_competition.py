@@ -48,38 +48,24 @@ def _create_fake_participant(competition):
 
 
 def _stringdate_to_datetime(str_date):
-    print("STRING DATE IS: {}".format(str_date))
-    # DD-MM-YYYY:HH-MM-SS'
-    temp_date = str_date.split(':')[0]
-    temp_time = str_date.split(':')[1]
-
-    temp_day = int(temp_date.split('-')[0])
-    temp_month = int(temp_date.split('-')[1])
-    temp_year = int(temp_date.split('-')[2])
-
-    temp_hour = int(temp_time.split('-')[0])
-    temp_minute = int(temp_time.split('-')[1])
-    temp_second = int(temp_time.split('-')[2])
-
-    temp_new_date = datetime.datetime(
-        day=temp_day,
-        month=temp_month,
-        year=temp_year,
-        hour=temp_hour,
-        minute=temp_minute,
-        second=temp_second
-    )
-    return temp_new_date
+    datetime_object = datetime.datetime.strptime(str_date, "%m-%d-%Y:%H-%M-%S")
+    return datetime_object
 
 
+# Function should take some defaults, options dictionary,
+#  and dictionary key and set a value accordingly in the data dictionary.
 def _check_data_key(options, options_key, data, data_key, default_value, is_date=False):
+    # If we're not passed options or we don't have an options key to check, set value to default
     if not options or not options_key:
         data[data_key] = default_value
+    # If options contains the key we're looking for
     elif options.get(options_key):
+        # If it's a date try to format it, else just set to value
         if is_date:
             data[data_key] = _stringdate_to_datetime(options[options_key])
         else:
             data[data_key] = options[options_key]
+    # Else if we don't have anything in the data for the object, set it to the default value
     elif not data.get(data_key):
         data[data_key] = default_value
 
@@ -206,7 +192,7 @@ class Command(BaseCommand):
             '--fill-all-details',
             type=bool,
             dest='fill-all-details',
-            help="Should we fill in every detail for a competition? Random values will be used for URL/Prize, etc"
+            help="Boolean: False for simple competitions, True for filling in all the details"
         )
 
     def handle(self, *args, **options):
@@ -224,7 +210,6 @@ class Command(BaseCommand):
                     'desc': None,
                     'title': None,
                     'phase_count': None,
-                    'part_count': None,
                     'created_when': None,
                     'start': None,
                     'end': None,
@@ -234,31 +219,25 @@ class Command(BaseCommand):
                 if not data['creator']:
                     data['creator'] = _create_fake_user()
 
-                _check_data_key(None, None, data, 'title', fake.catch_phrase())
+                # def _check_data_key(options, options_key, data, data_key, default_value, is_date=False):
 
-                _check_data_key(None, None, data, 'desc', fake.text(max_nb_chars=200, ext_word_list=None))
+                _check_data_key(options, 'title', data, 'title', fake.catch_phrase())
 
-                _check_data_key(None, None, data, 'phase_count', random.randint(1, 7))
+                _check_data_key(options, 'desc', data, 'desc', fake.text(max_nb_chars=200, ext_word_list=None))
 
-                _check_data_key(None, None, data, 'part_count', random.randint(5, 17))
+                _check_data_key(options, 'phases', data, 'phase_count', random.randint(1, 7))
 
-                _check_data_key(None, None, data, 'admin_count', random.randint(1, 5))
+                _check_data_key(options, 'participants', data, 'part_count', random.randint(5, 17))
 
-                _check_data_key(None, None, data, 'created_when', timezone.now())
+                _check_data_key(options, 'admins', data, 'admin_count', random.randint(1, 5))
 
-                _check_data_key(None, None, data, 'start',
-                                timezone.now() + datetime.timedelta(days=random.randint(1, 35)))
+                _check_data_key(options, 'created-when', data, 'created_when', timezone.now())
 
-                _check_data_key(None, None, data, 'end',
-                                data['start'] + datetime.timedelta(days=random.randint(7, 475)))
+                _check_data_key(options, 'start', data, 'start',
+                                timezone.now() + datetime.timedelta(days=random.randint(1, 35)), is_date=True)
 
-                # Check Prize data. Default 100-5000
-
-                # should_have_prize = random.randint(1, 4) == 4
-                # if not should_have_prize:
-                #     data['prize'] = None
-                # else:
-                #     _check_data_key(None, None, data, 'prize', random.randint(100, 5000))
+                _check_data_key(options, 'end', data, 'end',
+                                data['start'] + datetime.timedelta(days=random.randint(7, 475)), is_date=True)
 
                 # if we don't pass prize parameter
                 if not options.get('prize'):
@@ -315,7 +294,6 @@ class Command(BaseCommand):
                 'desc': None,
                 'title': None,
                 'phase_count': None,
-                'part_count': None,
                 'created_when': None,
                 'start': None,
                 'end': None,
