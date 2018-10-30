@@ -14,7 +14,7 @@
             </div>
         </div>
         <div id="top_row" class="ui row">
-            <img id="brand_logo" src="static/img/temp_chahub_logo.png">
+            <img id="brand_logo" src="static/img/temp_chahub_logo_beta.png">
             <img id="brand_logo_mobile" src="static/img/Chahub_C.png">
 
             <!-- We keep 1 empty column here to align the brand logo defined above this element -->
