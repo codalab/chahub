@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # Make elasticsearch indexes
 # python manage.py search_index --create
