@@ -1,7 +1,7 @@
 {
   "name": "chahub",
   "scripts": {
-    "postdeploy": "bin/init_staging.sh"
+    "postdeploy": "bin/init_staging"
   },
   "env": {
     "USE_SSL": "True",
