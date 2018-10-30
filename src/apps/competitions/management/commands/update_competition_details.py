@@ -18,7 +18,7 @@ class Command(BaseCommand):
     help = 'Updates competition details in ES'
 
     def handle(self, *args, **options):
-        qs = Competition.objects.all()
+        qs = Competition.objects.exclude(is_active=False)
         qs = qs.prefetch_related('phases')
         for comp in tqdm(qs):
             try:
@@ -31,5 +31,4 @@ class Command(BaseCommand):
             except:
                 traceback.print_exc()
                 print(colored("Failed to save/update competition.", 'red'))
-            sleep(.25)
         print(colored("Competition details finished updating.", 'green'))
