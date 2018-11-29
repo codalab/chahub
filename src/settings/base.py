@@ -208,13 +208,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite'),
-        'CONN_MAX_AGE': 500,
     }
 }
 
 # Overridden by env settings
 if os.environ.get('DATABASE_URL'):
-    DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+    # conn_max_age removed stop 'max connections reached problem'
+    # DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+    DATABASES['default'] = dj_database_url.config()
 
 
 # =============================================================================
