@@ -4,7 +4,12 @@
 
     <sidebar></sidebar>
     <div class="pusher">
-        <app></app>
+        <search-results></search-results>
     </div>
+{% endblock %}
 
+{% block extra_body %}
+    <script>
+        riot.mount('search-results')
+    </script>
 {% endblock %}

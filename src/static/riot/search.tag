@@ -273,7 +273,7 @@
         }
 
 
-        self.one('route', function () {
+        self.one('mount', function () {
             var params = route.query()
 
             // On page load set search bar to search and execute search if we were given a query
