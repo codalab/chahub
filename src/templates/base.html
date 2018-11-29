@@ -126,7 +126,10 @@
         assets: {
             header_particles: "{% static "particles/header.json" %}"
         },
-        API: "/api/v1/"
+        API: "/api/v1/",
+        STATIC: function(asset_url) {
+            return "{% static "-----replace!me-----" %}".replace("-----replace!me-----", asset_url)
+        }
     }
     PRODUCERS = JSON.parse("{{ producers|escapejs }}")
     {% if default_search_results %}

@@ -1,6 +1,4 @@
-var CHAHUB = {
-    URLS: []  // Set in base.html
-}
+var CHAHUB = {}
 
 CHAHUB.api = {
     request: function (method, url, data) {
