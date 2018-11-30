@@ -427,7 +427,6 @@
         #brand_logo
             position absolute
             width 180 * 1.618% px
-            height 60 * 1.618% px
             opacity .85
             left 0
             top -2%
