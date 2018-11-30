@@ -453,10 +453,8 @@
                 display none
 
             @media screen and (min-width 2560px)
-                width 40em
-                height 12.5em
-                left: -32px;
-                top: -10px;
+                top 50%
+                left 50px
 
         #brand_logo_mobile
             filter brightness(0) invert(1)
