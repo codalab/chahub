@@ -162,7 +162,7 @@
         self.old_filters = {}
         self.display_search_options = false
 
-        self.on('mount', function () {
+        self.one('mount', function () {
 
             /*$(self.refs.search_wrapper).dropdown({
 
@@ -175,7 +175,7 @@
             // header particles
             particlesJS.load('particle_header', URLS.assets.header_particles)
 
-            // Template stuff
+            // Datepickers
             $('.datepicker').calendar({
                 type: 'date',
                 formatter: {
@@ -196,8 +196,10 @@
                     self.search()
                 }
             })
-            $(".ui.dropdown").dropdown({
-                onChange: function () {
+
+            // Dropdown actions
+            $(".dropdown", self.root).dropdown({
+                onChange: function (text, value) {
                     self.search()
                 }
             })
@@ -241,8 +243,19 @@
                 minCharacters: 2,
                 duration: 300,
                 transition: 'slide down'
-            });
-        });
+            })
+
+            // Loading the search results
+            if (DEFAULT_SEARCH_RESULTS) {
+                self.results = DEFAULT_SEARCH_RESULTS
+                self.update()
+            } else {
+                self.search()
+            }
+
+            // Focus on search
+            self.refs.search.focus()
+        })
 
         self.toggle_search_options = function () {
             self.display_search_options = !self.display_search_options
@@ -272,7 +285,7 @@
             }
         }
 
-
+        /* Old 'route' event handler.. probably still very relevant
         self.one('mount', function () {
             var params = route.query()
 
@@ -317,7 +330,7 @@
 
             // Focus on search
             self.refs.search.focus()
-        })
+        })*/
 
         self.input_updated = function () {
             delay(function () {
@@ -340,6 +353,9 @@
 
         self.search = function (query) {
             var filters = {q: query || self.refs.search.value}
+
+            console.log("Search filters:")
+            console.log(filters)
 
             filters.start_date = self.refs.start_date.value || ''
             filters.end_date = self.refs.end_date.value || ''
