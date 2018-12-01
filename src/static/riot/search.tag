@@ -354,9 +354,6 @@
         self.search = function (query) {
             var filters = {q: query || self.refs.search.value}
 
-            console.log("Search filters:")
-            console.log(filters)
-
             filters.start_date = self.refs.start_date.value || ''
             filters.end_date = self.refs.end_date.value || ''
             filters.date_flags = $(self.refs.time_filter).dropdown('get value')
@@ -369,6 +366,9 @@
             if (JSON.stringify(self.old_filters) === JSON.stringify(filters)) {
                 return
             }
+
+            console.log("Doing search with filters:")
+            console.log(filters)
 
             self.old_filters = filters
             self.loading = true
