@@ -8,11 +8,13 @@
                class="ui button">LOGOUT
             </a>
         </span>-->
-        <div id="hamburger_button">
+
+        <!--<div id="hamburger_button">
             <div class="ui small icon button">
                 <i class="large bars icon"></i>
             </div>
-        </div>
+        </div>-->
+        
         <div id="top_row" class="ui row">
             <img id="brand_logo" src="static/img/temp_chahub_logo_beta.png">
             <img id="brand_logo_mobile" src="static/img/Chahub_C.png">
