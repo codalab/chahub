@@ -128,8 +128,7 @@
         },
         API: "/api/v1/",
         STATIC: function(asset_url) {
-            {# We have to use a static file Django can find, this one exists for sure so let's get it and replace with right asset url to use #}
-            return "{% static 'img/favicon.ico' %}".replace('img/favicon.ico', asset_url)
+            return "{{ STATIC_URL }}" + asset_url
         }
     }
     PRODUCERS = JSON.parse("{{ producers|escapejs }}")
