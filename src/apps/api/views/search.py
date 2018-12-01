@@ -92,6 +92,9 @@ class SearchView(APIView):
         elif sorting == 'deadline':
             sort_params.append('current_phase_deadline')
 
+        # We should see the "latest" competitions first
+        sort_params.append('-start')
+
         # If '_score' is the first sort parameter, the participant sorting gets overridden and the results are mostly
         # relevancy based instead of being based on whatever sorting we desire. Append it last here.
         if query:
