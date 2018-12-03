@@ -3,10 +3,10 @@ from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 
 
-def get_search_client():
+def get_search_client(size=100):
     client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
     s = Search(using=client)
-    # s = s.extra(size=size)  # default was 'size=35' -- we're displaying all competitions all the time now
+    s = s.extra(size=size)
     s = s.filter('term', published=True)
     s = s.source(excludes=["html_text"])
     return s
