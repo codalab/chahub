@@ -190,13 +190,6 @@
                 }
             })
 
-            // Dropdown actions
-            $(".dropdown", self.root).dropdown({
-                onChange: function (text, value) {
-                    self.search()
-                }
-            })
-
             // Sidebar with overlay on
             $('.sidebar')
                 .sidebar({
@@ -308,11 +301,16 @@
                 self.set_time_dropdown_text()
             }
 
-            // Sorting
+            // Dropdowns
             $(self.refs.sort_filter).dropdown('set selected', params.sorting)
-
-            // Producers
             $(self.refs.producer_filter).dropdown('set selected', params.producer)
+
+            // Dropdown actions (listen AFTER we set dropdowns, so double search doesn't happen!)
+            $(".dropdown", self.root).dropdown({
+                onChange: function (text, value) {
+                    self.search()
+                }
+            })
 
             // For iframes we might want to hide producer selection
             self.embedded = params.embedded
@@ -320,6 +318,7 @@
             if (DEFAULT_SEARCH_RESULTS && $.isEmptyObject(params)) {
                 console.log("Loading default search results")
                 self.results = DEFAULT_SEARCH_RESULTS
+                self.update()
             } else {
                 self.search()
             }

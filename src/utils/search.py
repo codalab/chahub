@@ -19,7 +19,5 @@ def get_results(search):
 
 def get_default_search_results():
     s = get_search_client()
-    s = s.filter('term', published=True)
-    s = s.extra(size=50)
     s = s.sort('-start', '-participant_count')
     return get_results(s)
