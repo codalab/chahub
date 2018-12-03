@@ -16,7 +16,7 @@ Under construction!
 ## Running it locally
 
 
-`elasticsearch` in a different terminal tab to start running elasticsearch before running the server.
+`elasticsearch` in a different terminal tab to start running elasticsearch before running the server. On Mac you can `brew install elasticsearch`.
 
 `python manage.py runserver` to start django which will automatically start `npm-watch` to compile riot (javascript components) and stylus (css preprocessor)
 
