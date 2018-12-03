@@ -14,7 +14,7 @@
                 <i class="large bars icon"></i>
             </div>
         </div>-->
-        
+
         <div id="top_row" class="ui row">
             <img id="brand_logo" src="static/img/temp_chahub_logo_beta.png">
             <img id="brand_logo_mobile" src="static/img/Chahub_C.png">
@@ -165,15 +165,6 @@
         self.display_search_options = false
 
         self.one('mount', function () {
-
-            /*$(self.refs.search_wrapper).dropdown({
-
-
-             on results do
-
-
-             onNoResults: function(search) {}
-             })*/
             // header particles
             particlesJS.load('particle_header', URLS.assets.header_particles)
 
@@ -247,7 +238,7 @@
                 transition: 'slide down'
             })
 
-            // Loading the search results
+            /*// Loading the search results
             if (DEFAULT_SEARCH_RESULTS) {
                 self.results = DEFAULT_SEARCH_RESULTS
                 self.update()
@@ -256,7 +247,9 @@
             }
 
             // Focus on search
-            self.refs.search.focus()
+            self.refs.search.focus()*/
+
+            self.init_values_from_query_params()
         })
 
         self.toggle_search_options = function () {
@@ -287,8 +280,8 @@
             }
         }
 
-        /* Old 'route' event handler.. probably still very relevant
-        self.one('mount', function () {
+
+        self.init_values_from_query_params = function() {
             var params = route.query()
 
             // On page load set search bar to search and execute search if we were given a query
@@ -324,7 +317,8 @@
             // For iframes we might want to hide producer selection
             self.embedded = params.embedded
 
-            if (DEFAULT_SEARCH_RESULTS) {
+            if (DEFAULT_SEARCH_RESULTS && $.isEmptyObject(params)) {
+                console.log("Loading default search results")
                 self.results = DEFAULT_SEARCH_RESULTS
             } else {
                 self.search()
@@ -332,7 +326,7 @@
 
             // Focus on search
             self.refs.search.focus()
-        })*/
+        }
 
         self.input_updated = function () {
             delay(function () {
