@@ -9,12 +9,14 @@ Under construction!
 1. `cd chahub`
 1. Make a virtual environment and source into it
 1. `pip install -r requirements.dev.txt`
-1. `npm install -g npm-watch`
+1. `npm install -g npm-watch riot stylus`
 1. `brew install elasticsearch` (defaults should work)
 
 
 ## Running it locally
 
+
+`elasticsearch` in a different terminal tab to start running elasticsearch before running the server. On Mac you can `brew install elasticsearch`.
 
 `python manage.py runserver` to start django which will automatically start `npm-watch` to compile riot (javascript components) and stylus (css preprocessor)
 
