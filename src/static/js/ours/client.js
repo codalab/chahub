@@ -15,9 +15,6 @@ CHAHUB.api = {
         var params = route.query()
         Object.assign(params, filters)
 
-        // Remove any unused params so our URL stays pretty
-        dict_remove_empty_values(params)
-
         // Add query params to URL
         // This causes bugs with repeating the query params over and over, so we just replaceState now
         //route('?' + $.param(params))

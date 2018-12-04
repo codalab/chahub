@@ -357,13 +357,17 @@
             // We may not have a producer so grab preset one from page load if so
             filters.producer = $(self.refs.producer_filter).dropdown('get value')
 
-            // If our filters are the same as before, just return
+            // Remove any unused filters so we don't do empty searches
+            dict_remove_empty_values(filters)
+
+            // If we don't need to search.. don't! either it's the same search or empty
             if (JSON.stringify(self.old_filters) === JSON.stringify(filters)) {
                 return
             }
 
             console.log("Doing search with filters:")
             console.log(filters)
+            console.trace()
 
             self.old_filters = filters
             self.loading = true
