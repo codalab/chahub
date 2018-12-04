@@ -141,11 +141,14 @@
     <div id="mobile-grid" class="ui centered grid">
         <div id="mobile" class="sixteen wide tablet eleven wide computer column">
             <div class="ui stacked">
-                <div class="ui warning message" show="{showing_default_results}">
+                <div class="ui warning message" show="{ results.length === 0 && !showing_default_results }">
                     <div class="header">
                         No results found
                     </div>
                     Try broadening your search
+                </div>
+                <div class="ui success message" show="{ results.length > 0 && !showing_default_results }">
+                    Found { results.length } results
                 </div>
                 <div class="ui middle aligned unstackable compact divided link items content-desktop">
                     <competition-tile each="{ results }" no-reorder class="item"></competition-tile>
@@ -318,6 +321,7 @@
             if (DEFAULT_SEARCH_RESULTS && $.isEmptyObject(params)) {
                 console.log("Loading default search results")
                 self.results = DEFAULT_SEARCH_RESULTS
+                self.showing_default_results = true
                 self.update()
             } else {
                 self.search()

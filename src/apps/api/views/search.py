@@ -18,22 +18,35 @@ class SearchView(APIView):
         end = request.GET.get('end_date')
         producer = request.GET.get('producer')
 
-        # Setup ES connection, excluding HTML text from our results
-        s = get_search_client()
+        # Do we even have anything to search with?
+        filters = (
+            query,
+            sorting,
+            date_flags,
+            start,
+            end,
+            producer,
+        )
+        empty_search = all(not f for f in filters)
+
+        # Get results and prepare them
         data = {
             "results": [],
             "showing_default_results": False,
         }
 
-        # Do search/filtering/sorting
-        s = self._search(s, query)
-        s = self._filter(s, date_flags, start, end, producer)
-        s = self._sort(s, sorting, query)
+        if not empty_search:
+            # Setup ES connection, excluding HTML text from our results
+            s = get_search_client()
 
-        # Get results and prepare them
-        data["results"] = get_results(s)
 
-        if not data["results"]:
+            # Do search/filtering/sorting
+            s = self._search(s, query)
+            s = self._filter(s, date_flags, start, end, producer)
+            s = self._sort(s, sorting, query)
+            data["results"] = get_results(s)
+
+        if not data["results"] or empty_search:
             data["showing_default_results"] = True
             data["results"] = get_default_search_results()
 

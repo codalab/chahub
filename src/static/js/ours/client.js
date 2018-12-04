@@ -11,14 +11,10 @@ CHAHUB.api = {
         })
     },
     search: function (filters) {
-        // get existing params and update them with the filters
-        var params = route.query()
-        Object.assign(params, filters)
-
         // Add query params to URL
         // This causes bugs with repeating the query params over and over, so we just replaceState now
         //route('?' + $.param(params))
-        var url_params = `/?${$.param(params)}`
+        var url_params = `/?${$.param(filters)}`
         window.history.replaceState("", "", url_params);
         return CHAHUB.api.request('GET', URLS.API + "query" + url_params)
     },
