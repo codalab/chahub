@@ -141,7 +141,7 @@
     <div id="mobile-grid" class="ui centered grid">
         <div id="mobile" class="sixteen wide tablet eleven wide computer column">
             <div class="ui stacked">
-                <div class="ui warning message" show="{ results.length === 0 && !showing_default_results }">
+                <div class="ui warning message" show="{ results.length === 0 && !showing_default_results && !loading }">
                     <div class="header">
                         No results found
                     </div>
@@ -164,6 +164,7 @@
         var self = this
         self.results = []
         self.display_mode = 'list'
+        self.loading = true
         self.old_filters = {}
         self.display_search_options = false
 
@@ -324,6 +325,7 @@
                 self.showing_default_results = true
                 self.update()
             } else {
+                // We have some search to perform, not just displaying default results
                 self.search()
             }
 
