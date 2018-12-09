@@ -35,6 +35,7 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
         )
         #  Go to the homepage and assert that the URL is correct - index without any producers selected
         self.get('')
+        sleep(.5)
 
         #  Click the Producer drop-down bar and click the 4th child - Producer1
         #  Need a half second to load the dropdown bar
@@ -49,7 +50,7 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
 
         #  Click the Producer drop-down bar and click the 4th child - Producer1
         #  Need a half second to load the dropdown bar
-
+        sleep(.5)
         self.find('#advanced_search_button[ref="producer_filter"]').click()
         sleep(.5)
         self.find('#advanced_search_button[ref="producer_filter"] *:nth-child(5)').click()
