@@ -9,15 +9,10 @@ jobs:
       - checkout
       - restore_cache:
           key: chahub-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}
+      - run: virtualenv -p python3 myvenv
+      - run: source myvenv/bin/activate
       - run: sudo pip install -r requirements.dev.txt
       - run: python manage.py collectstatic --no-input
-      - run: sudo systemctl start elasticsearch.service
-      - save_cache:
-          key: codalab-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}
-          paths:
-          - "~/.cache/pip"
-      - run: py.test
-      - run: flake8 src/ --ignore E501
       - run: mkdir test-reports
       - run:
           name: Download Selenium
@@ -26,6 +21,12 @@ jobs:
           name: Start Selenium
           command: java -jar selenium-server-standalone-3.5.3.jar -log test-reports/selenium.log
           background: true
+      - save_cache:
+          key: codalab-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}
+          paths:
+          - "~/.cache/pip"
+      - run: py.test
+      - run: flake8 src/ --ignore E501
 #      - run: if [[ `grep -rnw src -e 'TODO'` ]]; then (exit -1); fi
 #      - run [[ `grep -rnw src/templates/ -e 'style='` ]]; then (exit -1); fi
 #      - run [[ `grep -rnw src/static/riot -e 'style='` ]]; then (exit -1); fi
