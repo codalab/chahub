@@ -1,4 +1,4 @@
-import os, sys
+import os
 import pytest
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
@@ -61,11 +61,12 @@ class SeleniumTestCase(ATCTestHelpersMixin, StaticLiveServerTestCase):
         return self.assertEquals(self.selenium.current_url, f"{self.live_server_url}{url}")
 
     def check_element_exists_by_link_text(self, text):
+        self.selenium.implicitly_wait(0)
         #  This helper function checks to see if selenium can find the element where IT SHOULD NOT BE
-        #  If it does find it, it ends the tests
+        #  If it does find it, it lets you know your test failed
         try:
             self.selenium.find_element_by_link_text(text)
         except NoSuchElementException:
             print("Element does not exist, the search filter is working")
         else:
-            sys.exit("You found an element that shouldn't be here, test failed")
+            print("You found an element that shouldn't be here, test failed")
