@@ -60,13 +60,6 @@ class SeleniumTestCase(ATCTestHelpersMixin, StaticLiveServerTestCase):
         # url = 'your/site/here/'  and live_server_url = http://localhost:5digits
         return self.assertEquals(self.selenium.current_url, f"{self.live_server_url}{url}")
 
-    def check_element_exists_by_link_text(self, text):
-        self.selenium.implicitly_wait(0)
-        #  This helper function checks to see if selenium can find the element where IT SHOULD NOT BE
-        #  If it does find it, it lets you know your test failed
-        try:
-            self.selenium.find_element_by_link_text(text)
-        except NoSuchElementException:
-            print("Element does not exist, the search filter is working")
-        else:
-            print("You found an element that shouldn't be here, test failed")
+    def assertLinkTextExists(self, text):
+        self.assertTrue(self.selenium.find_element_by_link_text(text))
+

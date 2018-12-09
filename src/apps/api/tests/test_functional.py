@@ -45,7 +45,7 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
         #  Confirm that the URL at index loads the proper competition
         #  Assert that the URL has changed to the producer1's search results and filtered out unwanted search results
         self.assertIn(f"producer={prod1.pk}", self.selenium.current_url)
-        self.check_element_exists_by_link_text('test2.org')
+        self.assertLinkTextExists('test.org')
 
         #  Click the Producer drop-down bar and click the 4th child - Producer1
         #  Need a half second to load the dropdown bar
@@ -56,4 +56,4 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
 
         #  Assert that the URL has changed to the producer2's search results and filtered out unwanted search results
         self.assertIn(f"producer={prod2.pk}", self.selenium.current_url)
-        self.check_element_exists_by_link_text('test.org')
+        self.assertLinkTextExists('test2.org')
