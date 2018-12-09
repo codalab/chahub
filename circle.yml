@@ -11,6 +11,7 @@ jobs:
           key: chahub-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}
       - run: sudo pip install -r requirements.dev.txt
       - run: python manage.py collectstatic --no-input
+      - run: sudo systemctl start elasticsearch.service
       - save_cache:
           key: codalab-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}
           paths:
