@@ -14,8 +14,7 @@ class ATCTestHelpersMixin(object):
 
     def login(self):
         User.objects.create_user(username='test', password='test')
-        # removed following line because I needed it to login to producers/normal user
-        # self.get(reverse('login'))
+        self.get(reverse('login'))
         self.find("#id_username").send_keys("test")
         self.find("#id_password").send_keys("test")
         self.find(".submit.button").click()
@@ -57,5 +56,5 @@ class SeleniumTestCase(ATCTestHelpersMixin, StaticLiveServerTestCase):
         self.selenium.get_screenshot_as_file(os.path.join(circle_dir, name))
 
     def assertCurrentUrl(self, url):
-        # url = 'your/site/here/'  and live_server_url = http://localhost:5digits/
+        # url = 'your/site/here/'  and live_server_url = http://localhost:5digits
         return self.assertEquals(self.selenium.current_url, f"{self.live_server_url}{url}")
