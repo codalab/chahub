@@ -9,8 +9,6 @@ jobs:
       - checkout
       - restore_cache:
           key: chahub-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}
-      - run: virtualenv -p python3 myvenv
-      - run: source myvenv/bin/activate
       - run: sudo pip install -r requirements.dev.txt
       - run: python manage.py collectstatic --no-input
       - save_cache:
