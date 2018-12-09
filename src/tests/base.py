@@ -1,9 +1,10 @@
-import os
+import os, sys
 import pytest
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
 #from selenium.webdriver.firefox.webdriver import WebDriver
 #from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from django.contrib.auth import get_user_model
 
@@ -58,3 +59,13 @@ class SeleniumTestCase(ATCTestHelpersMixin, StaticLiveServerTestCase):
     def assertCurrentUrl(self, url):
         # url = 'your/site/here/'  and live_server_url = http://localhost:5digits
         return self.assertEquals(self.selenium.current_url, f"{self.live_server_url}{url}")
+
+    def check_element_exists_by_link_text(self, text):
+        #  This helper function checks to see if selenium can find the element where IT SHOULD NOT BE
+        #  If it does find it, it ends the tests
+        try:
+            self.selenium.find_element_by_link_text(text)
+        except NoSuchElementException:
+            print("Element does not exist, the search filter is working")
+        else:
+            sys.exit("You found an element that shouldn't be here, test failed")
