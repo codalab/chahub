@@ -62,6 +62,31 @@ var pretty_date = function (date_string) {
     }
 }
 
+var deadline_date = function (date_string) {
+    if (!!date_string) {
+        var deadline_count = luxon.DateTime.fromISO(date_string).diffNow(["months", "days", "hours", "minutes", "seconds", "milliseconds"]).toObject()
+        var days_normalized = luxon.Duration.fromObject(deadline_count).shiftTo('days').toObject()
+
+        if (deadline_count.milliseconds < 0) {
+            return 'Phase ended ' + Math.abs(Math.round(days_normalized.days)) + ' days ago'
+        }
+
+        if (deadline_count.months >= 2) {
+            return deadline_count.months + ' months, ' + deadline_count.days + ' days left'
+        } else if (deadline_count.months >= 1) {
+            return deadline_count.days + ' days left'
+        } else if (deadline_count.days >= 7) {
+            return deadline_count.days + ' days, ' + deadline_count.hours + ' hours left'
+        } else if (deadline_count.days >= 1) {
+            return deadline_count.hours + ' hours, ' + deadline_count.minutes + ' minutes left'
+        } else if (deadline_count.hours >= 1) {
+            return deadline_count.minutes + ' minutes left'
+        }
+    } else {
+        return 'No Phase Deadline'
+    }
+};
+
 /* ----------------------------------------------------------------------------
  Dict helpers
  ----------------------------------------------------------------------------*/

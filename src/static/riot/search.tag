@@ -746,16 +746,16 @@
                 <div class="mobile_labelwrap"></div>
                 <span class="participant_label ui right floated mini label tooltip" data-content="Participant count">
                 <i class="user icon"></i> {participant_count}
-            </span>
+                </span>
+                <span style="text-overflow: ellipsis;" class="deadline_label ui right floated red mini label tooltip"
+                      data-content="Deadline of the current phase"
+                      >
+                <i class="alarm icon"></i> {deadline_date(current_phase_deadline)}
+                </span>
                 <span class="prize_label ui right floated mini label tooltip" data-content="Prize Amount"
                       show="{prize}">
                 <i class="yellow trophy icon"></i> {prize}
-            </span>
-                <span class="deadline_label ui right floated red mini label tooltip"
-                      data-content="Deadline of the current phase"
-                      show="{current_phase_deadline}">
-                <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
-            </span>
+                </span>
             </div>
         </div>
     </div>
@@ -837,6 +837,11 @@
             color #dfe3e5 !important
             right 0
             margin 0 2px !important
+            width 45px // May need to be increased to 50px if we expect competitions with more than 10k participants
+            text-align right
+
+            i
+                float left
 
         .prize_label
             background-color rgba(99, 84, 14, 0.68) !important
