@@ -8,7 +8,7 @@ jobs:
     - checkout
     - restore_cache:
         key: chahub-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}
-    - run: pip install -r requirements.dev.txt
+    - run: pip install -r requirements.dev.txt --user
     - run: python manage.py collectstatic --no-input
     - save_cache:
         key: codalab-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}
