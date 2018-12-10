@@ -1,4 +1,4 @@
-from time import sleep
+# from time import sleep
 
 import traceback
 from django.core.management.base import BaseCommand
