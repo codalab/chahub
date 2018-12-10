@@ -10,9 +10,9 @@ jobs:
           key: chahub-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}
       - run: sudo pip install -r requirements.dev.txt
       - run: python manage.py collectstatic --no-input
-      - run: "mkdir ~/artifacts/"
+      - run: mkdir ~/artifacts/
         environment:
-          CIRCLE_ARTIFACTS: "~/artifacts/"
+          CIRCLE_ARTIFACTS: ~/artifacts/
         - save_cache:
             key: codalab-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}
             paths:
