@@ -7,16 +7,16 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: chahub-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}
+        key: chahub-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}
       - run: sudo pip install -r requirements.dev.txt
       - run: python manage.py collectstatic --no-input
       - run: mkdir ~/artifacts/
         environment:
           CIRCLE_ARTIFACTS: ~/artifacts/
         - save_cache:
-            key: codalab-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}
-            paths:
-              - ~/.cache/pip
+          key: codalab-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}
+          paths:
+            - ~/.cache/pip
         - run: py.test
         - run: flake8 src/ --ignore E501
   #      - run: if [[ `grep -rnw src -e 'TODO'` ]]; then (exit -1); fi
