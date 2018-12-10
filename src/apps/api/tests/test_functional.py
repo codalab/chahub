@@ -39,7 +39,9 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
 
         #  Click the Producer drop-down bar and click the 4th child - Producer1
         #  Need a half second to load the dropdown bar
+        self.circleci_screenshot('Before_clicking_Prod1.png')
         self.find('#advanced_search_button[ref="producer_filter"]').click()
+        self.circleci_screenshot('After_clicking_Prod1.png')
         sleep(.5)
         self.find('#advanced_search_button[ref="producer_filter"] *:nth-child(4)').click()
 
