@@ -14,6 +14,8 @@ jobs:
         run: 'python manage.py collectstatic --no-input'
       -
         run: 'mkdir artifacts/'
+      - store_artifacts:
+          path: /artifacts/
       -
         save_cache:
           key: 'codalab-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}'
