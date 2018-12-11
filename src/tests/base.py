@@ -2,16 +2,12 @@ import os
 import pytest
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
-# from selenium.webdriver.firefox.webdriver import WebDriver
-# from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.chrome.webdriver import WebDriver
 from django.contrib.auth import get_user_model
-
 User = get_user_model()
 
 
 class ATCTestHelpersMixin(object):
-
     def login(self):
         User.objects.create_user(username='test', password='test')
         self.get(reverse('login'))
@@ -22,8 +18,6 @@ class ATCTestHelpersMixin(object):
 
 @pytest.mark.e2e
 class SeleniumTestCase(ATCTestHelpersMixin, StaticLiveServerTestCase):
-    # binary = FirefoxBinary('C://Program Files/Mozilla Firefox/firefox.exe')
-    # driver = WebDriver(firefox_binary=binary)
     urls = 'urls'  # TODO: what the F is this???
     serialized_rollback = True
 
@@ -41,7 +35,7 @@ class SeleniumTestCase(ATCTestHelpersMixin, StaticLiveServerTestCase):
 
     def setUp(self):
         super().setUp()
-        self.selenium.set_window_size(1200, 8000)
+        self.selenium.set_window_size(800, 600)
 
     def get(self, url):
         #  live_server_url will be a random localhost:5digits/
