@@ -2,7 +2,6 @@ from tests.base import SeleniumTestCase
 from producers.models import Producer
 from competitions.models import Competition
 from time import sleep
-from django.test.utils import override_settings
 
 
 class TestChangingProviderAndResultsChange(SeleniumTestCase):
@@ -23,7 +22,7 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
             is_active=True,
             published=True,
             url='http://www.test.org'
-                                           )
+        )
         prod2 = Producer.objects.create(
             name='Prod2Testing'
         )
@@ -38,14 +37,12 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
         #  Go to the homepage and assert that the URL is correct - index without any producers selected
         self.get('')
 
-        sleep(10)
+        sleep(.5)
 
         #  Click the Producer drop-down bar and click the 4th child - Producer1
         #  Need a half second to load the dropdown bar
-        self.circleci_screenshot('Before_clicking_Prod1.png')
         self.find('#advanced_search_button[ref="producer_filter"]').click()
-        self.circleci_screenshot('After_clicking_Prod1.png')
-        sleep(10)
+        sleep(.5)
         self.find('#advanced_search_button[ref="producer_filter"] *:nth-child(4)').click()
 
         #  Confirm that the URL at index loads the proper competition

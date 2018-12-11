@@ -2,9 +2,8 @@ import os
 import pytest
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
-#from selenium.webdriver.firefox.webdriver import WebDriver
-#from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
-from selenium.common.exceptions import NoSuchElementException
+# from selenium.webdriver.firefox.webdriver import WebDriver
+# from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.chrome.webdriver import WebDriver
 from django.contrib.auth import get_user_model
 
@@ -62,4 +61,3 @@ class SeleniumTestCase(ATCTestHelpersMixin, StaticLiveServerTestCase):
 
     def assertLinkTextExists(self, text):
         self.assertTrue(self.selenium.find_element_by_link_text(text))
-
