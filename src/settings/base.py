@@ -192,8 +192,7 @@ SERVER_EMAIL = os.environ.get('SERVER_EMAIL', 'noreply@chahub.org')
 # =============================================================================
 # Debugging
 # =============================================================================
-#DEBUG = os.environ.get('DEBUG', True)
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', True)
 
 if DEBUG:
     INSTALLED_APPS += ('debug_toolbar',)

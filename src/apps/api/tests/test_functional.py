@@ -2,6 +2,7 @@ from tests.base import SeleniumTestCase
 from producers.models import Producer
 from competitions.models import Competition
 from time import sleep
+from django.test.utils import override_settings
 
 
 class TestChangingProviderAndResultsChange(SeleniumTestCase):
@@ -10,6 +11,7 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
         #  Starts a new window for Chrome
         self.login()
 
+    @override_settings(DEBUG=False)
     def test_changing_provider_changes_url_and_search_results(self):
         #  Creates Two Providers, and Two Competitions
         #  Assign Competitions to the two separate Providers - "tag" them through the url
@@ -33,6 +35,7 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
             published=True,
             url='http://www.test2.org'
         )
+
         #  Go to the homepage and assert that the URL is correct - index without any producers selected
         self.get('')
         self.circleci_screenshot('After_getting_webpage.png')
