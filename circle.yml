@@ -15,7 +15,11 @@ jobs:
       -
         run: 'python manage.py create_competition --amount 3 --fill-all-details True --fail-on-exception True'
       -
+        run: 'python manage.py migrate'
+      -
         run: 'echo "Y" | python manage.py search_index --rebuild'
+      -
+        run: 'python manage.py migrate'
       -
         run: 'mkdir artifacts/'
       -
