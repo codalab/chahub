@@ -15,7 +15,7 @@ jobs:
       -
         run: 'python manage.py collectstatic --no-input'
       -
-        run: 'pip install npm'
+        run: 'pip install npm --user'
       -
         run: 'npm install riot -g'
       -
