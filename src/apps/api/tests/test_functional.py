@@ -16,7 +16,7 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
         prod1 = Producer.objects.create(
             name='Prod1Testing'
         )
-        comp1 = Competition.objects.create(
+        comp1 = Competition.objects.create(  # noqa
             title='Fake Competition1',
             producer=prod1,
             is_active=True,
@@ -26,7 +26,7 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
         prod2 = Producer.objects.create(
             name='Prod2Testing'
         )
-        comp2 = Competition.objects.create(
+        comp2 = Competition.objects.create(  # noqa
             title='Even Faker Competition2',
             producer=prod2,
             is_active=True,
