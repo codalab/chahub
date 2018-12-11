@@ -15,7 +15,9 @@ jobs:
       -
         run: 'python manage.py collectstatic --no-input'
       -
-        run: 'npm install -g npm-watch'
+        run: 'riot src/static/riot src/static/generated/riot.js --style stylus'
+      -
+        run: 'stylus --compress --sourcemap-inline < src/static/stylus/index.styl > src/static/generated/output.css'
       -
         run: 'python manage.py migrate'
       -
