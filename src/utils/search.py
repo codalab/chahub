@@ -20,5 +20,5 @@ def get_results(search):
 def get_default_search_results():
     s = get_search_client()
     s = s.filter('term', published=True)
-    s = s.sort('_score', 'unmapped_type: -start')
+    s = s.sort('_score', 'start:desc')
     return get_results(s)
