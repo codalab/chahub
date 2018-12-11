@@ -4,10 +4,12 @@ jobs:
     docker:
       -
         image: 'circleci/python:3.6-jessie-browsers'
-      -
-        image: 'library/elasticsearch:5.5.3'
+#      -
+#        image: 'library/elasticsearch:5.5.3'
     steps:
       - checkout
+      -
+        run: 'docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:6.5.2'
       -
         run: 'sudo pip install -r requirements.dev.txt'
       -
