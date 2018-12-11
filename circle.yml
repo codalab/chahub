@@ -13,6 +13,8 @@ jobs:
       -
         run: 'python manage.py collectstatic --no-input'
       -
+        run: 'sh bin/init-staging'
+      -
         run: 'mkdir artifacts/'
       -
         save_cache:
