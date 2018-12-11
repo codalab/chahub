@@ -20,5 +20,5 @@ def get_results(search):
 def get_default_search_results():
     s = get_search_client()
     s = s.filter('term', published=True)
-    s = s.sort('_score', 'start:desc')
+    s = s.sort('_score', 'start')
     return get_results(s)
