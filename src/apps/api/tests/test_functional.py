@@ -38,7 +38,6 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
 
         #  Go to the homepage and assert that the URL is correct - index without any producers selected
         self.get('')
-        self.circleci_screenshot('After_getting_webpage.png')
 
         sleep(.5)
 
