@@ -11,6 +11,8 @@ jobs:
       -
         run: 'sudo pip install -r requirements.dev.txt'
       -
+        run: 'mkdir -p src/static/generated/'
+      -
         run: 'python manage.py collectstatic --no-input'
       -
         run: 'python manage.py migrate'
