@@ -23,9 +23,9 @@ jobs:
       -
         run: 'sudo npm install riot-compiler --save'
       -
-        run: 'pip install django-static-precompiler --user'
-      -
         run: 'riot src/static/riot src/static/generated/riot.js --style stylus'
+      -
+        run: 'sudo npm install stylus -g'
       -
         run: 'stylus --compress --sourcemap-inline < src/static/stylus/index.styl > src/static/generated/output.css'
       -
