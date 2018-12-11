@@ -42,7 +42,7 @@ class SeleniumTestCase(ATCTestHelpersMixin, StaticLiveServerTestCase):
 
     def setUp(self):
         super().setUp()
-        self.selenium.set_window_size(1200, 10000)
+        self.selenium.set_window_size(1200, 8000)
 
     def get(self, url):
         #  live_server_url will be a random localhost:5digits/

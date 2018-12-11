@@ -19,8 +19,6 @@ jobs:
       -
         run: 'echo "Y" | python manage.py search_index --rebuild'
       -
-        run: 'python manage.py migrate'
-      -
         run: 'mkdir artifacts/'
       -
         save_cache:
