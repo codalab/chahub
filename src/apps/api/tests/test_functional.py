@@ -5,13 +5,13 @@ from time import sleep
 from django.test.utils import override_settings
 
 
+@override_settings(DEBUG=False)
 class TestChangingProviderAndResultsChange(SeleniumTestCase):
 
     def test_setup_and_login_as_user(self):
         #  Starts a new window for Chrome
         self.login()
 
-    @override_settings(DEBUG=False)
     def test_changing_provider_changes_url_and_search_results(self):
         #  Creates Two Providers, and Two Competitions
         #  Assign Competitions to the two separate Providers - "tag" them through the url
