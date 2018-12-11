@@ -5,7 +5,7 @@ from time import sleep
 from django.test.utils import override_settings
 
 
-@override_settings(DEBUG=False)
+@override_settings(DEBUG=True)
 class TestChangingProviderAndResultsChange(SeleniumTestCase):
 
     def test_setup_and_login_as_user(self):
