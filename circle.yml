@@ -7,24 +7,9 @@ jobs:
     steps:
       - checkout
       -
-        run: 'sudo apt-get install elasticsearch'
-      -
-        run: 'sudo /bin/systemctl daemon-reload | sudo /bin/systemctl enable elasticsearch.service'
-      -
         run: 'sudo pip install -r requirements.dev.txt'
       -
         run: 'python manage.py collectstatic --no-input'
-      -
-        run: 'mkdir test-reports'
-      -
-        run:
-          name: 'Download Selenium'
-          command: 'curl -O http://selenium-release.storage.googleapis.com/3.5/selenium-server-standalone-3.5.3.jar'
-      -
-        run:
-          name: 'Start Selenium'
-          command: 'java -jar selenium-server-standalone-3.5.3.jar -log test-reports/selenium.log'
-          background: true
       -
         run: 'mkdir artifacts/'
       -
