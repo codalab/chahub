@@ -15,13 +15,13 @@ l.addHandler(logging.StreamHandler())
 class Command(BaseCommand):
     help = 'Updates competition details in ES'
 
-    def handle(self, *args, **options):
+    def handle(self, *args, **options):  # noqa 231
         qs = Competition.objects.exclude(is_active=False)
-        qs = qs.prefetch_related('phases')  # noqa
-        for comp in tqdm(qs):  # noqa
-            try:  # noqa
-                old_deadline, old_is_active = comp.current_phase_deadline, comp.is_active  # noqa
-                comp.current_phase_deadline = comp.get_current_phase_deadline()  # noqa
+        qs = qs.prefetch_related('phases')
+        for comp in tqdm(qs):  # noqa 231
+            try:  # noqa 231
+                old_deadline, old_is_active = comp.current_phase_deadline, comp.is_active  # noqa 231
+                comp.current_phase_deadline = comp.get_current_phase_deadline()  # noqa 231
                 comp.is_active = comp.get_is_active()
                 if comp.is_active != old_is_active or comp.current_phase_deadline != old_deadline:
                     comp.save()
