@@ -20,7 +20,7 @@ class Command(BaseCommand):
         qs = qs.prefetch_related('phases')
         for comp in tqdm(qs):
             try:
-                old_deadline, old_is_active = comp.current_phase_deadline, comp.is_active
+                old_deadline,  old_is_active = comp.current_phase_deadline,  comp.is_active
                 comp.current_phase_deadline = comp.get_current_phase_deadline()
                 comp.is_active = comp.get_is_active()
                 if comp.is_active != old_is_active or comp.current_phase_deadline != old_deadline:
