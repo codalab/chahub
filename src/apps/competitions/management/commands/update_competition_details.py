@@ -18,10 +18,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         qs = Competition.objects.exclude(is_active=False)
         qs = qs.prefetch_related('phases')
-        for comp in tqdm(qs):
-            try:  # noqa
+        for comp in tqdm(qs):  # noqa
+            try:
                 old_deadline, old_is_active = comp.current_phase_deadline, comp.is_active  # noqa
-                comp.current_phase_deadline = comp.get_current_phase_deadline()  # noqa
+                comp.current_phase_deadline = comp.get_current_phase_deadline()
                 comp.is_active = comp.get_is_active()
                 if comp.is_active != old_is_active or comp.current_phase_deadline != old_deadline:
                     comp.save()

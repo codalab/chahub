@@ -6,10 +6,6 @@ from time import sleep
 
 class TestChangingProviderAndResultsChange(SeleniumTestCase):
 
-    def test_setup_and_login_as_user(self):
-        #  Starts a new window for Chrome
-        self.login()
-
     def test_changing_provider_changes_url_and_search_results(self):
         #  Creates Two Providers, and Two Competitions
         #  Assign Competitions to the two separate Providers - "tag" them through the url
@@ -36,7 +32,6 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
 
         #  Go to the homepage and assert that the URL is correct - index without any producers selected
         self.get('')
-
         sleep(.5)
 
         #  Click the Producer drop-down bar and click the 4th child - Producer1
