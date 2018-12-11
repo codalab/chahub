@@ -9,7 +9,7 @@ jobs:
       -
         run: 'sudo apt-get install elasticsearch'
       -
-        run: 'curl -X GET "localhost:9200/"'
+        run: 'sudo /bin/systemctl daemon-reload | sudo /bin/systemctl enable elasticsearch.service'
       -
         run: 'sudo pip install -r requirements.dev.txt'
       -
