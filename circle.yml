@@ -15,7 +15,13 @@ jobs:
       -
         run: 'python manage.py collectstatic --no-input'
       -
+        run: 'curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -'
+      -
+        run: 'sudo apt-get install -y nodejs'
+      -
         run: 'riot src/static/riot src/static/generated/riot.js --style stylus'
+      -
+        run: 'pip install django-static-precompiler --user'
       -
         run: 'stylus --compress --sourcemap-inline < src/static/stylus/index.styl > src/static/generated/output.css'
       -
