@@ -9,7 +9,7 @@ jobs:
       -
         run: 'sudo apt-get install elasticsearch'
       -
-        run: 'ps -p 1'
+        run: 'curl -X GET "localhost:9200/"'
       -
         run: 'sudo pip install -r requirements.dev.txt'
       -
