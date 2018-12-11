@@ -13,9 +13,9 @@ jobs:
       -
         run: 'python manage.py collectstatic --no-input'
       -
-        run: 'python manage.py create_competition --amount 3 --fill-all-details True --fail-on-exception True'
-      -
         run: 'python manage.py migrate'
+      -
+        run: 'python manage.py create_competition --amount 3 --fill-all-details True --fail-on-exception True'
       -
         run: 'echo "Y" | python manage.py search_index --rebuild'
       -
