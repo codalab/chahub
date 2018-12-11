@@ -13,7 +13,7 @@ jobs:
       -
         run: 'python manage.py collectstatic --no-input'
       -
-        run: 'sh bin/init-staging'
+        run: 'echo "Y" | python manage.py search_index --rebuild'
       -
         run: 'mkdir artifacts/'
       -
