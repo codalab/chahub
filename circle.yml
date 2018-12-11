@@ -19,9 +19,9 @@ jobs:
       -
         run: 'sudo apt install nodejs'
       -
-        run: 'npm install riot -g'
+        run: 'sudo npm install riot -g'
       -
-        run: 'npm install riot-compiler --save'
+        run: 'sudo npm install riot-compiler --save'
       -
         run: 'pip install django-static-precompiler --user'
       -
