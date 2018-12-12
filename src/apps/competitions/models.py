@@ -13,21 +13,15 @@ class Competition(models.Model):
     description = models.TextField(null=True, blank=True)
     end = models.DateTimeField(null=True, blank=True)
     prize = models.PositiveIntegerField(null=True, blank=True)
-
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True)
     remote_id = models.CharField(max_length=128, null=True, blank=True)
-
     logo = models.URLField(null=True, blank=True, default="/static/img/img-wireframe.png")
     url = models.URLField()
-
     admins = models.ManyToManyField('CompetitionParticipant', related_name='admins', blank=True)
-
     participant_count = models.IntegerField(default=0)
     html_text = models.TextField(default="", null=True, blank=True)
-
     current_phase_deadline = models.DateTimeField(blank=True, null=True)
     is_active = models.BooleanField(default=False)
-
     published = models.BooleanField(default=False)
 
     class Meta:
