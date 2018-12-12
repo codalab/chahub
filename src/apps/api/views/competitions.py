@@ -25,6 +25,14 @@ class CompetitionViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
         return context
 
     def get_queryset(self):
+
+
+
+        # TODO: Filter out competitions that don't belong to this provider ???
+
+
+
+
         qs = Competition.objects.all()
         qs = qs.prefetch_related('phases', 'producer', 'admins', 'participants')
         return qs

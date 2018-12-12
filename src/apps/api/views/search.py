@@ -39,7 +39,6 @@ class SearchView(APIView):
             # Setup ES connection, excluding HTML text from our results
             s = get_search_client()
 
-
             # Do search/filtering/sorting
             s = self._search(s, query)
             s = self._filter(s, date_flags, start, end, producer)
