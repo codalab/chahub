@@ -1,13 +1,13 @@
 <search-results>
     <div id="particle_header" class="ui centered grid">
-        <!--<span hide="{ embedded }">
+        <span hide="{ embedded }">
             <a id="login-button" hide="{USER_AUTHENTICATED}" href="/accounts/login/"
                class="ui button">LOGIN
             </a>
             <a id="login-button" show="{USER_AUTHENTICATED}" href="/accounts/logout/"
                class="ui button">LOGOUT
             </a>
-        </span>-->
+        </span>
 
         <!--<div id="hamburger_button">
             <div class="ui small icon button">
