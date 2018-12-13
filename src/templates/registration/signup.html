@@ -18,6 +18,9 @@
                                 {% if field.name == 'username' %}
                                     <i class="user icon"></i>
                                     <input type="text" name="{{ field.name }}" placeholder="{{ field.name }}">
+                                {% elif field.name == 'email' %}
+                                    <i class="mail icon"></i>
+                                    <input type="text" name="{{ field.name }}" placeholder="{{ field.name }}">
                                 {% else %}
                                     <i class="write icon"></i>
                                     <input type="password" name="{{ field.name }}" placeholder="password">
