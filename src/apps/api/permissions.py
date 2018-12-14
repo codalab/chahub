@@ -14,4 +14,4 @@ class ProducerPermission(permissions.BasePermission):
 
             # TODO: Check object permissions, should only be able to work on non existant objects or objects where producer == producer!!!
 
-            return isinstance(request.user, Producer)
+            return isinstance(request.user, Producer) or request.user.is_staff

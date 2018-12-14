@@ -9,5 +9,12 @@ class Producer(models.Model):
     contact = models.EmailField(null=True, blank=True)
     url = models.URLField()
 
+    competition_count = models.IntegerField(default=0)
+    dataset_count = models.IntegerField(default=0)
+    participant_count = models.IntegerField(default=0)
+    submission_count = models.IntegerField(default=0)
+    user_count = models.IntegerField(default=0)
+    organizer_count = models.IntegerField(default=0)
+
     def __str__(self):
         return "{} @ {}".format(self.name, self.url)

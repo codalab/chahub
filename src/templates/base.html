@@ -131,7 +131,9 @@
             return "{{ STATIC_URL }}" + asset_url
         }
     }
-    PRODUCERS = JSON.parse("{{ producers|escapejs }}")
+    {% if producers %}
+        PRODUCERS = JSON.parse("{{ producers|escapejs }}")
+    {% endif %}
     {% if default_search_results %}
         DEFAULT_SEARCH_RESULTS = JSON.parse("{{ default_search_results|escapejs }}")
     {% else %}

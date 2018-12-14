@@ -31,5 +31,9 @@ CHAHUB.api = {
     },
     delete_producer: function(pk) {
         return CHAHUB.api.request('DELETE', URLS.API + "producers/" + pk + "/")
-    }
+    },
+    // Producer Stats
+    get_producer_stats: function() {
+        return CHAHUB.api.request('GET', URLS.API + "producer_stats/")
+    },
 }

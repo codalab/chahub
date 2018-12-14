@@ -167,6 +167,7 @@
         self.loading = true
         self.old_filters = {}
         self.display_search_options = false
+        self.producer_stats = {}
 
         self.one('mount', function () {
             // header particles
@@ -247,6 +248,7 @@
             self.refs.search.focus()*/
 
             self.init_values_from_query_params()
+            self.get_general_stats()
         })
 
         self.toggle_search_options = function () {
@@ -393,6 +395,17 @@
         self.set_display_mode = function (mode) {
             self.display_mode = mode
             self.update()
+        }
+
+        self.get_general_stats = function() {
+            CHAHUB.api.get_producer_stats()
+                .done(function (data) {
+                    console.log("Received general stats")
+                    self.update({
+                        producer_stats: data,
+                    })
+                    console.log(self.producer_stats)
+                })
         }
     </script>
 
