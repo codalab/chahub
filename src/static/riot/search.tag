@@ -763,25 +763,21 @@
             </span>
                 <div class="mobile_labelwrap"></div>
                 <span class="participant_label ui right floated mini label tooltip" data-content="Participant count">
-                <i class="user icon"></i> {participant_count}
+                    <i class="user icon"></i> {participant_count}
                 </span>
-                <span class="deadline_label ui right floated red mini label tooltip"
+                <span class="deadline_label ui right floated mini label tooltip {grey: !!alert_icon, red: !alert_icon}"
                       data-content="Deadline of the current phase"
-                      show="{current_phase_deadline}"
-                >
-                <i show="{!alert_icon}" class="alarm icon"></i> {pretty_deadline_time}
+                      show="{current_phase_deadline}">
+                    <i show="{!alert_icon}" class="alarm icon"></i> {pretty_deadline_time}
                 </span>
-                <span class="deadline_label ui right floated mini green label"
-                      show="{!current_phase_deadline}">
-                Phase Never Ends
+                <span class="deadline_label ui right floated mini green label" show="{!current_phase_deadline}">
+                    Phase Never Ends
                 </span>
-                <span class="prize_label ui right floated mini label tooltip" data-content="Prize Amount"
-                      show="{prize}">
-                <i class="yellow trophy icon"></i> {prize}
+                <span class="prize_label ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
+                    <i class="yellow trophy icon"></i> {prize}
                 </span>
             </div>
         </div>
-    </div>
     </div>
 
     <script>
@@ -864,7 +860,7 @@
             width 45px // May need to be increased to 50px if we expect competitions with more than 10k participants
             text-align right
 
-            i
+            .icon
                 float left
 
         .prize_label
