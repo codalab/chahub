@@ -133,7 +133,8 @@
         <div class="advanced search ui row">
             <div id="mobile_drop" class="sixteen wide mobile only column">
                 <button id="down_caret" class="ui icon button" onclick="{ toggle_search_options }"><i
-                        class="{up: display_search_options}{down: !display_search_options} caret icon"></i>Advanced Search
+                        class="{up: display_search_options}{down: !display_search_options} caret icon"></i>Advanced
+                    Search
                 </button>
             </div>
         </div>
@@ -742,6 +743,12 @@
 </search-result>
 
 <competition-tile onclick="{redirect_to_url}">
+    <div class="floating-actions { is-admin: USER_IS_SUPERUSER }">
+        <i class="icon green pencil alternate"
+           onclick="{ edit_competition }"></i>
+        <i class="icon red delete" onclick="{ delete_competition }"></i>
+        <i class="icon { yellow: locked, unlock: locked, lock: !locked }" onclick="{ lock_competition}"></i>
+    </div>
     <div class="ui tiny image">
         <img src="{logo || URLS.STATIC('/img/img-wireframe.png')}" class="ui avatar image">
     </div>
@@ -780,11 +787,25 @@
         </div>
     </div>
 
+    <div class="ui modal" ref="modal">
+        <label>Title</label>
+
+        <input class="ui input" ref="competition_title" name="title">
+        <input class="ui input" ref="competition_description" name="description">
+        <input class="ui input" ref="competition_url" name="url">
+        <input class="ui input" ref="competition_prize" name="prize">
+        <input class="ui input" ref="competition_current_phase_deadline" name="current_phase_deadline">
+        <input class="ui input" ref="competition_start" name="start">
+        <input class="ui input" ref="competition_end" name="end">
+    </div>
+
+
     <script>
         var self = this
 
         self.on("mount", function () {
             $(".tooltip", self.root).popup()
+            $(self.refs.modal).modal()
         })
 
         self.redirect_to_url = function () {
@@ -794,11 +815,57 @@
         self.url_short = function (url) {
             return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
         }
+
+        self.edit_competition = function (event) {
+            CHAHUB.events.trigger('competition_selected', event.item)
+            event.cancelBubble = true
+        }
+
+        //console.log(CHAHUB.events)
+
+        // self.on??????????????????????? or CHAHUB.events.on??????????????
+        CHAHUB.events.on('competition_selected', function (competition) {
+            self.selected_competition = competition
+            self.refs.competition_title.value = self.selected_competition.title
+            self.refs.competition_description.value = self.selected_competition.description
+            self.refs.competition_url.value = self.selected_competition.url
+            self.refs.competition_prize.value = self.selected_competition.prize
+            self.refs.competition_current_phase_deadline.value = self.selected_competition.current_phase_deadline
+            self.refs.competition_start.value = self.selected_competition.start
+            self.refs.competition_end.value = self.selected_competition.end
+            self.update()
+            //$('.ui.modal').modal('show')
+            $(self.refs.modal).modal('show')
+        })
+
+
+        self.delete_competition = function (event) {
+            console.log(event)
+            if (confirm(`Are you sure you want to delete "${event.item.title}?"`)) {
+                alert('Deleted')
+            }
+            event.cancelBubble = true
+        }
+
+        self.lock_competition = function (event) {
+            event.cancelBubble = true
+        }
     </script>
 
     <style type="text/stylus">
         :scope
             display block
+            position relative
+
+        :scope:hover .floating-actions.is-admin
+            opacity 1
+
+        .floating-actions
+            position absolute
+            top 0
+            right 0
+            opacity 0
+            z-index 10
 
         .content
             .description
