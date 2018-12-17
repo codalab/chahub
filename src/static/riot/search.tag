@@ -1,4 +1,5 @@
 <search-results>
+    <competition-modal></competition-modal>
     <div id="particle_header" class="ui centered grid">
         <span hide="{ embedded }">
             <a id="login-button" hide="{USER_AUTHENTICATED}" href="/accounts/login/"
@@ -196,11 +197,11 @@
             })
 
             // Sidebar with overlay on
-            $('.sidebar')
-                .sidebar({
-                    transition: 'overlay',
-                })
-                .sidebar('attach events', '#hamburger_button');
+            //$('.sidebar')
+            //    .sidebar({
+            //        transition: 'overlay',
+            //    })
+            //    .sidebar('attach events', '#hamburger_button');
 
             //$(self.refs.time_filter).dropdown('setting', 'onChange', self.search);
 
@@ -721,7 +722,7 @@
 
 <search-result class="item">
     <!--<div class="image">
-        <!--<img src="https://semantic-ui.com/images/wireframe/image.png">
+        <img src="https://semantic-ui.com/images/wireframe/image.png">
         <img src="{ logo }">
     </div>
     <div class="content">
@@ -772,7 +773,7 @@
                 <span class="participant_label ui right floated mini label tooltip" data-content="Participant count">
                     <i class="user icon"></i> {participant_count}
                 </span>
-                <span class="deadline_label ui right floated mini label tooltip {grey: !!alert_icon, red: !alert_icon}"
+                <span class="deadline_label ui right floated mini label tooltip {red: !alert_icon}"
                       data-content="Deadline of the current phase"
                       show="{current_phase_deadline}">
                     <i show="{!alert_icon}" class="alarm icon"></i> {pretty_deadline_time}
@@ -780,25 +781,13 @@
                 <span class="deadline_label ui right floated mini green label" show="{!current_phase_deadline}">
                     Phase Never Ends
                 </span>
-                <span class="prize_label ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
+                <span class="prize_label ui right floated mini label tooltip" data-content="Prize Amount"
+                      show="{prize}">
                     <i class="yellow trophy icon"></i> {prize}
                 </span>
             </div>
         </div>
     </div>
-
-    <div class="ui modal" ref="modal">
-        <label>Title</label>
-
-        <input class="ui input" ref="competition_title" name="title">
-        <input class="ui input" ref="competition_description" name="description">
-        <input class="ui input" ref="competition_url" name="url">
-        <input class="ui input" ref="competition_prize" name="prize">
-        <input class="ui input" ref="competition_current_phase_deadline" name="current_phase_deadline">
-        <input class="ui input" ref="competition_start" name="start">
-        <input class="ui input" ref="competition_end" name="end">
-    </div>
-
 
     <script>
         var self = this
@@ -821,26 +810,8 @@
             event.cancelBubble = true
         }
 
-        //console.log(CHAHUB.events)
-
-        // self.on??????????????????????? or CHAHUB.events.on??????????????
-        CHAHUB.events.on('competition_selected', function (competition) {
-            self.selected_competition = competition
-            self.refs.competition_title.value = self.selected_competition.title
-            self.refs.competition_description.value = self.selected_competition.description
-            self.refs.competition_url.value = self.selected_competition.url
-            self.refs.competition_prize.value = self.selected_competition.prize
-            self.refs.competition_current_phase_deadline.value = self.selected_competition.current_phase_deadline
-            self.refs.competition_start.value = self.selected_competition.start
-            self.refs.competition_end.value = self.selected_competition.end
-            self.update()
-            //$('.ui.modal').modal('show')
-            $(self.refs.modal).modal('show')
-        })
-
-
         self.delete_competition = function (event) {
-            console.log(event)
+            // TODO - Need to delete the competition on confirm, else do nothing.
             if (confirm(`Are you sure you want to delete "${event.item.title}?"`)) {
                 alert('Deleted')
             }
@@ -848,6 +819,7 @@
         }
 
         self.lock_competition = function (event) {
+            // TODO - Need to lock the competition and change icon/color to represent locked and unlocked state
             event.cancelBubble = true
         }
     </script>
@@ -924,7 +896,6 @@
             color #dfe3e5 !important
             right 0
             margin 0 2px !important
-            width 45px // May need to be increased to 50px if we expect competitions with more than 10k participants
             text-align right
 
             .icon
@@ -937,7 +908,6 @@
             margin 0 2px !important
 
         .deadline_label
-            background-color #db28289e !important
             margin 0 2px !important
 
         .mobile_linewrap
@@ -964,9 +934,55 @@
             .header
                 font-size 2rem !important
 
-
     </style>
 </competition-tile>
+
+<competition-modal>
+    <div class="ui modal competition-form" ref="modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Edit Competition
+        </div>
+        <div style="padding: 20px;" class="edit-competition-form ui form">
+            <div class="field">
+                <label for="competition-title">Title</label>
+                <input id="competition-title" type="text" class="ui input" ref="competition_title" name="title">
+            </div>
+            <div class="field">
+                <label for="competition-description">Description</label>
+                <textarea class="ui input" ref="competition_description" id="competition-description"
+                          name="description"></textarea>
+            </div>
+            <div class="field">
+                <label for="logo-url">Logo URL</label>
+                <input type="url" class="ui input" ref="competition_logo" id="logo-url" name="logo">
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui black deny button">
+                Cancel
+            </div>
+            <div class="ui positive right labeled icon button">
+                Submit
+                <i class="checkmark icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var self = this
+
+        CHAHUB.events.on('competition_selected', function (competition) {
+            self.selected_competition = competition
+            self.refs.competition_title.value = self.selected_competition.title
+            self.refs.competition_description.value = self.selected_competition.description
+            self.refs.competition_logo.value = self.selected_competition.logo
+            console.log(self)
+            self.update()
+            $(self.refs.modal).modal('show')
+        })
+    </script>
+</competition-modal>
 
 <competition-card>
     <!-- <div class="image">
