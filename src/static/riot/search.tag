@@ -133,13 +133,14 @@
         <div class="advanced search ui row">
             <div id="mobile_drop" class="sixteen wide mobile only column">
                 <button id="down_caret" class="ui icon button" onclick="{ toggle_search_options }"><i
-                        class="{up: display_search_options}{down: !display_search_options} caret icon"></i>Advanced Search
+                        class="{up: display_search_options}{down: !display_search_options} caret icon"></i>Advanced
+                    Search
                 </button>
             </div>
         </div>
     </div>
-    <div id="mobile-grid" class="ui centered grid">
-        <div id="mobile" class="sixteen wide tablet eleven wide computer column">
+    <div id="mobile-grid" class="ui centered grid { fix-left: !show_stats }">
+        <div id="mobile" class="sixteen wide tablet twelve wide computer column">
             <div class="ui stacked">
                 <div class="ui warning message" show="{ results.length === 0 && !showing_default_results && !loading }">
                     <div class="header">
@@ -159,7 +160,13 @@
                 </div> -->
             </div>
         </div>
+
+        <div class="four wide right floated computer only column">
+            <show-stats></show-stats>
+        </div>
+
     </div>
+
     <script>
         var self = this
         self.results = []
@@ -167,7 +174,6 @@
         self.loading = true
         self.old_filters = {}
         self.display_search_options = false
-        self.producer_stats = {}
 
         self.one('mount', function () {
             // header particles
@@ -248,7 +254,6 @@
             self.refs.search.focus()*/
 
             self.init_values_from_query_params()
-            self.get_general_stats()
         })
 
         self.toggle_search_options = function () {
@@ -268,19 +273,17 @@
             if (self.refs.start_date.value && self.refs.end_date.value) {
                 var temp_string = self.refs.start_date.value + ' through ' + self.refs.end_date.value
                 $(self.refs.time_filter).dropdown('set text', temp_string)
-            }
-            else if (self.refs.start_date.value) {
+            } else if (self.refs.start_date.value) {
                 var temp_string = 'Starting from ' + self.refs.start_date.value
                 $(self.refs.time_filter).dropdown('set text', temp_string)
-            }
-            else if (self.refs.end_date.value) {
+            } else if (self.refs.end_date.value) {
                 var temp_string = 'End by ' + self.refs.end_date.value
                 $(self.refs.time_filter).dropdown('set text', temp_string)
             }
         }
 
 
-        self.init_values_from_query_params = function() {
+        self.init_values_from_query_params = function () {
             var params = route.query()
 
             // On page load set search bar to search and execute search if we were given a query
@@ -397,16 +400,15 @@
             self.update()
         }
 
-        self.get_general_stats = function() {
-            CHAHUB.api.get_producer_stats()
-                .done(function (data) {
-                    console.log("Received general stats")
-                    self.update({
-                        producer_stats: data,
-                    })
-                    console.log(self.producer_stats)
-                })
-        }
+
+        /*CHAHUB.events.on('show_stats', function () {
+            if (self.show_stats) {
+                self.show_stats = false
+            } else {
+                self.show_stats = true
+            }
+            self.update()
+        })*/
     </script>
 
     <style type="text/stylus">
@@ -431,6 +433,9 @@
         #mobile-grid
             margin-top 0
 
+        .fix-left
+            margin-left 50px !important
+
         #remove_mobile
             @media screen and (max-width 645px)
                 display none
@@ -440,6 +445,7 @@
         #searchbar
             width 100%
             margin-top 10px
+
             input
                 background-color rgba(255, 255, 255, .95)
                 padding-right 0 !important
@@ -564,6 +570,7 @@
             text-align center
             display flex
             flex-direction column
+
             .icon
                 background-color #C7402D
                 color #e2e2e2
@@ -595,6 +602,7 @@
         #advanced_search_button.active > i.icon
             color #e2e2e2 !important
             background-color #C7402D !important
+
             .icon
                 color #e2e2e2 !important
 
@@ -616,6 +624,7 @@
 
         .ui.button:hover
             color #3f3f3f
+
             .icon
                 opacity 1 !important
 
@@ -689,10 +698,13 @@
             opacity 1 !important
             z-index 1000
             // Buttons on calendar
+
             .icon
                 background-color transparent
                 border none
+
             // Buttons on Date Range Input
+
             .calendar.icon
                 background-color #e2e2e2
                 color #6f6f6f
@@ -702,6 +714,11 @@
 
         competition-tile
             padding-bottom 0 !important
+
+        h4.sub.header,
+        .ui.statistic > .label, .ui.statistics .statistic > .label,
+        .ui.statistic > .value, .ui.statistics .statistic > .value
+            color #808080 !important
 
         .content-desktop
             margin 15px auto !important
@@ -715,7 +732,7 @@
 
 <search-result class="item">
     <!--<div class="image">
-        <!--<img src="https://semantic-ui.com/images/wireframe/image.png">
+        <img src="https://semantic-ui.com/images/wireframe/image.png">
         <img src="{ logo }">
     </div>
     <div class="content">
@@ -772,7 +789,6 @@
             </div>
         </div>
     </div>
-    </div>
 
     <script>
         var self = this
@@ -800,6 +816,7 @@
                 color #808080 !important
                 display block
                 font-size .9em !important
+
             p
                 line-height 1.1em !important
 
@@ -888,6 +905,137 @@
 
     </style>
 </competition-tile>
+
+<show-stats>
+    <button id="stats-btn" onclick="{ stats_button_clicked }"
+            class="ui black big launch left attached fixed button">
+        <i class="icon plus"></i>
+        <span class="btn-text">Stats</span>
+    </button>
+    <div id="stat-card" show="{ !show_stats }" class="ui card">
+        <div class="content">
+            <div class="header">By the numbers...</div>
+        </div>
+        <div class="content">
+            <h4 class="ui sub header">Chahub brings together</h4>
+            <div class="ui small horizontal statistics">
+                <div class="statistic">
+                    <div class="value">
+                        { num_formatter(producer_stats.competition_count, 1) }
+                    </div>
+                    <div class="label">
+                        Competitions
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                        { num_formatter(producer_stats.dataset_count, 1) }
+                    </div>
+                    <div class="label">
+                        Datasets
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                        { num_formatter(producer_stats.participant_count, 1) }
+                    </div>
+                    <div class="label">
+                        Participants
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                        { num_formatter(producer_stats.submission_count, 1) }
+                    </div>
+                    <div class="label">
+                        Submissions
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                        { num_formatter(producer_stats.user_count, 1) }
+                    </div>
+                    <div class="label">
+                        Users
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                        { num_formatter(producer_stats.organizer_count, 1) }
+                    </div>
+                    <div class="label">
+                        Organizers
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var self = this
+        self.show_stats = false
+        self.producer_stats = {}
+
+        self.on("mount", function () {
+            $(".tooltip", self.root).popup()
+            /* $('#stats-btn').sticky() */
+            self.get_general_stats()
+        })
+
+        self.get_general_stats = function () {
+            CHAHUB.api.get_producer_stats()
+                .done(function (data) {
+                    console.log("Received general stats")
+                    self.update({
+                        producer_stats: data,
+                    })
+                    console.log(self.producer_stats)
+                })
+        }
+
+        self.stats_button_clicked = function () {
+            self.show_stats = !self.show_stats
+            self.update()
+        }
+
+        /* $('#stats-btn')
+            .sticky({
+                offset: 150,
+            }) */
+
+    </script>
+
+    <style type="text/stylus">
+        #stats-btn
+            position fixed
+            top 110px
+            right 0 !important
+            width: 55px;
+            height: auto;
+            white-space: nowrap;
+            overflow: hidden;
+            transition 0.3s width ease, 0.5s transform ease;
+
+        #stats-btn:hover
+            width: 130px
+
+            .btn-text
+                position: absolute;
+                white-space: nowrap;
+                top: auto;
+                right 54px
+                opacity: 0;
+                -webkit-transition: 0.3s opacity 0.3s;
+                -moz-transition: 0.3s opacity 0.3s;
+                -o-transition: 0.3s opacity 0.3s;
+                -ms-transition: 0.3s opacity 0.3s;
+                transition: 0.3s opacity 0.3s;
+
+        #stat-card
+            z-index -1
+
+    </style>
+</show-stats>
 
 <competition-card>
     <!-- <div class="image">
