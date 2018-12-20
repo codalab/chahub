@@ -909,7 +909,7 @@
 <show-stats>
     <button id="stats-btn" onclick="{ stats_button_clicked }"
             class="ui black big launch left attached fixed button">
-        <i class="icon plus"></i>
+        <i class="icon {minus: !show_stats, 'chart bar': show_stats}"></i>
         <span class="btn-text">Stats</span>
     </button>
     <div id="stat-card" show="{ !show_stats }" class="ui card">
@@ -998,11 +998,6 @@
             self.update()
         }
 
-        /* $('#stats-btn')
-            .sticky({
-                offset: 150,
-            }) */
-
     </script>
 
     <style type="text/stylus">
@@ -1010,26 +1005,32 @@
             position fixed
             top 110px
             right 0 !important
-            width: 55px;
-            height: auto;
-            white-space: nowrap;
-            overflow: hidden;
-            transition 0.3s width ease, 0.5s transform ease;
+            width 55px
+            height auto
+            white-space nowrap
+            overflow hidden
+            transition 0.3s width ease, 0.5s transform ease
+
+            .icon
+                margin 0 .5em 0 -0.45em
 
         #stats-btn:hover
-            width: 130px
+            width 130px
 
             .btn-text
-                position: absolute;
-                white-space: nowrap;
-                top: auto;
-                right 54px
-                opacity: 0;
-                -webkit-transition: 0.3s opacity 0.3s;
-                -moz-transition: 0.3s opacity 0.3s;
-                -o-transition: 0.3s opacity 0.3s;
-                -ms-transition: 0.3s opacity 0.3s;
-                transition: 0.3s opacity 0.3s;
+                opacity 1
+
+        .btn-text
+            position absolute
+            white-space nowrap
+            top auto
+            right 54px
+            opacity 0
+            -webkit-transition 0.23s opacity 0.2s
+            -moz-transition 0.23s opacity 0.2s
+            -o-transition 0.23s opacity 0.2s
+            -ms-transition 0.23s opacity 0.2s
+            transition 0.23s opacity 0.2s
 
         #stat-card
             z-index -1
