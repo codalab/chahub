@@ -132,9 +132,9 @@
         </div>
         <div class="advanced search ui row">
             <div id="mobile_drop" class="sixteen wide mobile only column">
-                <button id="down_caret" class="ui icon button" onclick="{ toggle_search_options }"><i
-                        class="{up: display_search_options}{down: !display_search_options} caret icon"></i>Advanced
-                    Search
+                <button id="down_caret" class="ui icon button" onclick="{ toggle_search_options }">
+                    <i class="{up: display_search_options}{down: !display_search_options} caret icon"></i>
+                    Advanced Search
                 </button>
             </div>
         </div>
@@ -160,11 +160,9 @@
                 </div> -->
             </div>
         </div>
-
         <div class="four wide right floated computer only column">
             <show-stats></show-stats>
         </div>
-
     </div>
 
     <script>
@@ -400,15 +398,6 @@
             self.update()
         }
 
-
-        /*CHAHUB.events.on('show_stats', function () {
-            if (self.show_stats) {
-                self.show_stats = false
-            } else {
-                self.show_stats = true
-            }
-            self.update()
-        })*/
     </script>
 
     <style type="text/stylus">
@@ -978,7 +967,6 @@
 
         self.on("mount", function () {
             $(".tooltip", self.root).popup()
-            /* $('#stats-btn').sticky() */
             self.get_general_stats()
         })
 
@@ -989,7 +977,6 @@
                     self.update({
                         producer_stats: data,
                     })
-                    console.log(self.producer_stats)
                 })
         }
 
@@ -997,7 +984,6 @@
             self.show_stats = !self.show_stats
             self.update()
         }
-
     </script>
 
     <style type="text/stylus">
@@ -1034,7 +1020,6 @@
 
         #stat-card
             z-index -1
-
     </style>
 </show-stats>
 

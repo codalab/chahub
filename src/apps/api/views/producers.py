@@ -1,9 +1,7 @@
-from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAdminUser
 
 from api.authenticators import ProducerAuthentication
 from api.permissions import ProducerPermission
