@@ -1,4 +1,5 @@
 <search-results>
+    <competition-modal></competition-modal>
     <div id="particle_header" class="ui centered grid">
         <span hide="{ embedded }">
             <a id="login-button" hide="{USER_AUTHENTICATED}" href="/accounts/login/"
@@ -133,7 +134,8 @@
         <div class="advanced search ui row">
             <div id="mobile_drop" class="sixteen wide mobile only column">
                 <button id="down_caret" class="ui icon button" onclick="{ toggle_search_options }"><i
-                        class="{up: display_search_options}{down: !display_search_options} caret icon"></i>Advanced Search
+                        class="{up: display_search_options}{down: !display_search_options} caret icon"></i>Advanced
+                    Search
                 </button>
             </div>
         </div>
@@ -195,11 +197,11 @@
             })
 
             // Sidebar with overlay on
-            $('.sidebar')
-                .sidebar({
-                    transition: 'overlay',
-                })
-                .sidebar('attach events', '#hamburger_button');
+            //$('.sidebar')
+            //    .sidebar({
+            //        transition: 'overlay',
+            //    })
+            //    .sidebar('attach events', '#hamburger_button');
 
             //$(self.refs.time_filter).dropdown('setting', 'onChange', self.search);
 
@@ -720,7 +722,7 @@
 
 <search-result class="item">
     <!--<div class="image">
-        <!--<img src="https://semantic-ui.com/images/wireframe/image.png">
+        <img src="https://semantic-ui.com/images/wireframe/image.png">
         <img src="{ logo }">
     </div>
     <div class="content">
@@ -742,6 +744,12 @@
 </search-result>
 
 <competition-tile onclick="{redirect_to_url}">
+    <div class="floating-actions { is-admin: USER_IS_SUPERUSER }">
+        <i class="icon green pencil alternate"
+           onclick="{ edit_competition }"></i>
+        <i class="icon red delete" onclick="{ delete_competition }"></i>
+        <i class="icon { yellow: locked, unlock: locked, lock: !locked }" onclick="{ lock_competition}"></i>
+    </div>
     <div class="ui tiny image">
         <img src="{logo || URLS.STATIC('/img/img-wireframe.png')}" class="ui avatar image">
     </div>
@@ -765,7 +773,7 @@
                 <span class="participant_label ui right floated mini label tooltip" data-content="Participant count">
                     <i class="user icon"></i> {participant_count}
                 </span>
-                <span class="deadline_label ui right floated mini label tooltip {grey: !!alert_icon, red: !alert_icon}"
+                <span class="deadline_label ui right floated mini label tooltip {red: !alert_icon}"
                       data-content="Deadline of the current phase"
                       show="{current_phase_deadline}">
                     <i show="{!alert_icon}" class="alarm icon"></i> {pretty_deadline_time}
@@ -773,7 +781,8 @@
                 <span class="deadline_label ui right floated mini green label" show="{!current_phase_deadline}">
                     Never ends
                 </span>
-                <span class="prize_label ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
+                <span class="prize_label ui right floated mini label tooltip" data-content="Prize Amount"
+                      show="{prize}">
                     <i class="yellow trophy icon"></i> {prize}
                 </span>
             </div>
@@ -785,6 +794,7 @@
 
         self.on("mount", function () {
             $(".tooltip", self.root).popup()
+            $(self.refs.modal).modal()
         })
 
         self.redirect_to_url = function () {
@@ -794,11 +804,40 @@
         self.url_short = function (url) {
             return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
         }
+
+        self.edit_competition = function (event) {
+            CHAHUB.events.trigger('competition_selected', event.item)
+            event.cancelBubble = true
+        }
+
+        self.delete_competition = function (event) {
+            // TODO - Need to delete the competition on confirm, else do nothing.
+            if (confirm(`Are you sure you want to delete "${event.item.title}?"`)) {
+                alert('Deleted')
+            }
+            event.cancelBubble = true
+        }
+
+        self.lock_competition = function (event) {
+            // TODO - Need to lock the competition and change icon/color to represent locked and unlocked state
+            event.cancelBubble = true
+        }
     </script>
 
     <style type="text/stylus">
         :scope
             display block
+            position relative
+
+        :scope:hover .floating-actions.is-admin
+            opacity 1
+
+        .floating-actions
+            position absolute
+            top 0
+            right 0
+            opacity 0
+            z-index 10
 
         .content
             .description
@@ -857,7 +896,6 @@
             color #dfe3e5 !important
             right 0
             margin 0 2px !important
-            width 45px // May need to be increased to 50px if we expect competitions with more than 10k participants
             text-align right
 
             .icon
@@ -870,7 +908,6 @@
             margin 0 2px !important
 
         .deadline_label
-            background-color #db28289e !important
             margin 0 2px !important
 
         .mobile_linewrap
@@ -897,9 +934,55 @@
             .header
                 font-size 2rem !important
 
-
     </style>
 </competition-tile>
+
+<competition-modal>
+    <div class="ui modal competition-form" ref="modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Edit Competition
+        </div>
+        <div style="padding: 20px;" class="edit-competition-form ui form">
+            <div class="field">
+                <label for="competition-title">Title</label>
+                <input id="competition-title" type="text" class="ui input" ref="competition_title" name="title">
+            </div>
+            <div class="field">
+                <label for="competition-description">Description</label>
+                <textarea class="ui input" ref="competition_description" id="competition-description"
+                          name="description"></textarea>
+            </div>
+            <div class="field">
+                <label for="logo-url">Logo URL</label>
+                <input type="url" class="ui input" ref="competition_logo" id="logo-url" name="logo">
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui black deny button">
+                Cancel
+            </div>
+            <div class="ui positive right labeled icon button">
+                Submit
+                <i class="checkmark icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var self = this
+
+        CHAHUB.events.on('competition_selected', function (competition) {
+            self.selected_competition = competition
+            self.refs.competition_title.value = self.selected_competition.title
+            self.refs.competition_description.value = self.selected_competition.description
+            self.refs.competition_logo.value = self.selected_competition.logo
+            console.log(self)
+            self.update()
+            $(self.refs.modal).modal('show')
+        })
+    </script>
+</competition-modal>
 
 <competition-card>
     <!-- <div class="image">
