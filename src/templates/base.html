@@ -9,15 +9,17 @@
 
     <title>Chahub Beta</title>
     <meta property="og:title" content="Chahub"/>
-    <meta property="og:description" content="Chahub is a resource aggregator for machine learning researchers and students. We track many machine learning competitions, datasets, and competitors."/>
-    <meta property="og:image" content="https://{{ request.get_host }}{% static 'img/chahub_logo_with_background.png' %}"/>
+    <meta property="og:description"
+          content="Chahub is a resource aggregator for machine learning researchers and students. We track many machine learning competitions, datasets, and competitors."/>
+    <meta property="og:image"
+          content="https://{{ request.get_host }}{% static 'img/chahub_logo_with_background.png' %}"/>
 
     <link rel="icon" type="image/ico" href="{% static 'img/favicon.ico' %}"/>
 
     <!-- JQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <!-- Riot -->
-{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/3.11.2/riot+compiler.min.js"></script>#}
+    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/3.11.2/riot+compiler.min.js"></script>#}
     <!-- Semantic -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
@@ -127,7 +129,7 @@
             header_particles: "{% static "particles/header.json" %}"
         },
         API: "/api/v1/",
-        STATIC: function(asset_url) {
+        STATIC: function (asset_url) {
             return "{{ STATIC_URL }}" + asset_url
         }
     }
@@ -139,7 +141,24 @@
     {% else %}
         DEFAULT_SEARCH_RESULTS = undefined
     {% endif %}
-    USER_AUTHENTICATED = ("{{ user.is_authenticated }}" === "True")
+    USER_AUTHENTICATED = "{{ user.is_authenticated }}" === "True"
+
+    USER_IS_SUPERUSER = "{{ user.is_superuser }}" === "True"
+
+    /*if ("{{ user.is_superuser }}" === "True") {
+        $(document).ready(function () {
+            var comp_tile = $(' competition-tile.item');
+
+            comp_tile.on({
+                mouseenter: function () {
+                    $(this).find('.actions').show()
+                },
+                mouseleave: function () {
+                    $(this).find('.actions').hide()
+                }
+            });
+        })
+    }*/
 </script>
 
 {% block extra_body %}
