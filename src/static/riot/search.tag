@@ -326,6 +326,7 @@
                 console.log("Loading default search results")
                 self.results = DEFAULT_SEARCH_RESULTS
                 self.showing_default_results = true
+                self.prepare_results()
                 self.update()
             } else {
                 // We have some search to perform, not just displaying default results
@@ -340,6 +341,18 @@
             delay(function () {
                 self.search()
             }, 250)
+        }
+
+        self.prepare_results = function () {
+            self.results.forEach(function (comp_result) {
+                var humanized_time = humanize_time(comp_result.current_phase_deadline)
+                comp_result.alert_icon = humanized_time < 0;
+                if (comp_result.alert_icon) {
+                    comp_result.pretty_deadline_time = 'Phase ended ' + Math.abs(humanized_time) + ' days ago'
+                } else {
+                    comp_result.pretty_deadline_time = humanized_time
+                }
+            })
         }
 
         self.clear_search = function () {
@@ -384,12 +397,12 @@
 
             CHAHUB.api.search(filters)
                 .done(function (data) {
-                    self.update({
-                        loading: false,
-                        results: data.results,
-                        suggestions: data.suggestions,
-                        showing_default_results: data.showing_default_results
-                    })
+                    self.loading = false
+                    self.suggestions = data.suggestions
+                    self.showing_default_results = data.showing_default_results
+                    self.results = data.results
+                    self.prepare_results()
+                    self.update()
                 })
         }
 
@@ -764,17 +777,19 @@
             </span>
                 <div class="mobile_labelwrap"></div>
                 <span class="participant_label ui right floated mini label tooltip" data-content="Participant count">
-                <i class="user icon"></i> {participant_count}
-            </span>
-                <span class="prize_label ui right floated mini label tooltip" data-content="Prize Amount"
-                      show="{prize}">
-                <i class="yellow trophy icon"></i> {prize}
-            </span>
-                <span class="deadline_label ui right floated red mini label tooltip"
+                    <i class="user icon"></i> {participant_count}
+                </span>
+                <span class="deadline_label ui right floated mini label tooltip {grey: !!alert_icon, red: !alert_icon}"
                       data-content="Deadline of the current phase"
                       show="{current_phase_deadline}">
-                <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
-            </span>
+                    <i show="{!alert_icon}" class="alarm icon"></i> {pretty_deadline_time}
+                </span>
+                <span class="deadline_label ui right floated mini green label" show="{!current_phase_deadline}">
+                    Never ends
+                </span>
+                <span class="prize_label ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
+                    <i class="yellow trophy icon"></i> {prize}
+                </span>
             </div>
         </div>
     </div>
@@ -856,6 +871,11 @@
             color #dfe3e5 !important
             right 0
             margin 0 2px !important
+            width 45px // May need to be increased to 50px if we expect competitions with more than 10k participants
+            text-align right
+
+            .icon
+                float left
 
         .prize_label
             background-color rgba(99, 84, 14, 0.68) !important

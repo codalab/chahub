@@ -82,6 +82,41 @@ function num_formatter(num, digits) {
     return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol
 }
 
+var time_difference_from_now = function (date_string) {
+    if (!!date_string) {
+        return luxon.DateTime.fromISO(date_string).diffNow([
+                "months",
+                "days",
+                "hours",
+                "minutes",
+                "milliseconds"
+            ]
+        ).toObject();
+    }
+}
+
+var humanize_time = function (date_string) {
+    if (!!date_string) {
+        var date_diff = time_difference_from_now(date_string)
+        var days_normalized = luxon.Duration.fromObject(date_diff).shiftTo('days').toObject();
+        if (date_diff.milliseconds < 0) {
+            return Math.round(days_normalized.days)
+        }
+
+        if (date_diff.months >= 2) {
+            return date_diff.months + ' months, ' + date_diff.days + ' days left'
+        } else if (date_diff.months >= 1) {
+            return date_diff.days + ' days left'
+        } else if (date_diff.days >= 7) {
+            return date_diff.days + ' days, ' + date_diff.hours + ' hours left'
+        } else if (date_diff.days >= 1) {
+            return date_diff.hours + ' hours, ' + date_diff.minutes + ' minutes left'
+        } else if (date_diff.hours >= 1) {
+            return date_diff.minutes + ' minutes left'
+        }
+    }
+};
+
 /* ----------------------------------------------------------------------------
  Dict helpers
  ----------------------------------------------------------------------------*/
