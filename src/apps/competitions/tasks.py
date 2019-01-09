@@ -26,7 +26,7 @@ def competition_download_image(competition_pk):
             image = Image.open(BytesIO(resp.content))
             width, height = image.size
             aspect = width / height
-            format = image.format
+            image_format = image.format
             unsimplified_ratio = "{0}/{1}".format(width, height)
             logger.info("Aspect ratio is: {0}, or: {1} unsimplified".format(aspect, unsimplified_ratio))
             new_width = 350
@@ -34,9 +34,9 @@ def competition_download_image(competition_pk):
             logger.info("New Width: {0}, New Height: {1}".format(new_width, new_height))
             image_rs = image.resize((new_width, new_height), Image.ANTIALIAS)
             thumb_io = BytesIO()
-            image_rs.save(thumb_io, format=format)
+            image_rs.save(thumb_io, format=image_format)
             new_image = ContentFile(thumb_io.getvalue())
-            comp.logo.save('logo_{0}.{1}'.format(comp.pk, format.lower()), new_image)
+            comp.logo.save('logo_{0}.{1}'.format(comp.pk, image_format.lower()), new_image)
             comp.save()
             logger.info("Image file saved for competition {}".format(comp.pk))
         else:
