@@ -3,6 +3,8 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
+from competitions.utils import competition_download_image
+
 
 class Competition(models.Model):
     # created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
@@ -30,6 +32,12 @@ class Competition(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.logo_url and not self.logo:
+            competition_download_image(self.pk)
+        super(Competition, self).save(force_insert=force_insert, force_update=force_update, using=using,
+                                      update_fields=update_fields)
 
     # def save(self, *args, **kwargs):
     #     # Send off our data
