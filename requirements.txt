@@ -27,4 +27,4 @@ tqdm==4.19.5
 django-debug-toolbar==1.9.1
 asgiref==2.3.2
 selenium==3.141.0
-Pillow
+Pillow==5.0.0

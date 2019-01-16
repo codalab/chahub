@@ -31,12 +31,11 @@ class Competition(models.Model):
     def __str__(self):
         return self.title
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    def save(self, **kwargs):
         if self.logo_url and not self.logo:
             from competitions.utils import competition_download_image
             competition_download_image(self.pk)
-        super(Competition, self).save(force_insert=force_insert, force_update=force_update, using=using,
-                                      update_fields=update_fields)
+        super().save(**kwargs)
 
     # def save(self, *args, **kwargs):
     #     # Send off our data
