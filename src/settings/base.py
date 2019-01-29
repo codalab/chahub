@@ -42,6 +42,7 @@ THIRD_PARTY_APPS = (
     'django_elasticsearch_dsl',
     'social_django',
     'django_extensions',
+    'storages',
 )
 OUR_APPS = (
     'api',
