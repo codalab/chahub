@@ -725,7 +725,7 @@
 
 <competition-tile onclick="{redirect_to_url}">
     <div class="ui tiny image">
-        <img src="{logo || URLS.STATIC('/img/img-wireframe.png')}" class="ui avatar image">
+        <img src="{logo || URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">
     </div>
     <div class="content">
         <div class="header">
