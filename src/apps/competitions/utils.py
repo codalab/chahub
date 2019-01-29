@@ -17,12 +17,9 @@ def competition_download_image(competition_pk):
         comp = Competition.objects.get(pk=competition_pk)
         logger.info("Competition found")
         if comp.logo_url == '/static/img/img-wireframe.png' or '':
-            # temp_url = f"http://localhost{comp.logo_url}"
             comp.logo_url = None
             comp.save()
             return
-        # else:
-        #     temp_url = comp.logo_url
         resp = requests.get(comp.logo_url)
         content_type = resp.headers.get('Content_Type')
         logger.info(
