@@ -751,7 +751,7 @@
         <i class="icon { yellow: locked, unlock: locked, lock: !locked }" onclick="{ lock_competition}"></i>
     </div>
     <div class="ui tiny image">
-        <img src="{logo || URLS.STATIC('/img/img-wireframe.png')}" class="ui avatar image">
+        <img src="{logo || URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">
     </div>
     <div class="content">
         <div class="header">

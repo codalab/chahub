@@ -15,7 +15,8 @@ class Competition(models.Model):
     prize = models.PositiveIntegerField(null=True, blank=True)
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True)
     remote_id = models.CharField(max_length=128, null=True, blank=True)
-    logo = models.URLField(null=True, blank=True, default="/static/img/img-wireframe.png")
+    logo_url = models.URLField(null=True, blank=True)
+    logo = models.ImageField(null=True, blank=True)
     url = models.URLField()
     admins = models.ManyToManyField('CompetitionParticipant', related_name='admins', blank=True)
     participant_count = models.IntegerField(default=0)
@@ -29,6 +30,12 @@ class Competition(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, **kwargs):
+        if self.logo_url and not self.logo:
+            from competitions.utils import competition_download_image
+            competition_download_image(self.pk)
+        super().save(**kwargs)
 
     # def save(self, *args, **kwargs):
     #     # Send off our data
