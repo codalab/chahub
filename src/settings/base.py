@@ -349,3 +349,9 @@ else:
     PublicStorage = StorageClass()
 
 CHAHUB_BASE_URL = os.environ.get('CHAHUB_BASE_URL', 'https://codalabchahub.herokuapp.com')
+
+# =============================================================================
+# Storage
+# =============================================================================
+
+LOGO_BASE_WIDTH = 350
