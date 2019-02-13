@@ -133,15 +133,15 @@
         </div>
         <div class="advanced search ui row">
             <div id="mobile_drop" class="sixteen wide mobile only column">
-                <button id="down_caret" class="ui icon button" onclick="{ toggle_search_options }"><i
-                        class="{up: display_search_options}{down: !display_search_options} caret icon"></i>Advanced
-                    Search
+                <button id="down_caret" class="ui icon button" onclick="{ toggle_search_options }">
+                    <i class="{up: display_search_options}{down: !display_search_options} caret icon"></i>
+                    Advanced Search
                 </button>
             </div>
         </div>
     </div>
-    <div id="mobile-grid" class="ui centered grid">
-        <div id="mobile" class="sixteen wide tablet eleven wide computer column">
+    <div id="mobile-grid" class="ui centered grid { fix-left: !show_stats }">
+        <div id="mobile" class="sixteen wide tablet twelve wide computer column">
             <div class="ui stacked">
                 <div class="ui warning message" show="{ results.length === 0 && !showing_default_results && !loading }">
                     <div class="header">
@@ -161,7 +161,11 @@
                 </div> -->
             </div>
         </div>
+        <div class="four wide right floated computer only column">
+            <show-stats></show-stats>
+        </div>
     </div>
+
     <script>
         var self = this
         self.results = []
@@ -407,6 +411,7 @@
             self.display_mode = mode
             self.update()
         }
+
     </script>
 
     <style type="text/stylus">
@@ -430,6 +435,9 @@
 
         #mobile-grid
             margin-top 0
+
+        .fix-left
+            margin-left 50px !important
 
         #remove_mobile
             @media screen and (max-width 645px)
@@ -710,6 +718,11 @@
         competition-tile
             padding-bottom 0 !important
 
+        h4.sub.header,
+        .ui.statistic > .label, .ui.statistics .statistic > .label,
+        .ui.statistic > .value, .ui.statistics .statistic > .value
+            color #808080 !important
+
         .content-desktop
             margin 15px auto !important
             max-width 1350px
@@ -936,6 +949,134 @@
 
     </style>
 </competition-tile>
+
+<show-stats>
+    <button id="stats-btn" onclick="{ stats_button_clicked }"
+            class="ui black big launch left attached fixed button">
+        <i class="icon {minus: !show_stats, 'chart bar': show_stats}"></i>
+        <span class="btn-text">Stats</span>
+    </button>
+    <div id="stat-card" show="{ !show_stats }" class="ui card">
+        <div class="content">
+            <div class="header">By the numbers...</div>
+        </div>
+        <div class="content">
+            <h4 class="ui sub header">Chahub brings together</h4>
+            <div class="ui small horizontal statistics">
+                <div class="statistic">
+                    <div class="value">
+                        { num_formatter(producer_stats.competition_count, 1) }
+                    </div>
+                    <div class="label">
+                        Competitions
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                        { num_formatter(producer_stats.dataset_count, 1) }
+                    </div>
+                    <div class="label">
+                        Datasets
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                        { num_formatter(producer_stats.participant_count, 1) }
+                    </div>
+                    <div class="label">
+                        Participants
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                        { num_formatter(producer_stats.submission_count, 1) }
+                    </div>
+                    <div class="label">
+                        Submissions
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                        { num_formatter(producer_stats.user_count, 1) }
+                    </div>
+                    <div class="label">
+                        Users
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                        { num_formatter(producer_stats.organizer_count, 1) }
+                    </div>
+                    <div class="label">
+                        Organizers
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var self = this
+        self.show_stats = false
+        self.producer_stats = {}
+
+        self.on("mount", function () {
+            $(".tooltip", self.root).popup()
+            self.get_general_stats()
+        })
+
+        self.get_general_stats = function () {
+            CHAHUB.api.get_producer_stats()
+                .done(function (data) {
+                    console.log("Received general stats")
+                    self.update({
+                        producer_stats: data,
+                    })
+                })
+        }
+
+        self.stats_button_clicked = function () {
+            self.show_stats = !self.show_stats
+            self.update()
+        }
+    </script>
+
+    <style type="text/stylus">
+        #stats-btn
+            position fixed
+            top 110px
+            right 0 !important
+            width 55px
+            height auto
+            white-space nowrap
+            overflow hidden
+            transition 0.3s width ease, 0.5s transform ease
+
+            .icon
+                margin 0 .5em 0 -0.45em
+
+        #stats-btn:hover
+            width 130px
+
+            .btn-text
+                opacity 1
+
+        .btn-text
+            position absolute
+            white-space nowrap
+            top auto
+            right 54px
+            opacity 0
+            -webkit-transition 0.23s opacity 0.2s
+            -moz-transition 0.23s opacity 0.2s
+            -o-transition 0.23s opacity 0.2s
+            -ms-transition 0.23s opacity 0.2s
+            transition 0.23s opacity 0.2s
+
+        #stat-card
+            z-index -1
+    </style>
+</show-stats>
 
 <competition-modal>
     <div class="ui modal competition-form" ref="modal">

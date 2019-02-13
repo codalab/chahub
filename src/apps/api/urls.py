@@ -4,6 +4,7 @@ from drf_yasg import openapi
 from rest_framework import permissions
 from rest_framework.routers import SimpleRouter
 
+from api.views import producers
 from api.views.producers import ProducerViewSet
 from .views import competitions, profiles, search
 
@@ -34,6 +35,7 @@ urlpatterns = [
     url('^', include(router.urls)),
     url('query/', search.SearchView.as_view()),
     url('my_profile/', profiles.GetMyProfile.as_view()),
+    url('producer_stats/', producers.producer_statistics, name='producer_stats'),
 
     url('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 

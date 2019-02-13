@@ -16,4 +16,4 @@ class ProducerPermission(permissions.BasePermission):
             # TODO, MAYBE: When a user.is_superuser calls this view maybe allow them to specify a producer ID to set as request.user here ????
             # This request.user hack is gross anyway. "Producer -> request.user" is extremely unintuitive. User should mean user, not producer
 
-            return isinstance(request.user, Producer)
+            return isinstance(request.user, Producer) or request.user.is_staff
