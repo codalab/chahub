@@ -30,18 +30,15 @@ class ProducerViewSet(ModelViewSet):
 
 @api_view(['GET'])
 def producer_statistics(request, version):
-    try:
-        stats = {
-            'competition_count': 0,
-            'dataset_count': 0,
-            'participant_count': 0,
-            'submission_count': 0,
-            'user_count': 0,
-            'organizer_count': 0,
-        }
-        for producer in Producer.objects.all():
-            for stat_key in stats.keys():
-                stats[stat_key] += getattr(producer, stat_key, 0)
-        return Response(data=stats, status=status.HTTP_200_OK)
-    except:
-        return Response(data={'status': 'error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    stats = {
+        'competition_count': 0,
+        'dataset_count': 0,
+        'participant_count': 0,
+        'submission_count': 0,
+        'user_count': 0,
+        'organizer_count': 0,
+    }
+    for producer in Producer.objects.all():
+        for stat_key in stats.keys():
+            stats[stat_key] += getattr(producer, stat_key, 0)
+    return Response(data=stats, status=status.HTTP_200_OK)
