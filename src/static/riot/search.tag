@@ -961,57 +961,22 @@
             <div class="header">By the numbers...</div>
         </div>
         <div class="content">
-            <h4 class="ui sub header">Chahub brings together</h4>
-            <div class="ui small horizontal statistics">
+            <h4 class="ui sub blue header">Chahub brings together</h4>
+            <div class="ui two column grid">
+                    <div class="column" each="{ stat in producer_stats }" no-reorder>
+            <div class="ui six tiny statistics">
                 <div class="statistic">
                     <div class="value">
-                        { num_formatter(producer_stats.competition_count, 1) }
+                        { stat.count }
                     </div>
                     <div class="label">
-                        Competitions
-                    </div>
-                </div>
-                <div class="statistic">
-                    <div class="value">
-                        { num_formatter(producer_stats.dataset_count, 1) }
-                    </div>
-                    <div class="label">
-                        Datasets
-                    </div>
-                </div>
-                <div class="statistic">
-                    <div class="value">
-                        { num_formatter(producer_stats.participant_count, 1) }
-                    </div>
-                    <div class="label">
-                        Participants
-                    </div>
-                </div>
-                <div class="statistic">
-                    <div class="value">
-                        { num_formatter(producer_stats.submission_count, 1) }
-                    </div>
-                    <div class="label">
-                        Submissions
-                    </div>
-                </div>
-                <div class="statistic">
-                    <div class="value">
-                        { num_formatter(producer_stats.user_count, 1) }
-                    </div>
-                    <div class="label">
-                        Users
-                    </div>
-                </div>
-                <div class="statistic">
-                    <div class="value">
-                        { num_formatter(producer_stats.organizer_count, 1) }
-                    </div>
-                    <div class="label">
-                        Organizers
+                        { stat.label }
                     </div>
                 </div>
             </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -1030,7 +995,14 @@
                 .done(function (data) {
                     console.log("Received general stats")
                     self.update({
-                        producer_stats: data,
+                        producer_stats: [
+                            {label: "Competitions", count: num_formatter(data.competition_count, 1)},
+                            {label: "Datasets", count: num_formatter(data.dataset_count, 1)},
+                            {label: "Participants", count: num_formatter(data.participant_count, 1)},
+                            {label: "Submissions", count: num_formatter(data.submission_count, 1)},
+                            {label: "Users", count: num_formatter(data.user_count, 1)},
+                            {label: "Organizers", count: num_formatter(data.organizer_count, 1)},
+                        ],
                     })
                 })
         }
@@ -1075,6 +1047,15 @@
 
         #stat-card
             z-index -1
+
+        .ui.card>.content, .ui.cards>.card>.content
+            padding-right 3em
+
+        .ui.card>.content>.sub.header
+            padding-bottom 10px
+
+        .ui.statistics>.statistic
+            flex 1 1 auto
     </style>
 </show-stats>
 
