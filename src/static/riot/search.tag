@@ -162,7 +162,7 @@
             </div>
         </div>
         <div class="four wide right floated computer only column">
-            <!--<show-stats></show-stats>-->
+            <show-stats></show-stats>
         </div>
     </div>
 
