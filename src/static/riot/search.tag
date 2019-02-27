@@ -791,7 +791,7 @@
                       show="{current_phase_deadline}">
                     <i show="{!alert_icon}" class="alarm icon"></i> {pretty_deadline_time}
                 </span>
-                <span class="deadline_label ui right floated mini green label" show="{!current_phase_deadline}">
+                <span class="deadline_label ui right floated mini label" show="{!current_phase_deadline}">
                     Never ends
                 </span>
                 <span class="prize_label ui right floated mini label tooltip" data-content="Prize Amount"
