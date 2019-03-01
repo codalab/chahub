@@ -15,6 +15,12 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 ALLOWED_HOSTS = ['*']
 USE_X_FORWARDED_HOST = True
 
+# Example ADMINS = example@test.com,example2@test.com
+ADMINS = os.environ.get('ADMINS')
+if ADMINS:
+    # turns above example into [('example', 'example@test.com'),('example2', 'example2@test.com')]
+    ADMINS = [(a.split('@')[0], a) for a in ADMINS.split(',')]
+
 SITE_ID = 1
 
 THIRD_PARTY_APPS = (
@@ -28,8 +34,7 @@ THIRD_PARTY_APPS = (
     'django.contrib.postgres',
 
     'rest_framework',
-    # 'rest_framework_swagger',
-    # 'drf_openapi',
+    'drf_yasg',
     'whitenoise',
     'channels',
     'oauth2_provider',
@@ -37,8 +42,10 @@ THIRD_PARTY_APPS = (
     'django_elasticsearch_dsl',
     'social_django',
     'django_extensions',
+    'storages',
 )
 OUR_APPS = (
+    'api',
     'competitions',
     'datasets',
     'pages',
@@ -50,8 +57,8 @@ OUR_APPS = (
 INSTALLED_APPS = THIRD_PARTY_APPS + OUR_APPS
 
 MIDDLEWARE = (
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -61,7 +68,7 @@ MIDDLEWARE = (
     'corsheaders.middleware.CorsMiddleware',
 )
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'base_urls'
 
 TEMPLATES = [
     {
@@ -85,7 +92,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'wsgi.application'
+ASGI_APPLICATION = 'sockets.routing.application'
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
@@ -93,7 +100,6 @@ USE_L10N = True
 USE_TZ = True
 SECRET_KEY = os.environ.get("SECRET_KEY", '(*0&74%ihg0ui+400+@%2pe92_c)x@w2m%6s(jhs^)dc$&&g93')
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_FINDERS = (
@@ -106,15 +112,29 @@ STATICFILES_DIRS = (
 MEDIA_URL = '/uploads/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
-EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
-
-DEFAULT_FROM_EMAIL = 'Do Not Reply <donotreply@imagefirstuniforms.com>'
-SERVER_EMAIL = 'Do Not Reply <donotreply@imagefirstuniforms.com>'
-
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 # AUTH_USER_MODEL = 'profiles.User'
 
+# =============================================================================
+# Logging
+# =============================================================================
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
+        },
+    },
+}
 
 # =============================================================================
 # Authentication
@@ -156,6 +176,19 @@ AUTH_USER_MODEL = 'profiles.User'
 SOCIAL_AUTH_USER_MODEL = 'profiles.User'
 
 
+# =========================================================================
+# Email
+# =========================================================================
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.sendgrid.net')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.environ.get('EMAIL_PORT', 587)
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', True)
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'CodaLab <noreply@chahub.org>')
+SERVER_EMAIL = os.environ.get('SERVER_EMAIL', 'noreply@chahub.org')
+
+
 # =============================================================================
 # Debugging
 # =============================================================================
@@ -164,13 +197,7 @@ DEBUG = os.environ.get('DEBUG', True)
 if DEBUG:
     INSTALLED_APPS += ('debug_toolbar',)
     MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
-    # SHOW_TOOLBAR_CALLBACK = f'{__name__}.show_toolbar_handler'
     INTERNAL_IPS = ('127.0.0.1',)
-
-
-# TODO: Fix this, not working... does not fire for some reason
-# def show_toolbar_handler(request):
-#     return True
 
 
 # =============================================================================
@@ -181,13 +208,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite'),
-        'CONN_MAX_AGE': 500,
     }
 }
 
 # Overridden by env settings
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+if os.environ.get('DATABASE_URL'):
+    # conn_max_age removed stop 'max connections reached problem'
+    # DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+    DATABASES['default'] = dj_database_url.config()
 
 
 # =============================================================================
@@ -214,6 +242,10 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
     'DEFAULT_VERSION': 'v1',
+
+    # Why did I add this?
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'PAGE_SIZE': 10,
 }
 REST_FRAMEWORK_EXTENSIONS = {
     'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60 * 15
@@ -227,8 +259,8 @@ FILE_UPLOAD_HANDLERS = ["django.core.files.uploadhandler.TemporaryFileUploadHand
 # =============================================================================
 CORS_ORIGIN_ALLOW_ALL = True
 
-if not DEBUG and CORS_ORIGIN_ALLOW_ALL:
-    raise Exception("Disable CORS_ORIGIN_ALLOW_ALL if we're not in DEBUG mode")
+# if not DEBUG and CORS_ORIGIN_ALLOW_ALL:
+#     raise Exception("Disable CORS_ORIGIN_ALLOW_ALL if we're not in DEBUG mode")
 
 OAUTH2_PROVIDER = {
     'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
@@ -317,3 +349,9 @@ else:
     PublicStorage = StorageClass()
 
 CHAHUB_BASE_URL = os.environ.get('CHAHUB_BASE_URL', 'https://codalabchahub.herokuapp.com')
+
+# =============================================================================
+# Storage
+# =============================================================================
+
+LOGO_BASE_WIDTH = 350

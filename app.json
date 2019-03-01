@@ -5,14 +5,12 @@
   },
   "env": {
     "USE_SSL": "True",
-    "CHANNEL_BACKEND": "asgi_redis.RedisChannelLayer"
+    "CHANNEL_BACKEND": "asgi_redis.RedisChannelLayer",
+    "GUNICORN_CMD_ARGS": "--workers=3",
+    "EMAIL_BACKEND": "django.core.mail.backends.smtp.EmailBackend"
   },
   "formation": {
     "web": {
-      "quantity": 1,
-      "size": "free"
-    },
-    "worker": {
       "quantity": 1,
       "size": "free"
     }
@@ -29,6 +27,9 @@
     }
   ],
   "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-pgbouncer"
+    },
     {
       "url": "heroku/nodejs"
     },

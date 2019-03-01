@@ -67,6 +67,7 @@ class CompetitionSerializer(WritableNestedModelSerializer):
     phases = PhaseSerializer(required=False, many=True)
     participants = CompetitionParticipantSerializer(many=True, read_only=True)
     admins = serializers.StringRelatedField(many=True, read_only=True)
+    logo = serializers.URLField()
 
     class Meta:
         model = Competition
@@ -115,19 +116,24 @@ class CompetitionSerializer(WritableNestedModelSerializer):
         return producer
 
     def create(self, validated_data):
+        """
+        This creates *AND* updates based on the combination of (remote_id, producer)
+        """
+        logo_url = validated_data.pop('logo') if validated_data.get('logo') else None
+        validated_data['logo_url'] = logo_url
         try:
+            # If we have an existing instance from this producer
+            # with the same remote_id, update it instead of making a new one
             temp_instance = Competition.objects.get(
                 remote_id=validated_data.get('remote_id'),
                 producer__id=self.context['producer'].id
             )
-        except ObjectDoesNotExist:
-            temp_instance = None
-        # If we have an existing instance from this producer
-        # with the same remote_id, update it instead of making a new one
-        if temp_instance:
+            if logo_url and logo_url != temp_instance.logo_url:
+                temp_instance.logo_url = None
+                temp_instance.logo = None
             return self.update(temp_instance, validated_data)
-        else:
-            new_instance = super(CompetitionSerializer, self).create(validated_data)
+        except ObjectDoesNotExist:
+            new_instance = super().create(validated_data)
             new_instance.producer = self.context['producer']
             new_instance.save()
             return new_instance

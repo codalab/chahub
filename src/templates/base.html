@@ -7,23 +7,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-    <title>Chahub</title>
+    <title>Chahub Beta</title>
+    <meta property="og:title" content="Chahub"/>
+    <meta property="og:description"
+          content="Chahub is a resource aggregator for machine learning researchers and students. We track many machine learning competitions, datasets, and competitors."/>
+    <meta property="og:image"
+          content="https://{{ request.get_host }}{% static 'img/chahub_logo_with_background.png' %}"/>
 
     <link rel="icon" type="image/ico" href="{% static 'img/favicon.ico' %}"/>
 
     <!-- JQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <!-- Riot -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/3.6.1/riot+compiler.min.js"></script>
+    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/3.11.2/riot+compiler.min.js"></script>#}
     <!-- Semantic -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
     <!-- Datepicker -->
     <link rel="stylesheet" href="{% static "css/calendar.min.css" %}">
     <script src="{% static "js/calendar.min.js" %}"></script>
-
     <script src="{% static "js/luxon.js" %}"></script>
 
+    <script src="{% static "js/riot.js" %}"></script>
     <script src="{% static "js/riot-route.js" %}"></script>
     <script src="{% static "js/jquery.form.serializer.js" %}"></script>
 
@@ -42,25 +50,77 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="{% static "js/reconnecting-websocket.min.js" %}"></script>
 
-
-
-
-
     {% block extra_head %}
     {% endblock %}
+
+    <style>
+        body {
+            background: rgb(255, 255, 255) !important;
+        }
+
+        body.pushable > .pusher {
+            background: rgb(255, 255, 255) !important;
+        }
+
+        .footer.pusher {
+            min-height: 0 !important;
+            z-index: unset;
+            background: rgb(255, 255, 255) !important;
+        }
+
+        #chafooter {
+            padding: 10px;
+            background: rgb(255, 255, 255) !important;
+        }
+
+        body.pushable > #chafooter {
+            background: rgb(255, 255, 255) !important;
+        }
+
+        body.pushable {
+            background: rgb(255, 255, 255) !important;
+        }
+
+        .ui.uncover.sidebar {
+            z-index: 3 !important;
+        }
+    </style>
 </head>
 <body>
 
+{% block content %}
 
-<div class="ui grid container">
-    <div class="row">
-        <div class="column wide sixteen">
-            {% block content %}
-            {% endblock %}
+{% endblock %}
+
+<div class="footer pusher">
+    <div id="chafooter" class="ui horizontal divided tiny list">
+        <div class="item">
+            <div class="content">
+                <i>Chahub is a service of <a href="http://codalab.org/">Codalab</a></i>
+            </div>
+        </div>
+        <div class="item">
+            <div class="content">
+                <a href="https://github.com/codalab/codalab/issues" target="_blank">Join us on Github</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="content">
+                <a href="{% url 'api:docs' 'v1' %}" target="_blank">API</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="content">
+                <a href="https://github.com/codalab/codalab/wiki/Project_About_CodaLab">About</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="content">
+                <a href="https://github.com/codalab/codalab/wiki/Privacy" target="_blank">Privacy and Terms</a>
+            </div>
         </div>
     </div>
 </div>
-
 
 <script>
     // Load in URLs or other django generated goodies
@@ -68,10 +128,38 @@
         assets: {
             header_particles: "{% static "particles/header.json" %}"
         },
-        API: "/api/v1/"
+        API: "/api/v1/",
+        STATIC: function (asset_url) {
+            return "{{ STATIC_URL }}" + asset_url
+        }
     }
-</script>
+    {% if producers %}
+        PRODUCERS = JSON.parse("{{ producers|escapejs }}")
+    {% endif %}
+    {% if default_search_results %}
+        DEFAULT_SEARCH_RESULTS = JSON.parse("{{ default_search_results|escapejs }}")
+    {% else %}
+        DEFAULT_SEARCH_RESULTS = undefined
+    {% endif %}
+    USER_AUTHENTICATED = "{{ user.is_authenticated }}" === "True"
 
+    USER_IS_SUPERUSER = "{{ user.is_superuser }}" === "True"
+
+    /*if ("{{ user.is_superuser }}" === "True") {
+        $(document).ready(function () {
+            var comp_tile = $(' competition-tile.item');
+
+            comp_tile.on({
+                mouseenter: function () {
+                    $(this).find('.actions').show()
+                },
+                mouseleave: function () {
+                    $(this).find('.actions').hide()
+                }
+            });
+        })
+    }*/
+</script>
 
 {% block extra_body %}
 {% endblock %}

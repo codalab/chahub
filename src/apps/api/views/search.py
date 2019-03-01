@@ -1,12 +1,9 @@
-from django.conf import settings
-from elasticsearch import Elasticsearch
-from elasticsearch_dsl import Search
-
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_extensions.cache.decorators import cache_response
 
 from api.caching import QueryParamsKeyConstructor
+from utils.search import get_search_client, get_results, get_default_search_results
 
 
 class SearchView(APIView):
@@ -21,37 +18,38 @@ class SearchView(APIView):
         end = request.GET.get('end_date')
         producer = request.GET.get('producer')
 
-        # Setup ES connection, excluding HTML text from our results
-        s = self._get_search_client()
+        # Do we even have anything to search with?
+        filters = (
+            query,
+            sorting,
+            date_flags,
+            start,
+            end,
+            producer,
+        )
+        empty_search = all(not f for f in filters)
+
+        # Get results and prepare them
         data = {
             "results": [],
             "showing_default_results": False,
         }
 
-        # Do search/filtering/sorting
-        s = self._search(s, query)
-        s = self._filter(s, date_flags, start, end, producer)
-        s = self._sort(s, sorting, query)
+        if not empty_search:
+            # Setup ES connection, excluding HTML text from our results
+            s = get_search_client()
 
-        # Get results and prepare them
-        results = s.execute()
+            # Do search/filtering/sorting
+            s = self._search(s, query)
+            s = self._filter(s, date_flags, start, end, producer)
+            s = self._sort(s, sorting, query)
+            data["results"] = get_results(s)
 
-        if not results:
+        if not data["results"] or empty_search:
             data["showing_default_results"] = True
-            s = self._get_search_client()
-            s = s.filter('term', published=True)
-            results = s.execute()
+            data["results"] = get_default_search_results()
 
-        data["results"] = [hit.to_dict() for hit in results]
         return Response(data)
-
-    def _get_search_client(self, size=35):
-        client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
-        s = Search(using=client)
-        s = s.extra(size=size)
-        s = s.filter('term', published=True)
-        s = s.source(excludes=["html_text"])
-        return s
 
     def _search(self, search, query):
         if query and query != ' ':
@@ -59,7 +57,7 @@ class SearchView(APIView):
                 "multi_match",
                 query=query,
                 type="best_fields",
-                fuzziness='auto',
+                fuzziness=1,
                 fields=["title^5", "description^3", "html_text^2", "created_by"]
             )
             # s = s.highlight('title', fragment_size=50)
@@ -97,13 +95,17 @@ class SearchView(APIView):
         return search
 
     def _sort(self, search, sorting, query):
-        # Make a positional list with `_score`(relevancy ranking of keyword search) as the first entry if we
-        # have a valid query. Then tack on whatever field we sort by
-        sort_params = ['_score'] if query else []
+        # Make an empty list for our parameters
+        sort_params = []
         if sorting == 'participant_count':
             sort_params.append('-participant_count')
         elif sorting == 'prize':
             sort_params.append('-prize')
         elif sorting == 'deadline':
             sort_params.append('current_phase_deadline')
+
+        # If '_score' is the first sort parameter, the participant sorting gets overridden and the results are mostly
+        # relevancy based instead of being based on whatever sorting we desire. Append it last here.
+        if query:
+            sort_params.append('_score')
         return search.sort(*sort_params)

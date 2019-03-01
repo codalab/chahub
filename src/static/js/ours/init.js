@@ -19,13 +19,25 @@ $(document).ready(function () {
     $('.ui.sidebar').sidebar('attach events', '.toc.item')
 
     // dropdowns (nice non-select ones!)
-    $(".ui.dropdown").dropdown()
+    //$(".ui.dropdown").dropdown()
 
 
     /*-----------------------------------------------------------------------------
      Sockets
      */
     var ws_protocol = window.location.protocol == 'https:' ? 'wss' : 'ws'
+
+
+
+
+
+
+
+
+
+
+    // @@@@@@@@ Disabling sockets for now! @@@@@@@@
+    /*
     var socket = new ReconnectingWebSocket(ws_protocol + '://' + window.location.host + '/')
 
 
@@ -57,6 +69,7 @@ $(document).ready(function () {
         CHAHUB.events.trigger(update_message.type, update_message.data)
     }
     window.socket = socket
+    */
 
 
     /*-----------------------------------------------------------------------------
@@ -67,5 +80,5 @@ $(document).ready(function () {
     riot.mount('*')
 
     // Make the URLs in riotjs router start from / instead of the default #
-    route.base('/')
+    // route.base('/')
 })

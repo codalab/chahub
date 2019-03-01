@@ -10,4 +10,10 @@ class ProducerSerializer(serializers.ModelSerializer):
             'name',
             'contact',
             'url',
+            'competition_count',
+            'dataset_count',
+            'participant_count',
+            'submission_count',
+            'user_count',
+            'organizer_count'
         )

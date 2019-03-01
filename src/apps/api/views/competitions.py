@@ -1,11 +1,7 @@
-from channels import Group
-from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, ListModelMixin
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.viewsets import GenericViewSet
 
 from api.authenticators import ProducerAuthentication
 from api.permissions import ProducerPermission
@@ -28,14 +24,25 @@ class CompetitionViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
         context['producer'] = self.request.user
         return context
 
+    def get_queryset(self):
+        # TODO: Filter out competitions that don't belong to this provider ???
+
+        qs = Competition.objects.all()
+        qs = qs.prefetch_related('phases', 'producer', 'admins', 'participants')
+        return qs
+
     def create(self, request, *args, **kwargs):
-        # We're only overriding this so that we can replace the response with an empty dictionary
-        # instead of sending back the huge HTML text
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response({}, status=status.HTTP_201_CREATED, headers=headers)
+        """Overriding this for the following reasons:
+
+        1. Returning the huge amount of HTML/etc. back by default by DRF was bad
+        2. We want to handle creating many competitions this way, and we do that
+           custom to make drf-writable-nested able to interpret everything easily"""
+        # Make the serializer take many competitions at once
+        for competition in request.data:
+            serializer = self.get_serializer(data=competition)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+        return Response({}, status=status.HTTP_201_CREATED)
 
 
 #

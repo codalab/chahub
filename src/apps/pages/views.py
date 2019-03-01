@@ -1,17 +1,27 @@
+import json
+
+from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.generic import TemplateView
 
-
-class HomeView(TemplateView):
-    template_name = 'pages/home.html'
+from producers.models import Producer
 
 
-class CompetitionListTestView(TemplateView):
-    template_name = 'pages/competition_list.html'
+class IndexView(TemplateView):
+    template_name = 'index.html'
 
+    def get_context_data(self, **kwargs):
+        """We want to send some content to the front page before the page loads,
+        we used to have to ping the API for producer data, for example"""
+        context = super().get_context_data(**kwargs)
+        context['producers'] = json.dumps(list(Producer.objects.all().values('id', 'name', 'url')))
 
-class CompetitionFormView(TemplateView):
-    template_name = 'competitions/form.html'
+        if not self.request.GET:
+            from api.views.search import get_default_search_results
+            context['default_search_results'] = json.dumps(get_default_search_results())
 
+        return context
 
-class SearchView(TemplateView):
-    template_name = 'search/form.html'
+    # I don't think we'll use this in an iframe, but just-in-case
+    @xframe_options_exempt
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)

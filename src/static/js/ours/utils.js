@@ -42,8 +42,8 @@ $.ajaxSetup({
 //
 // Like, if you're typing in an autocomplete field it should wait until you're
 // finished typing before it sends the request
-window.delay = (function () {
-    var timer = 0;
+window.delay = (function (timer) {
+    var timer = timer || 0;
     return function (callback, ms) {
         clearTimeout(timer);
         timer = setTimeout(callback, ms);
@@ -61,6 +61,61 @@ var pretty_date = function (date_string) {
         return ''
     }
 }
+
+function num_formatter(num, digits) {
+    var si = [
+        {value: 1, symbol: ""},
+        {value: 1E3, symbol: "K"},
+        {value: 1E6, symbol: "M"},
+        {value: 1E9, symbol: "G"},
+        {value: 1E12, symbol: "T"},
+        {value: 1E15, symbol: "P"},
+        {value: 1E18, symbol: "E"}
+    ]
+    var rx = /\.0+$|(\.[0-9]*[1-9])0+$/
+    var i
+    for (i = si.length - 1; i > 0; i--) {
+        if (num >= si[i].value) {
+            break
+        }
+    }
+    return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol
+}
+
+var time_difference_from_now = function (date_string) {
+    if (!!date_string) {
+        return luxon.DateTime.fromISO(date_string).diffNow([
+                "months",
+                "days",
+                "hours",
+                "minutes",
+                "milliseconds"
+            ]
+        ).toObject();
+    }
+}
+
+var humanize_time = function (date_string) {
+    if (!!date_string) {
+        var date_diff = time_difference_from_now(date_string)
+        var days_normalized = luxon.Duration.fromObject(date_diff).shiftTo('days').toObject();
+        if (date_diff.milliseconds < 0) {
+            return Math.round(days_normalized.days)
+        }
+
+        if (date_diff.months >= 2) {
+            return date_diff.months + ' months, ' + date_diff.days + ' days left'
+        } else if (date_diff.months >= 1) {
+            return date_diff.days + ' days left'
+        } else if (date_diff.days >= 7) {
+            return date_diff.days + ' days, ' + date_diff.hours + ' hours left'
+        } else if (date_diff.days >= 1) {
+            return date_diff.hours + ' hours, ' + date_diff.minutes + ' minutes left'
+        } else if (date_diff.hours >= 1) {
+            return date_diff.minutes + ' minutes left'
+        }
+    }
+};
 
 /* ----------------------------------------------------------------------------
  Dict helpers

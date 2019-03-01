@@ -1,7 +1,4 @@
-import json
-
 import datetime
-from channels import Group
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -16,21 +13,16 @@ class Competition(models.Model):
     description = models.TextField(null=True, blank=True)
     end = models.DateTimeField(null=True, blank=True)
     prize = models.PositiveIntegerField(null=True, blank=True)
-
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True)
-    remote_id = models.PositiveIntegerField(null=True, blank=True)
-
-    logo = models.URLField(null=True, blank=True, default="/static/img/img-wireframe.png")
+    remote_id = models.CharField(max_length=128, null=True, blank=True)
+    logo_url = models.URLField(null=True, blank=True)
+    logo = models.ImageField(null=True, blank=True)
     url = models.URLField()
-
     admins = models.ManyToManyField('CompetitionParticipant', related_name='admins', blank=True)
-
     participant_count = models.IntegerField(default=0)
     html_text = models.TextField(default="", null=True, blank=True)
-
     current_phase_deadline = models.DateTimeField(blank=True, null=True)
     is_active = models.BooleanField(default=False)
-
     published = models.BooleanField(default=False)
 
     class Meta:
@@ -38,6 +30,12 @@ class Competition(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, **kwargs):
+        if self.logo_url and not self.logo:
+            from competitions.utils import competition_download_image
+            competition_download_image(self.pk)
+        super().save(**kwargs)
 
     # def save(self, *args, **kwargs):
     #     # Send off our data
@@ -51,7 +49,8 @@ class Competition(models.Model):
     #     return super().save(*args, **kwargs)
 
     def get_current_phase_deadline(self):
-        # TODO: We may need to have a celery task that updates ElasticSearch deadlines. We can't do sorting by deadline when we get a bunch of competitions.
+        # TODO: We may need to have a celery task that updates ElasticSearch deadlines.
+        # We can't do sorting by deadline when we get a bunch of competitions.
         # Could save this as a property on the model
         for phase in self.phases.all():
             if phase.is_active and not phase.never_ends:

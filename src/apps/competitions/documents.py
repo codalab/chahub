@@ -1,4 +1,4 @@
-from django_elasticsearch_dsl import DocType, Index, StringField, fields
+from django_elasticsearch_dsl import DocType, Index, fields
 from .models import Competition
 
 competitions = Index('competitions')
@@ -30,7 +30,7 @@ class CompetitionDocument(DocType):
     class Meta:
         model = Competition
 
-    remote_id = fields.IntegerField()
+    remote_id = fields.TextField()
     created_by = fields.TextField()
     title = fields.TextField()
     description = fields.TextField()
@@ -41,6 +41,7 @@ class CompetitionDocument(DocType):
     prize = fields.IntegerField()
     current_phase_deadline = fields.DateField()
     url = fields.TextField()
+    logo_url = fields.TextField()
     logo = fields.TextField()
 
     start = fields.DateField()
@@ -61,3 +62,6 @@ class CompetitionDocument(DocType):
 
         # We are using a regular string for created_by right now, used to be a user instance
         # return instance.created_by.username if instance.created_by else ""
+
+    def prepare_logo(self, instance):
+        return instance.logo.url if instance.logo else ''

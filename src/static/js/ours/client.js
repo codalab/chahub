@@ -1,6 +1,4 @@
-var CHAHUB = {
-    URLS: []  // Set in base.html
-}
+var CHAHUB = {}
 
 CHAHUB.api = {
     request: function (method, url, data) {
@@ -13,14 +11,12 @@ CHAHUB.api = {
         })
     },
     search: function (filters) {
-        // get existing params and update them with the filters
-        var params = route.query()
-        Object.assign(params, filters)
-        // Remove any unused params so our URL stays pretty
-        dict_remove_empty_values(params)
         // Add query params to URL
-        route('/?' + $.param(params))
-        return CHAHUB.api.request('GET', URLS.API + "query/?" + $.param(params))
+        // This causes bugs with repeating the query params over and over, so we just replaceState now
+        //route('?' + $.param(params))
+        var url_params = `/?${$.param(filters)}`
+        window.history.replaceState("", "", url_params);
+        return CHAHUB.api.request('GET', URLS.API + "query" + url_params)
     },
     // ------------------------------------------------------------------------
     // Producers
@@ -35,5 +31,9 @@ CHAHUB.api = {
     },
     delete_producer: function(pk) {
         return CHAHUB.api.request('DELETE', URLS.API + "producers/" + pk + "/")
-    }
+    },
+    // Producer Stats
+    get_producer_stats: function() {
+        return CHAHUB.api.request('GET', URLS.API + "producer_stats/")
+    },
 }
