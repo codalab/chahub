@@ -1014,6 +1014,9 @@
     </script>
 
     <style type="text/stylus">
+        :scope
+            position fixed
+
         #stats-btn
             position fixed
             top 110px
