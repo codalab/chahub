@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chahub Profile</title>
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Semantic UI -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
+
+    <!-- Custom CSS/JS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
+</head>
+<body>
+
+<div id="particles-js"></div>
+
+<script>
+    particlesJS.load('particles-js', '{% static 'particles/particles-profile.json' %}', function () {
+        console.log('callback - particles.js config loaded');
+    });
+</script>
+
+<div class="ui container">
+    <div class="ui profile-segment segment">
+        <div class="ui container profile-header">
+            <img class="profile-img" src="https://via.placeholder.com/200/0000FF/808080" alt="placeholder">
+            <div class="profile-user">
+                Profile Name
+                <div class="profile-brief">
+                    A brief description of the user goes here
+                </div>
+                <div class="ui large button msg-btn">Message Me</div>
+                <span class="ui icon large button follow-btn"><i class="user icon"></i>Follow</span>
+            </div>
+
+        </div>
+        <!------------ HOME TAB ----------->
+        <div class="ui active home tab" data-tab="home">
+            <div class="ui equal width grid container">
+                <div class="bio profile-row">
+                    <div class="label">About Me</div>
+                    <div class="bio-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi cum distinctio
+                        dolorem ipsam laboriosam minima pariatur quos totam, ullam velit. Ad architecto cum cupiditate
+                        dignissimos eaque facere id ipsa, laborum odit omnis quae, saepe sint sunt? Fugit id illo
+                        provident?
+                        <br>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam amet beatae corporis delectus
+                        deserunt distinctio doloremque eos fuga harum, ipsum iste labore neque obcaecati reiciendis rem
+                        sapiente tempore vel! Autem consequatur dolor doloribus dolorum earum, esse excepturi in odit
+                        pariatur perspiciatis quam quia quidem, quos repellendus sit? Cumque dolores ea, ex fugiat magni
+                        mollitia nam nemo, officia repellat, veritatis vitae!
+                    </div>
+                </div>
+                <div class="education profile-row">
+                    <div class="label">My Education</div>
+                    <div class="name">Placeholder University</div>
+                    <div class="degree">Bachelor's Degree, Test Science</div>
+                    <div class="attended">2007-2011</div>
+                    <div class="awards">Graduated Cum Laude with degrees in Testing Things and Science. Made
+                        Dean's List for 2 consecutive years.
+                    </div>
+                </div>
+                <div class="organizations profile-row">
+                    <div class="label">My Organizations</div>
+                    <img class="ui middle aligned tiny image" src="https://via.placeholder.com/150">
+                    <div class="org-container first">
+                        <div class="name">Placeholder Organization</div>
+                        <div class="type">Placehold</div>
+                        <div class="description">Set out to placehold all of the organizations for this description
+                        </div>
+                    </div>
+                    <div class="ui divider"></div>
+                    <img class="ui top aligned tiny image" src="https://via.placeholder.com/150">
+                    <div class="org-container">
+                        <div class="name">Placeholder Organization</div>
+                        <div class="type">Placehold</div>
+                        <div class="description">Set out to placehold all of the organizations for this description
+                        </div>
+                    </div>
+                    <div class="ui divider"></div>
+                    <img class="ui top aligned tiny image" src="https://via.placeholder.com/150">
+                    <div class="org-container">
+                        <div class="name">Placeholder Organization</div>
+                        <div class="type">Placehold</div>
+                        <div class="description">Set out to placehold all of the organizations for this description
+                        </div>
+                    </div>
+                    <div class="ui divider"></div>
+                    <img class="ui top aligned tiny image" src="https://via.placeholder.com/150">
+                    <div class="org-container">
+                        <div class="name">Placeholder Organization</div>
+                        <div class="type">Placehold</div>
+                        <div class="description">Set out to placehold all of the organizations for this description
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+
+
+                </style>
+
+                <div class="meetups profile-row">
+                    <div class="label">Conferences and Meetups</div>
+                    <div class="name">Seattle Machine Learning Meetup</div>
+                    <div class="date">Every Wednesday</div>
+                    <div class="brief">We meet every Wednesday to discuss Machine Learning Protocols and the science
+                        behind them. All skill levels welcome to join!
+                    </div>
+                    <div class="website"><a href="#">Facebook Link</a></div>
+                    <div class="ui divider"></div>
+                    <div class="name">MLCon</div>
+                    <div class="date">03/12/2017 to 03/15/2017</div>
+                    <div class="brief">Yearly Machine Learning Convention in Portland, OR. Days filled with talks by
+                        leaders in the ML industry!
+                    </div>
+                    <div class="website"><a href="#">www.MLConvention.com</a></div>
+                </div>
+                <div class="datasets profile-row">
+                    <div class="label">My Datasets</div>
+                    <table class="ui striped table">
+                        <thead>
+                        <tr>
+                            <th>Dataset</th>
+                            <th>Date Uploaded</th>
+                            <th>Downloads</th>
+                            <th>File Size</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><a href="#"><i class="download icon"></i>Cars</a></td>
+                            <td>February 11, 2019</td>
+                            <td>18</td>
+                            <td>159mb</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#"><i class="download icon"></i>Numbers</a></td>
+                            <td>June 18, 2018</td>
+                            <td>104</td>
+                            <td>1.34gb</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#"><i class="download icon"></i>Animals</a></td>
+                            <td>January 11, 2018</td>
+                            <td>2011</td>
+                            <td>416mb</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!------------ ACCOUNT TAB ----------->
+        <div class="ui account tab" data-tab="account">
+            <div class="ui grid container">
+                <div class="sixteen wide column">
+                    <form class="ui form">
+                        <div class="field">
+                            <label>User Name</label>
+                            <div class="no-edit">username</div>
+                            <div class="field-description">You cannot change your user name. Other Chahub users will not
+                                see this name.
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="five wide field">
+                            <label>Display Name</label>
+                            <div class="field-current">
+                                <span onclick="editfield(event)" class="display-name active">displayname</span>
+                                <input class="hidden" type="text" name="display-name"
+                                       placeholder="displayname"></div>
+                            <div class="field-description">This is the name other Chahub users will see.</div>
+                        </div>
+                        <hr>
+                        <div class="five wide field">
+                            <label>Email Address</label>
+                            <div class="field-current">
+                                <span onclick="editfield(event)" class="email active">email</span>
+                                <input class="hidden" type="text" name="email"
+                                       placeholder="email">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="five wide field">
+                            <label>Email Preferences</label>
+                            <div class="ui checkbox">
+                                <input type="checkbox" tabindex="0" class="hidden">
+                                <label class="email-pref">Subcribe to Email List to receive notifications</label>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="delete">
+                            <a href="#">Delete account...</a>
+                        </div>
+                        <button class="ui button" type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
+
+<style>
+    /* HOME TAB */
+
+    .msg-btn {
+        margin-top: 25px !important;
+        border-radius: 0 !important;
+        border: #a5a5a5 solid 1px !important;
+        background-color: #e8e8e8 !important;
+        color: #6d6d6d !important;
+        font-family: "Roboto", sans-serif;
+        font-weight: 100 !important;
+    }
+
+    .follow-btn {
+        border-radius: 0 !important;
+        border: #a5a5a5 solid 1px !important;
+        background-color: #e8e8e8 !important;
+        color: #6d6d6d !important;
+        font-family: "Roboto", sans-serif;
+        font-weight: 100 !important;
+    }
+
+
+    .msg-btn:hover,
+    .follow-btn:hover {
+        background-color: #d6d6d6 !important;
+    }
+
+    .msg-btn:active,
+    .follow-btn:active {
+        background-color: #c6c6c6 !important;
+    }
+
+    .home .ui.icon.button > .icon,
+    .home .ui.icon.buttons .button > .icon {
+        margin: 0 .42857143em 0 -.21428571em !important;
+    }
+
+    .label {
+        font-size: 20px;
+        padding: 10px 0 !important;
+    }
+
+    /* ACCOUNT TAB */
+    .account .grid.container {
+        padding: 20px;
+    }
+
+    .ui.checkbox {
+        padding: 5px
+    }
+
+    .field-description {
+        padding: 5px 0;
+    }
+
+    .form.field {
+        padding: 10px;
+    }
+
+    .field-current {
+        color: grey;
+        font-size: 0.96em;
+        padding: 5px 12px 5px 0;
+        cursor: pointer;
+    }
+
+    .no-edit {
+        color: grey;
+        font-size: 0.96em;
+        padding: 5px 12px 5px 0;
+    }
+
+    .delete {
+        padding: 20px 0;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .icon.button {
+        display: inline-block;
+    }
+
+    .account .ui.green.button {
+        background-color: transparent;
+        color: #21ba45;
+        text-shadow: none;
+        background-image: none;
+    }
+
+    .profile-row {
+        width: 100%;
+        padding: 25px 200px !important;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('.secondary.pointing.menu .item').tab();
+        $('.ui.checkbox').checkbox();
+    })
+
+    function editfield() {
+        $(event.target)[0].classList.add('hidden')
+        $(event.target)[0].nextElementSibling.classList.remove('hidden')
+    }
+</script>
+
+{% endblock %}

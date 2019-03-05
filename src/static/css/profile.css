@@ -1,0 +1,125 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+.profile-segment {
+    position: absolute;
+    top: -201px;
+    padding: 0 !important;
+}
+
+.profile-img {
+    border-top-left-radius: 3px;
+}
+
+.profile-header {
+    border-bottom: 1px solid gainsboro;
+    height: 201px;
+    display: inline-flex !important;
+}
+
+.profile-user {
+    padding: 30px;
+    font-size: 30px;
+}
+
+.profile-brief {
+    color: #acacac;
+    font-size: 15px;
+    margin-top: 50px;
+}
+
+.column.segment {
+    margin: 20px !important;
+}
+
+.ui.card {
+    margin: 10px !important;
+}
+
+#particles-js {
+    height: 350px !important;
+    background-color: #2a4457 !important;
+}
+
+.home .grid.container {
+    justify-content: center;
+}
+
+.home .grid.container .ui.card {
+    margin-top: 20px !important;
+    width: 31%;
+}
+
+/*---------- EDUCATION ----------*/
+
+.education .name {
+    font-size: 1.2em;
+    font-weight: 600;
+    line-height: 1.2em;
+}
+
+.education .degree {
+    font-size: 1.16em;
+    font-weight: 200;
+}
+
+.education .attended {
+    color: rgba(0, 0, 0, .6);
+    margin: 5px 0;
+}
+
+.education .awards {
+    color: rgba(0, 0, 0, .6);
+}
+
+/*---------- MEETUPS/CONVENTIONS ----------*/
+
+.meetups .name {
+    font-size: 1.2em;
+    font-weight: 600;
+    line-height: 1.2em;
+}
+
+.meetups .date {
+    color: rgba(0, 0, 0, .6);
+    margin: 5px 0;
+}
+
+.meetups .brief {
+    color: rgba(0, 0, 0, .6);
+}
+
+.meetups .website {
+    padding: 10px 0;
+}
+
+/*---------- ORGANIZATIONS ----------*/
+
+
+.org-container {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.org-container.first {
+    position: relative !important;
+    top: 20px !important;
+}
+
+.org-container .name {
+    font-size: 1.2em;
+    font-weight: 600;
+    line-height: 1.2em;
+}
+
+.org-container .type {
+    color: rgba(0, 0, 0, .6);
+    margin: 5px 0;
+}
+
+.org-container .description {
+    color: rgba(0, 0, 0, .6);
+}

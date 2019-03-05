@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from django.contrib.auth import get_user_model
@@ -21,3 +22,7 @@ def sign_up(request):
     else:
         form = ChahubCreationForm()
         return render(request, 'registration/signup.html', {'form': form})
+
+
+def profile(request, id):
+    return render(request, 'profiles/profile.html', {'User': User.objects.get(id=id)})
