@@ -963,17 +963,17 @@
         <div class="content">
             <h4 class="ui sub blue header">Chahub brings together</h4>
             <div class="ui two column grid">
-                    <div class="column" each="{ stat in producer_stats }" no-reorder>
-            <div class="ui six tiny statistics">
-                <div class="statistic">
-                    <div class="value">
-                        { stat.count }
+                <div class="column" each="{ stat in producer_stats }" no-reorder>
+                    <div class="ui six tiny statistics">
+                        <div class="statistic">
+                            <div class="value">
+                                { stat.count }
+                            </div>
+                            <div class="label">
+                                { stat.label }
+                            </div>
+                        </div>
                     </div>
-                    <div class="label">
-                        { stat.label }
-                    </div>
-                </div>
-            </div>
                 </div>
             </div>
 
@@ -1051,13 +1051,13 @@
         #stat-card
             z-index -1
 
-        .ui.card>.content, .ui.cards>.card>.content
+        .ui.card > .content, .ui.cards > .card > .content
             padding-right 3em
 
-        .ui.card>.content>.sub.header
+        .ui.card > .content > .sub.header
             padding-bottom 10px
 
-        .ui.statistics>.statistic
+        .ui.statistics > .statistic
             flex 1 1 auto
     </style>
 </show-stats>

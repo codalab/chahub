@@ -1,12 +1,10 @@
 html, body {
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9;
 }
 
 .profile-segment {
-    position: absolute;
-    top: -201px;
+    margin-top: -201px !important;
     padding: 0 !important;
 }
 
@@ -40,7 +38,7 @@ html, body {
 }
 
 #particles-js {
-    height: 350px !important;
+    height: 280px !important;
     background-color: #2a4457 !important;
 }
 
@@ -122,4 +120,133 @@ html, body {
 
 .org-container .description {
     color: rgba(0, 0, 0, .6);
+}
+
+#brand_logo {
+    position: absolute;
+    width: 280px;
+    opacity: .85;
+    left: 0;
+    cursor: pointer;
+    filter: brightness(0) invert(1);
+}
+
+/*.upload-img {*/
+    /*border: 1px dashed gainsboro;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    /*display: flex;*/
+    /*cursor: pointer;*/
+/*}*/
+
+/*.upload-img i {*/
+    /*color: gray;*/
+    /*width: 16px;*/
+    /*height: 16px;*/
+    /*margin: 0;*/
+/*}*/
+
+.edit .form {
+    width: 100%;
+}
+
+.submit-container {
+    margin: 30px auto;
+    text-align: center;
+}
+
+/* HOME TAB */
+
+.msg-btn {
+    margin-top: 25px !important;
+    border-radius: 0 !important;
+    border: #a5a5a5 solid 1px !important;
+    background-color: #e8e8e8 !important;
+    color: #6d6d6d !important;
+    font-family: "Roboto", sans-serif;
+    font-weight: 100 !important;
+}
+
+.follow-btn {
+    border-radius: 0 !important;
+    border: #a5a5a5 solid 1px !important;
+    background-color: #e8e8e8 !important;
+    color: #6d6d6d !important;
+    font-family: "Roboto", sans-serif;
+    font-weight: 100 !important;
+}
+
+
+.msg-btn:hover,
+.follow-btn:hover {
+    background-color: #d6d6d6 !important;
+}
+
+.msg-btn:active,
+.follow-btn:active {
+    background-color: #c6c6c6 !important;
+}
+
+.home .ui.icon.button > .icon,
+.home .ui.icon.buttons .button > .icon {
+    margin: 0 .42857143em 0 -.21428571em !important;
+}
+
+.label {
+    font-size: 20px;
+    padding: 10px 0 !important;
+}
+
+/* ACCOUNT TAB */
+.account .grid.container {
+    padding: 20px;
+}
+
+.ui.checkbox {
+    padding: 5px
+}
+
+.field-description {
+    padding: 5px 0;
+}
+
+.form.field {
+    padding: 10px;
+}
+
+.field-current {
+    color: grey;
+    font-size: 0.96em;
+    padding: 5px 12px 5px 0;
+    cursor: pointer;
+}
+
+.no-edit {
+    color: grey;
+    font-size: 0.96em;
+    padding: 5px 12px 5px 0;
+}
+
+.delete {
+    padding: 20px 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.icon.button {
+    display: inline-block;
+}
+
+.account .ui.green.button {
+    background-color: transparent;
+    color: #21ba45;
+    text-shadow: none;
+    background-image: none;
+}
+
+.profile-row {
+    width: 100%;
+    padding: 25px 200px !important;
 }

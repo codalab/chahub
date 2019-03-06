@@ -1,166 +1,339 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Chahub Profile</title>
-    <!-- jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Chahub Profile</title>
+        <!-- jQuery -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-    <!-- Semantic UI -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
+        <!-- Semantic UI -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
 
-    <!-- Custom CSS/JS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+        <!-- Custom CSS/JS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
+        <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
-</head>
-<body>
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
+    </head>
+    <body>
 
-<div id="particles-js"></div>
+    <div id="particles-js">
+        <a href="/"><img id="brand_logo" src="{% static 'img/temp_chahub_logo_beta.png' %}"></a>
+    </div>
 
-<script>
-    particlesJS.load('particles-js', '{% static 'particles/particles-profile.json' %}', function () {
-        console.log('callback - particles.js config loaded');
-    });
-</script>
+    <style>
 
-<div class="ui container">
-    <div class="ui profile-segment segment">
-        <div class="ui container profile-header">
-            <img class="profile-img" src="https://via.placeholder.com/200/0000FF/808080" alt="placeholder">
-            <div class="profile-user">
-                Profile Name
-                <div class="profile-brief">
-                    A brief description of the user goes here
+    </style>
+
+    <script>
+        particlesJS.load('particles-js', '{% static 'particles/particles-profile.json' %}', function () {
+            console.log('callback - particles.js config loaded');
+        });
+    </script>
+
+    <div class="ui container">
+        <div class="ui profile-segment segment">
+            <div class="ui container profile-header">
+                <img class="profile-img" src="https://via.placeholder.com/200/0000FF/808080" alt="placeholder">
+                <div class="profile-user">
+                    Profile Name
+                    <div class="profile-brief">
+                        A brief description of the user goes here
+                    </div>
+                    <div class="ui large button msg-btn">Message Me</div>
+                    <span class="ui icon large button follow-btn"><i class="user icon"></i>Follow</span>
                 </div>
-                <div class="ui large button msg-btn">Message Me</div>
-                <span class="ui icon large button follow-btn"><i class="user icon"></i>Follow</span>
+
+            </div>
+            <div class="ui secondary pointing menu">
+                <a class="active item" data-tab="home">
+                    Home
+                </a>
+                <a class="item" data-tab="edit">
+                    Add/Edit
+                </a>
+            </div>
+            <!------------ HOME TAB ----------->
+            <div class="ui active home tab" data-tab="home">
+                <div class="ui equal width grid container">
+                    <div class="bio profile-row">
+                        <div class="label">About Me</div>
+                        <div class="bio-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi cum
+                            distinctio
+                            dolorem ipsam laboriosam minima pariatur quos totam, ullam velit. Ad architecto cum
+                            cupiditate
+                            dignissimos eaque facere id ipsa, laborum odit omnis quae, saepe sint sunt? Fugit id illo
+                            provident?
+                            <br>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam amet beatae corporis
+                            delectus
+                            deserunt distinctio doloremque eos fuga harum, ipsum iste labore neque obcaecati reiciendis
+                            rem
+                            sapiente tempore vel! Autem consequatur dolor doloribus dolorum earum, esse excepturi in
+                            odit
+                            pariatur perspiciatis quam quia quidem, quos repellendus sit? Cumque dolores ea, ex fugiat
+                            magni
+                            mollitia nam nemo, officia repellat, veritatis vitae!
+                        </div>
+                    </div>
+                    <div class="education profile-row">
+                        <div class="label">My Education</div>
+                        <div class="name">Placeholder University</div>
+                        <div class="degree">Bachelor's Degree, Test Science</div>
+                        <div class="attended">2007-2011</div>
+                        <div class="awards">Graduated Cum Laude with degrees in Testing Things and Science. Made
+                            Dean's List for 2 consecutive years.
+                        </div>
+                    </div>
+                    <div class="organizations profile-row">
+                        <div class="label">My Organizations</div>
+                        <img class="ui middle aligned tiny image" src="https://via.placeholder.com/150">
+                        <div class="org-container first">
+                            <div class="name">Placeholder Organization</div>
+                            <div class="type">Placehold</div>
+                            <div class="description">Set out to placehold all of the organizations for this description
+                            </div>
+                        </div>
+                        <div class="ui divider"></div>
+                        <img class="ui top aligned tiny image" src="https://via.placeholder.com/150">
+                        <div class="org-container">
+                            <div class="name">Placeholder Organization</div>
+                            <div class="type">Placehold</div>
+                            <div class="description">Set out to placehold all of the organizations for this description
+                            </div>
+                        </div>
+                        <div class="ui divider"></div>
+                        <img class="ui top aligned tiny image" src="https://via.placeholder.com/150">
+                        <div class="org-container">
+                            <div class="name">Placeholder Organization</div>
+                            <div class="type">Placehold</div>
+                            <div class="description">Set out to placehold all of the organizations for this description
+                            </div>
+                        </div>
+                        <div class="ui divider"></div>
+                        <img class="ui top aligned tiny image" src="https://via.placeholder.com/150">
+                        <div class="org-container">
+                            <div class="name">Placeholder Organization</div>
+                            <div class="type">Placehold</div>
+                            <div class="description">Set out to placehold all of the organizations for this description
+                            </div>
+                        </div>
+                    </div>
+                    <div class="meetups profile-row">
+                        <div class="label">Conferences and Meetups</div>
+                        <div class="name">Seattle Machine Learning Meetup</div>
+                        <div class="date">Every Wednesday</div>
+                        <div class="brief">We meet every Wednesday to discuss Machine Learning Protocols and the science
+                            behind them. All skill levels welcome to join!
+                        </div>
+                        <div class="website"><a href="#">Facebook Link</a></div>
+                        <div class="ui divider"></div>
+                        <div class="name">MLCon</div>
+                        <div class="date">03/12/2017 to 03/15/2017</div>
+                        <div class="brief">Yearly Machine Learning Convention in Portland, OR. Days filled with talks by
+                            leaders in the ML industry!
+                        </div>
+                        <div class="website"><a href="#">www.MLConvention.com</a></div>
+                    </div>
+                    <div class="datasets profile-row">
+                        <div class="label">My Datasets</div>
+                        <table class="ui striped table">
+                            <thead>
+                            <tr>
+                                <th>Dataset</th>
+                                <th>Date Uploaded</th>
+                                <th>Downloads</th>
+                                <th>File Size</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><a href="#"><i class="download icon"></i>Cars</a></td>
+                                <td>February 11, 2019</td>
+                                <td>18</td>
+                                <td>159mb</td>
+                            </tr>
+                            <tr>
+                                <td><a href="#"><i class="download icon"></i>Numbers</a></td>
+                                <td>June 18, 2018</td>
+                                <td>104</td>
+                                <td>1.34gb</td>
+                            </tr>
+                            <tr>
+                                <td><a href="#"><i class="download icon"></i>Animals</a></td>
+                                <td>January 11, 2018</td>
+                                <td>2011</td>
+                                <td>416mb</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
-        </div>
-        <!------------ HOME TAB ----------->
-        <div class="ui active home tab" data-tab="home">
-            <div class="ui equal width grid container">
-                <div class="bio profile-row">
-                    <div class="label">About Me</div>
-                    <div class="bio-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi cum distinctio
-                        dolorem ipsam laboriosam minima pariatur quos totam, ullam velit. Ad architecto cum cupiditate
-                        dignissimos eaque facere id ipsa, laborum odit omnis quae, saepe sint sunt? Fugit id illo
-                        provident?
-                        <br>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam amet beatae corporis delectus
-                        deserunt distinctio doloremque eos fuga harum, ipsum iste labore neque obcaecati reiciendis rem
-                        sapiente tempore vel! Autem consequatur dolor doloribus dolorum earum, esse excepturi in odit
-                        pariatur perspiciatis quam quia quidem, quos repellendus sit? Cumque dolores ea, ex fugiat magni
-                        mollitia nam nemo, officia repellat, veritatis vitae!
-                    </div>
-                </div>
-                <div class="education profile-row">
-                    <div class="label">My Education</div>
-                    <div class="name">Placeholder University</div>
-                    <div class="degree">Bachelor's Degree, Test Science</div>
-                    <div class="attended">2007-2011</div>
-                    <div class="awards">Graduated Cum Laude with degrees in Testing Things and Science. Made
-                        Dean's List for 2 consecutive years.
-                    </div>
-                </div>
-                <div class="organizations profile-row">
-                    <div class="label">My Organizations</div>
-                    <img class="ui middle aligned tiny image" src="https://via.placeholder.com/150">
-                    <div class="org-container first">
-                        <div class="name">Placeholder Organization</div>
-                        <div class="type">Placehold</div>
-                        <div class="description">Set out to placehold all of the organizations for this description
+            <!------------ EDIT TAB ----------->
+            <div class="ui edit tab" data-tab="edit">
+                <div class="ui equal width grid container">
+                    <div class="ui form">
+                        <div class="bio profile-row">
+                            <div class="label">About Me</div>
+                            <div class="bio-edit">
+                                <div class="field">
+                                    <textarea></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="education profile-row">
+                            <div class="label">My Education</div>
+                            <div class="name-edit">
+                                <div class="field">
+                                    <label>Institution</label>
+                                    <input type="text">
+                                </div>
+                            </div>
+                            <div class="degree-edit">
+                                <div class="field">
+                                    <label>Degree and Field of Study</label>
+                                    <input type="text">
+                                </div>
+                            </div>
+                            <div class="attended-edit">
+                                <div class="field">
+                                    <label>Years Attended</label>
+                                    <input type="text">
+                                </div>
+                            </div>
+                            <div class="awards-edit">
+                                <div class="field">
+                                    <label>Awards</label>
+                                    <input type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="organizations profile-row">
+                            <div class="label">My Organizations</div>
+                            <div class="field">
+                                <label>Image</label>
+
+                                <input class="upload-img ui input" type="file" onchange="previewFile()"/>
+                                <img id="img-preview" src="" alt="Image preview...">
+                                <style>
+                                    #img-preview {
+                                        margin-top: 5px;
+                                        width: 100px;
+                                        height: 100px;
+                                        border: 1px dashed gainsboro;
+                                        display: none;
+                                    }
+                                </style>
+
+                            </div>
+                            <div class="org-container-edit">
+                                <div class="name">
+                                    <div class="field">
+                                        <label>Name</label>
+                                        <input type="text">
+                                    </div>
+                                </div>
+                                <div class="type">
+                                    <div class="field">
+                                        <label>Type</label>
+                                        <input type="text">
+                                    </div>
+                                </div>
+                                <div class="description">
+                                    <div class="field">
+                                        <label>Short Description</label>
+                                        <input type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="meetups-edit profile-row">
+                            <div class="label">Conferences and Meetups</div>
+                            <div class="name">
+                                <div class="field">
+                                    <label>Name</label>
+                                    <input type="text">
+                                </div>
+                            </div>
+                            <div class="date">
+                                <div class="field">
+                                    <label>Dates</label>
+                                    <input type="text">
+                                </div>
+                            </div>
+                            <div class="brief">
+                                <div class="field">
+                                    <label>Short Description</label>
+                                    <input type="text">
+                                </div>
+                            </div>
+                            <div class="website">
+                                <div class="field">
+                                    <label>Website</label>
+                                    <input type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="datasets profile-row">
+                            <div class="label">My Datasets</div>
+                            <table class="ui striped table">
+                                <thead>
+                                <tr>
+                                    <th>Dataset</th>
+                                    <th>Date Uploaded</th>
+                                    <th>Downloads</th>
+                                    <th>File Size</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><a href="#"><i class="upload icon"></i>Upload Dataset</a></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="submit-container">
+                            <div class="ui submit button">Submit</div>
                         </div>
                     </div>
-                    <div class="ui divider"></div>
-                    <img class="ui top aligned tiny image" src="https://via.placeholder.com/150">
-                    <div class="org-container">
-                        <div class="name">Placeholder Organization</div>
-                        <div class="type">Placehold</div>
-                        <div class="description">Set out to placehold all of the organizations for this description
-                        </div>
-                    </div>
-                    <div class="ui divider"></div>
-                    <img class="ui top aligned tiny image" src="https://via.placeholder.com/150">
-                    <div class="org-container">
-                        <div class="name">Placeholder Organization</div>
-                        <div class="type">Placehold</div>
-                        <div class="description">Set out to placehold all of the organizations for this description
-                        </div>
-                    </div>
-                    <div class="ui divider"></div>
-                    <img class="ui top aligned tiny image" src="https://via.placeholder.com/150">
-                    <div class="org-container">
-                        <div class="name">Placeholder Organization</div>
-                        <div class="type">Placehold</div>
-                        <div class="description">Set out to placehold all of the organizations for this description
-                        </div>
-                    </div>
-                </div>
-
-                <style>
-
-
-                </style>
-
-                <div class="meetups profile-row">
-                    <div class="label">Conferences and Meetups</div>
-                    <div class="name">Seattle Machine Learning Meetup</div>
-                    <div class="date">Every Wednesday</div>
-                    <div class="brief">We meet every Wednesday to discuss Machine Learning Protocols and the science
-                        behind them. All skill levels welcome to join!
-                    </div>
-                    <div class="website"><a href="#">Facebook Link</a></div>
-                    <div class="ui divider"></div>
-                    <div class="name">MLCon</div>
-                    <div class="date">03/12/2017 to 03/15/2017</div>
-                    <div class="brief">Yearly Machine Learning Convention in Portland, OR. Days filled with talks by
-                        leaders in the ML industry!
-                    </div>
-                    <div class="website"><a href="#">www.MLConvention.com</a></div>
-                </div>
-                <div class="datasets profile-row">
-                    <div class="label">My Datasets</div>
-                    <table class="ui striped table">
-                        <thead>
-                        <tr>
-                            <th>Dataset</th>
-                            <th>Date Uploaded</th>
-                            <th>Downloads</th>
-                            <th>File Size</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><a href="#"><i class="download icon"></i>Cars</a></td>
-                            <td>February 11, 2019</td>
-                            <td>18</td>
-                            <td>159mb</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#"><i class="download icon"></i>Numbers</a></td>
-                            <td>June 18, 2018</td>
-                            <td>104</td>
-                            <td>1.34gb</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#"><i class="download icon"></i>Animals</a></td>
-                            <td>January 11, 2018</td>
-                            <td>2011</td>
-                            <td>416mb</td>
-                        </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
+
+        <script>
+            function previewFile() {
+                var preview = document.getElementById('img-preview'); //selects the query named img
+                var file = document.querySelector('input[type=file]').files[0]; //sames as here
+                var reader = new FileReader();
+
+                reader.onloadend = function () {
+                    preview.src = reader.result;
+
+                }
+
+                if (file) {
+                    reader.readAsDataURL(file); //reads the data as a URL
+                    $('#img-preview').css('display', 'block')
+                    $('#img-preview').css('border', 'dashed 1px gainsboro')
+                    $('#img-preview').css('padding', '5px')
+                } else {
+                    preview.src = "";
+                    $('#img-preview').css('display', 'hidden')
+                }
+            }
+
+            previewFile();  //calls the function named previewFile()
+        </script>
 
         <!------------ ACCOUNT TAB ----------->
         <div class="ui account tab" data-tab="account">
@@ -170,7 +343,8 @@
                         <div class="field">
                             <label>User Name</label>
                             <div class="no-edit">username</div>
-                            <div class="field-description">You cannot change your user name. Other Chahub users will not
+                            <div class="field-description">You cannot change your user name. Other Chahub users will
+                                not
                                 see this name.
                             </div>
                         </div>
@@ -210,120 +384,19 @@
             </div>
         </div>
     </div>
-</div>
+    </body>
+    </html>
 
-</body>
+    <script>
+        $(document).ready(function () {
+            $('.secondary.pointing.menu .item').tab();
+            $('.ui.checkbox').checkbox();
+        })
 
-</html>
-
-<style>
-    /* HOME TAB */
-
-    .msg-btn {
-        margin-top: 25px !important;
-        border-radius: 0 !important;
-        border: #a5a5a5 solid 1px !important;
-        background-color: #e8e8e8 !important;
-        color: #6d6d6d !important;
-        font-family: "Roboto", sans-serif;
-        font-weight: 100 !important;
-    }
-
-    .follow-btn {
-        border-radius: 0 !important;
-        border: #a5a5a5 solid 1px !important;
-        background-color: #e8e8e8 !important;
-        color: #6d6d6d !important;
-        font-family: "Roboto", sans-serif;
-        font-weight: 100 !important;
-    }
-
-
-    .msg-btn:hover,
-    .follow-btn:hover {
-        background-color: #d6d6d6 !important;
-    }
-
-    .msg-btn:active,
-    .follow-btn:active {
-        background-color: #c6c6c6 !important;
-    }
-
-    .home .ui.icon.button > .icon,
-    .home .ui.icon.buttons .button > .icon {
-        margin: 0 .42857143em 0 -.21428571em !important;
-    }
-
-    .label {
-        font-size: 20px;
-        padding: 10px 0 !important;
-    }
-
-    /* ACCOUNT TAB */
-    .account .grid.container {
-        padding: 20px;
-    }
-
-    .ui.checkbox {
-        padding: 5px
-    }
-
-    .field-description {
-        padding: 5px 0;
-    }
-
-    .form.field {
-        padding: 10px;
-    }
-
-    .field-current {
-        color: grey;
-        font-size: 0.96em;
-        padding: 5px 12px 5px 0;
-        cursor: pointer;
-    }
-
-    .no-edit {
-        color: grey;
-        font-size: 0.96em;
-        padding: 5px 12px 5px 0;
-    }
-
-    .delete {
-        padding: 20px 0;
-    }
-
-    .hidden {
-        display: none !important;
-    }
-
-    .icon.button {
-        display: inline-block;
-    }
-
-    .account .ui.green.button {
-        background-color: transparent;
-        color: #21ba45;
-        text-shadow: none;
-        background-image: none;
-    }
-
-    .profile-row {
-        width: 100%;
-        padding: 25px 200px !important;
-    }
-</style>
-
-<script>
-    $(document).ready(function () {
-        $('.secondary.pointing.menu .item').tab();
-        $('.ui.checkbox').checkbox();
-    })
-
-    function editfield() {
-        $(event.target)[0].classList.add('hidden')
-        $(event.target)[0].nextElementSibling.classList.remove('hidden')
-    }
-</script>
+        function editfield() {
+            $(event.target)[0].classList.add('hidden')
+            $(event.target)[0].nextElementSibling.classList.remove('hidden')
+        }
+    </script>
 
 {% endblock %}
