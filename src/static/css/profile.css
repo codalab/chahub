@@ -131,21 +131,6 @@ html, body {
     filter: brightness(0) invert(1);
 }
 
-/*.upload-img {*/
-    /*border: 1px dashed gainsboro;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
-    /*display: flex;*/
-    /*cursor: pointer;*/
-/*}*/
-
-/*.upload-img i {*/
-    /*color: gray;*/
-    /*width: 16px;*/
-    /*height: 16px;*/
-    /*margin: 0;*/
-/*}*/
-
 .edit .form {
     width: 100%;
 }
