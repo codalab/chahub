@@ -380,6 +380,10 @@
             // We may not have a producer so grab preset one from page load if so
             filters.producer = $(self.refs.producer_filter).dropdown('get value')
 
+            // TODO: Set this from input. Spaces are alright, they will get stripped.
+            // Just a string list. Should probably pass this as a JSON string list, and decode on the other side?
+            filters.object_types = 'users, competitions'
+
             // Remove any unused filters so we don't do empty searches
             dict_remove_empty_values(filters)
 
@@ -402,6 +406,7 @@
                     self.suggestions = data.suggestions
                     self.showing_default_results = data.showing_default_results
                     self.results = data.results
+                    console.log(data.results)
                     self.prepare_results()
                     self.update()
                 })

@@ -1,8 +1,16 @@
 from django_elasticsearch_dsl import DocType, Index, fields
+
+from profiles.models import User
 from .models import Competition
 
 competitions = Index('competitions')
 competitions.settings(
+    number_of_shards=1,
+    number_of_replicas=0
+)
+
+users = Index('users')
+users.settings(
     number_of_shards=1,
     number_of_replicas=0
 )
@@ -23,6 +31,30 @@ competitions.settings(
 #
 #     def get_model_instance(self):
 #         return self.get_queryset().get(pk=self.pk)
+
+
+@users.doc_type
+class UserDocument(DocType):
+    class Meta:
+        model = User
+
+    github_uid = fields.TextField()
+    avatar_url = fields.TextField()
+    url = fields.TextField()
+    html_url = fields.TextField()
+    name = fields.TextField()
+    company = fields.TextField()
+    bio = fields.TextField()
+    username = fields.TextField()
+    # email = fields.TextField()
+    date_joined = fields.DateField()
+    is_active = fields.BooleanField
+    is_staff = fields.BooleanField
+
+    _obj_type = fields.TextField()
+
+    def prepare__obj_type(self, instance):
+        return 'user'
 
 
 @competitions.doc_type
@@ -54,6 +86,11 @@ class CompetitionDocument(DocType):
         'url': fields.TextField(),
         'name': fields.TextField()
     })
+
+    _obj_type = fields.TextField()
+
+    def prepare__obj_type(self, instance):
+        return 'competition'
 
     # TODO: add "active" boolean field so we can add this to queries and not have a special case
 
