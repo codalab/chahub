@@ -27,13 +27,30 @@
                 <div class="ui centered grid">
                     <div class="ui centered row">
                         <div class="ui sixteen wide mobile fifteen wide search-wrapper column">
-                            <div id="searchbar" class="ui left action right icon input">
+                            <div id="searchbar" class="ui left action right action input">
                                 <button class="ui icon button" onclick="{ clear_search }">
                                     <i class="delete icon"></i>
                                 </button>
                                 <input type="text" placeholder="Search..." ref="search"
                                        onkeydown="{ input_updated }">
-                                <i class="search icon"></i>
+                                <div id="search-filter" class="ui left multiple pointing dropdown icon button">
+                                    <i class="filter icon"></i>
+                                    <span class="text"></span>
+                                    <div class="menu">
+                                        <div class="item" data-value="all">
+                                            <i class="globe icon"></i>
+                                            <span class="label-text">All</span>
+                                        </div>
+                                        <div class="item" data-value="users">
+                                            <i class="users icon"></i>
+                                            <span class="label-text">Users</span>
+                                        </div>
+                                        <div class="item" data-value="competitions">
+                                            <i class="desktop icon"></i>
+                                            <span class="label-text">Competitions</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -143,7 +160,8 @@
     <div id="mobile-grid" class="ui centered grid { fix-left: !show_stats }">
         <div id="mobile" class="sixteen wide tablet twelve wide computer column">
             <div class="ui stacked">
-                <div class="ui warning message" show="{ results.length === 0 && !showing_default_results && !loading }">
+                <div class="ui warning message"
+                     show="{ results.length === 0 && !showing_default_results && !loading }">
                     <div class="header">
                         No results found
                     </div>
@@ -161,7 +179,7 @@
                 </div> -->
             </div>
         </div>
-        <div class="four wide right floated computer only column">
+        <div id="stat-column" class="four wide right floated computer only column">
             <show-stats></show-stats>
         </div>
     </div>
@@ -420,7 +438,6 @@
     </script>
 
     <style type="text/stylus">
-
         #particle_header
             // This is for the particles js animations to fit to this
             position relative
@@ -437,6 +454,9 @@
 
         .advanced.search.ui.row
             padding 0 0
+
+        .search-wrapper
+            z-index 2
 
         #mobile-grid
             margin-top 0
@@ -586,6 +606,20 @@
                 border-bottom-left-radius 3px
             @media screen and (min-width 646px)
                 display none
+
+        #search-filter
+            margin-left 10px
+            border-radius 4px
+            padding 0.5em 0.25em 0.5em 0.75em
+
+            > .label
+                margin 0 .14285714em
+
+                .label-text
+                    display none
+
+                > .icon
+                    margin 0 .25rem 0 0
 
         #search_wrapper .results
             margin-top 1px
