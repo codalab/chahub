@@ -33,7 +33,8 @@
                                 </button>
                                 <input type="text" placeholder="Search..." ref="search"
                                        onkeydown="{ input_updated }">
-                                <div id="search-filter" class="ui left multiple pointing dropdown icon button">
+                                <div id="search-filter" class="ui left multiple pointing dropdown icon button"
+                                     ref="object_types">
                                     <i class="filter icon"></i>
                                     <span class="text"></span>
                                     <div class="menu">
@@ -330,6 +331,8 @@
             // Dropdowns
             $(self.refs.sort_filter).dropdown('set selected', params.sorting)
             $(self.refs.producer_filter).dropdown('set selected', params.producer)
+            $(self.refs.object_types).dropdown('set selected', params.object_types)
+
 
             // Dropdown actions (listen AFTER we set dropdowns, so double search doesn't happen!)
             $(".dropdown", self.root).dropdown({
@@ -378,6 +381,7 @@
             self.refs.search.value = ''
             self.refs.start_date.value = ''
             self.refs.end_date.value = ''
+            $(self.refs.object_types.value).dropdown('set selected', '')
             $(self.refs.time_filter).dropdown('set selected', '')
             $(self.refs.sort_filter).dropdown('set selected', '')
             if (!self.embedded) {
@@ -400,7 +404,7 @@
 
             // TODO: Set this from input. Spaces are alright, they will get stripped.
             // Just a string list. Should probably pass this as a JSON string list, and decode on the other side?
-            filters.object_types = 'users, competitions'
+            filters.object_types = $(self.refs.object_types).dropdown('get value')
 
             // Remove any unused filters so we don't do empty searches
             dict_remove_empty_values(filters)
