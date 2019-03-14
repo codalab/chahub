@@ -1010,16 +1010,66 @@
                 <span class="url"><a href="{url}">{url}</a></span>
             </div>
         </div>
+        <span class="competitions-label ui right floated mini label tooltip" data-content="Competitions">
+            <i class="trophy icon"></i>
+            <span class="label-text">30</span>
+        </span>
+        <span class="submissions-label ui right floated mini label tooltip" data-content="Submissions">
+            <i class="archive icon"></i>
+            <span class="label-text">30</span>
+        </span>
+        <span class="datasets-label ui right floated mini label tooltip" data-content="Datasets">
+            <i class="upload icon"></i>
+            <span class="label-text">4</span>
+        </span>
+        <span class="button-group">
+            <button class="ui circular mini facebook icon button">
+                <i class="facebook icon"></i>
+            </button>
+            <button class="ui circular mini twitter icon button">
+                <i class="twitter icon"></i>
+            </button>
+            <button class="ui circular mini linkedin icon button">
+                <i class="linkedin icon"></i>
+            </button>
+            <button class="ui circular mini google plus icon button">
+                <i class="google plus icon"></i>
+            </button>
+        </span>
     </div>
 
     <script>
         var self = this
 
         self.redirect_to_profile = function () {
-
             window.open('/profiles/' + self.username);
         }
+
+        self.on("mount", function () {
+            $(".tooltip", self.root).popup()
+        })
     </script>
+
+    <style type="text/stylus">
+        .ui.label
+            margin 0 2px !important
+
+        .competitions-label
+            background-color #a5917a !important
+            color #ffc73a !important
+
+        .submissions-label
+            background-color #464646 !important
+            color #f7f7f7 !important
+
+        .datasets-label
+            background-color #b1402f !important
+            color #f7f7f7 !important
+
+        .label-text
+            color white !important
+    </style>
+
 </user-tile>
 
 <show-stats>
