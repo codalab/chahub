@@ -38,7 +38,7 @@
                                     <i class="filter icon"></i>
                                     <span class="text"></span>
                                     <div class="menu">
-                                        <div class="item" data-value="all">
+                                        <div class="item" data-value="users,competitions">
                                             <i class="globe icon"></i>
                                             <span class="label-text">All</span>
                                         </div>
@@ -173,6 +173,7 @@
                 </div>
                 <div class="ui middle aligned unstackable compact divided link items content-desktop">
                     <competition-tile each="{ results }" no-reorder class="item"></competition-tile>
+                    <user-tile each="{results}" no-reorder class="item"></user-tile>
                 </div>
                 <!--<div class="ui middle aligned compact link items content-mobile" style="margin-top: -1;">
                     <competition-mobile-tile each="{ results }" no-reorder class="item"
@@ -381,7 +382,7 @@
             self.refs.search.value = ''
             self.refs.start_date.value = ''
             self.refs.end_date.value = ''
-            $(self.refs.object_types.value).dropdown('set selected', '')
+            $(self.refs.object_types).dropdown('clear')
             $(self.refs.time_filter).dropdown('set selected', '')
             $(self.refs.sort_filter).dropdown('set selected', '')
             if (!self.embedded) {
@@ -799,7 +800,7 @@
     </div>-->
 </search-result>
 
-<competition-tile onclick="{redirect_to_url}">
+<competition-tile show="{ _obj_type == 'competition' }" onclick="{redirect_to_url}">
     <div class="floating-actions { is-admin: USER_IS_SUPERUSER }">
         <i class="icon green pencil alternate"
            onclick="{ edit_competition }"></i>
@@ -992,6 +993,34 @@
 
     </style>
 </competition-tile>
+
+<user-tile if="{ _obj_type == 'user' }" show="{ _obj_type == 'user' }" onclick="{redirect_to_profile}">
+    <div class="ui tiny image">
+        <img src="{avatar_url || URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">
+    </div>
+    <div class="content">
+        <div class="header">
+            {username}
+        </div>
+        <div class="description">
+            <p>{bio}</p>
+        </div>
+        <div class="extra">
+            <div class="mobile_linewrap">
+                <span class="url"><a href="{url}">{url}</a></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var self = this
+
+        self.redirect_to_profile = function () {
+
+            window.open('/profiles/' + self.username);
+        }
+    </script>
+</user-tile>
 
 <show-stats>
     <button id="stats-btn" onclick="{ stats_button_clicked }"

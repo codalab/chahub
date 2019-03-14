@@ -23,5 +23,5 @@ def sign_up(request):
         return render(request, 'registration/signup.html', {'form': form})
 
 
-def profile(request, id):
-    return render(request, 'profiles/profile.html', {'User': User.objects.get(id=id)})
+def profile(request, username):
+    return render(request, 'profiles/profile.html', {'User': User.objects.get(username=username)})
