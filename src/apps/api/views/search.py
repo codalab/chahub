@@ -54,7 +54,7 @@ class SearchView(APIView):
 
         if not empty_search:
             # Setup ES connection, excluding HTML text from our results
-            if object_types != 'ALL':
+            if object_types != 'ALL' or 'ALL' not in object_types:
                 object_types = [obj.strip() for obj in object_types.split(',')]
                 ms = get_search_client(multi=True)
                 for obj_type in object_types:
@@ -81,13 +81,9 @@ class SearchView(APIView):
                 s = self._sort(s, sorting, query)
                 data["results"] = get_results(s)
 
-                if not data["results"] or empty_search:
-                    data["showing_default_results"] = True
-                    data["results"] = get_default_search_results()
-
-        # if not data["results"] or empty_search:
-        #     data["showing_default_results"] = True
-        #     data["results"] = get_default_search_results()
+        if not data["results"] or empty_search:
+            data["showing_default_results"] = True
+            data["results"] = get_default_search_results()
 
         return Response(data)
 

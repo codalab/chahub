@@ -188,6 +188,21 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="profile-row">
+                            {% if not user.github_info %}
+                                <div class="field">
+                                    <label>Connect with github</label>
+                                    <a class="ui large blue button" href="{% url 'social:begin' 'github' %}">Login</a>
+                                </div>
+                            {% else %}
+                                <div class="field">
+                                    <label>Connect with github</label>
+                                    <a class="ui large disabled blue button"
+                                       href="{% url 'social:begin' 'github' %}">Login</a>
+                                    <i>You are already connected!</i>
+                                </div>
+                            {% endif %}
+                        </div>
                         <div class="education profile-row">
                             <div class="label">My Education</div>
                             <div class="name-edit">

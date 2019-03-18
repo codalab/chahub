@@ -38,7 +38,7 @@
                                     <i class="filter icon"></i>
                                     <span class="text"></span>
                                     <div class="menu">
-                                        <div class="item" data-value="users,competitions">
+                                        <div class="item" data-value="ALL">
                                             <i class="globe icon"></i>
                                             <span class="label-text">All</span>
                                         </div>
@@ -49,6 +49,14 @@
                                         <div class="item" data-value="competitions">
                                             <i class="desktop icon"></i>
                                             <span class="label-text">Competitions</span>
+                                        </div>
+                                        <div class="item" data-value="tasks">
+                                            <i class="wrench icon"></i>
+                                            <span class="label-text">Tasks</span>
+                                        </div>
+                                        <div class="item" data-value="solutions">
+                                            <i class="pallet icon"></i>
+                                            <span class="label-text">Solutions</span>
                                         </div>
                                     </div>
                                 </div>
@@ -406,6 +414,9 @@
             // TODO: Set this from input. Spaces are alright, they will get stripped.
             // Just a string list. Should probably pass this as a JSON string list, and decode on the other side?
             filters.object_types = $(self.refs.object_types).dropdown('get value')
+            if (filters.object_types === '') {
+                filters.object_types = 'ALL'
+            }
 
             // Remove any unused filters so we don't do empty searches
             dict_remove_empty_values(filters)

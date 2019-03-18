@@ -32,21 +32,15 @@ users.settings(
 #     def get_model_instance(self):
 #         return self.get_queryset().get(pk=self.pk)
 
+# TODO:
+# Include github_info on UserDocument + Set-up to index right
 
 @users.doc_type
 class UserDocument(DocType):
     class Meta:
         model = User
 
-    github_uid = fields.TextField()
-    avatar_url = fields.TextField()
-    url = fields.TextField()
-    html_url = fields.TextField()
-    name = fields.TextField()
-    company = fields.TextField()
-    bio = fields.TextField()
     username = fields.TextField()
-    # email = fields.TextField()
     date_joined = fields.DateField()
     is_active = fields.BooleanField
     is_staff = fields.BooleanField
