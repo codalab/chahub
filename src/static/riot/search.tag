@@ -38,13 +38,17 @@
                                     <i class="filter icon"></i>
                                     <span class="text"></span>
                                     <div class="menu">
-                                        <div class="item" data-value="ALL">
+                                        <div class="item" data-value="all">
                                             <i class="globe icon"></i>
                                             <span class="label-text">All</span>
                                         </div>
                                         <div class="item" data-value="users">
                                             <i class="users icon"></i>
                                             <span class="label-text">Users</span>
+                                        </div>
+                                        <div class="item" data-value="datasets">
+                                            <i class="file icon"></i>
+                                            <span class="label-text">Datasets</span>
                                         </div>
                                         <div class="item" data-value="competitions">
                                             <i class="desktop icon"></i>
@@ -223,7 +227,6 @@
                 },
                 onChange: function (date, text, mode) {
                     self.set_time_dropdown_text()
-
                     self.search()
                 }
             })
@@ -236,6 +239,23 @@
             //    .sidebar('attach events', '#hamburger_button');
 
             //$(self.refs.time_filter).dropdown('setting', 'onChange', self.search);
+
+            // Dropdown actions (listen AFTER we set dropdowns, so double search doesn't happen!)
+            $(".dropdown", self.root).dropdown({
+                onChange: self.search
+            })
+
+            $(self.refs.object_types).dropdown({
+                onChange: function (text, value) {
+                    var selected_text = $(self.refs.object_types).dropdown('get value')
+                    var all_conditions_found = selected_text.indexOf("competitions") >= 0 && selected_text.indexOf("users") >= 0 && selected_text.indexOf("datasets") >= 0
+
+                    if (value === "all" || all_conditions_found) {
+                        $(self.refs.object_types).dropdown('change values', 'all')
+                    }
+                    self.search()
+                }
+            })
 
             // Search handling
             $(self.refs.search_wrapper).search({
@@ -342,14 +362,6 @@
             $(self.refs.producer_filter).dropdown('set selected', params.producer)
             $(self.refs.object_types).dropdown('set selected', params.object_types)
 
-
-            // Dropdown actions (listen AFTER we set dropdowns, so double search doesn't happen!)
-            $(".dropdown", self.root).dropdown({
-                onChange: function (text, value) {
-                    self.search()
-                }
-            })
-
             // For iframes we might want to hide producer selection
             self.embedded = params.embedded
 
@@ -428,7 +440,6 @@
 
             console.log("Doing search with filters:")
             console.log(filters)
-            console.trace()
 
             self.old_filters = filters
             self.loading = true
