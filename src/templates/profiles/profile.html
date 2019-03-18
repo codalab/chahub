@@ -54,9 +54,11 @@
                 <a class="active item" data-tab="home">
                     Home
                 </a>
-                <a class="item" data-tab="edit">
-                    Add/Edit
-                </a>
+                {% if user == request.user %}
+                    <a class="item" data-tab="edit">
+                        Add/Edit
+                    </a>
+                {% endif %}
             </div>
             <!------------ HOME TAB ----------->
             <div class="ui active home tab" data-tab="home">
