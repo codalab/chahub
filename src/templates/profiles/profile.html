@@ -39,28 +39,46 @@
     <div class="ui container">
         <div class="ui profile-segment segment">
             <div class="ui container profile-header">
-                <img class="profile-img" src="http://i.pravatar.cc/120" alt="placeholder">
+                <div class="holder">
+                    <img class="profile-img" src="http://i.pravatar.cc/120" alt="placeholder">
+                    <div class="social-buttons">
+                        <button class="ui circular facebook mini icon button">
+                            <i class="facebook icon"></i>
+                        </button>
+                        <button class="ui circular twitter mini icon button">
+                            <i class="twitter icon"></i>
+                        </button>
+                        <button class="ui circular linkedin mini icon button">
+                            <i class="linkedin icon"></i>
+                        </button>
+                        <button style="background-color: #582c80; color: white;"
+                                class="ui circular github plus mini icon button">
+                            <i class="github icon"></i>
+                        </button>
+                    </div>
+                </div>
                 <div class="profile-user">
                     Profile Name
                     <div class="profile-brief">
+                        <div class="occupation">Programmer at MadeUp</div>
                         A brief description of the user goes here
                     </div>
-                    <div class="ui large button msg-btn">Message Me</div>
-                    <span class="ui icon large button follow-btn"><i class="user icon"></i>Follow</span>
+                    <!-- <div class="ui large button msg-btn">Message Me</div>
+                    <span class="ui icon large button follow-btn"><i class="user icon"></i>Follow</span> -->
                 </div>
+            </div>
+            <div id="profile-menu" class="ui secondary pointing menu">
+                <a class="active item" data-tab="home">
+                    Home
+                </a>
+                {% if user == request.user %}
+                    <a class="item" data-tab="edit">
+                        Add/Edit
+                    </a>
+                {% endif %}
             </div>
         </div>
 
-        <div class="ui secondary pointing menu">
-            <a class="active item" data-tab="home">
-                Home
-            </a>
-            {% if user == request.user %}
-                <a class="item" data-tab="edit">
-                    Add/Edit
-                </a>
-            {% endif %}
-        </div>
 
         <!------------ HOME TAB ----------->
         <div class="ui active home tab" data-tab="home">
@@ -137,12 +155,38 @@
                         </div>
                     </div>
                 </div>
+                <div class="bio-segment competition-segment ui segment sixteen wide">
+                    <div class="ui header">About Me</div>
+                    <div class="list-tile">
+                        <div class="biography">
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus alias architecto
+                                aspernatur autem esse est impedit, in inventore laboriosam magnam nam nisi, non
+                                nulla quas reprehenderit similique sit? A aperiam blanditiis consequuntur illum
+                                itaque quaerat quibusdam ratione voluptate. Animi eaque explicabo inventore mollitia
+                                neque qui quo quod similique tenetur voluptatem!
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
             <style>
                 .home > .container > .ui.segment {
                     width: 47.5%;
                     margin: 1em;
                     padding: 0;
+                }
+
+                .occupation {
+                    font-weight: 600;
+                }
+
+                .social-buttons {
+                    margin: 10px;
+                }
+
+                #profile-menu {
+                    margin: 0;
                 }
 
                 .competition-segment > .header {
@@ -153,6 +197,19 @@
                     border-top-left-radius: 3px;
                     border-top-right-radius: 3px;
                     border-bottom: solid 1px gainsboro;
+                }
+
+                .competition-segment {
+                    margin: 15px 0;
+                }
+
+                .bio-segment {
+                    width: 100% !important;
+                }
+
+                .biography {
+                    padding: 30px;
+                    color: #A0A0A0;
                 }
 
                 .flex-content {
@@ -166,7 +223,6 @@
                 }
 
                 .list-comps {
-
                     border-right: 1px solid gainsboro;
                     width: 60%;
                 }

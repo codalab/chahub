@@ -27,7 +27,7 @@ html, body {
 .profile-brief {
     color: #acacac;
     font-size: 15px;
-    margin-top: 50px;
+    margin-top: 25px;
 }
 
 .column.segment {
@@ -44,7 +44,8 @@ html, body {
 }
 
 .home .grid.container {
-    justify-content: center;
+    display: inline-flex;
+    justify-content: space-between;
 }
 
 .home .grid.container .ui.card {
