@@ -38,7 +38,7 @@
                                     <i class="filter icon"></i>
                                     <span class="text"></span>
                                     <div class="menu">
-                                        <div class="item" data-value="all">
+                                        <div class="item" data-value="ALL">
                                             <i class="globe icon"></i>
                                             <span class="label-text">All</span>
                                         </div>
@@ -248,7 +248,7 @@
             $(self.refs.object_types).dropdown({
                 onChange: function (text, value) {
                     var selected_text = $(self.refs.object_types).dropdown('get value')
-                    var all_conditions_found = selected_text.indexOf("competitions") >= 0 && selected_text.indexOf("users") >= 0 && selected_text.indexOf("datasets") >= 0
+                    var all_conditions_found = selected_text.indexOf("competitions") >= 0 && selected_text.indexOf("users") >= 0 && selected_text.indexOf("datasets") >= 0 && selected_text.indexOf("tasks") >= 0 && selected_text.indexOf("solutions") >= 0
 
                     if (value === "all" || all_conditions_found) {
                         $(self.refs.object_types).dropdown('change values', 'all')

@@ -39,7 +39,7 @@
     <div class="ui container">
         <div class="ui profile-segment segment">
             <div class="ui container profile-header">
-                <img class="profile-img" src="http://i.pravatar.cc/200" alt="placeholder">
+                <img class="profile-img" src="http://i.pravatar.cc/120" alt="placeholder">
                 <div class="profile-user">
                     Profile Name
                     <div class="profile-brief">
@@ -48,99 +48,406 @@
                     <div class="ui large button msg-btn">Message Me</div>
                     <span class="ui icon large button follow-btn"><i class="user icon"></i>Follow</span>
                 </div>
+            </div>
+        </div>
 
-            </div>
-            <div class="ui secondary pointing menu">
-                <a class="active item" data-tab="home">
-                    Home
+        <div class="ui secondary pointing menu">
+            <a class="active item" data-tab="home">
+                Home
+            </a>
+            {% if user == request.user %}
+                <a class="item" data-tab="edit">
+                    Add/Edit
                 </a>
-                {% if user == request.user %}
-                    <a class="item" data-tab="edit">
-                        Add/Edit
-                    </a>
-                {% endif %}
+            {% endif %}
+        </div>
+
+        <!------------ HOME TAB ----------->
+        <div class="ui active home tab" data-tab="home">
+            <div class="ui sixteen wide grid container">
+                <div class="competition-segment ui segment eight wide">
+                    <div class="ui header">Competitions</div>
+                    <div class="ui content flex-content">
+                        <div class="list-comps">
+                            <div class="list-tile">
+                                <a href="#">Competition about competition b...</a>
+                                <div class="date-complete">Competition ended 03/01/2018</div>
+                            </div>
+                            <div class="list-tile">
+                                <a href="#">Competition about competition b...</a>
+                                <div class="date-complete">Competition ended 03/01/2018</div>
+                            </div>
+                            <div class="list-tile">
+                                <a href="#">Competition about competition b...</a>
+                                <div class="date-complete">Competition ended 03/01/2018</div>
+                            </div>
+                            <div class="list-tile">
+                                <a href="#">Competition about competition b...</a>
+                                <div class="date-complete">Competition ended 03/01/2018</div>
+                            </div>
+                        </div>
+                        <div class="scores">
+                            <div class="medals">
+                                <div class="medal medal-one"></div>
+                                <div class="medal medal-two"></div>
+                                <div class="medal medal-three"></div>
+                            </div>
+                            <div class="medal-amounts">
+                                <div class="medal-amount">12</div>
+                                <div class="medal-amount">18</div>
+                                <div class="medal-amount">43</div>
+                            </div>
+                            <div class="stats"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="competition-segment ui segment eight wide">
+                    <div class="ui header">Submissions</div>
+                    <div class="ui content flex-content">
+                        <div class="list-comps">
+                            <div class="list-tile">
+                                <a href="#">Competition about competition b...</a>
+                                <div class="date-complete">Competition ended 03/01/2018</div>
+                            </div>
+                            <div class="list-tile">
+                                <a href="#">Competition about competition b...</a>
+                                <div class="date-complete">Competition ended 03/01/2018</div>
+                            </div>
+                            <div class="list-tile">
+                                <a href="#">Competition about competition b...</a>
+                                <div class="date-complete">Competition ended 03/01/2018</div>
+                            </div>
+                            <div class="list-tile">
+                                <a href="#">Competition about competition b...</a>
+                                <div class="date-complete">Competition ended 03/01/2018</div>
+                            </div>
+                        </div>
+                        <div class="scores">
+                            <div class="medals">
+                                <div class="medal medal-one"></div>
+                                <div class="medal medal-two"></div>
+                                <div class="medal medal-three"></div>
+                            </div>
+                            <div class="medal-amounts">
+                                <div class="medal-amount">12</div>
+                                <div class="medal-amount">18</div>
+                                <div class="medal-amount">43</div>
+                            </div>
+                            <div class="stats"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!------------ HOME TAB ----------->
-            <div class="ui active home tab" data-tab="home">
-                <div class="ui equal width grid container">
+            <style>
+                .home > .container > .ui.segment {
+                    width: 47.5%;
+                    margin: 1em;
+                    padding: 0;
+                }
+
+                .competition-segment > .header {
+                    margin-top: 0 !important;
+                    margin-bottom: 0 !important;
+                    background-color: #F2FAFF;
+                    padding: 10px;
+                    border-top-left-radius: 3px;
+                    border-top-right-radius: 3px;
+                    border-bottom: solid 1px gainsboro;
+                }
+
+                .flex-content {
+                    display: flex;
+                    flex-direction: row;
+                }
+
+                .list-tile > a {
+                    font-size: 15px;
+                    font-weight: 600;
+                }
+
+                .list-comps {
+
+                    border-right: 1px solid gainsboro;
+                    width: 60%;
+                }
+
+                .list-comps, .scores {
+                    padding: 20px;
+                }
+
+                .medals, .medal-amounts {
+                    display: flex;
+                    flex-direction: row;
+                }
+
+                .medal {
+                    height: 30px;
+                    width: 30px;
+                    border-radius: 50%;
+                    background-color: yellow;
+                    margin: 3px 14px;
+                }
+
+                .medal-one {
+                    background-color: gold;
+                    border: solid 2px goldenrod;
+                }
+
+                .medal-two {
+                    background-color: silver;
+                    border: solid 2px lightslategrey;
+                }
+
+                .medal-three {
+                    background-color: saddlebrown;
+                    border: solid 2px rosybrown;
+                }
+
+                .medal-amount {
+                    text-align: center;
+                    margin: 14px;
+                    width: 30px;
+                }
+
+                .date-complete {
+                    color: #A0A0A0;
+                    font-size: 0.8em;
+                }
+            </style>
+
+            <div class="bio profile-row">
+                <div class="label">About Me</div>
+                <div class="bio-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi cum
+                    distinctio
+                    dolorem ipsam laboriosam minima pariatur quos totam, ullam velit. Ad architecto cum
+                    cupiditate
+                    dignissimos eaque facere id ipsa, laborum odit omnis quae, saepe sint sunt? Fugit id illo
+                    provident?
+                    <br>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam amet beatae corporis
+                    delectus
+                    deserunt distinctio doloremque eos fuga harum, ipsum iste labore neque obcaecati reiciendis
+                    rem
+                    sapiente tempore vel! Autem consequatur dolor doloribus dolorum earum, esse excepturi in
+                    odit
+                    pariatur perspiciatis quam quia quidem, quos repellendus sit? Cumque dolores ea, ex fugiat
+                    magni
+                    mollitia nam nemo, officia repellat, veritatis vitae!
+                </div>
+            </div>
+            <div class="education profile-row">
+                <div class="label">My Education</div>
+                <div class="name">Placeholder University</div>
+                <div class="degree">Bachelor's Degree, Test Science</div>
+                <div class="attended">2007-2011</div>
+                <div class="awards">Graduated Cum Laude with degrees in Testing Things and Science. Made
+                    Dean's List for 2 consecutive years.
+                </div>
+            </div>
+            <div class="organizations profile-row">
+                <div class="label">My Organizations</div>
+                <img class="ui middle aligned tiny image" src="https://via.placeholder.com/150">
+                <div class="org-container first">
+                    <div class="name">Placeholder Organization</div>
+                    <div class="type">Placehold</div>
+                    <div class="description">Set out to placehold all of the organizations for this description
+                    </div>
+                </div>
+                <div class="ui divider"></div>
+                <img class="ui top aligned tiny image" src="https://via.placeholder.com/150">
+                <div class="org-container">
+                    <div class="name">Placeholder Organization</div>
+                    <div class="type">Placehold</div>
+                    <div class="description">Set out to placehold all of the organizations for this description
+                    </div>
+                </div>
+                <div class="ui divider"></div>
+                <img class="ui top aligned tiny image" src="https://via.placeholder.com/150">
+                <div class="org-container">
+                    <div class="name">Placeholder Organization</div>
+                    <div class="type">Placehold</div>
+                    <div class="description">Set out to placehold all of the organizations for this description
+                    </div>
+                </div>
+                <div class="ui divider"></div>
+                <img class="ui top aligned tiny image" src="https://via.placeholder.com/150">
+                <div class="org-container">
+                    <div class="name">Placeholder Organization</div>
+                    <div class="type">Placehold</div>
+                    <div class="description">Set out to placehold all of the organizations for this description
+                    </div>
+                </div>
+            </div>
+            <div class="meetups profile-row">
+                <div class="label">Conferences and Meetups</div>
+                <div class="name">Seattle Machine Learning Meetup</div>
+                <div class="date">Every Wednesday</div>
+                <div class="brief">We meet every Wednesday to discuss Machine Learning Protocols and the science
+                    behind them. All skill levels welcome to join!
+                </div>
+                <div class="website"><a href="#">Facebook Link</a></div>
+                <div class="ui divider"></div>
+                <div class="name">MLCon</div>
+                <div class="date">03/12/2017 to 03/15/2017</div>
+                <div class="brief">Yearly Machine Learning Convention in Portland, OR. Days filled with talks by
+                    leaders in the ML industry!
+                </div>
+                <div class="website"><a href="#">www.MLConvention.com</a></div>
+            </div>
+            <div class="datasets profile-row">
+                <div class="label">My Datasets</div>
+                <table class="ui striped table">
+                    <thead>
+                    <tr>
+                        <th>Dataset</th>
+                        <th>Date Uploaded</th>
+                        <th>Downloads</th>
+                        <th>File Size</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><a href="#"><i class="download icon"></i>Cars</a></td>
+                        <td>February 11, 2019</td>
+                        <td>18</td>
+                        <td>159mb</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#"><i class="download icon"></i>Numbers</a></td>
+                        <td>June 18, 2018</td>
+                        <td>104</td>
+                        <td>1.34gb</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#"><i class="download icon"></i>Animals</a></td>
+                        <td>January 11, 2018</td>
+                        <td>2011</td>
+                        <td>416mb</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!------------ EDIT TAB ----------->
+        <div class="ui edit tab" data-tab="edit">
+            <div class="ui equal width grid container">
+                <div class="ui form">
                     <div class="bio profile-row">
                         <div class="label">About Me</div>
-                        <div class="bio-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi cum
-                            distinctio
-                            dolorem ipsam laboriosam minima pariatur quos totam, ullam velit. Ad architecto cum
-                            cupiditate
-                            dignissimos eaque facere id ipsa, laborum odit omnis quae, saepe sint sunt? Fugit id illo
-                            provident?
-                            <br>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam amet beatae corporis
-                            delectus
-                            deserunt distinctio doloremque eos fuga harum, ipsum iste labore neque obcaecati reiciendis
-                            rem
-                            sapiente tempore vel! Autem consequatur dolor doloribus dolorum earum, esse excepturi in
-                            odit
-                            pariatur perspiciatis quam quia quidem, quos repellendus sit? Cumque dolores ea, ex fugiat
-                            magni
-                            mollitia nam nemo, officia repellat, veritatis vitae!
+                        <div class="bio-edit">
+                            <div class="field">
+                                <textarea></textarea>
+                            </div>
                         </div>
+                    </div>
+                    <div class="profile-row">
+                        {% if not user.github_info %}
+                            <div class="field">
+                                <label>Connect with github</label>
+                                <a class="ui large blue button" href="{% url 'social:begin' 'github' %}">Login</a>
+                            </div>
+                        {% else %}
+                            <div class="field">
+                                <label>Connect with github</label>
+                                <a class="ui large disabled blue button"
+                                   href="{% url 'social:begin' 'github' %}">Login</a>
+                                <i>You are already connected!</i>
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="education profile-row">
                         <div class="label">My Education</div>
-                        <div class="name">Placeholder University</div>
-                        <div class="degree">Bachelor's Degree, Test Science</div>
-                        <div class="attended">2007-2011</div>
-                        <div class="awards">Graduated Cum Laude with degrees in Testing Things and Science. Made
-                            Dean's List for 2 consecutive years.
+                        <div class="name-edit">
+                            <div class="field">
+                                <label>Institution</label>
+                                <input type="text">
+                            </div>
+                        </div>
+                        <div class="degree-edit">
+                            <div class="field">
+                                <label>Degree and Field of Study</label>
+                                <input type="text">
+                            </div>
+                        </div>
+                        <div class="attended-edit">
+                            <div class="field">
+                                <label>Years Attended</label>
+                                <input type="text">
+                            </div>
+                        </div>
+                        <div class="awards-edit">
+                            <div class="field">
+                                <label>Awards</label>
+                                <input type="text">
+                            </div>
                         </div>
                     </div>
                     <div class="organizations profile-row">
                         <div class="label">My Organizations</div>
-                        <img class="ui middle aligned tiny image" src="https://via.placeholder.com/150">
-                        <div class="org-container first">
-                            <div class="name">Placeholder Organization</div>
-                            <div class="type">Placehold</div>
-                            <div class="description">Set out to placehold all of the organizations for this description
-                            </div>
+                        <div class="field">
+                            <label>Image</label>
+
+                            <input class="upload-img ui input" type="file" onchange="previewFile()"/>
+                            <img id="img-preview" src="" alt="Image preview...">
+                            <style>
+                                #img-preview {
+                                    margin-top: 5px;
+                                    width: 100px;
+                                    height: 100px;
+                                    border: 1px dashed gainsboro;
+                                    display: none;
+                                }
+                            </style>
+
                         </div>
-                        <div class="ui divider"></div>
-                        <img class="ui top aligned tiny image" src="https://via.placeholder.com/150">
-                        <div class="org-container">
-                            <div class="name">Placeholder Organization</div>
-                            <div class="type">Placehold</div>
-                            <div class="description">Set out to placehold all of the organizations for this description
+                        <div class="org-container-edit">
+                            <div class="name">
+                                <div class="field">
+                                    <label>Name</label>
+                                    <input type="text">
+                                </div>
                             </div>
-                        </div>
-                        <div class="ui divider"></div>
-                        <img class="ui top aligned tiny image" src="https://via.placeholder.com/150">
-                        <div class="org-container">
-                            <div class="name">Placeholder Organization</div>
-                            <div class="type">Placehold</div>
-                            <div class="description">Set out to placehold all of the organizations for this description
+                            <div class="type">
+                                <div class="field">
+                                    <label>Type</label>
+                                    <input type="text">
+                                </div>
                             </div>
-                        </div>
-                        <div class="ui divider"></div>
-                        <img class="ui top aligned tiny image" src="https://via.placeholder.com/150">
-                        <div class="org-container">
-                            <div class="name">Placeholder Organization</div>
-                            <div class="type">Placehold</div>
-                            <div class="description">Set out to placehold all of the organizations for this description
+                            <div class="description">
+                                <div class="field">
+                                    <label>Short Description</label>
+                                    <input type="text">
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="meetups profile-row">
+                    <div class="meetups-edit profile-row">
                         <div class="label">Conferences and Meetups</div>
-                        <div class="name">Seattle Machine Learning Meetup</div>
-                        <div class="date">Every Wednesday</div>
-                        <div class="brief">We meet every Wednesday to discuss Machine Learning Protocols and the science
-                            behind them. All skill levels welcome to join!
+                        <div class="name">
+                            <div class="field">
+                                <label>Name</label>
+                                <input type="text">
+                            </div>
                         </div>
-                        <div class="website"><a href="#">Facebook Link</a></div>
-                        <div class="ui divider"></div>
-                        <div class="name">MLCon</div>
-                        <div class="date">03/12/2017 to 03/15/2017</div>
-                        <div class="brief">Yearly Machine Learning Convention in Portland, OR. Days filled with talks by
-                            leaders in the ML industry!
+                        <div class="date">
+                            <div class="field">
+                                <label>Dates</label>
+                                <input type="text">
+                            </div>
                         </div>
-                        <div class="website"><a href="#">www.MLConvention.com</a></div>
+                        <div class="brief">
+                            <div class="field">
+                                <label>Short Description</label>
+                                <input type="text">
+                            </div>
+                        </div>
+                        <div class="website">
+                            <div class="field">
+                                <label>Website</label>
+                                <input type="text">
+                            </div>
+                        </div>
                     </div>
                     <div class="datasets profile-row">
                         <div class="label">My Datasets</div>
@@ -155,249 +462,92 @@
                             </thead>
                             <tbody>
                             <tr>
-                                <td><a href="#"><i class="download icon"></i>Cars</a></td>
-                                <td>February 11, 2019</td>
-                                <td>18</td>
-                                <td>159mb</td>
-                            </tr>
-                            <tr>
-                                <td><a href="#"><i class="download icon"></i>Numbers</a></td>
-                                <td>June 18, 2018</td>
-                                <td>104</td>
-                                <td>1.34gb</td>
-                            </tr>
-                            <tr>
-                                <td><a href="#"><i class="download icon"></i>Animals</a></td>
-                                <td>January 11, 2018</td>
-                                <td>2011</td>
-                                <td>416mb</td>
+                                <td><a href="#"><i class="upload icon"></i>Upload Dataset</a></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-
-            <!------------ EDIT TAB ----------->
-            <div class="ui edit tab" data-tab="edit">
-                <div class="ui equal width grid container">
-                    <div class="ui form">
-                        <div class="bio profile-row">
-                            <div class="label">About Me</div>
-                            <div class="bio-edit">
-                                <div class="field">
-                                    <textarea></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="profile-row">
-                            {% if not user.github_info %}
-                                <div class="field">
-                                    <label>Connect with github</label>
-                                    <a class="ui large blue button" href="{% url 'social:begin' 'github' %}">Login</a>
-                                </div>
-                            {% else %}
-                                <div class="field">
-                                    <label>Connect with github</label>
-                                    <a class="ui large disabled blue button"
-                                       href="{% url 'social:begin' 'github' %}">Login</a>
-                                    <i>You are already connected!</i>
-                                </div>
-                            {% endif %}
-                        </div>
-                        <div class="education profile-row">
-                            <div class="label">My Education</div>
-                            <div class="name-edit">
-                                <div class="field">
-                                    <label>Institution</label>
-                                    <input type="text">
-                                </div>
-                            </div>
-                            <div class="degree-edit">
-                                <div class="field">
-                                    <label>Degree and Field of Study</label>
-                                    <input type="text">
-                                </div>
-                            </div>
-                            <div class="attended-edit">
-                                <div class="field">
-                                    <label>Years Attended</label>
-                                    <input type="text">
-                                </div>
-                            </div>
-                            <div class="awards-edit">
-                                <div class="field">
-                                    <label>Awards</label>
-                                    <input type="text">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="organizations profile-row">
-                            <div class="label">My Organizations</div>
-                            <div class="field">
-                                <label>Image</label>
-
-                                <input class="upload-img ui input" type="file" onchange="previewFile()"/>
-                                <img id="img-preview" src="" alt="Image preview...">
-                                <style>
-                                    #img-preview {
-                                        margin-top: 5px;
-                                        width: 100px;
-                                        height: 100px;
-                                        border: 1px dashed gainsboro;
-                                        display: none;
-                                    }
-                                </style>
-
-                            </div>
-                            <div class="org-container-edit">
-                                <div class="name">
-                                    <div class="field">
-                                        <label>Name</label>
-                                        <input type="text">
-                                    </div>
-                                </div>
-                                <div class="type">
-                                    <div class="field">
-                                        <label>Type</label>
-                                        <input type="text">
-                                    </div>
-                                </div>
-                                <div class="description">
-                                    <div class="field">
-                                        <label>Short Description</label>
-                                        <input type="text">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="meetups-edit profile-row">
-                            <div class="label">Conferences and Meetups</div>
-                            <div class="name">
-                                <div class="field">
-                                    <label>Name</label>
-                                    <input type="text">
-                                </div>
-                            </div>
-                            <div class="date">
-                                <div class="field">
-                                    <label>Dates</label>
-                                    <input type="text">
-                                </div>
-                            </div>
-                            <div class="brief">
-                                <div class="field">
-                                    <label>Short Description</label>
-                                    <input type="text">
-                                </div>
-                            </div>
-                            <div class="website">
-                                <div class="field">
-                                    <label>Website</label>
-                                    <input type="text">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="datasets profile-row">
-                            <div class="label">My Datasets</div>
-                            <table class="ui striped table">
-                                <thead>
-                                <tr>
-                                    <th>Dataset</th>
-                                    <th>Date Uploaded</th>
-                                    <th>Downloads</th>
-                                    <th>File Size</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td><a href="#"><i class="upload icon"></i>Upload Dataset</a></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="submit-container">
-                            <div class="ui submit button">Submit</div>
-                        </div>
+                    <div class="submit-container">
+                        <div class="ui submit button">Submit</div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script>
-            function previewFile() {
-                var preview = document.getElementById('img-preview'); //selects the query named img
-                var file = document.querySelector('input[type=file]').files[0]; //sames as here
-                var reader = new FileReader();
+    <script>
+        function previewFile() {
+            var preview = document.getElementById('img-preview'); //selects the query named img
+            var file = document.querySelector('input[type=file]').files[0]; //sames as here
+            var reader = new FileReader();
 
-                reader.onloadend = function () {
-                    preview.src = reader.result;
+            reader.onloadend = function () {
+                preview.src = reader.result;
 
-                }
-
-                if (file) {
-                    reader.readAsDataURL(file); //reads the data as a URL
-                    $('#img-preview').css('display', 'block')
-                    $('#img-preview').css('border', 'dashed 1px gainsboro')
-                    $('#img-preview').css('padding', '5px')
-                } else {
-                    preview.src = "";
-                    $('#img-preview').css('display', 'hidden')
-                }
             }
 
-            previewFile();  //calls the function named previewFile()
-        </script>
+            if (file) {
+                reader.readAsDataURL(file); //reads the data as a URL
+                $('#img-preview').css('display', 'block')
+                $('#img-preview').css('border', 'dashed 1px gainsboro')
+                $('#img-preview').css('padding', '5px')
+            } else {
+                preview.src = "";
+                $('#img-preview').css('display', 'hidden')
+            }
+        }
 
-        <!------------ ACCOUNT TAB ----------->
-        <div class="ui account tab" data-tab="account">
-            <div class="ui grid container">
-                <div class="sixteen wide column">
-                    <form class="ui form">
-                        <div class="field">
-                            <label>User Name</label>
-                            <div class="no-edit">username</div>
-                            <div class="field-description">You cannot change your user name. Other Chahub users will
-                                not
-                                see this name.
-                            </div>
+        previewFile();  //calls the function named previewFile()
+    </script>
+
+    <!------------ ACCOUNT TAB ----------->
+    <div class="ui account tab" data-tab="account">
+        <div class="ui grid container">
+            <div class="sixteen wide column">
+                <form class="ui form">
+                    <div class="field">
+                        <label>User Name</label>
+                        <div class="no-edit">username</div>
+                        <div class="field-description">You cannot change your user name. Other Chahub users will
+                            not
+                            see this name.
                         </div>
-                        <hr>
-                        <div class="five wide field">
-                            <label>Display Name</label>
-                            <div class="field-current">
-                                <span onclick="editfield(event)" class="display-name active">displayname</span>
-                                <input class="hidden" type="text" name="display-name"
-                                       placeholder="displayname"></div>
-                            <div class="field-description">This is the name other Chahub users will see.</div>
+                    </div>
+                    <hr>
+                    <div class="five wide field">
+                        <label>Display Name</label>
+                        <div class="field-current">
+                            <span onclick="editfield(event)" class="display-name active">displayname</span>
+                            <input class="hidden" type="text" name="display-name"
+                                   placeholder="displayname"></div>
+                        <div class="field-description">This is the name other Chahub users will see.</div>
+                    </div>
+                    <hr>
+                    <div class="five wide field">
+                        <label>Email Address</label>
+                        <div class="field-current">
+                            <span onclick="editfield(event)" class="email active">email</span>
+                            <input class="hidden" type="text" name="email"
+                                   placeholder="email">
                         </div>
-                        <hr>
-                        <div class="five wide field">
-                            <label>Email Address</label>
-                            <div class="field-current">
-                                <span onclick="editfield(event)" class="email active">email</span>
-                                <input class="hidden" type="text" name="email"
-                                       placeholder="email">
-                            </div>
+                    </div>
+                    <hr>
+                    <div class="five wide field">
+                        <label>Email Preferences</label>
+                        <div class="ui checkbox">
+                            <input type="checkbox" tabindex="0" class="hidden">
+                            <label class="email-pref">Subcribe to Email List to receive notifications</label>
                         </div>
-                        <hr>
-                        <div class="five wide field">
-                            <label>Email Preferences</label>
-                            <div class="ui checkbox">
-                                <input type="checkbox" tabindex="0" class="hidden">
-                                <label class="email-pref">Subcribe to Email List to receive notifications</label>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="delete">
-                            <a href="#">Delete account...</a>
-                        </div>
-                        <button class="ui button" type="submit">Submit</button>
-                    </form>
-                </div>
+                    </div>
+                    <hr>
+                    <div class="delete">
+                        <a href="#">Delete account...</a>
+                    </div>
+                    <button class="ui button" type="submit">Submit</button>
+                </form>
             </div>
         </div>
     </div>
