@@ -6,6 +6,10 @@ html, body {
 .profile-segment {
     margin-top: -201px !important;
     padding: 0 !important;
+    margin-bottom: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-bottom: none !important;
 }
 
 .profile-img {

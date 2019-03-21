@@ -13,6 +13,14 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
 
+        <!-- Rich Text Editor -->
+        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+        <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+        <!-- Theme included stylesheets -->
+        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+        <link href="https://cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+
         <!-- Custom CSS/JS -->
         <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
         <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
@@ -25,10 +33,6 @@
     <div id="particles-js">
         <a href="/"><img id="brand_logo" src="{% static 'img/temp_chahub_logo_beta.png' %}"></a>
     </div>
-
-    <style>
-
-    </style>
 
     <script>
         particlesJS.load('particles-js', '{% static 'particles/particles-profile.json' %}', function () {
@@ -115,7 +119,20 @@
                                 <div class="medal-amount">18</div>
                                 <div class="medal-amount">43</div>
                             </div>
-                            <div class="stats"></div>
+                            <table class="stats">
+                                <tr>
+                                    <td class="category">Competitions:</td>
+                                    <td class="statistic">124</td>
+                                </tr>
+                                <tr>
+                                    <td class="category">Percentile:</td>
+                                    <td class="statistic">89.25</td>
+                                </tr>
+                                <tr>
+                                    <td class="category">Total Score:</td>
+                                    <td class="statistic">12,389.25</td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -151,26 +168,76 @@
                                 <div class="medal-amount">18</div>
                                 <div class="medal-amount">43</div>
                             </div>
-                            <div class="stats"></div>
+                            <table class="stats">
+                                <tr>
+                                    <td class="category">Competitions:</td>
+                                    <td class="statistic">124</td>
+                                </tr>
+                                <tr>
+                                    <td class="category">Percentile:</td>
+                                    <td class="statistic">89.25</td>
+                                </tr>
+                                <tr>
+                                    <td class="category">Total Score:</td>
+                                    <td class="statistic">12,389.25</td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
                 <div class="bio-segment competition-segment ui segment sixteen wide">
-                    <div class="ui header">About Me</div>
+                    <div class="ui header">
+                        About Me
+                        <div class="right floated ui button edit-button">Edit</div>
+                        <div class="right floated ui button save-button">Save</div>
+                        <div class="right floated ui button cancel-button">Cancel</div>
+                    </div>
                     <div class="list-tile">
                         <div class="biography">
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus alias architecto
-                                aspernatur autem esse est impedit, in inventore laboriosam magnam nam nisi, non
-                                nulla quas reprehenderit similique sit? A aperiam blanditiis consequuntur illum
-                                itaque quaerat quibusdam ratione voluptate. Animi eaque explicabo inventore mollitia
-                                neque qui quo quod similique tenetur voluptatem!
-                            </p>
+                            <div class="bio">Write about yourself!</div>
+                            <div id="editor-container">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <style>
+                .home > .container {
+                    margin-top: 1em;
+                }
+
+                #editor-container {
+                    height: auto;
+                }
+
+                .ql-snow {
+                    display: none;
+                }
+
+                .edit-button, .save-button, .cancel-button {
+                    font-size: 0.5em !important;
+                    border: solid 1px #cacaca !important;
+                    color: #909090 !important;
+                }
+
+                .save-button, .cancel-button {
+                    display: none !important;
+                }
+
+                .stats .category {
+                    font-weight: 600;
+                    font-size: 1.15em;
+                    color: #202d53;
+                    text-align: right;
+                }
+
+                .stats .statistic {
+                    width: 100%;
+                    font-size: .85em;
+                    color: #A0A0A0;
+                    text-align: right;
+                }
+
                 .home > .container > .ui.segment {
                     width: 47.5%;
                     margin: 1em;
@@ -611,10 +678,44 @@
     </html>
 
     <script>
+        var Delta = Quill.import('delta');
+        var biotext = $('.bio-segment .bio')
+        var quill = new Quill('#editor-container', {
+            placeholder: 'Write about yourself!',
+            theme: 'snow'
+        });
+
         $(document).ready(function () {
             $('.secondary.pointing.menu .item').tab();
             $('.ui.checkbox').checkbox();
         })
+
+        $('.edit-button').click(function () {
+            $(this).hide();
+            $(this).siblings('.save-button, .cancel-button').attr("style", "display: block !important");
+            $('.bio-segment .bio').hide()
+            $('.ql-snow').show()
+            quill.setText(biotext[0].outerHTML.write(), true);
+        });
+
+        $('.cancel-button').click(function () {
+            $(this).siblings('.edit-button').attr("style", "display: block !important");
+            $(this).siblings('.save-button').hide();
+            $(this).hide();
+            $('.ql-snow').hide()
+            $('.bio-segment .bio').show()
+        });
+
+        $('.save-button').click(function () {
+            $(this).siblings('.edit-button').attr("style", "display: block !important");
+            $(this).siblings('.cancel-button').hide();
+            $(this).hide();
+            $('.ql-snow').hide()
+            var html_text = quill.container.firstChild.innerHTML;
+            biotext[0].innerHTML = html_text
+
+            $('.bio-segment .bio').show()
+        });
 
         function editfield() {
             $(event.target)[0].classList.add('hidden')
