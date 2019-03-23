@@ -21,10 +21,15 @@
     <!-- Riot -->
     {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/3.11.2/riot+compiler.min.js"></script>#}
     <!-- Semantic -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <!-- Rich Text Editor -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.6.1/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 
     <!-- Datepicker -->
     <link rel="stylesheet" href="{% static "css/calendar.min.css" %}">
@@ -43,12 +48,17 @@
     <script src="{% static "js/ours/init.js" %}"></script>
     <script src="{% static "js/ours/router.js" %}"></script>
 
+
     <!-- Compiled stylus -->
     <link rel="stylesheet" href="{% static "generated/output.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="{% static "js/reconnecting-websocket.min.js" %}"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
+
+
 
     {% block extra_head %}
     {% endblock %}
@@ -159,6 +169,7 @@
             });
         })
     }*/
+
 </script>
 
 {% block extra_body %}

@@ -57,6 +57,18 @@ html, body {
     width: 31%;
 }
 
+.edit-button {
+    font-size: 0.5em !important;
+    border: solid 1px #cacaca !important;
+    color: #909090 !important;
+}
+
+.edit-button:hover {
+    font-size: 0.5em !important;
+    border: solid 1px #b1b1b1 !important;
+    color: #909090 !important;
+}
+
 /*---------- EDUCATION ----------*/
 
 .education .name {
@@ -79,26 +91,6 @@ html, body {
     color: rgba(0, 0, 0, .6);
 }
 
-/*---------- MEETUPS/CONVENTIONS ----------*/
-
-.meetups .name {
-    font-size: 1.2em;
-    font-weight: 600;
-    line-height: 1.2em;
-}
-
-.meetups .date {
-    color: rgba(0, 0, 0, .6);
-    margin: 5px 0;
-}
-
-.meetups .brief {
-    color: rgba(0, 0, 0, .6);
-}
-
-.meetups .website {
-    padding: 10px 0;
-}
 
 /*---------- ORGANIZATIONS ----------*/
 
@@ -190,7 +182,6 @@ html, body {
 
 .label {
     font-size: 20px;
-    padding: 10px 0 !important;
 }
 
 /* ACCOUNT TAB */
@@ -221,10 +212,6 @@ html, body {
     color: grey;
     font-size: 0.96em;
     padding: 5px 12px 5px 0;
-}
-
-.delete {
-    padding: 20px 0;
 }
 
 .hidden {
