@@ -255,11 +255,11 @@
         }
 
         education-container {
-            width: 40% !important;
+            width: 35% !important;
         }
 
         datasets-container {
-            width: 57.5%;
+            width: 62% !important;
         }
 
         organization-container {
@@ -395,13 +395,6 @@
             font-size: 0.8em;
         }
 
-        .education-container {
-            width: 33% !important;
-        }
-
-        .datasets-container {
-            width: 60% !important;
-        }
     </style>
 </profile-page>
 
@@ -433,8 +426,13 @@
         }
 
         self.on('mount', function () {
-            self.simplemde = new SimpleMDE({
-                element: document.getElementById("editor")
+            self.easymde = new EasyMDE({
+                element: document.getElementById("editor"),
+                renderingConfig: {
+                    markedOptions: {
+                        sanitize: true,
+                    }
+                }
             });
 
             $('#editor-container').hide()
@@ -445,15 +443,15 @@
         self.editing = function () {
             $('#bio', self.root)
             self.edit = true
-            self.simplemde.value(self.user.bio_markdown);
+            self.easymde.value(self.user.bio_markdown);
             $('#editor-container').attr('style', 'display: block !important')
-            self.simplemde.codemirror.refresh();
+            self.easymde.codemirror.refresh();
         }
 
         self.saving = function () {
             self.edit = false
-            self.user.bio_markdown = self.simplemde.value()
-            self.user.bio = marked(self.simplemde.value())
+            self.user.bio_markdown = self.easymde.value()
+            self.user.bio = marked(self.easymde.value())
             $('#editor-container').attr('style', 'display: none !important')
             document.getElementById('bio').innerHTML = self.user.bio
         }
@@ -511,12 +509,12 @@
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
             My Education
-            <div class="right floated ui button edit-button" onclick="{edit_education}" if="{!edit_education}">Edit
+            <div class="right floated ui button edit-button" onclick="{edit_education}" if="{!edit_edu}">Edit
             </div>
-            <div class="right floated ui button edit-button" onclick="{add_education}" if="{!edit_education}">Add</div>
-            <div class="right floated ui button edit-button" onclick="{save_education}" if="{!!edit_education}">Save
+            <div class="right floated ui button edit-button" onclick="{add_education}" if="{!edit_edu}">Add</div>
+            <div class="right floated ui button edit-button" onclick="{save_education}" if="{!!edit_edu}">Save
             </div>
-            <div class="right floated ui button edit-button" onclick="{cancel_education}" if="{!!edit_education}">
+            <div class="right floated ui button edit-button" onclick="{cancel_education}" if="{!!edit_edu}">
                 Cancel
             </div>
         </div>
@@ -527,6 +525,31 @@
     </div>
 
     <script>
+
+        self.edit_education = function () {
+            $('#bio', self.root)
+            self.edit_education = true
+            self.simplemde.value(self.user.bio_markdown);
+            $('#editor-container').attr('style', 'display: block !important')
+            self.simplemde.codemirror.refresh();
+        }
+
+        self.add_education = function () {
+            self.edit_education = true
+        }
+
+        self.save_education = function () {
+            self.edit_education = false
+            self.user.bio_markdown = self.simplemde.value()
+            self.user.bio = marked(self.simplemde.value())
+            $('#editor-container').attr('style', 'display: none !important')
+            document.getElementById('bio').innerHTML = self.user.bio
+        }
+
+        self.cancel_edit = function () {
+            self.edit_education = false
+            $('#editor-container').attr('style', 'display: none !important')
+        }
     </script>
 
     <style>
