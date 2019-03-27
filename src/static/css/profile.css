@@ -1,0 +1,235 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.profile-segment {
+    margin-top: -201px !important;
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-bottom: none !important;
+}
+
+.profile-img {
+    border-top-left-radius: 3px;
+    height: 147px;
+}
+
+.profile-header {
+    border-bottom: 1px solid gainsboro;
+    height: 201px;
+    display: inline-flex !important;
+}
+
+.profile-user {
+    padding: 30px;
+    font-size: 30px;
+}
+
+.profile-brief {
+    color: #acacac;
+    font-size: 15px;
+    margin-top: 25px;
+}
+
+.column.segment {
+    margin: 20px !important;
+}
+
+.ui.card {
+    margin: 10px !important;
+}
+
+#particles-js {
+    height: 280px !important;
+    background-color: #2a4457 !important;
+}
+
+.home .grid.container {
+    display: inline-flex;
+    justify-content: space-between;
+}
+
+.home .grid.container .ui.card {
+    margin-top: 20px !important;
+    width: 31%;
+}
+
+.edit-button {
+    font-size: 0.5em !important;
+    border: solid 1px #cacaca !important;
+    color: #909090 !important;
+}
+
+.edit-button:hover {
+    font-size: 0.5em !important;
+    border: solid 1px #b1b1b1 !important;
+    color: #909090 !important;
+}
+
+/*---------- EDUCATION ----------*/
+
+.education .name {
+    font-size: 1.2em;
+    font-weight: 600;
+    line-height: 1.2em;
+}
+
+.education .degree {
+    font-size: 1.16em;
+    font-weight: 200;
+}
+
+.education .attended {
+    color: rgba(0, 0, 0, .6);
+    margin: 5px 0;
+}
+
+.education .awards {
+    color: rgba(0, 0, 0, .6);
+}
+
+
+/*---------- ORGANIZATIONS ----------*/
+
+
+.org-container {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.org-container.first {
+    position: relative !important;
+    top: 20px !important;
+}
+
+.org-container .name {
+    font-size: 1.2em;
+    font-weight: 600;
+    line-height: 1.2em;
+}
+
+.org-container .type {
+    color: rgba(0, 0, 0, .6);
+    margin: 5px 0;
+}
+
+.org-container .description {
+    color: rgba(0, 0, 0, .6);
+}
+
+#brand_logo {
+    position: absolute;
+    width: 280px;
+    opacity: .85;
+    left: 0;
+    cursor: pointer;
+    filter: brightness(0) invert(1);
+}
+
+.edit .form {
+    width: 100%;
+}
+
+.submit-container {
+    margin: 30px auto;
+    text-align: center;
+}
+
+/* HOME TAB */
+
+.msg-btn {
+    border-radius: 0 !important;
+    border: #a5a5a5 solid 1px !important;
+    background-color: #e8e8e8 !important;
+    color: #6d6d6d !important;
+    font-family: "Roboto", sans-serif;
+    font-weight: 100 !important;
+    position: relative;
+    left: -173px;
+    top: 34px;
+}
+
+.follow-btn {
+    border-radius: 0 !important;
+    border: #a5a5a5 solid 1px !important;
+    background-color: #e8e8e8 !important;
+    color: #6d6d6d !important;
+    font-family: "Roboto", sans-serif;
+    font-weight: 100 !important;
+    position: relative;
+    left: -178px;
+    top: 34px;
+}
+
+
+.msg-btn:hover,
+.follow-btn:hover {
+    background-color: #d6d6d6 !important;
+}
+
+.msg-btn:active,
+.follow-btn:active {
+    background-color: #c6c6c6 !important;
+}
+
+.home .ui.icon.button > .icon,
+.home .ui.icon.buttons .button > .icon {
+    margin: 0 .42857143em 0 -.21428571em !important;
+}
+
+.label {
+    font-size: 20px;
+}
+
+/* ACCOUNT TAB */
+.account .grid.container {
+    padding: 20px;
+}
+
+.ui.checkbox {
+    padding: 5px
+}
+
+.field-description {
+    padding: 5px 0;
+}
+
+.form.field {
+    padding: 10px;
+}
+
+.field-current {
+    color: grey;
+    font-size: 0.96em;
+    padding: 5px 12px 5px 0;
+    cursor: pointer;
+}
+
+.no-edit {
+    color: grey;
+    font-size: 0.96em;
+    padding: 5px 12px 5px 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.icon.button {
+    display: inline-block;
+}
+
+.account .ui.green.button {
+    background-color: transparent;
+    color: #21ba45;
+    text-shadow: none;
+    background-image: none;
+}
+
+.profile-row {
+    width: 100%;
+    padding: 25px 200px !important;
+}

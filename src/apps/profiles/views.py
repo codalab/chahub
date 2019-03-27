@@ -21,3 +21,7 @@ def sign_up(request):
     else:
         form = ChahubCreationForm()
         return render(request, 'registration/signup.html', {'form': form})
+
+
+def profile(request, username):
+    return render(request, 'profiles/profile.html', {'User': User.objects.get(username=username)})

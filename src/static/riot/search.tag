@@ -27,13 +27,43 @@
                 <div class="ui centered grid">
                     <div class="ui centered row">
                         <div class="ui sixteen wide mobile fifteen wide search-wrapper column">
-                            <div id="searchbar" class="ui left action right icon input">
+                            <div id="searchbar" class="ui left action right action input">
                                 <button class="ui icon button" onclick="{ clear_search }">
                                     <i class="delete icon"></i>
                                 </button>
                                 <input type="text" placeholder="Search..." ref="search"
                                        onkeydown="{ input_updated }">
-                                <i class="search icon"></i>
+                                <div id="search-filter" class="ui left multiple pointing dropdown icon button"
+                                     ref="object_types">
+                                    <i class="filter icon"></i>
+                                    <span class="text"></span>
+                                    <div class="menu">
+                                        <div class="item" data-value="ALL">
+                                            <i class="globe icon"></i>
+                                            <span class="label-text">All</span>
+                                        </div>
+                                        <div class="item" data-value="users">
+                                            <i class="users icon"></i>
+                                            <span class="label-text">Users</span>
+                                        </div>
+                                        <div class="item" data-value="datasets">
+                                            <i class="file icon"></i>
+                                            <span class="label-text">Datasets</span>
+                                        </div>
+                                        <div class="item" data-value="competitions">
+                                            <i class="desktop icon"></i>
+                                            <span class="label-text">Competitions</span>
+                                        </div>
+                                        <div class="item" data-value="tasks">
+                                            <i class="wrench icon"></i>
+                                            <span class="label-text">Tasks</span>
+                                        </div>
+                                        <div class="item" data-value="solutions">
+                                            <i class="pallet icon"></i>
+                                            <span class="label-text">Solutions</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -143,7 +173,8 @@
     <div id="mobile-grid" class="ui centered grid { fix-left: !show_stats }">
         <div id="mobile" class="sixteen wide tablet twelve wide computer column">
             <div class="ui stacked">
-                <div class="ui warning message" show="{ results.length === 0 && !showing_default_results && !loading }">
+                <div class="ui warning message"
+                     show="{ results.length === 0 && !showing_default_results && !loading }">
                     <div class="header">
                         No results found
                     </div>
@@ -154,6 +185,7 @@
                 </div>
                 <div class="ui middle aligned unstackable compact divided link items content-desktop">
                     <competition-tile each="{ results }" no-reorder class="item"></competition-tile>
+                    <user-tile each="{results}" no-reorder class="item"></user-tile>
                 </div>
                 <!--<div class="ui middle aligned compact link items content-mobile" style="margin-top: -1;">
                     <competition-mobile-tile each="{ results }" no-reorder class="item"
@@ -161,7 +193,7 @@
                 </div> -->
             </div>
         </div>
-        <div class="four wide right floated computer only column">
+        <div id="stat-column" class="four wide right floated computer only column">
             <show-stats></show-stats>
         </div>
     </div>
@@ -195,7 +227,6 @@
                 },
                 onChange: function (date, text, mode) {
                     self.set_time_dropdown_text()
-
                     self.search()
                 }
             })
@@ -208,6 +239,23 @@
             //    .sidebar('attach events', '#hamburger_button');
 
             //$(self.refs.time_filter).dropdown('setting', 'onChange', self.search);
+
+            // Dropdown actions (listen AFTER we set dropdowns, so double search doesn't happen!)
+            $(".dropdown", self.root).dropdown({
+                onChange: self.search
+            })
+
+            $(self.refs.object_types).dropdown({
+                onChange: function (text, value) {
+                    var selected_text = $(self.refs.object_types).dropdown('get value')
+                    var all_conditions_found = selected_text.indexOf("competitions") >= 0 && selected_text.indexOf("users") >= 0 && selected_text.indexOf("datasets") >= 0 && selected_text.indexOf("tasks") >= 0 && selected_text.indexOf("solutions") >= 0
+
+                    if (value === "all" || all_conditions_found) {
+                        $(self.refs.object_types).dropdown('change values', 'all')
+                    }
+                    self.search()
+                }
+            })
 
             // Search handling
             $(self.refs.search_wrapper).search({
@@ -312,13 +360,7 @@
             // Dropdowns
             $(self.refs.sort_filter).dropdown('set selected', params.sorting)
             $(self.refs.producer_filter).dropdown('set selected', params.producer)
-
-            // Dropdown actions (listen AFTER we set dropdowns, so double search doesn't happen!)
-            $(".dropdown", self.root).dropdown({
-                onChange: function (text, value) {
-                    self.search()
-                }
-            })
+            $(self.refs.object_types).dropdown('set selected', params.object_types)
 
             // For iframes we might want to hide producer selection
             self.embedded = params.embedded
@@ -360,6 +402,7 @@
             self.refs.search.value = ''
             self.refs.start_date.value = ''
             self.refs.end_date.value = ''
+            $(self.refs.object_types).dropdown('clear')
             $(self.refs.time_filter).dropdown('set selected', '')
             $(self.refs.sort_filter).dropdown('set selected', '')
             if (!self.embedded) {
@@ -380,6 +423,13 @@
             // We may not have a producer so grab preset one from page load if so
             filters.producer = $(self.refs.producer_filter).dropdown('get value')
 
+            // TODO: Set this from input. Spaces are alright, they will get stripped.
+            // Just a string list. Should probably pass this as a JSON string list, and decode on the other side?
+            filters.object_types = $(self.refs.object_types).dropdown('get value')
+            if (filters.object_types === '') {
+                filters.object_types = 'ALL'
+            }
+
             // Remove any unused filters so we don't do empty searches
             dict_remove_empty_values(filters)
 
@@ -390,7 +440,6 @@
 
             console.log("Doing search with filters:")
             console.log(filters)
-            console.trace()
 
             self.old_filters = filters
             self.loading = true
@@ -402,6 +451,7 @@
                     self.suggestions = data.suggestions
                     self.showing_default_results = data.showing_default_results
                     self.results = data.results
+                    console.log(data.results)
                     self.prepare_results()
                     self.update()
                 })
@@ -415,7 +465,6 @@
     </script>
 
     <style type="text/stylus">
-
         #particle_header
             // This is for the particles js animations to fit to this
             position relative
@@ -432,6 +481,9 @@
 
         .advanced.search.ui.row
             padding 0 0
+
+        .search-wrapper
+            z-index 2
 
         #mobile-grid
             margin-top 0
@@ -581,6 +633,20 @@
                 border-bottom-left-radius 3px
             @media screen and (min-width 646px)
                 display none
+
+        #search-filter
+            margin-left 10px
+            border-radius 4px
+            padding 0.5em 0.25em 0.5em 0.75em
+
+            > .label
+                margin 0 .14285714em
+
+                .label-text
+                    display none
+
+                > .icon
+                    margin 0 .25rem 0 0
 
         #search_wrapper .results
             margin-top 1px
@@ -756,7 +822,7 @@
     </div>-->
 </search-result>
 
-<competition-tile onclick="{redirect_to_url}">
+<competition-tile show="{ _obj_type == 'competition' }" onclick="{redirect_to_url}">
     <div class="floating-actions { is-admin: USER_IS_SUPERUSER }">
         <i class="icon green pencil alternate"
            onclick="{ edit_competition }"></i>
@@ -950,6 +1016,84 @@
     </style>
 </competition-tile>
 
+<user-tile if="{ _obj_type == 'user' }" show="{ _obj_type == 'user' }" onclick="{redirect_to_profile}">
+    <div class="ui tiny image">
+        <img src="{avatar_url || URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">
+    </div>
+    <div class="content">
+        <div class="header">
+            {username}
+        </div>
+        <div class="description">
+            <p>{bio}</p>
+        </div>
+        <div class="extra">
+            <div class="mobile_linewrap">
+                <span class="url"><a href="{url}">{url}</a></span>
+            </div>
+        </div>
+        <span class="competitions-label ui right floated mini label tooltip" data-content="Competitions">
+            <i class="trophy icon"></i>
+            <span class="label-text">30</span>
+        </span>
+        <span class="submissions-label ui right floated mini label tooltip" data-content="Submissions">
+            <i class="archive icon"></i>
+            <span class="label-text">30</span>
+        </span>
+        <span class="datasets-label ui right floated mini label tooltip" data-content="Datasets">
+            <i class="upload icon"></i>
+            <span class="label-text">4</span>
+        </span>
+        <span class="button-group">
+            <button class="ui circular mini facebook icon button">
+                <i class="facebook icon"></i>
+            </button>
+            <button class="ui circular mini twitter icon button">
+                <i class="twitter icon"></i>
+            </button>
+            <button class="ui circular mini linkedin icon button">
+                <i class="linkedin icon"></i>
+            </button>
+            <button class="ui circular mini google plus icon button">
+                <i class="google plus icon"></i>
+            </button>
+        </span>
+    </div>
+
+    <script>
+        var self = this
+
+        self.redirect_to_profile = function () {
+            window.open('/profiles/' + self.username);
+        }
+
+        self.on("mount", function () {
+            $(".tooltip", self.root).popup()
+        })
+    </script>
+
+    <style type="text/stylus">
+        .ui.label
+            margin 0 2px !important
+
+        .competitions-label
+            background-color #a5917a !important
+            color #ffc73a !important
+
+        .submissions-label
+            background-color #464646 !important
+            color #f7f7f7 !important
+
+        .datasets-label
+            background-color #b1402f !important
+            color #f7f7f7 !important
+
+        .label-text
+            color white !important
+    </style>
+
+</user-tile>
+
 <show-stats>
     <button id="stats-btn" onclick="{ stats_button_clicked }"
             class="ui black big launch left attached fixed button">
@@ -963,17 +1107,17 @@
         <div class="content">
             <h4 class="ui sub blue header">Chahub brings together</h4>
             <div class="ui two column grid">
-                    <div class="column" each="{ stat in producer_stats }" no-reorder>
-            <div class="ui six tiny statistics">
-                <div class="statistic">
-                    <div class="value">
-                        { stat.count }
+                <div class="column" each="{ stat in producer_stats }" no-reorder>
+                    <div class="ui six tiny statistics">
+                        <div class="statistic">
+                            <div class="value">
+                                { stat.count }
+                            </div>
+                            <div class="label">
+                                { stat.label }
+                            </div>
+                        </div>
                     </div>
-                    <div class="label">
-                        { stat.label }
-                    </div>
-                </div>
-            </div>
                 </div>
             </div>
 
@@ -1051,13 +1195,13 @@
         #stat-card
             z-index -1
 
-        .ui.card>.content, .ui.cards>.card>.content
+        .ui.card > .content, .ui.cards > .card > .content
             padding-right 3em
 
-        .ui.card>.content>.sub.header
+        .ui.card > .content > .sub.header
             padding-bottom 10px
 
-        .ui.statistics>.statistic
+        .ui.statistics > .statistic
             flex 1 1 auto
     </style>
 </show-stats>

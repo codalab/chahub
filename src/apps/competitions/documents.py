@@ -1,4 +1,5 @@
 from django_elasticsearch_dsl import DocType, Index, fields
+
 from .models import Competition
 
 competitions = Index('competitions')
@@ -54,6 +55,11 @@ class CompetitionDocument(DocType):
         'url': fields.TextField(),
         'name': fields.TextField()
     })
+
+    _obj_type = fields.TextField()
+
+    def prepare__obj_type(self, instance):
+        return 'competition'
 
     # TODO: add "active" boolean field so we can add this to queries and not have a special case
 
