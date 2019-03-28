@@ -10,7 +10,7 @@ class GithubUserInfoSerializer(ModelSerializer):
     class Meta:
         model = GithubUserInfo
         fields = [
-            'github_uid',
+            'uid',
             'login',
             'avatar_url',
             'gravatar_id',
@@ -40,7 +40,7 @@ class LinkedInUserInfoSerializer(ModelSerializer):
     class Meta:
         model = LinkedInUserInfo
         fields = [
-            'linkedin_uid',
+            'uid',
             'firstName',
             'lastName'
         ]
