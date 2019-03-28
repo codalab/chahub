@@ -31,7 +31,7 @@ html, body {
 .profile-brief {
     color: #acacac;
     font-size: 15px;
-    margin-top: 25px;
+    margin: 35px 0 15px;
 }
 
 .column.segment {

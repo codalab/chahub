@@ -27,8 +27,20 @@
                 <div class="profile-user">
                     Profile Name
                     <div class="profile-brief">
+                        <div class="location">Seattle, Washington USA</div>
                         <div class="occupation">Programmer at MadeUp Company</div>
                         A brief description of the user goes here
+                    </div>
+                    <div class="languages">
+                        <div class="ui mini label">
+                            Python
+                        </div>
+                        <div class="ui mini label">
+                            C++
+                        </div>
+                        <div class="ui mini label">
+                            Go
+                        </div>
                     </div>
                     <!-- <div class="ui large button msg-btn">Message Me</div>
                     <span class="ui icon large button follow-btn"><i class="user icon"></i>Follow</span> -->
@@ -49,101 +61,67 @@
         <!------------ HOME TAB ----------->
         <div class="ui active home tab" data-tab="home">
             <div class="ui sixteen wide grid container">
+
                 <div class="competition-segment ui segment eight wide">
                     <div class="ui header">Competitions</div>
                     <div class="ui content flex-content">
                         <div class="list-comps">
-                            <div class="list-tile">
-                                <a href="#">Competition about competition b...</a>
-                                <div class="date-complete">Competition ended 03/01/2018</div>
+                            <div class="stat-breakdown">
+                                <table class="stats-table">
+                                    <tr>
+                                        <td class="category">Competitions Organized:</td>
+                                        <td class="statistic">124</td>
+                                        <td class="category">Organizer Since:</td>
+                                        <td class="statistic">02/11/2017</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="category">Total Participants:</td>
+                                        <td class="statistic">5201</td>
+                                        <td class="category">Total Submissions:</td>
+                                        <td class="statistic">73,240</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="category">Prize Money Awarded:</td>
+                                        <td class="statistic">$65,500.00</td>
+                                    </tr>
+                                </table>
                             </div>
-                            <div class="list-tile">
-                                <a href="#">Competition about competition b...</a>
-                                <div class="date-complete">Competition ended 03/01/2018</div>
+                            <div class="ui middle aligned unstackable compact divided link items content-desktop">
+                                <h3>My Featured Competitions</h3>
+                                <competition-tile each="{ competitions }" no-reorder class="item"></competition-tile>
                             </div>
-                            <div class="list-tile">
-                                <a href="#">Competition about competition b...</a>
-                                <div class="date-complete">Competition ended 03/01/2018</div>
-                            </div>
-                            <div class="list-tile">
-                                <a href="#">Competition about competition b...</a>
-                                <div class="date-complete">Competition ended 03/01/2018</div>
-                            </div>
-                        </div>
-                        <div class="scores">
-                            <div class="medals">
-                                <div class="medal medal-one"></div>
-                                <div class="medal medal-two"></div>
-                                <div class="medal medal-three"></div>
-                            </div>
-                            <div class="medal-amounts">
-                                <div class="medal-amount">12</div>
-                                <div class="medal-amount">18</div>
-                                <div class="medal-amount">43</div>
-                            </div>
-                            <table class="stats">
-                                <tr>
-                                    <td class="category">Competitions:</td>
-                                    <td class="statistic">124</td>
-                                </tr>
-                                <tr>
-                                    <td class="category">Percentile:</td>
-                                    <td class="statistic">89.25</td>
-                                </tr>
-                                <tr>
-                                    <td class="category">Total Score:</td>
-                                    <td class="statistic">12,389.25</td>
-                                </tr>
-                            </table>
                         </div>
                     </div>
                 </div>
+
                 <div class="competition-segment ui segment eight wide">
                     <div class="ui header">Submissions</div>
                     <div class="ui content flex-content">
                         <div class="list-comps">
-                            <div class="list-tile">
-                                <a href="#">Competition about competition b...</a>
-                                <div class="date-complete">Submitted 03/01/2018</div>
+                            <div class="stat-breakdown">
+                                <table class="stats-table">
+                                    <tr>
+                                        <td class="category">Submissions:</td>
+                                        <td class="statistic">1250</td>
+                                        <td class="category">User Since:</td>
+                                        <td class="statistic">09/12/2016</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="category">Top 10 Finishes:</td>
+                                        <td class="statistic">1</td>
+                                        <td class="category">Prize Money Won:</td>
+                                        <td class="statistic">$2,500.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="category">Competitions Joined:</td>
+                                        <td class="statistic">112</td>
+                                    </tr>
+                                </table>
                             </div>
-                            <div class="list-tile">
-                                <a href="#">Competition about competition b...</a>
-                                <div class="date-complete">Submitted 03/01/2018</div>
+                            <div class="ui middle aligned unstackable compact divided link items content-desktop">
+                                <h3>Latest Submissions</h3>
+                                <competition-tile each="{ submissions }" no-reorder class="item"></competition-tile>
                             </div>
-                            <div class="list-tile">
-                                <a href="#">Competition about competition b...</a>
-                                <div class="date-complete">Submitted 03/01/2018</div>
-                            </div>
-                            <div class="list-tile">
-                                <a href="#">Competition about competition b...</a>
-                                <div class="date-complete">Submitted 03/01/2018</div>
-                            </div>
-                        </div>
-                        <div class="scores">
-                            <div class="medals">
-                                <div class="medal medal-one"></div>
-                                <div class="medal medal-two"></div>
-                                <div class="medal medal-three"></div>
-                            </div>
-                            <div class="medal-amounts">
-                                <div class="medal-amount">12</div>
-                                <div class="medal-amount">18</div>
-                                <div class="medal-amount">43</div>
-                            </div>
-                            <table class="stats">
-                                <tr>
-                                    <td class="category">Submissions:</td>
-                                    <td class="statistic">124</td>
-                                </tr>
-                                <tr>
-                                    <td class="category">Percentile:</td>
-                                    <td class="statistic">89.25</td>
-                                </tr>
-                                <tr>
-                                    <td class="category">Total Score:</td>
-                                    <td class="statistic">12,389.25</td>
-                                </tr>
-                            </table>
                         </div>
                     </div>
                 </div>
@@ -159,18 +137,23 @@
 
         <!------------ EDIT TAB ----------->
         <div class="ui edit tab" data-tab="edit">
-            <div class="ui equal width grid container">
+            <div class="ui sixteen wide grid container">
                 <div class="ui form">
-                    <div class="profile-row">
-                        <div class="field" if="{!user.github_info}">
-                            <label>Connect with github</label>
-                            <a class="ui large blue button" href="/social/login/github">Login</a>
+                    <div class="segment-container social-connect ui segment sixteen wide">
+                        <div class="ui header">
+                            Connect with Github
                         </div>
-                        <div class="field" if="{!!user.github_info}">
-                            <label>Connect with github</label>
-                            <a class="ui large disabled blue button"
-                               href="/social/login/github">Login</a>
-                            <i>You are already connected!</i>
+                        <div class="container-content">
+                            <div class="field" if="{!user.github_info}">
+                                <label>Connect with github</label>
+                                <a class="ui large blue button" href="/social/login/github">Login</a>
+                            </div>
+                            <div class="field" if="{!!user.github_info}">
+                                <label>Connect with github</label>
+                                <a class="ui large disabled blue button"
+                                   href="/social/login/github">Login</a>
+                                <i>You are already connected!</i>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -243,6 +226,77 @@
             $('.ui.checkbox').checkbox();
         })
 
+        self.submissions = [
+            {
+                logo: 'http://placeimg.com/200/200/any',
+                _obj_type: 'competition',
+                title: 'Placeholder Competition',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '190',
+                prize: '2400',
+            },
+            {
+                logo: 'http://placeimg.com/201/201/any',
+                _obj_type: 'competition',
+                title: 'Placeholder Competition',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '190',
+                prize: '2400',
+            },
+            {
+                logo: 'http://placeimg.com/202/202/any',
+                _obj_type: 'competition',
+                title: 'Placeholder Competition',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '190',
+                prize: '2400',
+            }
+        ]
+
+        self.competitions = [
+            {
+                logo: 'http://placeimg.com/203/203/any',
+                _obj_type: 'competition',
+                title: 'Placeholder Competition',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '190',
+                prize: '2400',
+            },
+            {
+                logo: 'http://placeimg.com/204/204/any',
+                _obj_type: 'competition',
+                title: 'Placeholder Competition',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '190',
+                prize: '2400',
+            },
+            {
+                logo: 'http://placeimg.com/205/205/any',
+                _obj_type: 'competition',
+                title: 'Placeholder Competition',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '190',
+                prize: '2400',
+            }
+        ]
     </script>
 
     <style>
@@ -284,15 +338,22 @@
             height: auto;
         }
 
-        .stats .category {
-            font-weight: 600;
-            font-size: 1.15em;
-            color: #202d53;
-            text-align: right;
+        .stats-table {
+            width: 100%;
+            border-bottom: 1px solid gainsboro;
+            padding-bottom: 1em;
+            margin-bottom: 1em;
         }
 
-        .stats .statistic {
-            width: 100%;
+        .stats-table .category {
+            font-weight: 600;
+            font-size: 1.15em;
+            color: #2b2b2b;
+            text-align: left;
+            padding: 0 10px;
+        }
+
+        .stats-table .statistic {
             font-size: .85em;
             color: #A0A0A0;
             text-align: right;
@@ -302,10 +363,6 @@
             width: 47.5%;
             margin: 1em;
             padding: 0;
-        }
-
-        .occupation {
-            font-weight: 600;
         }
 
         .social-buttons {
@@ -339,6 +396,7 @@
             color: #A0A0A0;
         }
 
+
         .flex-content {
             display: flex;
             flex-direction: row;
@@ -347,47 +405,18 @@
             margin: 1em 0;
         }
 
+        .competition-segment .flex-content {
+            flex-direction: column;
+            margin: 0;
+        }
+
         .list-tile > a {
             font-size: 15px;
             font-weight: 600;
         }
 
-        .list-comps {
-            border-right: 1px solid gainsboro;
-            width: 60%;
-        }
-
         .list-comps, .scores {
             padding: 20px;
-        }
-
-        .medals, .medal-amounts {
-            display: flex;
-            flex-direction: row;
-        }
-
-        .medal {
-            height: 30px;
-            width: 30px;
-            margin: 3px 14px;
-        }
-
-        .medal-one {
-            background-image: url('/static/img/gold_medal.svg');
-        }
-
-        .medal-two {
-            background-image: url('/static/img/silver_medal.svg')
-        }
-
-        .medal-three {
-            background-image: url('/static/img/bronze_medal.svg')
-        }
-
-        .medal-amount {
-            text-align: center;
-            margin: 14px;
-            width: 30px;
         }
 
         .date-complete {
@@ -395,7 +424,48 @@
             font-size: 0.8em;
         }
 
+        .edit.tab .primary-container {
+            width: 100%;
+        }
+
+        .edit.tab .sixteen.wide.grid.container {
+            margin: 2em -1em;
+        }
+
+        .segment-container.social-connect {
+            padding: 0 !important;
+            height: 100%;
+            text-align: left;
+            margin: 0 -1em !important;
+        }
+
+        .edit.tab .segment-container > .header {
+            font-size: 1em !important;
+            text-align: left !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            background-color: #F2FAFF;
+            padding: 10px;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            border-bottom: solid 1px gainsboro;
+        }
+
+        .edit.tab .container-content {
+            margin: 10px;
+        }
+
+        .edit.tab .list-tile {
+            font-size: 0.75em;
+        }
+
+        .edit.tab .list-tile a {
+            font-size: 10px;
+        }
+
     </style>
+
+
 </profile-page>
 
 <about-me id="about-me">
