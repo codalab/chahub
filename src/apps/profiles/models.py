@@ -54,7 +54,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 # WILL BE VERY USEFUL
 class GithubUserInfo(models.Model):
     # Required Info
-    github_uid = models.CharField(max_length=30, unique=True)
+    uid = models.CharField(max_length=30, unique=True)
 
     # Misc/Avatar/Profile
     login = models.CharField(max_length=100, null=True, blank=True) # username
@@ -84,11 +84,11 @@ class GithubUserInfo(models.Model):
 
 # No use yet
 class DockerUserInfo(models.Model):
-    docker_uid = models.CharField(max_length=30, unique=True)
+    uid = models.CharField(max_length=30, unique=True)
 
 
 # Not so useful
 class LinkedInUserInfo(models.Model):
-    linkedin_uid = models.CharField(max_length=30, unique=True)
+    uid = models.CharField(max_length=30, unique=True)
     firstName = models.CharField(max_length=50, null=True, blank=True)
     lastName = models.CharField(max_length=50, null=True, blank=True)
