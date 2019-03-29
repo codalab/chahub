@@ -13,7 +13,8 @@ class Data(models.Model):
 
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True)
 
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    created_by = models.TextField(null=True, blank=True)
 
     created_when = models.DateTimeField(default=None, blank=True, null=True)
     uploaded_when = models.DateTimeField(auto_now_add=True)

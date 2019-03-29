@@ -23,7 +23,8 @@ class Task(models.Model):
     # We can keep this, and allow null/blank. If the user has a chahub_id attached to their profile
     # (Or some such field when connecting), and have that sent across so we can associate this dataset back here with their user.
     # We will probably need to send their Chahub OAuth access token or some such to verify this for security reasons.
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    created_by = models.TextField(null=True, blank=True)
 
     created_when = models.DateTimeField(default=None, blank=True, null=True)
     uploaded_when = models.DateTimeField(auto_now_add=True)
@@ -60,7 +61,8 @@ class Solution(models.Model):
     # We can keep this, and allow null/blank. If the user has a chahub_id attached to their profile
     # (Or some such field when connecting), and have that sent across so we can associate this dataset back here with their user.
     # We will probably need to send their Chahub OAuth access token or some such to verify this for security reasons.
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    created_by = models.TextField(null=True, blank=True)
 
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True)
 

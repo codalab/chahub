@@ -7,6 +7,7 @@ from django.utils import timezone
 class Competition(models.Model):
     # created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     created_by = models.TextField(null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True) # Added so we can tie back to Chahub Users
     created_when = models.DateTimeField(auto_now_add=True)
     start = models.DateTimeField(null=True, blank=True)
     title = models.TextField()
