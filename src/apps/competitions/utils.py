@@ -30,6 +30,7 @@ def competition_download_image(competition_pk):
         resp = requests.get(comp.logo_url)
     except RequestsConnectionError:
         logger.info("Failed to retrieve logo from {site}".format(site=comp.logo_url))
+        return
     content_type = resp.headers.get('Content_Type')
     logger.info(
         "Response; Status: {0}, Content-Type: {1}".format(resp.status_code, content_type.lower())
