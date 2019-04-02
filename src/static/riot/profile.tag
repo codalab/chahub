@@ -289,35 +289,45 @@
                                 <td data-label="Type">Competition Bundle</td>
                                 <td data-label="Uploaded">03/20/15</td>
                                 <td data-label="Public">True</td>
-                                <td data-label="Delete" class="center aligned column"><div class="ui red button">Delete</div></td>
+                                <td data-label="Delete" class="center aligned column">
+                                    <div class="ui red button">Delete</div>
+                                </td>
                             </tr>
                             <tr>
                                 <td data-label="Name">file2.zip</td>
                                 <td data-label="Type">Input Data</td>
                                 <td data-label="Uploaded">11/20/2018</td>
                                 <td data-label="Public">False</td>
-                                <td data-label="Delete" class="center aligned column"><div class="ui red button">Delete</div></td>
+                                <td data-label="Delete" class="center aligned column">
+                                    <div class="ui red button">Delete</div>
+                                </td>
                             </tr>
                             <tr>
                                 <td data-label="Name">file3.zip</td>
                                 <td data-label="Type">Ingestion Program</td>
                                 <td data-label="Uploaded">05/10/16</td>
                                 <td data-label="Public">True</td>
-                                <td data-label="Delete" class="center aligned column"><div class="ui red button">Delete</div></td>
+                                <td data-label="Delete" class="center aligned column">
+                                    <div class="ui red button">Delete</div>
+                                </td>
                             </tr>
                             <tr>
                                 <td data-label="Name">file3.zip</td>
                                 <td data-label="Type">Ingestion Program</td>
                                 <td data-label="Uploaded">05/10/16</td>
                                 <td data-label="Public">True</td>
-                                <td data-label="Delete" class="center aligned column"><div class="ui red button">Delete</div></td>
+                                <td data-label="Delete" class="center aligned column">
+                                    <div class="ui red button">Delete</div>
+                                </td>
                             </tr>
                             <tr>
                                 <td data-label="Name">file3.zip</td>
                                 <td data-label="Type">Ingestion Program</td>
                                 <td data-label="Uploaded">05/10/16</td>
                                 <td data-label="Public">True</td>
-                                <td data-label="Delete" class="center aligned column"><div class="ui red button">Delete</div></td>
+                                <td data-label="Delete" class="center aligned column">
+                                    <div class="ui red button">Delete</div>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -500,48 +510,40 @@
 
     <style>
         .details {
-            margin: 0 -1em;
+            margin: 0 -1em
         }
 
-        about-me {
-            width: 100%;
+        .competitions.tab .primary-container, .edit.tab .primary-container, about-me, events-container, organization-container {
+            width: 100%
         }
 
         education-container {
-            width: 35% !important;
+            width: 35% !important
         }
 
         datasets-container {
-            width: 62% !important;
-        }
-
-        organization-container {
-            width: 100%;
-        }
-
-        events-container {
-            width: 100%;
+            width: 62% !important
         }
 
         recent-container {
             margin: 1em 1em 1em auto;
             text-align: right;
-            float: right;
+            float: right
         }
 
         .details > .container {
-            margin-top: 1em;
+            margin-top: 1em
         }
 
         #editor-container {
-            height: auto;
+            height: auto
         }
 
         .stats-table {
             width: 100%;
-            border-bottom: 1px solid gainsboro;
+            border-bottom: 1px solid #dcdcdc;
             padding-bottom: 1em;
-            margin-bottom: 1em;
+            margin-bottom: 1em
         }
 
         .stats-table .category {
@@ -549,55 +551,57 @@
             font-size: 1.15em;
             color: #2b2b2b;
             text-align: left;
-            padding: 0 10px;
+            padding: 0 10px
         }
 
         .stats-table .statistic {
             font-size: .85em;
-            color: #A0A0A0;
-            text-align: right;
+            color: #a0a0a0;
+            text-align: right
         }
 
-        .details > .container > .ui.segment,
-        .competitions > .container > .ui.segment {
+        .competitions > .container > .ui.segment,
+        .details > .container > .ui.segment {
             width: 47.5%;
             margin: 1em;
-            padding: 0;
+            padding: 0
         }
 
+        .competitions.tab .container-content,
+        .edit.tab .container-content,
         .social-buttons {
-            margin: 10px;
+            margin: 10px
         }
 
         #profile-menu {
-            margin: 0;
+            margin: 0
         }
 
         .competition-segment > .header {
             margin-top: 0 !important;
             margin-bottom: 0 !important;
-            background-color: #F2FAFF;
+            background-color: #f2faff;
             padding: 10px;
             border-top-left-radius: 3px;
             border-top-right-radius: 3px;
-            border-bottom: solid 1px gainsboro;
+            border-bottom: solid 1px #dcdcdc
         }
 
         .competition-segment {
-            margin: 15px 0;
+            margin: 15px 0
         }
 
         .bio-segment {
-            width: 100% !important;
+            width: 100% !important
         }
 
         .biography {
             padding: 30px;
-            color: #A0A0A0;
+            color: #a0a0a0
         }
 
         .no-margin {
-            margin: 0 !important;
+            margin: 0 !important
         }
 
         .flex-content {
@@ -605,87 +609,68 @@
             flex-direction: row;
             justify-content: space-between;
             flex-wrap: wrap;
-            margin: 1em 0;
+            margin: 1em 0
         }
 
         .competition-segment .flex-content {
             flex-direction: column;
             margin: 0;
-            padding: 1em !important;
+            padding: 1em !important
         }
 
         .list-tile > a {
             font-size: 15px;
-            font-weight: 600;
+            font-weight: 600
         }
 
         .date-complete {
-            color: #A0A0A0;
-            font-size: 0.8em;
+            color: #a0a0a0;
+            font-size: .8em
         }
 
-        .edit.tab .primary-container,
-        .competitions.tab .primary-container {
-            width: 100%;
-        }
-
-        .edit.tab .sixteen.wide.grid.container {
-            margin: 2em -1em;
-        }
-
-        .competitions.tab {
-            margin: 2em -1em;
+        .competitions.tab, .edit.tab .sixteen.wide.grid.container {
+            margin: 2em -1em
         }
 
         .competitions.tab .pagination.menu {
-            margin: 1.25em 0.5em 0.25em;
+            margin: 1.25em .5em .25em
         }
 
         .edit .segment-container {
             padding: 0 !important;
             height: 100%;
             text-align: left;
-            margin: 0 -1em !important;
+            margin: 0 -1em !important
         }
 
         .competitions .segment-container {
             padding: 0 !important;
-            width: 100%;
+            width: 100%
         }
 
-
-        .edit.tab .segment-container > .header,
-        .competitions.tab .segment-container > .header,
-        .datasets.tab .segment-container > .header {
+        .competitions.tab .segment-container > .header, .datasets.tab .segment-container > .header, .edit.tab .segment-container > .header {
             font-size: 1em !important;
             text-align: left !important;
             margin-top: 0 !important;
             margin-bottom: 0 !important;
-            background-color: #F2FAFF;
+            background-color: #f2faff;
             padding: 10px;
             border-top-left-radius: 3px;
             border-top-right-radius: 3px;
-            border-bottom: solid 1px gainsboro;
+            border-bottom: solid 1px #dcdcdc
         }
 
-        .edit.tab .container-content,
-        .competitions.tab .container-content {
-            margin: 10px;
+        .competitions.tab .list-tile, .edit.tab .list-tile {
+            font-size: .75em
         }
 
-        .edit.tab .list-tile,
-        .competitions.tab .list-tile {
-            font-size: 0.75em;
-        }
-
-        .edit.tab .list-tile a,
-        .competitions.tab .list-tile a {
-            font-size: 10px;
+        .competitions.tab .list-tile a, .edit.tab .list-tile a {
+            font-size: 10px
         }
 
         .competitions-summary {
             width: 100% !important;
-            margin: 1em !important;
+            margin: 1em !important
         }
 
         .competitions.tab .stats-table {
@@ -693,25 +678,25 @@
             justify-content: space-between;
             margin: 1em 4em 1em 1em;
             width: auto;
-            border-bottom: none;
+            border-bottom: none
         }
 
         .competitions-summary .container-content {
-            text-align: center;
+            text-align: center
         }
 
         .datasets .table {
-            width: 100%;
+            width: 100%
         }
 
         .datasets-segment {
             margin-top: 3em !important;
             width: 100%;
-            padding: 0 !important;
+            padding: 0 !important
         }
 
         .datasets-segment .container-content {
-            padding: 1em;
+            padding: 1em
         }
 
     </style>
@@ -1068,45 +1053,43 @@
     </script>
 
     <style>
-
         .segment-container {
             padding: 0 !important;
             margin: 1em 0 !important;
-            height: auto;
+            height: auto
         }
 
         .segment-container > .header {
             margin-top: 0 !important;
             margin-bottom: 0 !important;
-            background-color: #F2FAFF;
+            background-color: #f2faff;
             padding: 10px;
             border-top-left-radius: 3px;
             border-top-right-radius: 3px;
-            border-bottom: solid 1px gainsboro;
+            border-bottom: solid 1px #dcdcdc
         }
 
         .container-content {
-            margin: 20px;
+            margin: 20px
         }
 
         .name {
             font-size: 1.2em;
             font-weight: 600;
-            line-height: 1.2em;
+            line-height: 1.2em
         }
 
         .degree {
             font-size: 1.16em;
-            font-weight: 200;
+            font-weight: 200
         }
 
         .attended {
-            color: #909090;
-            margin: 5px 0;
+            margin: 5px 0
         }
 
-        .awards {
-            color: #909090;
+        .attended, .awards {
+            color: #909090
         }
 
     </style>
