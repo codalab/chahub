@@ -48,20 +48,25 @@
                 <recent-container></recent-container>
             </div>
             <div id="profile-menu" class="ui secondary pointing menu">
-                <a class="active item" data-tab="home">
-                    Home
+                <a class="active item" data-tab="details">
+                    Details
                 </a>
-                <a class="item" data-tab="edit">
-                    Add/Edit
+                <a class="item" data-tab="competitions">
+                    Competitions
+                </a>
+                <a class="item" data-tab="datasets">
+                    Datasets
+                </a>
+                <a class="item" if="{USER_AUTHENTICATED}" data-tab="edit">
+                    Account
                 </a>
             </div>
         </div>
 
 
         <!------------ HOME TAB ----------->
-        <div class="ui active home tab" data-tab="home">
+        <div class="ui active details tab" data-tab="details">
             <div class="ui sixteen wide grid container">
-
                 <div class="competition-segment ui segment eight wide">
                     <div class="ui header">Competitions</div>
                     <div class="ui content flex-content">
@@ -86,9 +91,10 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div class="ui middle aligned unstackable compact divided link items content-desktop">
+                            <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>My Featured Competitions</h3>
-                                <competition-tile each="{ competitions }" no-reorder class="item"></competition-tile>
+                                <competition-tile each="{ sorted_competitions }" no-reorder
+                                                  class="item"></competition-tile>
                             </div>
                         </div>
                     </div>
@@ -118,9 +124,9 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div class="ui middle aligned unstackable compact divided link items content-desktop">
+                            <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>Latest Submissions</h3>
-                                <competition-tile each="{ submissions }" no-reorder class="item"></competition-tile>
+                                <competition-tile each="{ submissions }" class="item"></competition-tile>
                             </div>
                         </div>
                     </div>
@@ -132,6 +138,191 @@
                 </div>
                 <organization-container class="organization-container"></organization-container>
                 <events-container class="events-container"></events-container>
+            </div>
+        </div>
+
+
+        <!---------- COMPETITIONS TAB ----------->
+        <div class="ui competitions tab" data-tab="competitions">
+            <div class="ui sixteen wide grid container">
+                <div class="segment-container competitions-summary ui segment sixteen wide">
+                    <div class="ui header">
+                        Competitions Summary
+                    </div>
+                    <div class="container-content">
+                        <table class="stats-table">
+                            <tr>
+                                <td class="category">Competitions Organized:</td>
+                                <td class="statistic">124</td>
+                                <td class="category">Organizer Since:</td>
+                                <td class="statistic">02/11/2017</td>
+                            </tr>
+                            <tr>
+                                <td class="category">Total Participants:</td>
+                                <td class="statistic">5201</td>
+                                <td class="category">Total Submissions:</td>
+                                <td class="statistic">73,240</td>
+                            </tr>
+                            <tr>
+                                <td class="category">Prize Money Awarded:</td>
+                                <td class="statistic">$65,500.00</td>
+                            </tr>
+                        </table>
+                        <table class="stats-table">
+                            <tr>
+                                <td class="category">Submissions:</td>
+                                <td class="statistic">1250</td>
+                                <td class="category">User Since:</td>
+                                <td class="statistic">09/12/2016</td>
+                            </tr>
+                            <tr>
+                                <td class="category">Top 10 Finishes:</td>
+                                <td class="statistic">1</td>
+                                <td class="category">Prize Money Won:</td>
+                                <td class="statistic">$2,500.00</td>
+                            </tr>
+                            <tr>
+                                <td class="category">Competitions Joined:</td>
+                                <td class="statistic">112</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="ui sixteen wide grid container">
+                <div class="competition-segment ui segment eight wide">
+                    <div class="ui header">Competitions I'm Running</div>
+                    <div class="ui content flex-content">
+                        <div class="list-comps">
+                            <div class="stat-breakdown">
+
+                            </div>
+                            <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
+                                <competition-tile each="{ sorted_competitions }" no-reorder
+                                                  class="item"></competition-tile>
+                            </div>
+                            <div class="ui pagination menu">
+                                <a class="active item">
+                                    1
+                                </a>
+                                <a class="item">
+                                    2
+                                </a>
+                                <a class="item">
+                                    3
+                                </a>
+                                <a class="item">
+                                    4
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="competition-segment ui segment eight wide">
+                    <div class="ui header">Competitions I'm In</div>
+                    <div class="ui content flex-content">
+                        <div class="list-comps">
+                            <div class="stat-breakdown">
+
+                            </div>
+                            <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
+                                <competition-tile each="{ submissions }" class="item"></competition-tile>
+                            </div>
+                            <div class="ui pagination menu">
+                                <a class="active item">
+                                    1
+                                </a>
+                                <a class="item">
+                                    2
+                                </a>
+                                <a class="item">
+                                    3
+                                </a>
+                                <a class="item">
+                                    4
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!---------- SUBMISSIONS TAB ----------->
+        <div class="ui submissions tab" data-tab="submissions">
+            <div class="ui sixteen wide grid container">
+                <div class="segment-container ui segment sixteen wide">
+                    <div class="ui header">
+                        My Submissions
+                    </div>
+                    <div class="container-content">
+                        <div class="ui middle aligned unstackable compact divided link items content-desktop">
+                            <competition-tile each="{ submissions }" class="item"></competition-tile>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!------------ EDIT TAB ----------->
+        <div class="ui datasets tab" data-tab="datasets">
+            <div class="ui sixteen wide grid container">
+                <div class="segment-container datasets-segment ui segment sixteen wide">
+                    <div class="ui header">
+                        My Datasets
+                    </div>
+                    <div class="container-content">
+                        <table class="ui celled table">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Uploaded</th>
+                                <th>Public</th>
+                                <th class="center aligned column">Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td data-label="Name">file1.zip</td>
+                                <td data-label="Type">Competition Bundle</td>
+                                <td data-label="Uploaded">03/20/15</td>
+                                <td data-label="Public">True</td>
+                                <td data-label="Delete" class="center aligned column"><div class="ui red button">Delete</div></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Name">file2.zip</td>
+                                <td data-label="Type">Input Data</td>
+                                <td data-label="Uploaded">11/20/2018</td>
+                                <td data-label="Public">False</td>
+                                <td data-label="Delete" class="center aligned column"><div class="ui red button">Delete</div></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Name">file3.zip</td>
+                                <td data-label="Type">Ingestion Program</td>
+                                <td data-label="Uploaded">05/10/16</td>
+                                <td data-label="Public">True</td>
+                                <td data-label="Delete" class="center aligned column"><div class="ui red button">Delete</div></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Name">file3.zip</td>
+                                <td data-label="Type">Ingestion Program</td>
+                                <td data-label="Uploaded">05/10/16</td>
+                                <td data-label="Public">True</td>
+                                <td data-label="Delete" class="center aligned column"><div class="ui red button">Delete</div></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Name">file3.zip</td>
+                                <td data-label="Type">Ingestion Program</td>
+                                <td data-label="Uploaded">05/10/16</td>
+                                <td data-label="Public">True</td>
+                                <td data-label="Delete" class="center aligned column"><div class="ui red button">Delete</div></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -226,42 +417,6 @@
             $('.ui.checkbox').checkbox();
         })
 
-        self.submissions = [
-            {
-                logo: 'http://placeimg.com/200/200/any',
-                _obj_type: 'competition',
-                title: 'Placeholder Competition',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '2400',
-            },
-            {
-                logo: 'http://placeimg.com/201/201/any',
-                _obj_type: 'competition',
-                title: 'Placeholder Competition',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '2400',
-            },
-            {
-                logo: 'http://placeimg.com/202/202/any',
-                _obj_type: 'competition',
-                title: 'Placeholder Competition',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '2400',
-            }
-        ]
-
         self.competitions = [
             {
                 logo: 'http://placeimg.com/203/203/any',
@@ -271,7 +426,7 @@
                 url: 'https://google.com/',
                 start: '2018-01-29',
                 end: '2021-06-29',
-                participant_count: '190',
+                participant_count: '19',
                 prize: '2400',
             },
             {
@@ -282,7 +437,7 @@
                 url: 'https://google.com/',
                 start: '2018-01-29',
                 end: '2021-06-29',
-                participant_count: '190',
+                participant_count: '1900',
                 prize: '2400',
             },
             {
@@ -297,10 +452,54 @@
                 prize: '2400',
             }
         ]
+
+        self.submissions = [
+            {
+                logo: 'http://placeimg.com/200/200/any',
+                _obj_type: 'competition',
+                title: 'Find Stuff in Data',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '10',
+                prize: '1200',
+            },
+            {
+                logo: 'http://placeimg.com/201/201/any',
+                _obj_type: 'competition',
+                title: 'Chance of a Car Running into a Tree',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '1090',
+                prize: '2400',
+            },
+            {
+                logo: 'http://placeimg.com/202/202/any',
+                _obj_type: 'competition',
+                title: 'Trading bot',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '190',
+                prize: '65400',
+            }
+        ]
+
+
+        self.sorted_competitions = self.competitions.slice(0);
+        self.sorted_competitions.sort(function (a, b) {
+            return b.participant_count - a.participant_count;
+        });
+
+
     </script>
 
     <style>
-        .home {
+        .details {
             margin: 0 -1em;
         }
 
@@ -330,7 +529,7 @@
             float: right;
         }
 
-        .home > .container {
+        .details > .container {
             margin-top: 1em;
         }
 
@@ -359,7 +558,8 @@
             text-align: right;
         }
 
-        .home > .container > .ui.segment {
+        .details > .container > .ui.segment,
+        .competitions > .container > .ui.segment {
             width: 47.5%;
             margin: 1em;
             padding: 0;
@@ -396,6 +596,9 @@
             color: #A0A0A0;
         }
 
+        .no-margin {
+            margin: 0 !important;
+        }
 
         .flex-content {
             display: flex;
@@ -408,6 +611,7 @@
         .competition-segment .flex-content {
             flex-direction: column;
             margin: 0;
+            padding: 1em !important;
         }
 
         .list-tile > a {
@@ -415,16 +619,13 @@
             font-weight: 600;
         }
 
-        .list-comps, .scores {
-            padding: 20px;
-        }
-
         .date-complete {
             color: #A0A0A0;
             font-size: 0.8em;
         }
 
-        .edit.tab .primary-container {
+        .edit.tab .primary-container,
+        .competitions.tab .primary-container {
             width: 100%;
         }
 
@@ -432,14 +633,30 @@
             margin: 2em -1em;
         }
 
-        .segment-container.social-connect {
+        .competitions.tab {
+            margin: 2em -1em;
+        }
+
+        .competitions.tab .pagination.menu {
+            margin: 1.25em 0.5em 0.25em;
+        }
+
+        .edit .segment-container {
             padding: 0 !important;
             height: 100%;
             text-align: left;
             margin: 0 -1em !important;
         }
 
-        .edit.tab .segment-container > .header {
+        .competitions .segment-container {
+            padding: 0 !important;
+            width: 100%;
+        }
+
+
+        .edit.tab .segment-container > .header,
+        .competitions.tab .segment-container > .header,
+        .datasets.tab .segment-container > .header {
             font-size: 1em !important;
             text-align: left !important;
             margin-top: 0 !important;
@@ -451,30 +668,68 @@
             border-bottom: solid 1px gainsboro;
         }
 
-        .edit.tab .container-content {
+        .edit.tab .container-content,
+        .competitions.tab .container-content {
             margin: 10px;
         }
 
-        .edit.tab .list-tile {
+        .edit.tab .list-tile,
+        .competitions.tab .list-tile {
             font-size: 0.75em;
         }
 
-        .edit.tab .list-tile a {
+        .edit.tab .list-tile a,
+        .competitions.tab .list-tile a {
             font-size: 10px;
         }
 
+        .competitions-summary {
+            width: 100% !important;
+            margin: 1em !important;
+        }
+
+        .competitions.tab .stats-table {
+            display: inline-flex;
+            justify-content: space-between;
+            margin: 1em 4em 1em 1em;
+            width: auto;
+            border-bottom: none;
+        }
+
+        .competitions-summary .container-content {
+            text-align: center;
+        }
+
+        .datasets .table {
+            width: 100%;
+        }
+
+        .datasets-segment {
+            margin-top: 3em !important;
+            width: 100%;
+            padding: 0 !important;
+        }
+
+        .datasets-segment .container-content {
+            padding: 1em;
+        }
+
     </style>
-
-
 </profile-page>
 
 <about-me id="about-me">
     <div class="bio-segment primary-segment ui segment sixteen wide">
         <div class="ui header">
             About Me
-            <div class="right floated ui button edit-button" onclick="{editing}" if="{!edit}">Edit</div>
-            <div class="right floated ui button edit-button" onclick="{saving}" if="{!!edit}">Save</div>
-            <div class="right floated ui button edit-button" onclick="{cancel_edit}" if="{!!edit}">Cancel</div>
+            <div class="right floated ui button edit-button" onclick="{editing}" if="{!edit && USER_AUTHENTICATED}">
+                Edit
+            </div>
+            <div class="right floated ui button edit-button" onclick="{saving}" if="{!!edit && USER_AUTHENTICATED}">
+                Save
+            </div>
+            <div class="right floated ui button edit-button" onclick="{cancel_edit}"
+                 if="{!!edit && USER_AUTHENTICATED}">Cancel
+            </div>
         </div>
         <div class="list-tile">
             <div class="biography">
@@ -579,12 +834,17 @@
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
             My Education
-            <div class="right floated ui button edit-button" onclick="{edit_education}" if="{!edit_edu}">Edit
+            <div class="right floated ui button edit-button" onclick="{edit_education}"
+                 if="{!edit_edu && USER_AUTHENTICATED}">Edit
             </div>
-            <div class="right floated ui button edit-button" onclick="{add_education}" if="{!edit_edu}">Add</div>
-            <div class="right floated ui button edit-button" onclick="{save_education}" if="{!!edit_edu}">Save
+            <div class="right floated ui button edit-button" onclick="{add_education}"
+                 if="{!edit_edu && USER_AUTHENTICATED}">Add
             </div>
-            <div class="right floated ui button edit-button" onclick="{cancel_education}" if="{!!edit_edu}">
+            <div class="right floated ui button edit-button" onclick="{save_education}"
+                 if="{!!edit_edu && USER_AUTHENTICATED}">Save
+            </div>
+            <div class="right floated ui button edit-button" onclick="{cancel_education}"
+                 if="{!!edit_edu && USER_AUTHENTICATED}">
                 Cancel
             </div>
         </div>
@@ -683,10 +943,17 @@
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
             My Datasets
-            <div class="right floated ui button edit-button" onclick="{edit_dataset}" if="{!edit_dataset}">Edit</div>
-            <div class="right floated ui button edit-button" onclick="{add_dataset}" if="{!edit_dataset}">Add</div>
-            <div class="right floated ui button edit-button" onclick="{save_dataset}" if="{!!edit_dataset}">Save</div>
-            <div class="right floated ui button edit-button" onclick="{cancel_dataset}" if="{!!edit_dataset}">Cancel
+            <div class="right floated ui button edit-button" onclick="{edit_dataset}"
+                 if="{!edit_dataset && USER_AUTHENTICATED}">Edit
+            </div>
+            <div class="right floated ui button edit-button" onclick="{add_dataset}"
+                 if="{!edit_dataset && USER_AUTHENTICATED}">Add
+            </div>
+            <div class="right floated ui button edit-button" onclick="{save_dataset}"
+                 if="{!!edit_dataset && USER_AUTHENTICATED}">Save
+            </div>
+            <div class="right floated ui button edit-button" onclick="{cancel_dataset}"
+                 if="{!!edit_dataset && USER_AUTHENTICATED}">Cancel
             </div>
         </div>
         <div class="container-content">
@@ -774,16 +1041,20 @@
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
             My Organizations
-            <div class="right floated ui button edit-button" onclick="{edit_organization}" if="{!edit_organization}">
+            <div class="right floated ui button edit-button" onclick="{edit_organization}"
+                 if="{!edit_organization && USER_AUTHENTICATED}">
                 Edit
             </div>
-            <div class="right floated ui button edit-button" onclick="{add_organization}" if="{!edit_organization}">
+            <div class="right floated ui button edit-button" onclick="{add_organization}"
+                 if="{!edit_organization && USER_AUTHENTICATED}">
                 Add
             </div>
-            <div class="right floated ui button edit-button" onclick="{save_organization}" if="{!!edit_organization}">
+            <div class="right floated ui button edit-button" onclick="{save_organization}"
+                 if="{!!edit_organization && USER_AUTHENTICATED}">
                 Save
             </div>
-            <div class="right floated ui button edit-button" onclick="{cancel_organization}" if="{!!edit_organization}">
+            <div class="right floated ui button edit-button" onclick="{cancel_organization}"
+                 if="{!!edit_organization && USER_AUTHENTICATED}">
                 Cancel
             </div>
         </div>
@@ -856,10 +1127,18 @@
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
             Events and Meetups
-            <div class="right floated ui button edit-button" onclick="{edit_events}" if="{!edit_events}">Edit</div>
-            <div class="right floated ui button edit-button" onclick="{add_events}" if="{!edit_events}">Add</div>
-            <div class="right floated ui button edit-button" onclick="{save_events}" if="{!!edit_events}">Save</div>
-            <div class="right floated ui button edit-button" onclick="{cancel_events}" if="{!!edit_events}">Cancel</div>
+            <div class="right floated ui button edit-button" onclick="{edit_events}"
+                 if="{!edit_events && USER_AUTHENTICATED}">Edit
+            </div>
+            <div class="right floated ui button edit-button" onclick="{add_events}"
+                 if="{!edit_events && USER_AUTHENTICATED}">Add
+            </div>
+            <div class="right floated ui button edit-button" onclick="{save_events}"
+                 if="{!!edit_events && USER_AUTHENTICATED}">Save
+            </div>
+            <div class="right floated ui button edit-button" onclick="{cancel_events}"
+                 if="{!!edit_events && USER_AUTHENTICATED}">Cancel
+            </div>
         </div>
         <div class="container-content">
             <events-tile></events-tile>
