@@ -14,13 +14,21 @@ html, body {
 
 .profile-img {
     border-top-left-radius: 3px;
-    height: 147px;
+    height: 200px;
 }
 
 .profile-header {
     border-bottom: 1px solid gainsboro;
     height: 201px;
     display: inline-flex !important;
+}
+
+.social-buttons {
+    padding: 5px 0;
+}
+
+.social-buttons .icon.button {
+    padding: .55em;
 }
 
 .profile-user {
@@ -31,7 +39,7 @@ html, body {
 .profile-brief {
     color: #acacac;
     font-size: 15px;
-    margin: 35px 0 15px;
+    margin: 15px 0 0;
 }
 
 .column.segment {

@@ -7,7 +7,15 @@
         <div class="ui profile-segment segment">
             <div class="ui container profile-header">
                 <div class="holder">
-                    <img class="profile-img" src="http://i.pravatar.cc/120" alt="placeholder">
+                    <img class="profile-img" src="http://i.pravatar.cc/200" alt="placeholder">
+                </div>
+                <div class="profile-user">
+                    Profile Name
+                    <div class="profile-brief">
+                        <div class="location">Seattle, Washington USA</div>
+                        <div class="occupation">Programmer at MadeUp Company</div>
+                        A brief description of the user goes here
+                    </div>
                     <div class="social-buttons">
                         <button class="ui circular facebook mini icon button">
                             <i class="facebook icon"></i>
@@ -23,14 +31,6 @@
                             <i class="github icon"></i>
                         </button>
                     </div>
-                </div>
-                <div class="profile-user">
-                    Profile Name
-                    <div class="profile-brief">
-                        <div class="location">Seattle, Washington USA</div>
-                        <div class="occupation">Programmer at MadeUp Company</div>
-                        A brief description of the user goes here
-                    </div>
                     <div class="languages">
                         <div class="ui mini label">
                             Python
@@ -42,6 +42,7 @@
                             Go
                         </div>
                     </div>
+
                     <!-- <div class="ui large button msg-btn">Message Me</div>
                     <span class="ui icon large button follow-btn"><i class="user icon"></i>Follow</span> -->
                 </div>
@@ -279,54 +280,28 @@
                                 <th>Name</th>
                                 <th>Type</th>
                                 <th>Uploaded</th>
-                                <th>Public</th>
+                                <th class="center aligned column">Public</th>
                                 <th class="center aligned column">Delete</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td data-label="Name">file1.zip</td>
-                                <td data-label="Type">Competition Bundle</td>
-                                <td data-label="Uploaded">03/20/15</td>
-                                <td data-label="Public">True</td>
+                            <tr each="{dataset}">
+                                <td data-label="Name"><a href="#"><i class="download icon"></i>{name}</a></td>
+                                <td data-label="Type">{type}</td>
+                                <td data-label="Uploaded">{upload_date}</td>
+                                <td data-label="Public" class="center aligned column">
+                                    <div class="ui icon button public-button {green: published}"
+                                         onclick="{publish}"><i class="file icon"></i>
+                                    </div>
+                                </td>
                                 <td data-label="Delete" class="center aligned column">
-                                    <div class="ui red button">Delete</div>
+                                    <a class="delete-button" href="#" onclick="{delete_dataset}">Delete</a>
                                 </td>
                             </tr>
                             <tr>
-                                <td data-label="Name">file2.zip</td>
-                                <td data-label="Type">Input Data</td>
-                                <td data-label="Uploaded">11/20/2018</td>
-                                <td data-label="Public">False</td>
-                                <td data-label="Delete" class="center aligned column">
-                                    <div class="ui red button">Delete</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td data-label="Name">file3.zip</td>
-                                <td data-label="Type">Ingestion Program</td>
-                                <td data-label="Uploaded">05/10/16</td>
-                                <td data-label="Public">True</td>
-                                <td data-label="Delete" class="center aligned column">
-                                    <div class="ui red button">Delete</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td data-label="Name">file3.zip</td>
-                                <td data-label="Type">Ingestion Program</td>
-                                <td data-label="Uploaded">05/10/16</td>
-                                <td data-label="Public">True</td>
-                                <td data-label="Delete" class="center aligned column">
-                                    <div class="ui red button">Delete</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td data-label="Name">file3.zip</td>
-                                <td data-label="Type">Ingestion Program</td>
-                                <td data-label="Uploaded">05/10/16</td>
-                                <td data-label="Public">True</td>
-                                <td data-label="Delete" class="center aligned column">
-                                    <div class="ui red button">Delete</div>
+                                <td colspan="5">
+                                    <input type="file" id="dataset-upload" style="display:none"/>
+                                    <a href="#" onclick="{upload_dataset}"><i class="plus icon"></i>Add new dataset</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -398,7 +373,7 @@
                         <label>Email Preferences</label>
                         <div class="ui checkbox">
                             <input type="checkbox" tabindex="0" class="hidden">
-                            <label class="email-pref">Subcribe to Email List to receive notifications</label>
+                            <label class="email-pref">Subscribe to Email List to receive notifications</label>
                         </div>
                     </div>
                     <hr>
@@ -499,11 +474,93 @@
             }
         ]
 
+        self.dataset = [
+            {
+                name: 'file3.zip',
+                _obj_type: 'dataset',
+                type: 'Ingestion Program',
+                upload_date: "05/14/15",
+                published: false,
+            },
+            {
+                name: 'file2.zip',
+                _obj_type: 'dataset',
+                type: 'Ingestion Program',
+                upload_date: "05/14/19",
+                published: true,
+            },
+            {
+                name: 'file1.zip',
+                _obj_type: 'dataset',
+                type: 'Ingestion Program',
+                upload_date: "05/14/26",
+                published: false,
+            },
+            {
+                name: 'file4.zip',
+                _obj_type: 'dataset',
+                type: 'Ingestion Program',
+                upload_date: "05/14/12",
+                published: false,
+            },
+            {
+                name: 'file5.zip',
+                _obj_type: 'dataset',
+                type: 'Ingestion Program',
+                upload_date: "05/14/10",
+                published: true,
+            }
+        ]
+
 
         self.sorted_competitions = self.competitions.slice(0);
         self.sorted_competitions.sort(function (a, b) {
             return b.participant_count - a.participant_count;
         });
+
+        self.publish = function (event) {
+            var txt;
+
+            if (event.item.published) {
+                var r = confirm("Are you sure you want to make this dataset private?");
+                if (r === true) {
+                    txt = "This dataset is now private";
+                    return event.item.published = false;
+                } else {
+                    txt = "This dataset is still public";
+                    return event.item.published = true;
+                }
+            } else {
+                var r = confirm("Are you sure you want to publish this dataset?");
+                if (r === true) {
+                    txt = "This dataset is now public!";
+                    return event.item.published = true;
+                } else {
+                    txt = "This dataset is still private";
+                    return event.item.published = false;
+                }
+
+            }
+        }
+
+        self.delete_dataset = function (event) {
+            var txt;
+
+            var r = confirm("Are you sure you want to delete this dataset?");
+            if (r === true) {
+                txt = "This dataset has been deleted!";
+                // TODO: Delete this item from the model
+            } else {
+                txt = "This dataset is still public";
+            }
+            event.preventDefault();
+        }
+
+        self.upload_dataset = function(event) {
+            $('#dataset-upload').trigger('click');
+            event.preventDefault();
+            // TODO: Needs modal for Name, Type, and Public
+        }
 
 
     </script>
@@ -568,8 +625,7 @@
         }
 
         .competitions.tab .container-content,
-        .edit.tab .container-content,
-        .social-buttons {
+        .edit.tab .container-content {
             margin: 10px
         }
 
@@ -581,7 +637,7 @@
             margin-top: 0 !important;
             margin-bottom: 0 !important;
             background-color: #f2faff;
-            padding: 10px;
+            padding: 10px 10px 10px 1.25em;
             border-top-left-radius: 3px;
             border-top-right-radius: 3px;
             border-bottom: solid 1px #dcdcdc
@@ -596,7 +652,7 @@
         }
 
         .biography {
-            padding: 30px;
+            padding: 1.55em;
             color: #a0a0a0
         }
 
@@ -686,7 +742,20 @@
         }
 
         .datasets .table {
-            width: 100%
+            width: 70%;
+            margin: 0 auto;
+        }
+
+        .delete-button {
+            color: #c23100 !important;
+            text-align: center;
+            cursor: pointer;
+            text-transform: capitalize;
+        }
+
+        .delete-button:hover {
+            color: #cc1c1c !important;
+            text-decoration: underline;
         }
 
         .datasets-segment {
@@ -786,7 +855,7 @@
             margin-top: 0 !important;
             margin-bottom: 0 !important;
             background-color: #F2FAFF;
-            padding: 10px;
+            padding: 10px 10px 10px 1.75em;
             border-top-left-radius: 3px;
             border-top-right-radius: 3px;
             border-bottom: solid 1px gainsboro;
@@ -881,7 +950,7 @@
             margin-top: 0 !important;
             margin-bottom: 0 !important;
             background-color: #F2FAFF;
-            padding: 10px;
+            padding: 10px 10px 10px 1.25em;
             border-top-left-radius: 3px;
             border-top-right-radius: 3px;
             border-bottom: solid 1px gainsboro;
@@ -989,7 +1058,7 @@
             margin-top: 0 !important;
             margin-bottom: 0 !important;
             background-color: #F2FAFF;
-            padding: 10px;
+            padding: 10px 10px 10px 1.25em;
             border-top-left-radius: 3px;
             border-top-right-radius: 3px;
             border-bottom: solid 1px gainsboro;
@@ -1063,7 +1132,7 @@
             margin-top: 0 !important;
             margin-bottom: 0 !important;
             background-color: #f2faff;
-            padding: 10px;
+            padding: 10px 10px 10px 1.25em;
             border-top-left-radius: 3px;
             border-top-right-radius: 3px;
             border-bottom: solid 1px #dcdcdc
@@ -1144,7 +1213,7 @@
             margin-top: 0 !important;
             margin-bottom: 0 !important;
             background-color: #F2FAFF;
-            padding: 10px;
+            padding: 10px 10px 10px 1.25em;
             border-top-left-radius: 3px;
             border-top-right-radius: 3px;
             border-bottom: solid 1px gainsboro;
