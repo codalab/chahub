@@ -58,7 +58,7 @@
                 <a class="item" data-tab="datasets">
                     Datasets
                 </a>
-                <a class="item" if="{USER_AUTHENTICATED}" data-tab="edit">
+                <a class="item" data-tab="edit">
                     Account
                 </a>
             </div>
@@ -266,48 +266,51 @@
             </div>
         </div>
 
-        <!------------ EDIT TAB ----------->
+        <!------------ DATASETS TAB ----------->
         <div class="ui datasets tab" data-tab="datasets">
             <div class="ui sixteen wide grid container">
-                <div class="segment-container datasets-segment ui segment sixteen wide">
+                <!-- <div class="segment-container datasets-segment ui segment sixteen wide">
                     <div class="ui header">
                         My Datasets
                     </div>
-                    <div class="container-content">
-                        <table class="ui celled table">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Uploaded</th>
-                                <th class="center aligned column">Public</th>
-                                <th class="center aligned column">Delete</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr each="{dataset}">
-                                <td data-label="Name"><a href="#"><i class="download icon"></i>{name}</a></td>
-                                <td data-label="Type">{type}</td>
-                                <td data-label="Uploaded">{upload_date}</td>
-                                <td data-label="Public" class="center aligned column">
-                                    <div class="ui icon button public-button {green: published}"
-                                         onclick="{publish}"><i class="file icon"></i>
-                                    </div>
-                                </td>
-                                <td data-label="Delete" class="center aligned column">
-                                    <a class="delete-button" href="#" onclick="{delete_dataset}">Delete</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="5">
-                                    <input type="file" id="dataset-upload" style="display:none"/>
-                                    <a href="#" onclick="{upload_dataset}"><i class="plus icon"></i>Add new dataset</a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                    <div class="container-content"> -->
+                <table class="ui celled table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Uploaded</th>
+                        <!-- Bring back later for publishing and deleting datasets
+                        <th class="center aligned column">Public</th>
+                        <th class="center aligned column">Delete</th> -->
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr each="{dataset}">
+                        <td data-label="Name"><a href="#"><i class="download icon"></i>{name}</a></td>
+                        <td data-label="Type">{type}</td>
+                        <td data-label="Uploaded">{upload_date}</td>
+
+                        <!-- Bring back later for publishing, deleting, and adding new datasets
+                        <td data-label="Public" class="center aligned column">
+                            <div class="ui icon button public-button {green: published}"
+                                 onclick="{publish}"><i class="file icon"></i>
+                            </div>
+                        </td>
+                        <td data-label="Delete" class="center aligned column">
+                            <a class="delete-button" href="#" onclick="{delete_dataset}">Delete</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <input type="file" id="dataset-upload" style="display:none"/>
+                            <a href="#" onclick="{upload_dataset}"><i class="plus icon"></i>Add new dataset</a>
+                        </td>
+                    </tr> -->
+                    </tbody>
+                </table>
+                <!--</div>
+                 </div>-->
             </div>
         </div>
 
@@ -556,7 +559,7 @@
             event.preventDefault();
         }
 
-        self.upload_dataset = function(event) {
+        self.upload_dataset = function (event) {
             $('#dataset-upload').trigger('click');
             event.preventDefault();
             // TODO: Needs modal for Name, Type, and Public
@@ -742,8 +745,10 @@
         }
 
         .datasets .table {
-            width: 70%;
-            margin: 0 auto;
+            width: auto;
+            min-width: 50%;
+            padding: 0 !important;
+            margin: 3em auto !important;
         }
 
         .delete-button {
@@ -775,14 +780,14 @@
     <div class="bio-segment primary-segment ui segment sixteen wide">
         <div class="ui header">
             About Me
-            <div class="right floated ui button edit-button" onclick="{editing}" if="{!edit && USER_AUTHENTICATED}">
+            <div class="right floated ui button edit-button" onclick="{editing}" if="{!edit}">
                 Edit
             </div>
-            <div class="right floated ui button edit-button" onclick="{saving}" if="{!!edit && USER_AUTHENTICATED}">
+            <div class="right floated ui button edit-button" onclick="{saving}" if="{!!edit}">
                 Save
             </div>
             <div class="right floated ui button edit-button" onclick="{cancel_edit}"
-                 if="{!!edit && USER_AUTHENTICATED}">Cancel
+                 if="{!!edit}">Cancel
             </div>
         </div>
         <div class="list-tile">
@@ -888,22 +893,23 @@
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
             My Education
+            <!--
             <div class="right floated ui button edit-button" onclick="{edit_education}"
-                 if="{!edit_edu && USER_AUTHENTICATED}">Edit
+                 if="{!edit_edu}">Edit
             </div>
             <div class="right floated ui button edit-button" onclick="{add_education}"
-                 if="{!edit_edu && USER_AUTHENTICATED}">Add
+                 if="{!edit_edu}">Add
             </div>
             <div class="right floated ui button edit-button" onclick="{save_education}"
-                 if="{!!edit_edu && USER_AUTHENTICATED}">Save
+                 if="{!!edit_edu}">Save
             </div>
             <div class="right floated ui button edit-button" onclick="{cancel_education}"
-                 if="{!!edit_edu && USER_AUTHENTICATED}">
+                 if="{!!edit_edu}">
                 Cancel
             </div>
+            -->
         </div>
         <div class="container-content">
-            <education-tile></education-tile>
             <education-tile></education-tile>
         </div>
     </div>
@@ -997,18 +1003,20 @@
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
             My Datasets
+            <!--
             <div class="right floated ui button edit-button" onclick="{edit_dataset}"
-                 if="{!edit_dataset && USER_AUTHENTICATED}">Edit
+                 if="{!edit_dataset}">Edit
             </div>
             <div class="right floated ui button edit-button" onclick="{add_dataset}"
-                 if="{!edit_dataset && USER_AUTHENTICATED}">Add
+                 if="{!edit_dataset}">Add
             </div>
             <div class="right floated ui button edit-button" onclick="{save_dataset}"
-                 if="{!!edit_dataset && USER_AUTHENTICATED}">Save
+                 if="{!!edit_dataset}">Save
             </div>
             <div class="right floated ui button edit-button" onclick="{cancel_dataset}"
-                 if="{!!edit_dataset && USER_AUTHENTICATED}">Cancel
+                 if="{!!edit_dataset}">Cancel
             </div>
+            -->
         </div>
         <div class="container-content">
             <table class="ui striped table">
@@ -1095,26 +1103,26 @@
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
             My Organizations
+            <!--
             <div class="right floated ui button edit-button" onclick="{edit_organization}"
-                 if="{!edit_organization && USER_AUTHENTICATED}">
+                 if="{!edit_organization}">
                 Edit
             </div>
             <div class="right floated ui button edit-button" onclick="{add_organization}"
-                 if="{!edit_organization && USER_AUTHENTICATED}">
+                 if="{!edit_organization}">
                 Add
             </div>
             <div class="right floated ui button edit-button" onclick="{save_organization}"
-                 if="{!!edit_organization && USER_AUTHENTICATED}">
+                 if="{!!edit_organization}">
                 Save
             </div>
             <div class="right floated ui button edit-button" onclick="{cancel_organization}"
-                 if="{!!edit_organization && USER_AUTHENTICATED}">
+                 if="{!!edit_organization}">
                 Cancel
             </div>
+            -->
         </div>
         <div class="container-content">
-            <organization-tile></organization-tile>
-            <organization-tile></organization-tile>
         </div>
     </div>
 
@@ -1179,22 +1187,22 @@
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
             Events and Meetups
+            <!--
             <div class="right floated ui button edit-button" onclick="{edit_events}"
-                 if="{!edit_events && USER_AUTHENTICATED}">Edit
+                 if="{!edit_events}">Edit
             </div>
             <div class="right floated ui button edit-button" onclick="{add_events}"
-                 if="{!edit_events && USER_AUTHENTICATED}">Add
+                 if="{!edit_events}">Add
             </div>
             <div class="right floated ui button edit-button" onclick="{save_events}"
-                 if="{!!edit_events && USER_AUTHENTICATED}">Save
+                 if="{!!edit_events}">Save
             </div>
             <div class="right floated ui button edit-button" onclick="{cancel_events}"
-                 if="{!!edit_events && USER_AUTHENTICATED}">Cancel
+                 if="{!!edit_events}">Cancel
             </div>
+            -->
         </div>
         <div class="container-content">
-            <events-tile></events-tile>
-            <events-tile></events-tile>
         </div>
     </div>
 

@@ -241,3 +241,12 @@ html, body {
     width: 100%;
     padding: 25px 200px !important;
 }
+
+.datasets table {
+
+    width: 50%;
+}
+
+.datasets table th {
+    background-color: #f2faff !important;
+}
