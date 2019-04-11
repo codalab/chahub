@@ -17,7 +17,7 @@ django-extensions==1.9.0
 channels==2.1.2
 #daphne==2.2.2
 gunicorn==19.9.0
-uvicorn==0.3.21
+uvicorn==0.6.1
 asgi_redis==1.4.3
 drf-writable-nested==0.5.0
 drf-extensions==0.3.1
