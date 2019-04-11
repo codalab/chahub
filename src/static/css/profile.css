@@ -77,6 +77,10 @@ html, body {
     color: #909090 !important;
 }
 
+.flex-row {
+    width: 100%;
+}
+
 /*---------- EDUCATION ----------*/
 
 .education .name {

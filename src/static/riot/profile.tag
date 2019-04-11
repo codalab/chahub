@@ -55,6 +55,9 @@
                 <a class="item" data-tab="competitions">
                     Competitions
                 </a>
+                <a class="item" data-tab="submissions">
+                    Submissions
+                </a>
                 <a class="item" data-tab="datasets">
                     Datasets
                 </a>
@@ -86,10 +89,6 @@
                                         <td class="category">Total Submissions:</td>
                                         <td class="statistic">73,240</td>
                                     </tr>
-                                    <tr>
-                                        <td class="category">Prize Money Awarded:</td>
-                                        <td class="statistic">$65,500.00</td>
-                                    </tr>
                                 </table>
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
@@ -116,10 +115,6 @@
                                     <tr>
                                         <td class="category">Top 10 Finishes:</td>
                                         <td class="statistic">1</td>
-                                        <td class="category">Prize Money Won:</td>
-                                        <td class="statistic">$2,500.00</td>
-                                    </tr>
-                                    <tr>
                                         <td class="category">Competitions Joined:</td>
                                         <td class="statistic">112</td>
                                     </tr>
@@ -127,13 +122,13 @@
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>Latest Submissions</h3>
-                                <competition-tile each="{ submissions }" class="item"></competition-tile>
+                                <submission-tile each="{ submissions }" class="item"></submission-tile>
                             </div>
                         </div>
                     </div>
                 </div>
                 <about-me></about-me>
-                <div class="flex-content">
+                <div class="flex-content flex-row">
                     <education-container class="education-container"></education-container>
                     <datasets-container class="datasets-container"></datasets-container>
                 </div>
@@ -164,10 +159,6 @@
                                 <td class="category">Total Submissions:</td>
                                 <td class="statistic">73,240</td>
                             </tr>
-                            <tr>
-                                <td class="category">Prize Money Awarded:</td>
-                                <td class="statistic">$65,500.00</td>
-                            </tr>
                         </table>
                         <table class="stats-table">
                             <tr>
@@ -179,10 +170,6 @@
                             <tr>
                                 <td class="category">Top 10 Finishes:</td>
                                 <td class="statistic">1</td>
-                                <td class="category">Prize Money Won:</td>
-                                <td class="statistic">$2,500.00</td>
-                            </tr>
-                            <tr>
                                 <td class="category">Competitions Joined:</td>
                                 <td class="statistic">112</td>
                             </tr>
@@ -228,7 +215,8 @@
 
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
-                                <competition-tile each="{ submissions }" class="item"></competition-tile>
+                                <competition-tile each="{ sorted_competitions }"
+                                                  class="item"></competition-tile>
                             </div>
                             <div class="ui pagination menu">
                                 <a class="active item">
@@ -252,18 +240,7 @@
 
         <!---------- SUBMISSIONS TAB ----------->
         <div class="ui submissions tab" data-tab="submissions">
-            <div class="ui sixteen wide grid container">
-                <div class="segment-container ui segment sixteen wide">
-                    <div class="ui header">
-                        My Submissions
-                    </div>
-                    <div class="container-content">
-                        <div class="ui middle aligned unstackable compact divided link items content-desktop">
-                            <competition-tile each="{ submissions }" class="item"></competition-tile>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <submission-tab></submission-tab>
         </div>
 
         <!------------ DATASETS TAB ----------->
@@ -274,41 +251,7 @@
                         My Datasets
                     </div>
                     <div class="container-content"> -->
-                <table class="ui celled table">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Uploaded</th>
-                        <!-- Bring back later for publishing and deleting datasets
-                        <th class="center aligned column">Public</th>
-                        <th class="center aligned column">Delete</th> -->
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr each="{dataset}">
-                        <td data-label="Name"><a href="#"><i class="download icon"></i>{name}</a></td>
-                        <td data-label="Type">{type}</td>
-                        <td data-label="Uploaded">{upload_date}</td>
-
-                        <!-- Bring back later for publishing, deleting, and adding new datasets
-                        <td data-label="Public" class="center aligned column">
-                            <div class="ui icon button public-button {green: published}"
-                                 onclick="{publish}"><i class="file icon"></i>
-                            </div>
-                        </td>
-                        <td data-label="Delete" class="center aligned column">
-                            <a class="delete-button" href="#" onclick="{delete_dataset}">Delete</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">
-                            <input type="file" id="dataset-upload" style="display:none"/>
-                            <a href="#" onclick="{upload_dataset}"><i class="plus icon"></i>Add new dataset</a>
-                        </td>
-                    </tr> -->
-                    </tbody>
-                </table>
+                <datasets-table></datasets-table>
                 <!--</div>
                  </div>-->
             </div>
@@ -401,7 +344,17 @@
                 console.log('callback - particles.js config loaded');
             })
 
-            $('.secondary.pointing.menu .item').tab();
+            $('.secondary.pointing.menu .item').tab({
+                onVisible: function () {
+                    $('.ui.sticky')
+                        .sticky({
+                            context: '#submission-container',
+                            silent: 'True',
+                        })
+                        .sticky('refresh')
+                },
+            });
+
             $('.ui.checkbox').checkbox();
         })
 
@@ -443,7 +396,7 @@
 
         self.submissions = [
             {
-                logo: 'http://placeimg.com/200/200/any',
+                logo: 'http://placeimg.com/206/206/any',
                 _obj_type: 'competition',
                 title: 'Find Stuff in Data',
                 description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
@@ -454,7 +407,7 @@
                 prize: '1200',
             },
             {
-                logo: 'http://placeimg.com/201/201/any',
+                logo: 'http://placeimg.com/207/207/any',
                 _obj_type: 'competition',
                 title: 'Chance of a Car Running into a Tree',
                 description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
@@ -465,7 +418,7 @@
                 prize: '2400',
             },
             {
-                logo: 'http://placeimg.com/202/202/any',
+                logo: 'http://placeimg.com/208/208/any',
                 _obj_type: 'competition',
                 title: 'Trading bot',
                 description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
@@ -474,44 +427,6 @@
                 end: '2021-06-29',
                 participant_count: '190',
                 prize: '65400',
-            }
-        ]
-
-        self.dataset = [
-            {
-                name: 'file3.zip',
-                _obj_type: 'dataset',
-                type: 'Ingestion Program',
-                upload_date: "05/14/15",
-                published: false,
-            },
-            {
-                name: 'file2.zip',
-                _obj_type: 'dataset',
-                type: 'Ingestion Program',
-                upload_date: "05/14/19",
-                published: true,
-            },
-            {
-                name: 'file1.zip',
-                _obj_type: 'dataset',
-                type: 'Ingestion Program',
-                upload_date: "05/14/26",
-                published: false,
-            },
-            {
-                name: 'file4.zip',
-                _obj_type: 'dataset',
-                type: 'Ingestion Program',
-                upload_date: "05/14/12",
-                published: false,
-            },
-            {
-                name: 'file5.zip',
-                _obj_type: 'dataset',
-                type: 'Ingestion Program',
-                upload_date: "05/14/10",
-                published: true,
             }
         ]
 
@@ -565,7 +480,6 @@
             // TODO: Needs modal for Name, Type, and Public
         }
 
-
     </script>
 
     <style>
@@ -573,7 +487,11 @@
             margin: 0 -1em
         }
 
-        .competitions.tab .primary-container, .edit.tab .primary-container, about-me, events-container, organization-container {
+        .competitions.tab .primary-container,
+        .edit.tab .primary-container,
+        about-me,
+        events-container,
+        organization-container {
             width: 100%
         }
 
@@ -707,7 +625,9 @@
             width: 100%
         }
 
-        .competitions.tab .segment-container > .header, .datasets.tab .segment-container > .header, .edit.tab .segment-container > .header {
+        .competitions.tab .segment-container > .header,
+        .datasets.tab .segment-container > .header,
+        .edit.tab .segment-container > .header {
             font-size: 1em !important;
             text-align: left !important;
             margin-top: 0 !important;
@@ -719,11 +639,13 @@
             border-bottom: solid 1px #dcdcdc
         }
 
-        .competitions.tab .list-tile, .edit.tab .list-tile {
+        .competitions.tab .list-tile,
+        .edit.tab .list-tile {
             font-size: .75em
         }
 
-        .competitions.tab .list-tile a, .edit.tab .list-tile a {
+        .competitions.tab .list-tile a,
+        .edit.tab .list-tile a {
             font-size: 10px
         }
 
@@ -744,9 +666,9 @@
             text-align: center
         }
 
-        .datasets .table {
+        .datasets.tab datasets-table {
             width: auto;
-            min-width: 50%;
+            min-width: 50% !important;
             padding: 0 !important;
             margin: 3em auto !important;
         }
@@ -771,6 +693,10 @@
 
         .datasets-segment .container-content {
             padding: 1em
+        }
+
+        .submissions.tab {
+            margin-top: 2em;
         }
 
     </style>
@@ -950,6 +876,7 @@
         .segment-container {
             padding: 0 !important;
             height: 100%;
+            min-width: 290px;
         }
 
         .segment-container > .header {
@@ -993,10 +920,8 @@
     <div class="name">Placeholder University</div>
     <div class="degree">Bachelor's Degree, Test Science</div>
     <div class="attended">2007-2011</div>
-    <div class="awards">Graduated Cum Laude with degrees in Testing Things and Science. Made
-        Dean's List for 2 consecutive years.
+    <div class="awards">
     </div>
-    <div class="ui divider"></div>
 </education-tile>
 
 <datasets-container class="primary-container">
@@ -1019,36 +944,7 @@
             -->
         </div>
         <div class="container-content">
-            <table class="ui striped table">
-                <thead>
-                <tr>
-                    <th>Dataset</th>
-                    <th>Date Uploaded</th>
-                    <th>Downloads</th>
-                    <th>File Size</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td><a href="#"><i class="download icon"></i>Cars</a></td>
-                    <td>February 11, 2019</td>
-                    <td>18</td>
-                    <td>159mb</td>
-                </tr>
-                <tr>
-                    <td><a href="#"><i class="download icon"></i>Numbers</a></td>
-                    <td>June 18, 2018</td>
-                    <td>104</td>
-                    <td>1.34gb</td>
-                </tr>
-                <tr>
-                    <td><a href="#"><i class="download icon"></i>Animals</a></td>
-                    <td>January 11, 2018</td>
-                    <td>2011</td>
-                    <td>416mb</td>
-                </tr>
-                </tbody>
-            </table>
+            <datasets-table></datasets-table>
         </div>
     </div>
 
@@ -1099,6 +995,85 @@
     </style>
 </datasets-container>
 
+<datasets-table>
+    <table class="ui celled table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Uploaded</th>
+            <!-- Bring back later for publishing and deleting datasets
+            <th class="center aligned column">Public</th>
+            <th class="center aligned column">Delete</th> -->
+        </tr>
+        </thead>
+        <tbody>
+        <tr each="{dataset}">
+            <td data-label="Name"><a href="#"><i class="download icon"></i>{name}</a></td>
+            <td data-label="Type">{type}</td>
+            <td data-label="Uploaded">{upload_date}</td>
+
+            <!-- Bring back later for publishing, deleting, and adding new datasets
+            <td data-label="Public" class="center aligned column">
+                <div class="ui icon button public-button {green: published}"
+                     onclick="{publish}"><i class="file icon"></i>
+                </div>
+            </td>
+            <td data-label="Delete" class="center aligned column">
+                <a class="delete-button" href="#" onclick="{delete_dataset}">Delete</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <input type="file" id="dataset-upload" style="display:none"/>
+                <a href="#" onclick="{upload_dataset}"><i class="plus icon"></i>Add new dataset</a>
+            </td>-->
+        </tr>
+        </tbody>
+    </table>
+
+    <script>
+        var self = this
+        self.dataset = [
+            {
+                name: 'file3.zip',
+                _obj_type: 'dataset',
+                type: 'Ingestion Program',
+                upload_date: "05/14/15",
+                published: false,
+            },
+            {
+                name: 'file2.zip',
+                _obj_type: 'dataset',
+                type: 'Ingestion Program',
+                upload_date: "05/14/19",
+                published: true,
+            },
+            {
+                name: 'file1.zip',
+                _obj_type: 'dataset',
+                type: 'Ingestion Program',
+                upload_date: "05/14/26",
+                published: false,
+            },
+            {
+                name: 'file4.zip',
+                _obj_type: 'dataset',
+                type: 'Ingestion Program',
+                upload_date: "05/14/12",
+                published: false,
+            },
+            {
+                name: 'file5.zip',
+                _obj_type: 'dataset',
+                type: 'Ingestion Program',
+                upload_date: "05/14/10",
+                published: true,
+            }
+        ]
+    </script>
+</datasets-table>
+
 <organization-container class="primary-container">
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
@@ -1123,6 +1098,7 @@
             -->
         </div>
         <div class="container-content">
+            No information found
         </div>
     </div>
 
@@ -1147,7 +1123,8 @@
         }
 
         .container-content {
-            margin: 20px
+            margin: 20px;
+            color: #909090;
         }
 
         .name {
@@ -1203,6 +1180,7 @@
             -->
         </div>
         <div class="container-content">
+            No information found
         </div>
     </div>
 
@@ -1229,6 +1207,7 @@
 
         .container-content {
             margin: 20px;
+            color: #909090;
         }
 
         .name {
@@ -1326,3 +1305,218 @@
 
     </style>
 </recent-container>
+
+<submission-tab>
+    <div class="ui sixteen wide grid container">
+        <div id="submission-container" class="segment-container ui segment sixteen wide">
+            <div class="ui header">
+                My Submissions
+            </div>
+            <div class="container-content">
+                <div class="ui middle aligned unstackable compact divided link items content-desktop">
+                    <submission-tile each="{ submissions }" onclick="{show_table}" class="item"></submission-tile>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="segment-container data-container ui sticky segment sixteen wide">
+            <div class="ui header">
+                Submission Data
+            </div>
+            <div class="container-content" if={!selected_submission}>
+                <i>Please select a submission from the left side to view data about it.</i>
+            </div>
+            <div class="container-content" if={selected_submission}>
+                Competition Link:<a href="{ selected_submission.url }">{ selected_submission.url }</a>
+            </div>
+        </div> -->
+    </div>
+
+    <script>
+        var self = this
+
+        self.submissions = [
+            {
+                logo: 'http://placeimg.com/200/200/any',
+                _obj_type: 'competition',
+                title: 'Find Stuff in Data',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '10',
+                prize: '1200',
+            },
+            {
+                logo: 'http://placeimg.com/201/201/any',
+                _obj_type: 'competition',
+                title: 'Chance of a Car Running into a Tree',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '1090',
+                prize: '2400',
+            },
+            {
+                logo: 'http://placeimg.com/202/202/any',
+                _obj_type: 'competition',
+                title: 'Trading bot',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '190',
+                prize: '65400',
+            },
+            {
+                logo: 'http://placeimg.com/202/202/any',
+                _obj_type: 'competition',
+                title: 'Trading bot',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '190',
+                prize: '65400',
+            },
+            {
+                logo: 'http://placeimg.com/202/202/any',
+                _obj_type: 'competition',
+                title: 'Trading bot',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '190',
+                prize: '65400',
+            },
+            {
+                logo: 'http://placeimg.com/202/202/any',
+                _obj_type: 'competition',
+                title: 'Trading bot',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '190',
+                prize: '65400',
+            },
+            {
+                logo: 'http://placeimg.com/202/202/any',
+                _obj_type: 'competition',
+                title: 'Trading bot',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '190',
+                prize: '65400',
+            },
+            {
+                logo: 'http://placeimg.com/202/202/any',
+                _obj_type: 'competition',
+                title: 'Trading bot',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+                url: 'https://google.com/',
+                start: '2018-01-29',
+                end: '2021-06-29',
+                participant_count: '190',
+                prize: '65400',
+            }
+        ]
+
+    </script>
+
+    <style type="text/stylus">
+        :scope
+            display block
+
+        .sixteen.wide.grid
+            padding-top: 1em;
+
+        .segment-container {
+            padding: 0 !important;
+            height: 100%;
+            width: 100%;
+        }
+
+        #submission-container {
+            margin: 0 150px;
+        }
+
+        .segment-container > .header {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            background-color: #F2FAFF;
+            padding: 10px 10px 10px 1.25em;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            border-bottom: solid 1px gainsboro;
+        }
+
+        .container-content {
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            flex: 1 0 auto;
+            overflow-x: auto;
+        }
+    </style>
+</submission-tab>
+
+<submission-tile>
+    <div class="ui tiny image">
+        <img src="{logo || 'http://placeimg.com/203/203/any' }" class="ui avatar image">
+    </div>
+    <div class="content">
+        <div class="header">
+            {title}
+        </div>
+        <div class="description">
+            <p>{description}</p>
+        </div>
+        <div class="extra">
+            <div class="mobile_linewrap">
+                <span class="url"><a href="{url}">{url}</a></span>
+            </div>
+        </div>
+    </div>
+    <div class="sub-btn-container">
+        <a class="" href="{url}">
+            <button class="ui teal icon button sub-btn"><i class="external alternate icon"></i> Competition</button>
+        </a>
+        <button class="ui blue icon button sub-btn"><i class="download icon"></i> Submission</button>
+    </div>
+
+    <script>
+        var self = this
+
+    </script>
+
+    <style type="text/stylus">
+        :scope
+            display block
+
+        .tiny.image
+            width 4em !important
+
+        .header
+            font-size 1.25em !important
+
+        .description
+            color #909090 !important
+            font-size 0.9em !important
+            margin-top 0 !important
+
+        .extra
+            font-size 0.9em !important
+
+        .sub-btn-container
+            text-align right
+            width 125px
+
+        .sub-btn
+            margin 5px !important
+            width 121px
+    </style>
+</submission-tile>
