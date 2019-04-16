@@ -718,7 +718,8 @@
         </div>
         <div class="list-tile">
             <div class="biography">
-                <div id="bio">{user.bio}</div>
+                <div id="bio" if={!!user.bio}>{user.bio}</div>
+                <div id="bio" if={!user.bio}>No information found</div>
                 <div id="editor-container">
                     <textarea id="editor"></textarea>
                 </div>
@@ -948,9 +949,6 @@
         </div>
     </div>
 
-    <script>
-    </script>
-
     <style>
 
         .segment-container {
@@ -1102,9 +1100,6 @@
         </div>
     </div>
 
-    <script>
-    </script>
-
     <style>
         .segment-container {
             padding: 0 !important;
@@ -1184,9 +1179,6 @@
         </div>
     </div>
 
-    <script>
-    </script>
-
     <style>
 
         .segment-container {
@@ -1264,9 +1256,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-    </script>
 
     <style>
         .primary-container {
@@ -1482,16 +1471,11 @@
         </div>
     </div>
     <div class="sub-btn-container">
-        <a class="" href="{url}">
+        <a href="{url}">
             <button class="ui teal icon button sub-btn"><i class="external alternate icon"></i> Competition</button>
         </a>
         <button class="ui blue icon button sub-btn"><i class="download icon"></i> Submission</button>
     </div>
-
-    <script>
-        var self = this
-
-    </script>
 
     <style type="text/stylus">
         :scope

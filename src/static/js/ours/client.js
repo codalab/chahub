@@ -23,6 +23,9 @@ CHAHUB.api = {
     get_producers: function() {
         return CHAHUB.api.request('GET', URLS.API + "producers/")
     },
+    get_producer: function(id) {
+        return CHAHUB.api.request('GET', URLS.API + "producers/" + id + "/")
+    },
     create_producer: function(data) {
         return CHAHUB.api.request('POST', URLS.API + "producers/", data)
     },
