@@ -7,39 +7,25 @@
         <div class="ui profile-segment segment">
             <div class="ui container profile-header">
                 <div class="holder">
-                    <img class="profile-img" src="http://i.pravatar.cc/200" alt="placeholder">
+                    <img class="profile-img" src="{PROFILE_USER.github_info.avatar_url}" alt="placeholder">
                 </div>
                 <div class="profile-user">
-                    Profile Name
+                    {profile.name}
                     <div class="profile-brief">
-                        <div class="location">Seattle, Washington USA</div>
-                        <div class="occupation">Programmer at MadeUp Company</div>
-                        A brief description of the user goes here
+                        <div class="location">{PROFILE_USER.github_info.location}</div>
+                        <div class="occupation">{PROFILE_USER.github_info.company}</div>
+                        {profile.bio}
                     </div>
                     <div class="social-buttons">
-                        <button class="ui circular facebook mini icon button">
-                            <i class="facebook icon"></i>
-                        </button>
-                        <button class="ui circular twitter mini icon button">
-                            <i class="twitter icon"></i>
-                        </button>
-                        <button class="ui circular linkedin mini icon button">
-                            <i class="linkedin icon"></i>
-                        </button>
-                        <button style="background-color: #582c80; color: white;"
-                                class="ui circular github plus mini icon button">
+                        <a href="{PROFILE_USER.github_info.html_url}" if="!!profile.html_url"
+                           style="background-color: #582c80; color: white;"
+                           class="ui circular github plus mini icon button">
                             <i class="github icon"></i>
-                        </button>
+                        </a>
                     </div>
                     <div class="languages">
-                        <div class="ui mini label">
-                            Python
-                        </div>
-                        <div class="ui mini label">
-                            C++
-                        </div>
-                        <div class="ui mini label">
-                            Go
+                        <div each="{language in PROFILE_USER.languages}" class="ui mini label">
+                            {language}
                         </div>
                     </div>
 
@@ -79,7 +65,7 @@
                                 <table class="stats-table">
                                     <tr>
                                         <td class="category">Competitions Organized:</td>
-                                        <td class="statistic">124</td>
+                                        <td class="statistic"></td>
                                         <td class="category">Organizer Since:</td>
                                         <td class="statistic">02/11/2017</td>
                                     </tr>
@@ -95,6 +81,8 @@
                                 <h3>My Featured Competitions</h3>
                                 <competition-tile each="{ sorted_competitions }" no-reorder
                                                   class="item"></competition-tile>
+                                <p class="no-competitions" style="" if="{ sorted_competitions === undefined || sorted_competitions.length == 0 }">
+                                    No competitions found for this user</p>
                             </div>
                         </div>
                     </div>
@@ -116,7 +104,7 @@
                                         <td class="category">Top 10 Finishes:</td>
                                         <td class="statistic">1</td>
                                         <td class="category">Competitions Joined:</td>
-                                        <td class="statistic">112</td>
+                                        <td class="statistic">{profile.competitions.length}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -171,7 +159,7 @@
                                 <td class="category">Top 10 Finishes:</td>
                                 <td class="statistic">1</td>
                                 <td class="category">Competitions Joined:</td>
-                                <td class="statistic">112</td>
+                                <td class="statistic">{sorted_competitions.length }</td>
                             </tr>
                         </table>
                     </div>
@@ -215,8 +203,11 @@
 
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
-                                <competition-tile each="{ sorted_competitions }"
+                                <competition-tile if="{ sorted_competitions !== undefined && sorted_competitions.length < 0 }"
+                                                  each="{ sorted_competitions }" no-reorder
                                                   class="item"></competition-tile>
+                                <p class="no-competitions" if="{ sorted_competitions === undefined || sorted_competitions.length == 0 }">
+                                    No competitions found for this user</p>
                             </div>
                             <div class="ui pagination menu">
                                 <a class="active item">
@@ -266,11 +257,11 @@
                             Connect with Github
                         </div>
                         <div class="container-content">
-                            <div class="field" if="{!user.github_info}">
+                            <div class="field" if="{!PROFILE_USER.github_info}">
                                 <label>Connect with github</label>
                                 <a class="ui large blue button" href="/social/login/github">Login</a>
                             </div>
-                            <div class="field" if="{!!user.github_info}">
+                            <div class="field" if="{!!PROFILE_USER.github_info}">
                                 <label>Connect with github</label>
                                 <a class="ui large disabled blue button"
                                    href="/social/login/github">Login</a>
@@ -335,9 +326,6 @@
     <script>
         var self = this
 
-        self.user = {
-            github_info: '',
-        }
 
         self.on('mount', function () {
             particlesJS.load('particles-js', "/static/particles/particles-profile.json", function () {
@@ -356,43 +344,43 @@
             });
 
             $('.ui.checkbox').checkbox();
+            self.update_information();
         })
 
-        self.competitions = [
-            {
-                logo: 'http://placeimg.com/203/203/any',
-                _obj_type: 'competition',
-                title: 'Placeholder Competition',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '19',
-                prize: '2400',
-            },
-            {
-                logo: 'http://placeimg.com/204/204/any',
-                _obj_type: 'competition',
-                title: 'Placeholder Competition',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '1900',
-                prize: '2400',
-            },
-            {
-                logo: 'http://placeimg.com/205/205/any',
-                _obj_type: 'competition',
-                title: 'Placeholder Competition',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '2400',
-            }
-        ]
+        self.update_information = function () {
+            CHAHUB.api.get_profile(PROFILE_USER["id"])
+                .done(function (data) {
+                    self.update({
+                        profile: data
+                    })
+
+                    if (self.profile.competitions !== undefined || self.profile.competitions.length > 0) {
+                        self.sorted_competitions = self.profile.competitions.slice(0);
+                        self.sorted_competitions.sort(function (a, b) {
+                            return b.participant_count - a.participant_count;
+                        });
+                        self.prepare_results()
+                    }
+                    self.update()
+                })
+                .fail(function (response) {
+
+                })
+            console.log('updating user profile')
+        }
+
+        self.prepare_results = function () {
+            self.sorted_competitions.forEach(function (comp_result) {
+                var humanized_time = humanize_time(comp_result.current_phase_deadline)
+                comp_result.alert_icon = humanized_time < 0;
+                comp_result._obj_type = 'competition';
+                if (comp_result.alert_icon) {
+                    comp_result.pretty_deadline_time = 'Phase ended ' + Math.abs(humanized_time) + ' days ago'
+                } else {
+                    comp_result.pretty_deadline_time = humanized_time
+                }
+            })
+        }
 
         self.submissions = [
             {
@@ -429,12 +417,6 @@
                 prize: '65400',
             }
         ]
-
-
-        self.sorted_competitions = self.competitions.slice(0);
-        self.sorted_competitions.sort(function (a, b) {
-            return b.participant_count - a.participant_count;
-        });
 
         self.publish = function (event) {
             var txt;
@@ -699,6 +681,12 @@
             margin-top: 2em;
         }
 
+        .no-competitions {
+            border-top: 1px solid gainsboro;
+            color: #909090;
+            padding-top: 1em;
+        }
+
     </style>
 </profile-page>
 
@@ -718,8 +706,8 @@
         </div>
         <div class="list-tile">
             <div class="biography">
-                <div id="bio" if={!!user.bio}>{user.bio}</div>
-                <div id="bio" if={!user.bio}>No information found</div>
+                <div id="bio" if={!!PROFILE_USER.github_info.bio}>{PROFILE_USER.github_info.bio}</div>
+                <div id="bio" if={!PROFILE_USER.github_info.bio}>No information found</div>
                 <div id="editor-container">
                     <textarea id="editor"></textarea>
                 </div>
@@ -729,12 +717,6 @@
 
     <script>
         var self = this
-
-        self.user = {
-            bio: "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A<strong>ccusantium adipisci aliquid assumenda beata</strong>e blanditiis consequuntur ducimus eum id, inventore laborum nemo nihil nisi provident qui quia rerum soluta tempore temporibus!</p>",
-            bio_markdown: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. A**ccusantium adipisci aliquid assumenda beata**e blanditiis consequuntur ducimus eum id, inventore laborum nemo nihil nisi provident qui quia rerum soluta tempore temporibus!",
-            github_info: '',
-        }
 
         self.on('mount', function () {
             self.easymde = new EasyMDE({
@@ -748,7 +730,7 @@
 
             $('#editor-container').hide()
 
-            document.getElementById('bio').innerHTML = self.user.bio
+            document.getElementById('bio').innerHTML = PROFILE_USER.github_info.bio
         })
 
         self.editing = function () {

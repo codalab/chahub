@@ -11,6 +11,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # Any User Attributes
     username = models.CharField(max_length=50, unique=True)
     email = models.CharField(max_length=200, unique=True, null=True, blank=True)
+    name = models.CharField(max_length=50, null=True, blank=True, default='')
 
     github_info = models.OneToOneField('GithubUserInfo', related_name='user', null=True, blank=True, on_delete=models.CASCADE)
     docker_info = models.OneToOneField('DockerUserInfo', related_name='user', null=True, blank=True, on_delete=models.CASCADE)

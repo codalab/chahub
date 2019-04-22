@@ -39,4 +39,10 @@ CHAHUB.api = {
     get_producer_stats: function() {
         return CHAHUB.api.request('GET', URLS.API + "producer_stats/")
     },
+
+    // ------------------------------------------------------------------------
+    // Profiles
+    get_profile: function(id) {
+        return CHAHUB.api.request('GET', URLS.API + "profiles/" + id + "/")
+    }
 }

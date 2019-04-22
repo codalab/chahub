@@ -2,7 +2,14 @@
 {% load static %}
 
 {% block content %}
+
+
+    <script>
+        PROFILE_USER = JSON.parse("{{ user|escapejs }}")
+        PROFILE_USER.github_info = JSON.parse(PROFILE_USER.github_info)
+
+        //CHAHUB.events.trigger("profile_loaded")
+    </script>
+
     <profile-page></profile-page>
 {% endblock %}
-
-
