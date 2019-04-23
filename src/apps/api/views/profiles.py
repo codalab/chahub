@@ -1,9 +1,12 @@
 from django.contrib.auth import get_user_model
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.generics import GenericAPIView, RetrieveAPIView
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from api.authenticators import ProducerAuthentication
+from api.permissions import ProducerPermission
 from api.serializers.profiles import MyProfileSerializer, ProfileSerializer
 from profiles.models import Profile
 
@@ -22,7 +25,8 @@ class GetMyProfile(RetrieveAPIView, GenericAPIView):
 class ProfileViewSet(ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (ProducerAuthentication, SessionAuthentication, )
+    permission_classes = (permissions.IsAuthenticated, ProducerPermission)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
