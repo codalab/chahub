@@ -26,7 +26,7 @@ class ProfileViewSet(ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     authentication_classes = (ProducerAuthentication, SessionAuthentication, )
-    permission_classes = (permissions.IsAuthenticated, ProducerPermission)
+    permission_classes = (ProducerPermission, )
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
