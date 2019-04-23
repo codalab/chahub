@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework.serializers import ModelSerializer
 
-from profiles.models import GithubUserInfo, LinkedInUserInfo
+from profiles.models import GithubUserInfo, LinkedInUserInfo, Profile
 
 User = get_user_model()
 
@@ -60,3 +60,13 @@ class MyProfileSerializer(ModelSerializer):
             'github_info',
             'linkedin_info'
         )
+
+class ProfileSerializer(ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = [
+            'remote_id',
+            'producer',
+            'email',
+            'details'
+        ]

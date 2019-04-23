@@ -1,5 +1,8 @@
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, UserManager
 from django.db import models
+from django.contrib.postgres.fields import JSONField
+
+from producers.models import Producer
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -49,6 +52,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_full_name(self):
         return self.name
+
+
+class Profile(models.Model):
+    """
+    Keeps track of remote users from producers
+    """
+
+    remote_id = models.IntegerField()
+    producer = models.ForeignKey(Producer, related_name='profiles', on_delete=models.CASCADE)
+    email = models.EmailField()
+
+    details = JSONField()
 
 
 # WILL BE VERY USEFUL
