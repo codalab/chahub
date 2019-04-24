@@ -50,7 +50,7 @@ class ProfileViewSet(ModelViewSet):
         #         self.perform_update(serializer)
         #     else:
         #         self.perform_create(serializer)
-        serializer = self.get_serializer(data=request.data, partial=False, multi=True)
+        serializer = self.get_serializer(data=request.data, partial=False, many=True)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
