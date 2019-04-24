@@ -74,6 +74,15 @@ class ProfileSerializer(ModelSerializer):
             'details'
         ]
 
+    def get_unique_together_validators(self):
+        '''
+        Overriding method to disable unique together checks
+        '''
+        if self.many:
+            return []
+        else:
+            return super().get_unique_together_validators()
+
     def create(self, validated_data):
         """
         This creates *AND* updates based on the combination of (remote_id, producer)
