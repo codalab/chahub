@@ -76,6 +76,9 @@ class ProfileSerializer(ModelSerializer):
         This creates *AND* updates based on the combination of (remote_id, producer)
         """
         try:
+            print("**************************************************************************************************")
+            print(validated_data)
+            print("**************************************************************************************************")
             # If we have an existing instance from this producer
             # with the same remote_id, update it instead of making a new one
             temp_instance = Profile.objects.get(
