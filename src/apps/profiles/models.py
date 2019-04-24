@@ -63,7 +63,10 @@ class Profile(models.Model):
     producer = models.ForeignKey(Producer, related_name='profiles', on_delete=models.CASCADE)
     email = models.EmailField()
 
-    details = JSONField()
+    details = JSONField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ['remote_id', 'producer']
 
 
 # WILL BE VERY USEFUL

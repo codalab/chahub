@@ -34,6 +34,12 @@ class ProfileViewSet(ModelViewSet):
         context['producer'] = self.request.user
         return context
 
+    # def dispatch(self, request, *args, **kwargs):
+    #     super().dispatch()
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         for profile in request.data:
