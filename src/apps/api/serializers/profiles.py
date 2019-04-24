@@ -75,17 +75,33 @@ class ProfileSerializer(ModelSerializer):
         """
         This creates *AND* updates based on the combination of (remote_id, producer)
         """
-        try:
-            print("**************************************************************************************************")
-            print(validated_data)
-            print("**************************************************************************************************")
-            # If we have an existing instance from this producer
-            # with the same remote_id, update it instead of making a new one
-            temp_instance = Profile.objects.get(
-                remote_id=validated_data.get('remote_id'),
-                producer__id=validated_data.get('producer')
-            )
-            return self.update(temp_instance, validated_data)
-        except Profile.DoesNotExist:
-            new_instance = super().create(validated_data)
-            return new_instance
+        print("**************************************************************************************************")
+        print(validated_data)
+        print("**************************************************************************************************")
+        if self.many:
+            last_instance = None
+            for profile in validated_data:
+                try:
+                    # If we have an existing instance from this producer
+                    # with the same remote_id, update it instead of making a new one
+                    temp_instance = Profile.objects.get(
+                        remote_id=validated_data.get('remote_id'),
+                        producer__id=validated_data.get('producer')
+                    )
+                    last_instance = self.update(temp_instance, validated_data)
+                except Profile.DoesNotExist:
+                    last_instance = super().create(validated_data)
+                    # return new_instance
+                return last_instance
+        else:
+            try:
+                # If we have an existing instance from this producer
+                # with the same remote_id, update it instead of making a new one
+                temp_instance = Profile.objects.get(
+                    remote_id=validated_data.get('remote_id'),
+                    producer__id=validated_data.get('producer')
+                )
+                return self.update(temp_instance, validated_data)
+            except Profile.DoesNotExist:
+                new_instance = super().create(validated_data)
+                return new_instance
