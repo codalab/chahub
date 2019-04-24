@@ -78,12 +78,13 @@ class ProfileSerializer(ModelSerializer):
         '''
         Overriding method to disable unique together checks
         '''
-        if type(self.data) == list:
-            print("List")
-            return []
-        else:
-            print("Something else")
-            return super().get_unique_together_validators()
+        # if type(self.data) == list:
+        #     print("List")
+        #     return []
+        # else:
+        #     print("Something else")
+        #     return super().get_unique_together_validators()
+        return []
 
     def create(self, validated_data):
         """
