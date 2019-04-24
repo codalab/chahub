@@ -35,20 +35,23 @@ class ProfileViewSet(ModelViewSet):
         2. We want to handle creating many competitions this way, and we do that
            custom to make drf-writable-nested able to interpret everything easily"""
         # Make the serializer take many competitions at once
-        for profile in request.data:
-            # serializer = self.get_serializer(data=profile)
-            # serializer.is_valid(raise_exception=True)
-            # self.perform_create(serializer)
-
-            try:
-                instance = self.queryset.get(remote_id=profile.get('remote_id'))
-            except Profile.DoesNotExist:
-                instance = None
-            serializer = self.get_serializer(instance, data=profile, partial=False)
-            serializer.is_valid(raise_exception=True)
-            if instance:
-                self.perform_update(serializer)
-            else:
-                self.perform_create(serializer)
+        # for profile in request.data:
+        #     # serializer = self.get_serializer(data=profile)
+        #     # serializer.is_valid(raise_exception=True)
+        #     # self.perform_create(serializer)
+        #
+        #     try:
+        #         instance = self.queryset.get(remote_id=profile.get('remote_id'), producer__id=profile.get('producer'))
+        #     except Profile.DoesNotExist:
+        #         instance = None
+        #     serializer = self.get_serializer(instance, data=profile, partial=False)
+        #     serializer.is_valid(raise_exception=True)
+        #     if instance:
+        #         self.perform_update(serializer)
+        #     else:
+        #         self.perform_create(serializer)
+        serializer = self.get_serializer(data=request.data, partial=False, multi=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
 
         return Response({}, status=status.HTTP_201_CREATED)
