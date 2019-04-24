@@ -51,7 +51,11 @@ class ProfileViewSet(ModelViewSet):
         #     else:
         #         self.perform_create(serializer)
         serializer = self.get_serializer(data=request.data, partial=False, many=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        serializer.is_valid(raise_exception=False)
+        # if serializer.errors
+        if serializer.errors:
+            print(serializer.errors)
+        else:
+            self.perform_create(serializer)
 
         return Response({}, status=status.HTTP_201_CREATED)
