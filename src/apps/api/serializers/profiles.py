@@ -1,9 +1,12 @@
+import logging
 from django.contrib.auth import get_user_model
 from rest_framework.serializers import ModelSerializer
 
 from profiles.models import GithubUserInfo, LinkedInUserInfo, Profile
 
 User = get_user_model()
+
+logger = logging.getLogger(__name__)
 
 class GithubUserInfoSerializer(ModelSerializer):
 
@@ -75,9 +78,9 @@ class ProfileSerializer(ModelSerializer):
         """
         This creates *AND* updates based on the combination of (remote_id, producer)
         """
-        print("**************************************************************************************************")
-        print(validated_data)
-        print("**************************************************************************************************")
+        logger.info("**************************************************************************************************")
+        logger.info(validated_data)
+        logger.info("**************************************************************************************************")
         if self.many:
             last_instance = None
             for profile in validated_data:
