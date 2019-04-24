@@ -44,7 +44,7 @@ class ProfileViewSet(ModelViewSet):
                 instance = self.queryset.get(remote_id=profile.get('remote_id'))
             except Profile.DoesNotExist:
                 instance = None
-            serializer = self.get_serializer(instance, data=request.data, partial=False)
+            serializer = self.get_serializer(instance, data=profile, partial=False)
             serializer.is_valid(raise_exception=True)
             if instance:
                 self.perform_update(serializer)
