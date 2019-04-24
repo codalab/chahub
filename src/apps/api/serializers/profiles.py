@@ -97,7 +97,8 @@ class ProfileSerializer(ModelSerializer):
         logger.error("**************************************************************************************************")
         logger.error(validated_data)
         logger.error("**************************************************************************************************")
-        if self.many:
+        # if self.many:
+        if type(validated_data) == list:
             last_instance = None
             for profile in validated_data:
                 try:
