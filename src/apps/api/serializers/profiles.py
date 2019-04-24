@@ -106,7 +106,7 @@ class ProfileSerializer(ModelSerializer):
                     # with the same remote_id, update it instead of making a new one
                     temp_instance = Profile.objects.get(
                         remote_id=validated_data.get('remote_id'),
-                        producer__id=validated_data.get('producer')
+                        producer=validated_data.get('producer')
                     )
                     last_instance = self.update(temp_instance, validated_data)
                 except Profile.DoesNotExist:
@@ -119,7 +119,7 @@ class ProfileSerializer(ModelSerializer):
                 # with the same remote_id, update it instead of making a new one
                 temp_instance = Profile.objects.get(
                     remote_id=validated_data.get('remote_id'),
-                    producer__id=validated_data.get('producer')
+                    producer=validated_data.get('producer')
                 )
                 return self.update(temp_instance, validated_data)
             except Profile.DoesNotExist:
