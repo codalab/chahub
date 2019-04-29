@@ -5,11 +5,25 @@
 
 
     <script>
-        PROFILE_USER = JSON.parse("{{ user|escapejs }}")
-        PROFILE_USER.github_info = JSON.parse(PROFILE_USER.github_info)
+        //PROFILE_USER = JSON.parse("{{ user|escapejs }}")
+        //PROFILE_USER.github_info = JSON.parse(PROFILE_USER.github_info)
 
-        //CHAHUB.events.trigger("profile_loaded")
+{#        PROFILE_MODE = JSON.parse("{{ object_mode }}")#}
+{#        PROFILE_OBJECTS = JSON.parse("{{ objects }}")#}
+
+        {% if object_mode %}
+            PROFILE_MODE = "{{ object_mode }}"
+        {% endif %}
+        {% if objects %}
+            PROFILE_OBJECTS = {{ objects }}
+        {% endif %}
+
+{#        CHAHUB.events.trigger("profile_loaded")#}
     </script>
 
-    <profile-page></profile-page>
+    {% if object_mode == 'user' %}
+        <profile-page-user></profile-page-user>
+    {% elif object_mode == 'profile' %}
+        <profile-page></profile-page>
+    {% endif %}
 {% endblock %}

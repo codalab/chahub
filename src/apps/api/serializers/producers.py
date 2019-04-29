@@ -5,7 +5,7 @@ from producers.models import Producer
 class ProducerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Producer
-        fields = (
+        fields = [
             'id',
             'name',
             'contact',
@@ -16,4 +16,4 @@ class ProducerSerializer(serializers.ModelSerializer):
             'submission_count',
             'user_count',
             'organizer_count'
-        )
+        ]

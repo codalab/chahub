@@ -10,13 +10,13 @@ from competitions.models import Competition, Phase, Submission, CompetitionParti
 class CompetitionParticipantSerializer(serializers.ModelSerializer):
     class Meta:
         model = CompetitionParticipant
-        fields = ('competition', 'user')
+        fields = ['competition', 'user']
 
 
 class PhaseSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Phase
-        fields = (
+        fields = [
             'id',
             # 'competition',
             'index',
@@ -24,8 +24,8 @@ class PhaseSerializer(WritableNestedModelSerializer):
             'end',
             'name',
             'description',
-            'is_active',
-        )
+            'is_active'
+        ]
 
 
 class SubmissionSerializer(serializers.ModelSerializer):
@@ -34,13 +34,13 @@ class SubmissionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Submission
-        fields = (
+        fields = [
             'remote_id',
             'competition',  # on write only
             'phase_index',  # on write this is the phase index within the competition, NOT a PK
             'submitted_at',
-            'participant',
-        )
+            'participant'
+        ]
 
     def validate(self, attrs):
         competition = Competition.objects.get(
@@ -71,12 +71,13 @@ class CompetitionSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Competition
-        fields = (
+        fields = [
             'id',
             'remote_id',
             'title',
             'producer',
             'created_by',
+            'creator_id',
             'start',
             'logo',
             'url',
@@ -91,8 +92,9 @@ class CompetitionSerializer(WritableNestedModelSerializer):
             'html_text',
             'current_phase_deadline',
             'prize',
-            'published'
-        )
+            'published',
+            'user'
+        ]
         validators = []
         extra_kwargs = {
             'producer': {

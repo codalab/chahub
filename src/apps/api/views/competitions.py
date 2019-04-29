@@ -25,10 +25,17 @@ class CompetitionViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
         return context
 
     def get_queryset(self):
-        # TODO: Filter out competitions that don't belong to this provider ???
-
         qs = Competition.objects.all()
         qs = qs.prefetch_related('phases', 'producer', 'admins', 'participants')
+
+        producer = self.request.query_params.get('producer', None)
+        creator_id = self.request.query_params.get('creator_id', None)
+
+        if producer:
+            qs = qs.filter(producer__id=producer)
+        if creator_id:
+            qs = qs.filter(creator_id=creator_id)
+
         return qs
 
     def create(self, request, *args, **kwargs):

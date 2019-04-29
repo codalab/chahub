@@ -9,20 +9,22 @@ class DataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Data
-        fields = (
-            'created_by',
-            'created_when',
+        fields = [
+            'creator_id',
+            'remote_id',
+            'producer',
+            'user',
             'name',
             'type',
             'description',
-            'data_file',
-            'key',
-        )
+            'is_public'
+        ]
         read_only_fields = (
             'owner',
             'key',
             'created_by',
             'created_when',
+            'uploaded_when'
         )
 
     def to_representation(self, instance):
@@ -36,17 +38,17 @@ class DataSerializer(serializers.ModelSerializer):
 
         return representation
 
-    def create(self, validated_data):
-        validated_data["created_by"] = self.context['request'].user
-        return super().create(validated_data)
+    # def create(self, validated_data):
+    #     validated_data["created_by"] = self.context['request'].user
+    #     return super().create(validated_data)
 
 
 class DataGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataGroup
-        fields = (
+        fields = [
             'created_by',
             'created_when',
             'name',
-            'datas',
-        )
+            'datas'
+        ]

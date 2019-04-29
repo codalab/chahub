@@ -1,4 +1,4 @@
-<profile-page>
+<profile-page-user>
     <div id="particles-js">
         <a href="/"><img id="brand_logo" src="{URLS.STATIC('img/temp_chahub_logo_beta.png')}"></a>
     </div>
@@ -81,8 +81,7 @@
                                 <h3>My Featured Competitions</h3>
                                 <competition-tile each="{ sorted_competitions }" no-reorder
                                                   class="item"></competition-tile>
-                                <p class="no-competitions" style=""
-                                   if="{ sorted_competitions === undefined || sorted_competitions.length == 0 }">
+                                <p class="no-competitions" style="" if="{ sorted_competitions === undefined || sorted_competitions.length == 0 }">
                                     No competitions found for this user</p>
                             </div>
                         </div>
@@ -204,12 +203,10 @@
 
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
-                                <competition-tile
-                                        if="{ sorted_competitions !== undefined && sorted_competitions.length < 0 }"
-                                        each="{ sorted_competitions }" no-reorder
-                                        class="item"></competition-tile>
-                                <p class="no-competitions"
-                                   if="{ sorted_competitions === undefined || sorted_competitions.length == 0 }">
+                                <competition-tile if="{ sorted_competitions !== undefined && sorted_competitions.length < 0 }"
+                                                  each="{ sorted_competitions }" no-reorder
+                                                  class="item"></competition-tile>
+                                <p class="no-competitions" if="{ sorted_competitions === undefined || sorted_competitions.length == 0 }">
                                     No competitions found for this user</p>
                             </div>
                             <div class="ui pagination menu">
@@ -328,10 +325,11 @@
 
     <script>
         var self = this
-        self.competitions = []
+        self.profile = {}
+        self.organized_competitions = []
+        self.participating_competitions = []
         self.datasets = []
         self.submissions = []
-        self.profiles = []
 
 
         self.on('mount', function () {
@@ -352,36 +350,38 @@
 
             $('.ui.checkbox').checkbox();
             //self.update_information();
-            self.update_profiles();
         })
 
-        self.update_profiles = function () {
-            self.update({profiles: []})
-            PROFILE_OBJECTS.forEach(function (profile_id) {
-                CHAHUB.api.get_profile(profile_id)
-                    .done(function (data) {
-                        self.profiles.push(data)
-                        console.log(self.profiles)
-                        self.update()
-                        self.update_data()
+        /*self.update_information = function () {
+            CHAHUB.api.get_profile(PROFILE_USER["id"])
+                .done(function (data) {
+                    self.update({
+                        profile: data
                     })
-                    .fail(function (response) {
-                        toastr.error("Failed to retrieve profile: " + profile_id)
-                    })
-            })
-        }
 
-        self.update_data = function() {
-            self.profiles.forEach(function (profile) {
-                CHAHUB.api.get_profile_competitions(profile.producer, profile.remote_id)
-                    .done(function (data) {
-                        self.competitions.concat(data)
-                        console.log(self.competitions)
-                        self.update()
-                    })
-                    .fail(function (response) {
-                        toastr.error("Failed to retrieve competitions for creator ID: " + profile.remote_id + " for producer: " + profile.producer + "!")
-                    })
+                    if (self.profile.competitions !== undefined || self.profile.competitions.length > 0) {
+                        self.sorted_competitions = self.profile.competitions.slice(0);
+                        self.sorted_competitions.sort(function (a, b) {
+                            return b.participant_count - a.participant_count;
+                        });
+                        self.prepare_results()
+                    }
+                    self.update()
+                })
+                .fail(function (response) {
+
+                })
+            console.log('updating user profile')
+        }*/
+
+        self.update_user = function() {
+            CHAHUB.api.get_user(PROFILE_OBJECTS)
+            .done(function (data) {
+                self.profile = data
+                self.update()
+            })
+            .fail(function (response) {
+
             })
         }
 
@@ -704,7 +704,7 @@
         }
 
     </style>
-</profile-page>
+</profile-page-user>
 
 <about-me id="about-me">
     <div class="bio-segment primary-segment ui segment sixteen wide">

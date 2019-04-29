@@ -6,6 +6,7 @@ from rest_framework_extensions.cache.decorators import cache_response
 from api.caching import QueryParamsKeyConstructor
 from utils.search import get_search_client, get_results, get_default_search_results
 
+# TODO: This is farily UN-DRY so far. We should probably by default exclude published=False...
 EXTRA_FILTERS = {
     'competitions': {
         'filter': {
@@ -19,7 +20,31 @@ EXTRA_FILTERS = {
                 'excludes': ["html_text"]
             }
         }
-    }
+    },
+    'tasks': {
+        'filter': {
+            'args': ('term',),
+            'kwargs': {
+                'published': True
+            }
+        }
+    },
+    'solutions': {
+        'filter': {
+            'args': ('term',),
+            'kwargs': {
+                'published': True
+            }
+        }
+    },
+    'datasets': {
+        'filter': {
+            'args': ('term',),
+            'kwargs': {
+                'published': True
+            }
+        }
+    },
 }
 
 
@@ -94,6 +119,8 @@ class SearchView(APIView):
                 fields += ["title^5", "description^3", "html_text^2", "created_by"]
             if 'users' in obj_types or obj_types == 'ALL':
                 fields += ["username^5", "name^3", "bio^2", "company"]
+            if 'profiles' in obj_types or obj_types == 'ALL':
+                fields += ["email", "producer", "remote_id"]
             # Remove duplicates
             fields = list(set(fields))
             search = search.query(

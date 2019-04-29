@@ -1,5 +1,10 @@
+import uuid
+
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, UserManager
 from django.db import models
+from django.contrib.postgres.fields import JSONField
+
+from producers.models import Producer
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -15,7 +20,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     github_info = models.OneToOneField('GithubUserInfo', related_name='user', null=True, blank=True, on_delete=models.CASCADE)
     docker_info = models.OneToOneField('DockerUserInfo', related_name='user', null=True, blank=True, on_delete=models.CASCADE)
-    # linkedin_info = models.OneToOneField('LinkedInUserInfo', related_name='user', null=True, blank=True, on_delete=models.CASCADE)
+    linkedin_info = models.OneToOneField('LinkedInUserInfo', related_name='user', null=True, blank=True, on_delete=models.CASCADE)
 
     # Utility Attributes
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -52,16 +57,54 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.name
 
 
+class Profile(models.Model):
+    """
+    Keeps track of remote users from producers
+    """
+
+    remote_id = models.IntegerField()
+    producer = models.ForeignKey(Producer, related_name='profiles', on_delete=models.CASCADE)
+    email = models.EmailField()
+    username = models.CharField(max_length=150, default=uuid.uuid4)  # Required, but not unique
+
+    user = models.ForeignKey(User, related_name='profiles', on_delete=models.SET_NULL, null=True, blank=True)
+
+    details = JSONField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ['remote_id', 'producer']
+
+    @property
+    def organized_competitions(self):
+        from competitions.models import Competition
+        return Competition.objects.filter(producer=self.producer, creator_id=self.remote_id)
+
+    @property
+    def datasets(self):
+        from datasets.models import Data
+        return Data.objects.filter(producer=self.producer, creator_id=self.remote_id)
+
+    @property
+    def tasks(self):
+        from tasks.models import Task
+        return Task.objects.filter(producer=self.producer, creator_id=self.remote_id)
+
+    @property
+    def solutions(self):
+        from tasks.models import Solution
+        return Solution.objects.filter(producer=self.producer, creator_id=self.remote_id)
+
+
 # WILL BE VERY USEFUL
 class GithubUserInfo(models.Model):
     # Required Info
-    github_uid = models.CharField(max_length=30, unique=True)
+    uid = models.CharField(max_length=30, unique=True)
 
     # Misc/Avatar/Profile
-    login = models.CharField(max_length=100, null=True, blank=True) # username
+    login = models.CharField(max_length=100, null=True, blank=True)  # username
     avatar_url = models.URLField(max_length=100, null=True, blank=True)
     gravatar_id = models.CharField(max_length=100, null=True, blank=True)
-    html_url = models.URLField(max_length=100, null=True, blank=True) # Profile URL
+    html_url = models.URLField(max_length=100, null=True, blank=True)  # Profile URL
     name = models.CharField(max_length=100, null=True, blank=True)
     company = models.CharField(max_length=100, null=True, blank=True)
     bio = models.TextField(max_length=2000, null=True, blank=True)
@@ -71,7 +114,7 @@ class GithubUserInfo(models.Model):
 
     # API Info
     node_id = models.CharField(unique=True, max_length=50, default='')
-    url = models.URLField(max_length=100, null=True, blank=True) # Base API URL
+    url = models.URLField(max_length=100, null=True, blank=True)  # Base API URL
     followers_url = models.URLField(max_length=100, null=True, blank=True)
     following_url = models.URLField(max_length=100, null=True, blank=True)
     gists_url = models.URLField(max_length=100, null=True, blank=True)
@@ -85,11 +128,11 @@ class GithubUserInfo(models.Model):
 
 # No use yet
 class DockerUserInfo(models.Model):
-    docker_uid = models.CharField(max_length=30, unique=True)
+    uid = models.CharField(max_length=30, unique=True)
 
 
 # Not so useful
 class LinkedInUserInfo(models.Model):
-    linkedin_uid = models.CharField(max_length=30, unique=True)
+    uid = models.CharField(max_length=30, unique=True)
     firstName = models.CharField(max_length=50, null=True, blank=True)
     lastName = models.CharField(max_length=50, null=True, blank=True)

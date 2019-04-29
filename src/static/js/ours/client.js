@@ -44,5 +44,8 @@ CHAHUB.api = {
     // Profiles
     get_profile: function(id) {
         return CHAHUB.api.request('GET', URLS.API + "profiles/" + id + "/")
-    }
+    },
+    get_profile_competitions: function(producer, creator_id) {
+        return CHAHUB.api.request('GET', URLS.API + "competitions/?producer=" + producer + "&creator_id=" + creator_id)
+    },
 }

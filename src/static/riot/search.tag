@@ -46,6 +46,10 @@
                                             <i class="users icon"></i>
                                             <span class="label-text">Users</span>
                                         </div>
+                                        <div class="item" data-value="profiles">
+                                            <i class="users icon"></i>
+                                            <span class="label-text">Profiles</span>
+                                        </div>
                                         <div class="item" data-value="datasets">
                                             <i class="file icon"></i>
                                             <span class="label-text">Datasets</span>
@@ -1017,7 +1021,7 @@
     </style>
 </competition-tile>
 
-<user-tile if="{ _obj_type == 'user' }" show="{ _obj_type == 'user' }" onclick="{redirect_to_profile}">
+<user-tile if="{ _obj_type == 'user' || _obj_type == 'profile' }" show="{ _obj_type == 'user' || _obj_type == 'profile' }" onclick="{redirect_to_profile}">
     <div class="ui tiny image">
         <img src="{avatar_url || URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">
     </div>
