@@ -52,15 +52,12 @@ class LinkedInUserInfoSerializer(ModelSerializer):
 
 
 class MyProfileSerializer(serializers.ModelSerializer):
-    bio = serializers.CharField(source="github_info.bio")
-
     class Meta:
         model = User
         fields = [
             'username',
             'name',
             'email',
-            'bio',
             'id',
             'github_info',
         ]
