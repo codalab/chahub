@@ -5,6 +5,8 @@ from rest_framework.response import Response
 
 class BulkViewSetMixin(object):
 
+    extra_prefetch = None
+
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['producer'] = self.request.user
