@@ -6,7 +6,7 @@ from rest_framework.routers import SimpleRouter
 
 from api.views import producers
 from api.views.producers import ProducerViewSet
-from .views import competitions, profiles, search
+from .views import competitions, profiles, search, data
 
 app_name = 'api'
 API_PREFIX = "v1"
@@ -18,6 +18,7 @@ router.register('competitions', competitions.CompetitionViewSet)
 router.register('submissions', competitions.SubmissionViewSet)
 router.register('profiles', profiles.ProfileViewSet)
 router.register('users', profiles.UserViewSet)
+router.register('datasets', data.DataViewSet)
 
 # Documentation details
 schema_view = get_schema_view(
