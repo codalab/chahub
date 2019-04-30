@@ -3,11 +3,12 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from api.serializers.mixins import BulkSerializerMixin
+from api.serializers.producers import ProducerSerializer
 from datasets.models import Data, DataGroup
 
 
 class DataSerializer(BulkSerializerMixin, serializers.ModelSerializer):
-    # data_file = FileField(allow_empty_file=False)
+    producer = ProducerSerializer(required=False, validators=[])
 
     class Meta:
         model = Data
