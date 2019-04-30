@@ -4,18 +4,14 @@ from rest_framework.response import Response
 
 
 class BulkViewSetMixin(object):
-
-    extra_prefetch = None
-
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['producer'] = self.request.user
         return context
 
     def get_queryset(self):
-        extra_prefetch = self.extra_prefetch if self.extra_prefetch else []
         qs = self.queryset
-        qs = qs.prefetch_related('producer', 'user', *extra_prefetch)
+        qs = qs.prefetch_related('producer', 'user')
 
         producer = self.request.query_params.get('producer', None)
         creator_id = self.request.query_params.get('creator_id', None)
