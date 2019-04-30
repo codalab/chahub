@@ -82,6 +82,7 @@ class ProfileSerializer(ModelSerializer):
             'email',
             'username',
             'details',
+            'user',
             'organized_competitions',
             'datasets',
             'tasks',
