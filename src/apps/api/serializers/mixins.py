@@ -1,7 +1,11 @@
 from rest_framework.exceptions import ValidationError
 
+from api.serializers.producers import ProducerSerializer
+
 
 class BulkSerializerMixin(object):
+
+    producer = ProducerSerializer(required=False, validators=[])
 
     def get_unique_together_validators(self):
         '''
