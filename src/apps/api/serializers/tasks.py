@@ -1,10 +1,12 @@
 from django.conf import settings
 from rest_framework import serializers
 
+from api.serializers.mixins import BulkSerializerMixin
+from api.serializers.producers import ProducerSerializer
 from tasks.models import Task, Solution
 
-class TaskSerializer(serializers.ModelSerializer):
-    # data_file = FileField(allow_empty_file=False)
+class TaskSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+    producer = ProducerSerializer(required=False, validators=[])
 
     class Meta:
         model = Task
@@ -31,8 +33,8 @@ class TaskSerializer(serializers.ModelSerializer):
         ]
 
 
-class SolutionSerializer(serializers.ModelSerializer):
-
+class SolutionSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+    producer = ProducerSerializer(required=False, validators=[])
     tasks = TaskSerializer(many=True)
 
     class Meta:

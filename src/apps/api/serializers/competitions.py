@@ -3,6 +3,7 @@ from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from api.serializers.mixins import BulkSerializerMixin
 from api.serializers.producers import ProducerSerializer
 from competitions.models import Competition, Phase, Submission, CompetitionParticipant
 
@@ -59,7 +60,7 @@ class SubmissionSerializer(serializers.ModelSerializer):
         return instance
 
 
-class CompetitionSerializer(WritableNestedModelSerializer):
+class CompetitionSerializer(BulkSerializerMixin, WritableNestedModelSerializer):
     # Stop the "uniqueness" validation, we want to be able to update already
     # existing models
     # Also, Producer in this case comes from serializer context
@@ -108,34 +109,34 @@ class CompetitionSerializer(WritableNestedModelSerializer):
             description = description.replace("<p>", "").replace("</p>", "")
         return description
 
-    def validate_producer(self, producer):
-        context_producer = self.context.get(producer)
-        if context_producer:
-            return context_producer
-
-        if not producer:
-            raise ValidationError("Producer not found when creating data entry")
-        return producer
-
-    def create(self, validated_data):
-        """
-        This creates *AND* updates based on the combination of (remote_id, producer)
-        """
-        logo_url = validated_data.pop('logo') if validated_data.get('logo') else None
-        validated_data['logo_url'] = logo_url
-        try:
-            # If we have an existing instance from this producer
-            # with the same remote_id, update it instead of making a new one
-            temp_instance = Competition.objects.get(
-                remote_id=validated_data.get('remote_id'),
-                producer__id=self.context['producer'].id
-            )
-            if logo_url and logo_url != temp_instance.logo_url:
-                temp_instance.logo_url = None
-                temp_instance.logo = None
-            return self.update(temp_instance, validated_data)
-        except ObjectDoesNotExist:
-            new_instance = super().create(validated_data)
-            new_instance.producer = self.context['producer']
-            new_instance.save()
-            return new_instance
+    # def validate_producer(self, producer):
+    #     context_producer = self.context.get(producer)
+    #     if context_producer:
+    #         return context_producer
+    #
+    #     if not producer:
+    #         raise ValidationError("Producer not found when creating data entry")
+    #     return producer
+    #
+    # def create(self, validated_data):
+    #     """
+    #     This creates *AND* updates based on the combination of (remote_id, producer)
+    #     """
+    #     logo_url = validated_data.pop('logo') if validated_data.get('logo') else None
+    #     validated_data['logo_url'] = logo_url
+    #     try:
+    #         # If we have an existing instance from this producer
+    #         # with the same remote_id, update it instead of making a new one
+    #         temp_instance = Competition.objects.get(
+    #             remote_id=validated_data.get('remote_id'),
+    #             producer__id=self.context['producer'].id
+    #         )
+    #         if logo_url and logo_url != temp_instance.logo_url:
+    #             temp_instance.logo_url = None
+    #             temp_instance.logo = None
+    #         return self.update(temp_instance, validated_data)
+    #     except ObjectDoesNotExist:
+    #         new_instance = super().create(validated_data)
+    #         new_instance.producer = self.context['producer']
+    #         new_instance.save()
+    #         return new_instance

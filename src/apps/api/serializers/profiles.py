@@ -5,6 +5,8 @@ from rest_framework.serializers import ModelSerializer
 
 from api.serializers.competitions import CompetitionSerializer
 from api.serializers.data import DataSerializer
+from api.serializers.mixins import BulkSerializerMixin
+from api.serializers.producers import ProducerSerializer
 from api.serializers.tasks import TaskSerializer, SolutionSerializer
 from competitions.models import Competition, CompetitionParticipant
 from profiles.models import GithubUserInfo, LinkedInUserInfo, Profile
@@ -74,12 +76,13 @@ class MyProfileSerializer(serializers.ModelSerializer):
             'created_datasets',
         ]
 
-class ProfileSerializer(ModelSerializer):
+class ProfileSerializer(BulkSerializerMixin, ModelSerializer):
     from api.serializers.competitions import CompetitionSerializer
     from api.serializers.data import DataSerializer
     from api.serializers.tasks import TaskSerializer
     from api.serializers.tasks import SolutionSerializer
 
+    producer = ProducerSerializer(required=False, validators=[])
     organized_competitions = CompetitionSerializer(many=True, read_only=True)
     datasets = DataSerializer(many=True, read_only=True)
     tasks = TaskSerializer(many=True, read_only=True)
@@ -103,25 +106,25 @@ class ProfileSerializer(ModelSerializer):
 
         ]
 
-    def get_unique_together_validators(self):
-        '''
-        Overriding method to disable unique together checks
-        '''
-        return []
-
-    def create(self, validated_data):
-        """
-        This creates *AND* updates based on the combination of (remote_id, producer)
-        """
-
-        try:
-            # If we have an existing instance from this producer
-            # with the same remote_id, update it instead of making a new one
-            instance = Profile.objects.get(
-                remote_id=validated_data.get('remote_id'),
-                producer=validated_data.get('producer')
-            )
-            return self.update(instance, validated_data)
-        except Profile.DoesNotExist:
-            new_instance = super().create(validated_data)
-            return new_instance
+    # def get_unique_together_validators(self):
+    #     '''
+    #     Overriding method to disable unique together checks
+    #     '''
+    #     return []
+    #
+    # def create(self, validated_data):
+    #     """
+    #     This creates *AND* updates based on the combination of (remote_id, producer)
+    #     """
+    #
+    #     try:
+    #         # If we have an existing instance from this producer
+    #         # with the same remote_id, update it instead of making a new one
+    #         instance = Profile.objects.get(
+    #             remote_id=validated_data.get('remote_id'),
+    #             producer=validated_data.get('producer')
+    #         )
+    #         return self.update(instance, validated_data)
+    #     except Profile.DoesNotExist:
+    #         new_instance = super().create(validated_data)
+    #         return new_instance
