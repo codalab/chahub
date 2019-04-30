@@ -52,6 +52,7 @@ class LinkedInUserInfoSerializer(ModelSerializer):
 
 
 class MyProfileSerializer(serializers.ModelSerializer):
+    github_info = GithubUserInfoSerializer(read_only=True, required=False, many=False)
     class Meta:
         model = User
         fields = [
