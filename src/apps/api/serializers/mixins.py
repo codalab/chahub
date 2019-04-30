@@ -1,12 +1,7 @@
 from rest_framework.exceptions import ValidationError
 
-from api.serializers.producers import ProducerSerializer
-
 
 class BulkSerializerMixin(object):
-
-    producer = ProducerSerializer(required=False, validators=[])
-
     def get_unique_together_validators(self):
         '''
         Overriding method to disable unique together checks
@@ -29,3 +24,12 @@ class BulkSerializerMixin(object):
         except self.Meta.model.DoesNotExist:
             new_instance = super().create(validated_data)
             return new_instance
+
+    def validate_producer(self, producer):
+        context_producer = self.context.get(producer)
+        if context_producer:
+            return context_producer
+
+        if not producer:
+            raise ValidationError("Producer not found when creating data entry")
+        return producer
