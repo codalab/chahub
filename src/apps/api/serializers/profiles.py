@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
+from api.serializers.competitions import CompetitionSerializer
 from competitions.models import Competition, CompetitionParticipant
 from profiles.models import GithubUserInfo, LinkedInUserInfo, Profile
 
@@ -53,6 +54,7 @@ class LinkedInUserInfoSerializer(ModelSerializer):
 
 class MyProfileSerializer(serializers.ModelSerializer):
     github_info = GithubUserInfoSerializer(read_only=True, required=False, many=False)
+    organized_competitions = CompetitionSerializer(read_only=True, required=False, many=True)
     class Meta:
         model = User
         fields = [
@@ -61,6 +63,7 @@ class MyProfileSerializer(serializers.ModelSerializer):
             'email',
             'id',
             'github_info',
+            'organized_competitions',
         ]
 
 class ProfileSerializer(ModelSerializer):
