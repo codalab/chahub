@@ -17,6 +17,7 @@ router.register('producers', ProducerViewSet)
 router.register('competitions', competitions.CompetitionViewSet)
 router.register('submissions', competitions.SubmissionViewSet)
 router.register('profiles', profiles.ProfileViewSet)
+router.register('users', profiles.UserViewSet)
 
 # Documentation details
 schema_view = get_schema_view(

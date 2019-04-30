@@ -25,6 +25,15 @@ class GetMyProfile(RetrieveAPIView, GenericAPIView):
         return self.request.user
 
 
+class UserViewSet(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = MyProfileSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    # def get_object(self):
+    #     return self.request.user
+
+
 class ProfileViewSet(ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer

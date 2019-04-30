@@ -7,24 +7,24 @@
         <div class="ui profile-segment segment">
             <div class="ui container profile-header">
                 <div class="holder">
-                    <img class="profile-img" src="{PROFILE_USER.github_info.avatar_url}" alt="placeholder">
+                    <img class="profile-img" src="{profile.github_info.avatar_url}" alt="placeholder">
                 </div>
                 <div class="profile-user">
                     {profile.name}
                     <div class="profile-brief">
-                        <div class="location">{PROFILE_USER.github_info.location}</div>
-                        <div class="occupation">{PROFILE_USER.github_info.company}</div>
+                        <div class="location">{profile.github_info.location}</div>
+                        <div class="occupation">{profile.github_info.company}</div>
                         {profile.bio}
                     </div>
                     <div class="social-buttons">
-                        <a href="{PROFILE_USER.github_info.html_url}" if="!!profile.html_url"
+                        <a href="{profile.github_info.html_url}" if="!!profile.html_url"
                            style="background-color: #582c80; color: white;"
                            class="ui circular github plus mini icon button">
                             <i class="github icon"></i>
                         </a>
                     </div>
                     <div class="languages">
-                        <div each="{language in PROFILE_USER.languages}" class="ui mini label">
+                        <div each="{language in profile.languages}" class="ui mini label">
                             {language}
                         </div>
                     </div>
@@ -79,9 +79,9 @@
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>My Featured Competitions</h3>
-                                <competition-tile each="{ sorted_competitions }" no-reorder
+                                <competition-tile each="{ profile.organized_competitions }" no-reorder
                                                   class="item"></competition-tile>
-                                <p class="no-competitions" style="" if="{ sorted_competitions === undefined || sorted_competitions.length == 0 }">
+                                <p class="no-competitions" style="" if="{ profile.organized_competitions === undefined || profile.organized_competitions.length == 0 }">
                                     No competitions found for this user</p>
                             </div>
                         </div>
@@ -104,13 +104,13 @@
                                         <td class="category">Top 10 Finishes:</td>
                                         <td class="statistic">1</td>
                                         <td class="category">Competitions Joined:</td>
-                                        <td class="statistic">{profile.competitions.length}</td>
+                                        <td class="statistic">{profile.organized_competitions.length}</td>
                                     </tr>
                                 </table>
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>Latest Submissions</h3>
-                                <submission-tile each="{ submissions }" class="item"></submission-tile>
+                                <submission-tile each="{ profile.submissions }" class="item"></submission-tile>
                             </div>
                         </div>
                     </div>
@@ -174,7 +174,7 @@
 
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
-                                <competition-tile each="{ sorted_competitions }" no-reorder
+                                <competition-tile each="{ profile.organized_competitions }" no-reorder
                                                   class="item"></competition-tile>
                             </div>
                             <div class="ui pagination menu">
@@ -203,8 +203,8 @@
 
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
-                                <competition-tile if="{ sorted_competitions !== undefined && sorted_competitions.length < 0 }"
-                                                  each="{ sorted_competitions }" no-reorder
+                                <competition-tile if="{ profile.organized_competitions !== undefined && profile.organized_competitions.length < 0 }"
+                                                  each="{ profile.organized_competitions }" no-reorder
                                                   class="item"></competition-tile>
                                 <p class="no-competitions" if="{ sorted_competitions === undefined || sorted_competitions.length == 0 }">
                                     No competitions found for this user</p>
@@ -257,11 +257,11 @@
                             Connect with Github
                         </div>
                         <div class="container-content">
-                            <div class="field" if="{!PROFILE_USER.github_info}">
+                            <div class="field" if="{!profile.github_info}">
                                 <label>Connect with github</label>
                                 <a class="ui large blue button" href="/social/login/github">Login</a>
                             </div>
-                            <div class="field" if="{!!PROFILE_USER.github_info}">
+                            <div class="field" if="{!!profile.github_info}">
                                 <label>Connect with github</label>
                                 <a class="ui large disabled blue button"
                                    href="/social/login/github">Login</a>
@@ -350,10 +350,11 @@
 
             $('.ui.checkbox').checkbox();
             //self.update_information();
+            self.update_user();
         })
 
         /*self.update_information = function () {
-            CHAHUB.api.get_profile(PROFILE_USER["id"])
+            CHAHUB.api.get_profile(profile["id"])
                 .done(function (data) {
                     self.update({
                         profile: data
@@ -377,11 +378,12 @@
         self.update_user = function() {
             CHAHUB.api.get_user(PROFILE_OBJECTS)
             .done(function (data) {
+                console.log(data)
                 self.profile = data
                 self.update()
             })
             .fail(function (response) {
-
+                toastr.error("Unable to fetch user")
             })
         }
 
@@ -722,8 +724,8 @@
         </div>
         <div class="list-tile">
             <div class="biography">
-                <div id="bio" if={!!PROFILE_USER.github_info.bio}>{PROFILE_USER.github_info.bio}</div>
-                <div id="bio" if={!PROFILE_USER.github_info.bio}>No information found</div>
+                <div id="bio" if={!!profile.github_info.bio}>{profile.github_info.bio}</div>
+                <div id="bio" if={!profile.github_info.bio}>No information found</div>
                 <div id="editor-container">
                     <textarea id="editor"></textarea>
                 </div>
@@ -746,7 +748,7 @@
 
             $('#editor-container').hide()
 
-            document.getElementById('bio').innerHTML = PROFILE_USER.github_info.bio
+            document.getElementById('bio').innerHTML = profile.github_info.bio
         })
 
         self.editing = function () {
@@ -1004,7 +1006,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr each="{dataset}">
+        <tr each="{profile.dataset}">
             <td data-label="Name"><a href="#"><i class="download icon"></i>{name}</a></td>
             <td data-label="Type">{type}</td>
             <td data-label="Uploaded">{upload_date}</td>
@@ -1301,7 +1303,7 @@
             </div>
             <div class="container-content">
                 <div class="ui middle aligned unstackable compact divided link items content-desktop">
-                    <submission-tile each="{ submissions }" onclick="{show_table}" class="item"></submission-tile>
+                    <submission-tile each="{ profile.submissions }" onclick="{show_table}" class="item"></submission-tile>
                 </div>
             </div>
         </div>
