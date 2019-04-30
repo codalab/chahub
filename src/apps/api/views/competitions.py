@@ -20,6 +20,8 @@ class CompetitionViewSet(BulkViewSetMixin, ModelViewSet):
     authentication_classes = (ProducerAuthentication,)
     permission_classes = (ProducerPermission,)
 
+    extra_prefetch = ['phases', 'admins', 'participants']
+
     # def get_serializer_context(self):
     #     context = super().get_serializer_context()
     #     context['producer'] = self.request.user
