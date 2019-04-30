@@ -25,12 +25,3 @@ class BulkSerializerMixin(object):
         except self.Meta.model.DoesNotExist:
             new_instance = super().create(validated_data)
             return new_instance
-
-    def validate_producer(self, producer):
-        context_producer = self.context.get(producer)
-        if context_producer:
-            return context_producer
-
-        if not producer:
-            raise ValidationError("Producer not found when creating data entry")
-        return producer
