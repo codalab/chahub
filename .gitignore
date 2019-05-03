@@ -16,3 +16,4 @@ src/uploads/
 db.sqlite
 
 .envrc
+.env
