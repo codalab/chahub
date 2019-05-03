@@ -42,8 +42,8 @@ def _create_user_data(user, response, backend_name):
             user.github_info = new_github_info
         else:
             # Only update if they're the same remote id
-            if user.github_info.github_uid == data['uid']:
-                GithubUserInfo.objects.filter(github_uid=data['uid']).update(**data)
+            if user.github_info.uid == data['uid']:
+                GithubUserInfo.objects.filter(uid=data['uid']).update(**data)
     # --------------------------- Docker ----------------------
     elif backend_name == 'docker':
         pass
@@ -56,8 +56,8 @@ def _create_user_data(user, response, backend_name):
             user.linkedin_info = new_linkedin_info
         else:
             # Only update if they're the same remote id
-            if user.linkedin_info.linkedin_uid == data['uid']:
-                LinkedInUserInfo.objects.filter(linkedin_uid=data['uid']).update(**data)
+            if user.linkedin_info.uid == data['uid']:
+                LinkedInUserInfo.objects.filter(uid=data['uid']).update(**data)
     user.save()
 
 
