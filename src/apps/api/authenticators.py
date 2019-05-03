@@ -8,7 +8,6 @@ class ProducerAuthentication(authentication.BaseAuthentication):
         api_key = request.META.get('HTTP_X_CHAHUB_API_KEY')
         if not api_key:
             return None
-
         try:
             producer = Producer.objects.get(api_key=api_key)
             return producer, None

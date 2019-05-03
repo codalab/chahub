@@ -10,11 +10,11 @@
                     <img class="profile-img" src="{profile.github_info.avatar_url}" alt="placeholder">
                 </div>
                 <div class="profile-user">
-                    {profile.name}
+                    {profile.username}
                     <div class="profile-brief">
                         <div class="location">{profile.github_info.location}</div>
                         <div class="occupation">{profile.github_info.company}</div>
-                        {profile.bio}
+                        {profile.github_info.bio}
                     </div>
                     <div class="social-buttons">
                         <a href="{profile.github_info.html_url}" if="!!profile.html_url"

@@ -38,8 +38,10 @@ def profile(request, username):
         print(user)
     except User.DoesNotExist:
         profiles = Profile.objects.filter(username=username)
-        profiles.filter(email=profiles.first().email)
-        print(profiles)
+        if profiles.first():
+            profiles = profiles.filter(username=profiles.first().username)
+        else:
+            profiles = None
 
     if user and not profiles:
         context['object_mode'] = 'user'
@@ -48,6 +50,6 @@ def profile(request, username):
         context['object_mode'] = 'profile'
         context['objects'] = [profile.pk for profile in profiles]
     else:
-        raise Http404("No profile or user could be found for that email!")
+        raise Http404("No profile or user could be found for that username!")
 
     return render(request, 'profiles/profile.html', context)

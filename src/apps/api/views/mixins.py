@@ -2,6 +2,8 @@
 from rest_framework import status
 from rest_framework.response import Response
 
+from producers.models import Producer
+
 
 class BulkViewSetMixin(object):
     def get_serializer_context(self):

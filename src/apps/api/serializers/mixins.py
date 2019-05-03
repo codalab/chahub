@@ -12,6 +12,11 @@ class BulkSerializerMixin(object):
         """
         This creates *AND* updates based on the combination of (remote_id, producer)
         """
+        print("************************************")
+        print(validated_data)
+        print("-------------")
+        print(self.context.get('producer'))
+        print("************************************")
 
         try:
             # If we have an existing instance from this producer
