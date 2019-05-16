@@ -2,13 +2,54 @@
     <competition-modal></competition-modal>
     <div id="particle_header" class="ui centered grid">
         <span hide="{ embedded }">
-            <a id="login-button" hide="{USER_AUTHENTICATED}" href="/accounts/login/"
-               class="ui button">LOGIN
+            <a hide="{USER_AUTHENTICATED}" href="/accounts/login/"
+               class="ui login-button button">LOGIN
             </a>
-            <a id="login-button" show="{USER_AUTHENTICATED}" href="/accounts/logout/"
-               class="ui button">LOGOUT
-            </a>
+            <span hide="{USER_AUTHENTICATED}" class="ui login-button chasuite dropdown button item">
+                CHASUITE
+                <i class="dropdown icon"></i>
+                <span class="menu">
+                    <a class="item" href="https://competitions.codalab.org/">Codalab</a>
+                        <a class="item" href="https://chagrade.lri.fr/">Chagrade</a>
+                        <a class="item" href="https://chalab.lri.fr/">Chalab</a>
+                        <a class="item" href="#">Chagle</a>
+                </span>
+            </span>
+
+            <span show="{USER_AUTHENTICATED}" class="ui login-button dropdown button item">
+                <span class="text">
+                    <i class="icon user outline"></i>
+                    {USERNAME}
+                </span>
+                <i class="dropdown icon"></i>
+                <span class="menu">
+                    <div class="header">Django Admin</div>
+                    <a show="{USER_IS_SUPERUSER}">
+                        <a class="item" href="{ADMIN_URL}">Index</a>
+                        <a class="item" href="{ADMIN_URL}competitions/">Competitions</a>
+                        <a class="item" href="{ADMIN_URL}profiles/user/">Users</a>
+                        <a class="item" href="{ADMIN_URL}producers">Producers</a>
+                    </a>
+                    <div class="ui divider"></div>
+                    <div class="header">Chasuite</div>
+                        <a class="item" href="https://competitions.codalab.org/">Codalab</a>
+                        <a class="item" href="https://chagrade.lri.fr/">Chagrade</a>
+                        <a class="item" href="https://chalab.lri.fr/">Chalab</a>
+                        <a class="item" href="#">Chagle</a>
+                    <div class="ui divider"></div>
+                    <div class="header">My Account</div>
+                    <a class="item" href="/profiles/{USERNAME}">
+                        <i class="icon user"></i>
+                        My profile
+                    </a>
+                    <a class="item" href="/accounts/logout/">
+                        <i class="icon sign out"></i>
+                        Logout
+                    </a>
+                </span>
+            </span>
         </span>
+
 
         <!--<div id="hamburger_button">
             <div class="ui small icon button">
@@ -680,8 +721,8 @@
             .icon
                 color #e2e2e2 !important
 
-        #login-button
-            position absolute
+        .login-button
+            position absolute !important
             right 20px
             top 15px
             z-index 1000
@@ -689,6 +730,10 @@
                 display none
             @media screen and (min-width 2560px)
                 font-size 1.4rem
+
+        .chasuite
+            position absolute !important
+            right 115px !important
 
         .ui.button
             margin-top 10px
@@ -1021,7 +1066,8 @@
     </style>
 </competition-tile>
 
-<user-tile if="{ _obj_type == 'user' || _obj_type == 'profile' }" show="{ _obj_type == 'user' || _obj_type == 'profile' }" onclick="{redirect_to_profile}">
+<user-tile if="{ _obj_type == 'user' || _obj_type == 'profile' }"
+           show="{ _obj_type == 'user' || _obj_type == 'profile' }" onclick="{redirect_to_profile}">
     <div class="ui tiny image">
         <img src="{avatar_url || URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">
     </div>

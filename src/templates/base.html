@@ -1,4 +1,5 @@
 {% load static %}
+{% load admin_urls %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -156,6 +157,9 @@
 
     USER_IS_SUPERUSER = "{{ user.is_superuser }}" === "True"
 
+    USERNAME = "{{ user.username }}"
+
+    ADMIN_URL = "{% url 'admin:index' %}"
 
     /*if ("{{ user.is_superuser }}" === "True") {
         $(document).ready(function () {
