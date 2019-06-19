@@ -1,8 +1,12 @@
 import uuid
 
+from django.conf import settings
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, UserManager
+from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
 from django.db import models
 from django.contrib.postgres.fields import JSONField
+from django.urls import reverse
 
 from producers.models import Producer
 
@@ -136,3 +140,55 @@ class LinkedInUserInfo(models.Model):
     uid = models.CharField(max_length=30, unique=True)
     firstName = models.CharField(max_length=50, null=True, blank=True)
     lastName = models.CharField(max_length=50, null=True, blank=True)
+
+
+class AccountMergeRequest(models.Model):
+    master_account = models.ForeignKey(User, related_name='primary_merge_requests', on_delete=models.CASCADE)
+    secondary_account = models.ForeignKey(User, related_name='secondary_merge_requests', on_delete=models.CASCADE)
+    key = models.UUIDField(default=uuid.uuid4, unique=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+
+    def clean(self, *args, **kwargs):
+        # add custom validation here
+        if self.master_account == self.secondary_account:
+            raise ValidationError("Cannot create a merge request between the same account")
+        super().clean(*args, **kwargs)
+
+    # def save(self, *args, **kwargs):
+    #     self.full_clean()
+    #     super().save(*args, **kwargs)
+
+    class Meta:
+        unique_together = ['master_account', 'secondary_account']
+
+    @property
+    def absolute_url(self):
+        return '{0}{1}'.format(settings.SITE_DOMAIN, reverse('profiles:merge', kwargs={'merge_key': self.key}))
+
+    def save(self, *args, **kwargs):
+        # self.full_clean()
+        email_kwargs = {
+            'subject': 'test',
+            'recipient_list': ['tyler@ckcollab.com'],
+            'fail_silently': False
+        }
+        context = {
+            'user': self.secondary_account,
+            'requester': self.master_account,
+            'merge': self,
+            'static': '{}/static'.format(settings.SITE_DOMAIN),
+            'signature_img': '{}/static/img/temp_chahub_logo_beta.png'.format(settings.SITE_DOMAIN)
+        }
+        template_name = 'email/merge/merge_request'
+        from apps.profiles.utils import send_templated_email
+        send_templated_email(template_name, context, **email_kwargs)
+
+        return super(AccountMergeRequest, self).save(*args, **kwargs)
+
+    def merge_accounts(self):
+        merge_fields = ['organized_competitions', 'datasets', 'tasks', 'profiles']
+        for field in merge_fields:
+            for obj in getattr(self.secondary_account, field):
+                obj.user = self.master_account
+                obj.save()

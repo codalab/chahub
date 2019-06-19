@@ -69,6 +69,7 @@ class CompetitionSerializer(BulkSerializerMixin, WritableNestedModelSerializer):
     participants = CompetitionParticipantSerializer(many=True, read_only=True)
     admins = serializers.StringRelatedField(many=True, read_only=True)
     logo = serializers.URLField()
+    _object_type = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Competition
@@ -94,7 +95,8 @@ class CompetitionSerializer(BulkSerializerMixin, WritableNestedModelSerializer):
             'current_phase_deadline',
             'prize',
             'published',
-            'user'
+            'user',
+            '_object_type'
         ]
         validators = []
         extra_kwargs = {
@@ -103,6 +105,9 @@ class CompetitionSerializer(BulkSerializerMixin, WritableNestedModelSerializer):
                 'validators': [],
             }
         }
+
+    def get__object_type(self, obj):
+        return "competition"
 
     def validate_description(self, description):
         if description:

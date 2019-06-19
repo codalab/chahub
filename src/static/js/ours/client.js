@@ -52,4 +52,8 @@ CHAHUB.api = {
     get_profile_competitions: function(producer, creator_id) {
         return CHAHUB.api.request('GET', URLS.API + "competitions/?producer=" + producer + "&creator_id=" + creator_id)
     },
+    // Merge requests
+    create_merge: function(data) {
+        return CHAHUB.api.request('POST', URLS.API + "create_merge_request/", data)
+    },
 }

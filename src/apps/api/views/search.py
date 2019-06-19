@@ -68,6 +68,7 @@ class SearchView(APIView):
             start,
             end,
             producer,
+            object_types,
         )
         empty_search = all(not f for f in filters)
 
@@ -77,12 +78,16 @@ class SearchView(APIView):
             "showing_default_results": False,
         }
 
+        print(empty_search)
+
         if not empty_search:
             # Setup ES connection, excluding HTML text from our results
             if object_types != 'ALL' or 'ALL' not in object_types:
                 object_types = [obj.strip() for obj in object_types.split(',')]
-                ms = get_search_client(multi=True)
+                print(object_types)
+                ms = get_search_client(size=100, multi=True)
                 for obj_type in object_types:
+                    print(obj_type)
                     new_search = Search(index=obj_type)
                     extra_filters = EXTRA_FILTERS.get(obj_type, {})
                     for filter_type in extra_filters:
@@ -106,7 +111,12 @@ class SearchView(APIView):
                 s = self._sort(s, sorting, query)
                 data["results"] = get_results(s)
 
+        print("############################################")
+        print(data["results"])
+        print("############################################")
+
         if not data["results"] or empty_search:
+            print("THERES NO RESULTS")
             data["showing_default_results"] = True
             data["results"] = get_default_search_results()
 
@@ -118,9 +128,10 @@ class SearchView(APIView):
             if 'competitions' in obj_types or obj_types == 'ALL':
                 fields += ["title^5", "description^3", "html_text^2", "created_by"]
             if 'users' in obj_types or obj_types == 'ALL':
-                fields += ["username^5", "name^3", "bio^2", "company"]
+                fields += ["email^10", "username^5", "name^3", "bio^2", "company"]
             if 'profiles' in obj_types or obj_types == 'ALL':
-                fields += ["email", "producer", "remote_id"]
+                fields += ["email^10", "username^5", "producer", "remote_id"]
+            print(fields)
             # Remove duplicates
             fields = list(set(fields))
             search = search.query(
@@ -133,6 +144,10 @@ class SearchView(APIView):
             )
             # s = s.highlight('title', fragment_size=50)
             # s = s.suggest('suggestions', query, term={'field': 'title'})
+        else:
+            search = search.query(
+                "match_all"
+            )
         return search
 
     def _filter(self, search, date_flags, start, end, producer, obj_types='ALL'):

@@ -21,6 +21,7 @@ def get_results(search, multi=False):
         hits = [hit.to_dict() for result in results for hit in result]
     else:
         hits = [hit.to_dict() for hit in results]
+    print(hits)
     return hits
 
 

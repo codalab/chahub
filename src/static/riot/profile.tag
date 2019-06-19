@@ -7,24 +7,27 @@
         <div class="ui profile-segment segment">
             <div class="ui container profile-header">
                 <div class="holder">
-                    <img class="profile-img" src="{PROFILE_USER.github_info.avatar_url}" alt="placeholder">
+                    <!--<img class="profile-img" src="{profile.github_info.avatar_url}" alt="placeholder">\-->
+
+                    <img show="{profile.github_info === undefined}" src="{URLS.STATIC('img/img-wireframe.png')}" class="profile-img" alt="profile-image">
+                    <img show="{profile.github_info !== undefined}" src="{profile.github_info.avatar_url}" class="profile-img" alt="profile-image">
                 </div>
                 <div class="profile-user">
-                    {profile.name}
+                    {profile.username}
                     <div class="profile-brief">
-                        <div class="location">{PROFILE_USER.github_info.location}</div>
-                        <div class="occupation">{PROFILE_USER.github_info.company}</div>
-                        {profile.bio}
+                        <div class="location">{profile.github_info.location}</div>
+                        <div class="occupation">{profile.github_info.company}</div>
+                        {profile.github_info.bio}
                     </div>
                     <div class="social-buttons">
-                        <a href="{PROFILE_USER.github_info.html_url}" if="!!profile.html_url"
+                        <a href="{profile.github_info.html_url}" if="!!profile.html_url"
                            style="background-color: #582c80; color: white;"
                            class="ui circular github plus mini icon button">
                             <i class="github icon"></i>
                         </a>
                     </div>
                     <div class="languages">
-                        <div each="{language in PROFILE_USER.languages}" class="ui mini label">
+                        <div each="{language in profile.languages}" class="ui mini label">
                             {language}
                         </div>
                     </div>
@@ -32,7 +35,7 @@
                     <!-- <div class="ui large button msg-btn">Message Me</div>
                     <span class="ui icon large button follow-btn"><i class="user icon"></i>Follow</span> -->
                 </div>
-                <recent-container></recent-container>
+                <recent-container-user></recent-container-user>
             </div>
             <div id="profile-menu" class="ui secondary pointing menu">
                 <a class="active item" data-tab="details">
@@ -260,11 +263,11 @@
                             Connect with Github
                         </div>
                         <div class="container-content">
-                            <div class="field" if="{!PROFILE_USER.github_info}">
+                            <div class="field" if="{!profile.github_info}">
                                 <label>Connect with github</label>
                                 <a class="ui large blue button" href="/social/login/github">Login</a>
                             </div>
-                            <div class="field" if="{!!PROFILE_USER.github_info}">
+                            <div class="field" if="{!!profile.github_info}">
                                 <label>Connect with github</label>
                                 <a class="ui large disabled blue button"
                                    href="/social/login/github">Login</a>
@@ -328,10 +331,24 @@
 
     <script>
         var self = this
+        self.profile = {
+            github_info: {
+                avatar_url: '',
+                bio: ''
+            },
+            username: '',
+            name: '',
+            email: '',
+            bio: '',
+            competitions: [],
+            datasets: [],
+            submissions: []
+        }
         self.competitions = []
         self.datasets = []
         self.submissions = []
         self.profiles = []
+        self.sorted_competitions = []
 
 
         self.on('mount', function () {
@@ -356,34 +373,60 @@
         })
 
         self.update_profiles = function () {
-            self.update({profiles: []})
-            PROFILE_OBJECTS.forEach(function (profile_id) {
-                CHAHUB.api.get_profile(profile_id)
+            //self.update({profiles: []})
+            /*PROFILE_OBJECTS.forEach(function (profile_id) {
+             CHAHUB.api.get_profile(profile_id)
+             .done(function (data) {
+             self.profiles.push(data)
+             console.log(self.profiles)
+             self.update()
+             self.update_data()
+             })
+             .fail(function (response) {
+             toastr.error("Failed to retrieve profile: " + profile_id)
+             })
+             })*/
+            if (PROFILE_MODE === 'profile' || PROFILE_OBJECTS.length === 1) {
+                CHAHUB.api.get_profile(PROFILE_OBJECTS[0])
                     .done(function (data) {
-                        self.profiles.push(data)
-                        console.log(self.profiles)
+                        //self.profiles.push(data)
+                        self.profile = data
+                        //console.log(self.profiles)
                         self.update()
-                        self.update_data()
+                        //self.update_data()
                     })
                     .fail(function (response) {
                         toastr.error("Failed to retrieve profile: " + profile_id)
                     })
-            })
+            } else {
+                PROFILE_OBJECTS.forEach(function (profile_id) {
+                    CHAHUB.api.get_profile(profile_id)
+                        .done(function (data) {
+                            self.profiles.push(data)
+                            console.log(self.profiles)
+                            self.update()
+                            //self.update_data()
+                        })
+                        .fail(function (response) {
+                            toastr.error("Failed to retrieve profile: " + profile_id)
+                        })
+                })
+            }
         }
 
-        self.update_data = function() {
-            self.profiles.forEach(function (profile) {
-                CHAHUB.api.get_profile_competitions(profile.producer, profile.remote_id)
-                    .done(function (data) {
-                        self.competitions.concat(data)
-                        console.log(self.competitions)
-                        self.update()
-                    })
-                    .fail(function (response) {
-                        toastr.error("Failed to retrieve competitions for creator ID: " + profile.remote_id + " for producer: " + profile.producer + "!")
-                    })
-            })
-        }
+        /*self.update_data = function() {
+         self.profiles.forEach(function (profile) {
+         CHAHUB.api.get_profile_competitions(profile.producer, profile.remote_id)
+         .done(function (data) {
+         self.competitions.concat(data)
+         console.log(self.competitions)
+         self.update()
+         })
+         .fail(function (response) {
+         toastr.error("Failed to retrieve competitions for creator ID: " + profile.remote_id + " for producer: " + profile.producer + "!")
+         })
+         })
+         }*/
 
         self.prepare_results = function () {
             self.sorted_competitions.forEach(function (comp_result) {
@@ -722,8 +765,8 @@
         </div>
         <div class="list-tile">
             <div class="biography">
-                <div id="bio" if={!!PROFILE_USER.github_info.bio}>{PROFILE_USER.github_info.bio}</div>
-                <div id="bio" if={!PROFILE_USER.github_info.bio}>No information found</div>
+                <div id="bio" if={!!profile.github_info.bio}>{profile.github_info.bio}</div>
+                <div id="bio" if={!profile.github_info.bio}>No information found</div>
                 <div id="editor-container">
                     <textarea id="editor"></textarea>
                 </div>
@@ -733,8 +776,27 @@
 
     <script>
         var self = this
+        self.profile = {
+            github_info: {
+                avatar_url: '',
+                bio: ''
+            },
+            username: '',
+            name: '',
+            email: '',
+            bio: '',
+            organized_competitions: []
+        }
 
-        self.on('mount', function () {
+        CHAHUB.events.on('profile_loaded', function () {
+            alert("This was loaded")
+            console.log("################################################################")
+            console.log(self)
+            console.log(self.parent.profile)
+            self.update({profile: self.parent.profile})
+            //self.update_text()
+            console.log(self)
+            console.log("################################################################")
             self.easymde = new EasyMDE({
                 element: document.getElementById("editor"),
                 renderingConfig: {
@@ -745,8 +807,7 @@
             });
 
             $('#editor-container').hide()
-
-            document.getElementById('bio').innerHTML = PROFILE_USER.github_info.bio
+            //document.getElementById('bio').innerHTML = profile.github_info.bio
         })
 
         self.editing = function () {

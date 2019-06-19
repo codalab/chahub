@@ -32,8 +32,11 @@ class BulkViewSetMixin(object):
         2. We want to handle creating many competitions this way, and we do that
            custom to make drf-writable-nested able to interpret everything easily"""
         # Make the serializer take many competitions at once
-        for object in request.data:
-            serializer = self.get_serializer(data=object)
+        context = self.get_serializer_context()
+        for object_data in request.data:
+            if not object_data.get('producer') and context.get('producer'):
+                object_data['producer'] = context['producer'].pk
+            serializer = self.get_serializer(data=object_data, context=context)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
         return Response({}, status=status.HTTP_201_CREATED)

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+    <script>
+        {% if message %}
+            MESSAGE = "{{ message }}"
+            $('document').ready(function(){
+                toastr.success(MESSAGE)
+            });
+        {% endif %}
+    </script>
+
+    <merge-accounts></merge-accounts>
+
+{% endblock %}

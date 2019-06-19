@@ -39,6 +39,7 @@ urlpatterns = [
     url('query/', search.SearchView.as_view()),
     url('my_profile/', profiles.GetMyProfile.as_view()),
     url('producer_stats/', producers.producer_statistics, name='producer_stats'),
+    url('create_merge_request/', profiles.create_merge_request, name='create_merge_request'),
 
     url('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 

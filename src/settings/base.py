@@ -23,6 +23,8 @@ if ADMINS:
 
 SITE_ID = 1
 
+SITE_DOMAIN = os.environ.get('SITE_DOMAIN', 'http://localhost:8888')
+
 THIRD_PARTY_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
@@ -363,3 +365,12 @@ CHAHUB_BASE_URL = os.environ.get('CHAHUB_BASE_URL', 'https://codalabchahub.herok
 # =============================================================================
 
 LOGO_BASE_WIDTH = 350
+
+# =============================================================================
+# Misc
+# =============================================================================
+
+VALID_REDIRECT_DOMAINS = [
+    'www.google.com',
+    'localhost'
+]

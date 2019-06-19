@@ -190,6 +190,7 @@
                 <div class="ui middle aligned unstackable compact divided link items content-desktop">
                     <competition-tile each="{ results }" no-reorder class="item"></competition-tile>
                     <user-tile each="{results}" no-reorder class="item"></user-tile>
+                    <profile-tile each="{results}" no-reorder class="item"></profile-tile>
                 </div>
                 <!--<div class="ui middle aligned compact link items content-mobile" style="margin-top: -1;">
                     <competition-mobile-tile each="{ results }" no-reorder class="item"
@@ -304,7 +305,7 @@
             // Focus on search
             self.refs.search.focus()*/
 
-            self.init_values_from_query_params()
+            //self.init_values_from_query_params()
         })
 
         self.toggle_search_options = function () {
@@ -1021,16 +1022,16 @@
     </style>
 </competition-tile>
 
-<user-tile if="{ _obj_type == 'user' || _obj_type == 'profile' }" show="{ _obj_type == 'user' || _obj_type == 'profile' }" onclick="{redirect_to_profile}">
+<user-tile if="{ _obj_type == 'user' }" show="{ _obj_type == 'user' }" onclick="{redirect_to_profile}">
     <div class="ui tiny image">
-        <img src="{avatar_url || URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">
+        <img src="{github_info.avatar_url || URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">
     </div>
     <div class="content">
         <div class="header">
             {username}
         </div>
         <div class="description">
-            <p>{bio}</p>
+            <p>{github_info.bio || ''}</p>
         </div>
         <div class="extra">
             <div class="mobile_linewrap">
@@ -1098,6 +1099,89 @@
     </style>
 
 </user-tile>
+
+<profile-tile style="" if="{ _obj_type == 'profile' }" show="{ _obj_type == 'profile' }" onclick="{redirect_to_profile}">
+    <div class="ui tiny image">
+        <img show="{user.github_info === undefined}" src="{URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">
+        <img show="{user.github_info !== undefined}" src="{user.github_info.avatar_url}" class="ui avatar image">
+    </div>
+    <div class="content">
+        <div show="{user.github_info === undefined}" class="header">
+            {username}'s {producer.name} profile
+        </div>
+        <div show="{user.github_info !== undefined}" class="header">
+            {username}'s {producer.name} profile
+        </div>
+        <div class="description">
+            <p>{user.github_info.bio || ''}</p>
+        </div>
+        <!--<div class="extra">
+            <div class="mobile_linewrap">
+                <span class="url"><a href="{url}">{url}</a></span>
+            </div>
+        </div>-->
+        <span class="competitions-label ui right floated mini label tooltip" data-content="Competitions">
+            <i class="trophy icon"></i>
+            <span class="label-text">{organized_competitions_count}</span>
+        </span>
+        <span class="submissions-label ui right floated mini label tooltip" data-content="Submissions">
+            <i class="archive icon"></i>
+            <span class="label-text">{solutions_count}</span>
+        </span>
+        <span class="datasets-label ui right floated mini label tooltip" data-content="Datasets">
+            <i class="upload icon"></i>
+            <span class="label-text">{datasets_count}</span>
+        </span>
+        <!--<span class="button-group">
+            <button class="ui circular mini facebook icon button">
+                <i class="facebook icon"></i>
+            </button>
+            <button class="ui circular mini twitter icon button">
+                <i class="twitter icon"></i>
+            </button>
+            <button class="ui circular mini linkedin icon button">
+                <i class="linkedin icon"></i>
+            </button>
+            <button class="ui circular mini google plus icon button">
+                <i class="google plus icon"></i>
+            </button>
+        </span>-->
+    </div>
+
+    <script>
+        var self = this
+
+        self.redirect_to_profile = function () {
+            window.open('/profiles/' + self.username);
+        }
+
+        self.on("mount", function () {
+            console.log(self)
+            $(".tooltip", self.root).popup()
+        })
+    </script>
+
+    <style type="text/stylus">
+        .ui.label
+            margin 0 2px !important
+
+        .competitions-label
+            background-color #a5917a !important
+            color #ffc73a !important
+
+        .submissions-label
+            background-color #464646 !important
+            color #f7f7f7 !important
+
+        .datasets-label
+            background-color #b1402f !important
+            color #f7f7f7 !important
+
+        .label-text
+            color white !important
+    </style>
+
+</profile-tile>
 
 <show-stats>
     <button id="stats-btn" onclick="{ stats_button_clicked }"
@@ -1275,7 +1359,7 @@
             self.refs.competition_title.value = self.selected_competition.title
             self.refs.competition_description.value = self.selected_competition.description
             self.refs.competition_logo.value = self.selected_competition.logo
-            console.log(self)
+            //console.log(self)
             self.update()
             $(self.refs.modal).modal('show')
         })

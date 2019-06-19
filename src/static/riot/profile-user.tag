@@ -32,7 +32,7 @@
                     <!-- <div class="ui large button msg-btn">Message Me</div>
                     <span class="ui icon large button follow-btn"><i class="user icon"></i>Follow</span> -->
                 </div>
-                <recent-container></recent-container>
+                <recent-container-user></recent-container-user>
             </div>
             <div id="profile-menu" class="ui secondary pointing menu">
                 <a class="active item" data-tab="details">
@@ -79,8 +79,7 @@
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>My Featured Competitions</h3>
-                                <competition-tile each="{ profile.organized_competitions }" no-reorder
-                                                  class="item"></competition-tile>
+                                <competition-tile-user each="{ profile.organized_competitions.slice(0,5) }" no-reorder class="item"></competition-tile-user>
                                 <p class="no-competitions" style="" if="{ profile.organized_competitions === undefined || profile.organized_competitions.length == 0 }">
                                     No competitions found for this user</p>
                             </div>
@@ -110,18 +109,18 @@
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>Latest Submissions</h3>
-                                <submission-tile each="{ profile.submissions }" class="item"></submission-tile>
+                                <submission-tile-user each="{ profile.submissions }" class="item"></submission-tile-user>
                             </div>
                         </div>
                     </div>
                 </div>
-                <about-me></about-me>
+                <about-me-user opts={profile}></about-me-user>
                 <div class="flex-content flex-row">
-                    <education-container class="education-container"></education-container>
-                    <datasets-container class="datasets-container"></datasets-container>
+                    <education-container-user class="education-container"></education-container-user>
+                    <datasets-container-user class="datasets-container"></datasets-container-user>
                 </div>
-                <organization-container class="organization-container"></organization-container>
-                <events-container class="events-container"></events-container>
+                <organization-container-user class="organization-container"></organization-container-user>
+                <events-container-user class="events-container"></events-container-user>
             </div>
         </div>
 
@@ -325,11 +324,22 @@
 
     <script>
         var self = this
-        self.profile = {}
+        self.profile = {
+            github_info: {
+                avatar_url: '',
+                bio: ''
+            },
+            username: '',
+            name: '',
+            email: '',
+            bio: '',
+            organized_competitions: []
+        }
         self.organized_competitions = []
         self.participating_competitions = []
         self.datasets = []
         self.submissions = []
+        self.sorted_competitions = []
 
 
         self.on('mount', function () {
@@ -381,6 +391,7 @@
                 console.log(data)
                 self.profile = data
                 self.update()
+                CHAHUB.events.trigger("profile_loaded")
             })
             .fail(function (response) {
                 toastr.error("Unable to fetch user")
@@ -708,7 +719,7 @@
     </style>
 </profile-page-user>
 
-<about-me id="about-me">
+<about-me-user id="about-me">
     <div class="bio-segment primary-segment ui segment sixteen wide">
         <div class="ui header">
             About Me
@@ -735,8 +746,27 @@
 
     <script>
         var self = this
+        self.profile = {
+            github_info: {
+                avatar_url: '',
+                bio: ''
+            },
+            username: '',
+            name: '',
+            email: '',
+            bio: '',
+            organized_competitions: []
+        }
 
-        self.on('mount', function () {
+        CHAHUB.events.on('profile_loaded', function () {
+            alert("This was loaded")
+            console.log("################################################################")
+            console.log(self)
+            console.log(self.parent.profile)
+            self.update({profile: self.parent.profile})
+            //self.update_text()
+            console.log(self)
+            console.log("################################################################")
             self.easymde = new EasyMDE({
                 element: document.getElementById("editor"),
                 renderingConfig: {
@@ -747,9 +777,33 @@
             });
 
             $('#editor-container').hide()
-
-            document.getElementById('bio').innerHTML = profile.github_info.bio
+            //document.getElementById('bio').innerHTML = profile.github_info.bio
         })
+
+        /*self.on('mount', function () {
+            console.log("################################################################")
+            console.log(self)
+            console.log(self.parent.profile)
+            //self.update({profile: self.opts})
+            //self.update_text()
+            console.log(self)
+            console.log("################################################################")
+            self.easymde = new EasyMDE({
+                element: document.getElementById("editor"),
+                renderingConfig: {
+                    markedOptions: {
+                        sanitize: true,
+                    }
+                }
+            });
+
+            $('#editor-container').hide()
+            //document.getElementById('bio').innerHTML = profile.github_info.bio
+        })*/
+
+        /*self.update_text = function () {
+            document.getElementById('bio').innerHTML = self.profile.opts.github_info.bio
+        }*/
 
         self.editing = function () {
             $('#bio', self.root)
@@ -814,9 +868,9 @@
         }
 
     </style>
-</about-me>
+</about-me-user>
 
-<education-container class="primary-container">
+<education-container-user class="primary-container">
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
             My Education
@@ -837,7 +891,7 @@
             -->
         </div>
         <div class="container-content">
-            <education-tile></education-tile>
+            <education-tile-user></education-tile-user>
         </div>
     </div>
 
@@ -915,17 +969,17 @@
         }
 
     </style>
-</education-container>
+</education-container-user>
 
-<education-tile>
+<education-tile-user>
     <div class="name">Placeholder University</div>
     <div class="degree">Bachelor's Degree, Test Science</div>
     <div class="attended">2007-2011</div>
     <div class="awards">
     </div>
-</education-tile>
+</education-tile-user>
 
-<datasets-container class="primary-container">
+<datasets-container-user class="primary-container">
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
             My Datasets
@@ -945,9 +999,19 @@
             -->
         </div>
         <div class="container-content">
-            <datasets-table></datasets-table>
+            <datasets-table-user></datasets-table-user>
         </div>
     </div>
+
+    <script>
+        var self = this
+
+        CHAHUB.events.on('profile_loaded', function () {
+            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            console.log(self.parent.profile)
+            self.update({profile: self.parent.profile})
+        })
+    </script>
 
     <style>
 
@@ -991,9 +1055,9 @@
         }
 
     </style>
-</datasets-container>
+</datasets-container-user>
 
-<datasets-table>
+<datasets-table-user>
     <table class="ui celled table">
         <thead>
         <tr>
@@ -1006,7 +1070,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr each="{profile.dataset}">
+        <tr each="{datasets}">
             <td data-label="Name"><a href="#"><i class="download icon"></i>{name}</a></td>
             <td data-label="Type">{type}</td>
             <td data-label="Uploaded">{upload_date}</td>
@@ -1032,7 +1096,15 @@
 
     <script>
         var self = this
-        self.dataset = [
+
+        CHAHUB.events.on('profile_loaded', function () {
+            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            console.log(self.parent.profile)
+            self.update({datasets: self.parent.profile.created_datasets.slice(0,5)})
+            console.log(self.datasets)
+        })
+
+        self.datasets = [
             {
                 name: 'file3.zip',
                 _obj_type: 'dataset',
@@ -1070,9 +1142,9 @@
             }
         ]
     </script>
-</datasets-table>
+</datasets-table-user>
 
-<organization-container class="primary-container">
+<organization-container-user class="primary-container">
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
             My Organizations
@@ -1142,9 +1214,9 @@
         }
 
     </style>
-</organization-container>
+</organization-container-user>
 
-<organization-tile>
+<organization-tile-user>
     <img class="ui middle aligned tiny image" src="https://via.placeholder.com/150">
     <div class="org-container first">
         <div class="name">Placeholder Organization</div>
@@ -1153,9 +1225,9 @@
         </div>
     </div>
     <div class="ui divider"></div>
-</organization-tile>
+</organization-tile-user>
 
-<events-container class="primary-container">
+<events-container-user class="primary-container">
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
             Events and Meetups
@@ -1222,9 +1294,9 @@
         }
 
     </style>
-</events-container>
+</events-container-user>
 
-<events-tile>
+<events-tile-user>
     <div class="name">Seattle Machine Learning Meetup</div>
     <div class="date">Every Wednesday</div>
     <div class="brief">We meet every Wednesday to discuss Machine Learning Protocols and the science
@@ -1232,9 +1304,9 @@
     </div>
     <div class="website"><a href="#">Facebook Link</a></div>
     <div class="ui divider"></div>
-</events-tile>
+</events-tile-user>
 
-<recent-container>
+<recent-containe-user>
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
             Recent Activity
@@ -1293,9 +1365,9 @@
         }
 
     </style>
-</recent-container>
+</recent-containe-user>
 
-<submission-tab>
+<submission-tab-user>
     <div class="ui sixteen wide grid container">
         <div id="submission-container" class="segment-container ui segment sixteen wide">
             <div class="ui header">
@@ -1451,9 +1523,9 @@
             overflow-x: auto;
         }
     </style>
-</submission-tab>
+</submission-tab-user>
 
-<submission-tile>
+<submission-tile-user>
     <div class="ui tiny image">
         <img src="{logo || 'http://placeimg.com/203/203/any' }" class="ui avatar image">
     </div>
@@ -1503,4 +1575,198 @@
             margin 5px !important
             width 121px
     </style>
-</submission-tile>
+</submission-tile-user>
+
+<competition-tile-user onclick="{redirect_to_url}">
+    <div class="floating-actions { is-admin: USER_IS_SUPERUSER }">
+        <i class="icon green pencil alternate"
+           onclick="{ edit_competition }"></i>
+        <i class="icon red delete" onclick="{ delete_competition }"></i>
+        <i class="icon { yellow: locked, unlock: locked, lock: !locked }" onclick="{ lock_competition}"></i>
+    </div>
+    <div class="ui tiny image">
+        <img src="{logo || URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">
+    </div>
+    <div class="content">
+        <div class="header">
+            {title}
+        </div>
+        <div class="description">
+            <p>{description}</p>
+        </div>
+        <div class="extra">
+            <div class="mobile_linewrap">
+                <span class="url"><a href="{url}">{url_short(url)}</a></span>
+                <span class="date">
+                {pretty_date(start)}
+                <virtual if="{end}">
+                    - {pretty_date(end)}
+                </virtual>
+            </span>
+                <div class="mobile_labelwrap"></div>
+                <span class="participant_label ui right floated mini label tooltip" data-content="Participant count">
+                    <i class="user icon"></i> {participant_count}
+                </span>
+                <span class="deadline_label ui right floated mini label tooltip {red: !alert_icon}"
+                      data-content="Deadline of the current phase"
+                      show="{current_phase_deadline}">
+                    <i show="{!alert_icon}" class="alarm icon"></i> {pretty_deadline_time}
+                </span>
+                <span class="deadline_label ui right floated mini label" show="{!current_phase_deadline}">
+                    Never ends
+                </span>
+                <span class="prize_label ui right floated mini label tooltip" data-content="Prize Amount"
+                      show="{prize}">
+                    <i class="yellow trophy icon"></i> {prize}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var self = this
+
+        self.on("mount", function () {
+            $(".tooltip", self.root).popup()
+            $(self.refs.modal).modal()
+        })
+
+        self.redirect_to_url = function () {
+            window.open(self.url, '_blank');
+        }
+
+        self.url_short = function (url) {
+            return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
+        }
+
+        self.edit_competition = function (event) {
+            CHAHUB.events.trigger('competition_selected', event.item)
+            event.cancelBubble = true
+        }
+
+        self.delete_competition = function (event) {
+            // TODO - Need to delete the competition on confirm, else do nothing.
+            if (confirm(`Are you sure you want to delete "${event.item.title}?"`)) {
+                alert('Deleted')
+            }
+            event.cancelBubble = true
+        }
+
+        self.lock_competition = function (event) {
+            // TODO - Need to lock the competition and change icon/color to represent locked and unlocked state
+            event.cancelBubble = true
+        }
+    </script>
+
+    <style type="text/stylus">
+        :scope
+            display block
+            position relative
+
+        :scope:hover .floating-actions.is-admin
+            opacity 1
+
+        .floating-actions
+            position absolute
+            top 0
+            right 0
+            opacity 0
+            z-index 10
+
+        .content
+            .description
+                margin-top 0 !important
+                color #808080 !important
+                display block
+                font-size .9em !important
+
+            p
+                line-height 1.1em !important
+
+            @media screen and (max-width 645px)
+                padding-left 0.8em !important
+
+        .extra
+            margin-top 0
+            @media screen and (max-width 749px)
+                margin-bottom 0 !important
+
+            .url
+                font-size .8em
+                color rgba(0, 0, 255, 0.6) !important
+                white-space nowrap
+                overflow hidden
+                text-overflow ellipsis
+                max-width 90vw
+                display block !important
+                @media screen and (min-width 2560px)
+                    margin-bottom: 10px;
+                    overflow: visible;
+                @media screen and (max-width 750px) {
+                    margin-bottom: -6px;
+                }
+
+            .date
+                font-size 0.8em
+                color #8c8c8c !important
+
+        .ui.avatar.image
+            max-width 4em
+            @media screen and (max-width 750px)
+                max-width 3em
+            @media screen and (min-width 2560px)
+                max-width 8em
+
+        .ui.image
+            max-width 60px
+            display inline-grid !important
+            justify-content center
+            @media screen and (min-width 2560px)
+                max-width 240px
+
+        .participant_label
+            background-color #475e6f !important
+            border-color #475e6f !important
+            color #dfe3e5 !important
+            right 0
+            margin 0 2px !important
+            text-align right
+
+            .icon
+                float left
+
+        .prize_label
+            background-color rgba(99, 84, 14, 0.68) !important
+            border-color rgba(99, 84, 14, 0.68) !important
+            color #dee2e4 !important
+            margin 0 2px !important
+
+        .deadline_label
+            margin 0 2px !important
+
+        .mobile_linewrap
+            white-space nowrap
+            overflow hidden
+            text-overflow ellipsis
+            color rgba(0, 0, 255, 0.6)
+            margin-bottom 5px !important
+            margin-right 0 !important
+
+        .label
+            @media screen and (min-width 2560px)
+                font-size 1.2rem !important
+
+        .mobile_labelwrap
+            display block
+            @media screen and (min-width 500px)
+                display inline-block
+
+        @media screen and (min-width 2560px)
+            *
+                font-size 1.5rem !important
+
+            .header
+                font-size 2rem !important
+
+    </style>
+</competition-tile-user>

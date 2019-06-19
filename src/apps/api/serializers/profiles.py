@@ -9,11 +9,24 @@ from api.serializers.mixins import BulkSerializerMixin
 from api.serializers.producers import ProducerSerializer
 from api.serializers.tasks import TaskSerializer, SolutionSerializer
 from competitions.models import Competition, CompetitionParticipant
-from profiles.models import GithubUserInfo, LinkedInUserInfo, Profile
+from profiles.models import GithubUserInfo, LinkedInUserInfo, Profile, AccountMergeRequest
 
 User = get_user_model()
 
 logger = logging.getLogger(__name__)
+
+class AccountMergeRequestSerializer(ModelSerializer):
+    class Meta:
+        model = AccountMergeRequest
+        fields = [
+            'master_account',
+            'secondary_account',
+            'created'
+        ]
+        read_only_fields = [
+            'created'
+        ]
+
 
 class GithubUserInfoSerializer(ModelSerializer):
 
@@ -82,7 +95,7 @@ class ProfileSerializer(BulkSerializerMixin, ModelSerializer):
     from api.serializers.tasks import TaskSerializer
     from api.serializers.tasks import SolutionSerializer
 
-    producer = ProducerSerializer(required=False, validators=[])
+    # producer = ProducerSerializer(required=False, validators=[])
     organized_competitions = CompetitionSerializer(many=True, read_only=True)
     datasets = DataSerializer(many=True, read_only=True)
     tasks = TaskSerializer(many=True, read_only=True)
@@ -91,6 +104,7 @@ class ProfileSerializer(BulkSerializerMixin, ModelSerializer):
     class Meta:
         model = Profile
         fields = [
+            'id',
             'remote_id',
             'producer',
             'email',
@@ -102,9 +116,13 @@ class ProfileSerializer(BulkSerializerMixin, ModelSerializer):
             'tasks',
             'solutions'
         ]
-        read_only_fields = [
-
-        ]
+        read_only_fields = ['id']
+        extra_kwargs = {
+            'producer': {
+                # UniqueTogether validator messes this up
+                'validators': [],
+            }
+        }
 
     # def get_unique_together_validators(self):
     #     '''

@@ -57,6 +57,8 @@ services:
     restart: unless-stopped
     ports:
       - 9200:9200
+    volumes:
+      - ./var/data/elasticsearch:/usr/share/elasticsearch/data
     env_file: .env
     logging:
       options:
