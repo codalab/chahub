@@ -30,3 +30,4 @@ selenium==3.141.0
 Pillow==5.0.0
 django-storages[azure,google]==1.7.1
 boto3==1.9.86
+django-querycount==0.7.0
