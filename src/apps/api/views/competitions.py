@@ -72,3 +72,11 @@ class SubmissionViewSet(CreateModelMixin, GenericViewSet):
         context = super().get_serializer_context()
         context['producer'] = self.request.user
         return context
+
+    def create(self, request, *args, **kwargs):
+        """Overriding this so we return an empty response instead of the details of the created object"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response({}, status=status.HTTP_201_CREATED, headers=headers)
