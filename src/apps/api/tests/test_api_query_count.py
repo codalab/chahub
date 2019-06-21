@@ -44,7 +44,7 @@ class TestApiQueryCount(MaxQueryTestCase, APITestCase):
             model_class = serializer_class.Meta.model
 
             # Using __name__, get our query cout max or default to 5
-            max_count = LIST_MAX_QUERY_COUNTS.get(model_class.__name__, 5)
+            max_count = LIST_MAX_QUERY_COUNTS.get(model_class.__name__, 6)
 
             reversed_url = reverse('api:{}'.format(route.name), kwargs={'version': 'v1'})
 
