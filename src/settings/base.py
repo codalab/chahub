@@ -65,8 +65,7 @@ MIDDLEWARE = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'querycount.middleware.QueryCountMiddleware'
+    'corsheaders.middleware.CorsMiddleware'
 )
 
 ROOT_URLCONF = 'base_urls'
@@ -198,6 +197,7 @@ DEBUG = os.environ.get('DEBUG', True)
 if DEBUG:
     INSTALLED_APPS += ('debug_toolbar',)
     MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+    MIDDLEWARE += ('querycount.middleware.QueryCountMiddleware', )
     INTERNAL_IPS = ('127.0.0.1',)
 
 
@@ -358,7 +358,7 @@ CHAHUB_BASE_URL = os.environ.get('CHAHUB_BASE_URL', 'https://codalabchahub.herok
 LOGO_BASE_WIDTH = 350
 
 # =============================================================================
-# QueryCounter
+# QueryCounter - Enabled/Disabled by Debug
 # =============================================================================
 
 QUERYCOUNT = {
@@ -370,6 +370,6 @@ QUERYCOUNT = {
     },
     'IGNORE_REQUEST_PATTERNS': [],
     'IGNORE_SQL_PATTERNS': [],
-    'DISPLAY_DUPLICATES': 5,
+    'DISPLAY_DUPLICATES': 0,
     'RESPONSE_HEADER': 'X-DjangoQueryCount-Count'
 }
