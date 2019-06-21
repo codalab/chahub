@@ -3,6 +3,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
+from api.pagination import BasicPagination
 from api.serializers import data as serializers
 from datasets.models import Data, DataGroup
 
@@ -30,6 +31,7 @@ class DataViewSet(ListAPIView, CreateAPIView, RetrieveAPIView, DestroyAPIView, G
     serializer_class = serializers.DataSerializer
     parser_classes = (MultiPartParser,)
     permission_classes = (IsAuthenticated,)
+    pagination_class = BasicPagination
 
     # def get_serializer(self, *args, **kwargs):
     #     if self.request.method == 'POST':
@@ -53,3 +55,4 @@ class DataGroupViewSet(ModelViewSet):
     queryset = DataGroup.objects.all()
     serializer_class = serializers.DataGroupSerializer
     permission_classes = (IsAuthenticated,)
+    pagination_class = BasicPagination

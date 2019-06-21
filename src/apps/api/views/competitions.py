@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from api.authenticators import ProducerAuthentication
+from api.pagination import BasicPagination
 from api.permissions import ProducerPermission
 from api.serializers import competitions as serializers
 from competitions.models import Competition, Submission
@@ -18,6 +19,7 @@ class CompetitionViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
     serializer_class = serializers.CompetitionDetailSerializer
     authentication_classes = (ProducerAuthentication,)
     permission_classes = (ProducerPermission,)
+    pagination_class = BasicPagination
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -64,6 +66,7 @@ class SubmissionViewSet(CreateModelMixin, GenericViewSet):
     serializer_class = serializers.SubmissionSerializer
     authentication_classes = (ProducerAuthentication,)
     permission_classes = (ProducerPermission,)
+    pagination_class = BasicPagination
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
