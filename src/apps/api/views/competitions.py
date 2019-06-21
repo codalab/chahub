@@ -15,9 +15,14 @@ class CompetitionViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
 
     request.user = Producer in this case."""
     queryset = Competition.objects.all()
-    serializer_class = serializers.CompetitionSerializer
+    serializer_class = serializers.CompetitionDetailSerializer
     authentication_classes = (ProducerAuthentication,)
     permission_classes = (ProducerPermission,)
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.CompetitionListSerializer
+        return self.serializer_class
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

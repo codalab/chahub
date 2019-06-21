@@ -59,7 +59,40 @@ class SubmissionSerializer(serializers.ModelSerializer):
         return instance
 
 
-class CompetitionSerializer(WritableNestedModelSerializer):
+class CompetitionListSerializer(serializers.ModelSerializer):
+    producer = ProducerSerializer(required=False, validators=[])
+    logo = serializers.URLField()
+
+    class Meta:
+        model = Competition
+        fields = (
+            'id',
+            'remote_id',
+            'title',
+            'producer',
+            'created_by',
+            'start',
+            'logo',
+            'url',
+            'description',
+            'end',
+            'is_active',
+            'participant_count',
+            'html_text',
+            'current_phase_deadline',
+            'prize',
+            'published'
+        )
+        validators = []
+        extra_kwargs = {
+            'producer': {
+                # UniqueTogether validator messes this up
+                'validators': [],
+            }
+        }
+
+
+class CompetitionDetailSerializer(WritableNestedModelSerializer):
     # Stop the "uniqueness" validation, we want to be able to update already
     # existing models
     # Also, Producer in this case comes from serializer context
