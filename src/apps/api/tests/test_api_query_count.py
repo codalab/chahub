@@ -11,6 +11,7 @@ DETAIL_MAX_QUERY_COUNTS = {
     "Competition": 20
 }
 
+
 class MaxQueryTestCase(object):
     def setUp(self):
         all_urls = Router.get_urls()
