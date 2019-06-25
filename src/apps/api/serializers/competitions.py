@@ -68,7 +68,7 @@ class CompetitionSerializer(BulkSerializerMixin, WritableNestedModelSerializer):
     phases = PhaseSerializer(required=False, many=True)
     participants = CompetitionParticipantSerializer(many=True, read_only=True)
     admins = serializers.StringRelatedField(many=True, read_only=True)
-    logo = serializers.URLField()
+    logo = serializers.URLField(required=False)
     _object_type = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
