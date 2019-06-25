@@ -254,3 +254,25 @@ html, body {
 .datasets table th {
     background-color: #f2faff !important;
 }
+
+#about-me,
+organization-container-user,
+events-container-user {
+    width: 100% !important;
+}
+
+education-container-user {
+    width: 31%;
+    max-width: 31%;
+}
+
+datasets-container-user {
+    width: 66%;
+    max-width: 66%;
+}
+
+datasets-table-user-tab {
+    margin: 3em auto 0;
+    width: 75%;
+    padding: 0;
+}

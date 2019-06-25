@@ -173,11 +173,13 @@
                     <div class="ui content flex-content">
                         <div class="list-comps">
                             <div class="stat-breakdown">
-
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <competition-tile each="{ sorted_competitions }" no-reorder
                                                   class="item"></competition-tile>
+                                <p class="no-competitions"
+                                   if="{ sorted_competitions === undefined || sorted_competitions.length == 0 }">
+                                    No competitions found for this user</p>
                             </div>
                             <div class="ui pagination menu">
                                 <a class="active item">
@@ -556,7 +558,7 @@
         about-me,
         events-container,
         organization-container {
-            width: 100%
+            width: 100% !important;
         }
 
         education-container {
@@ -776,23 +778,11 @@
     <div class="bio-segment primary-segment ui segment sixteen wide">
         <div class="ui header">
             About Me
-            <div class="right floated ui button edit-button" onclick="{editing}" if="{!edit}">
-                Edit
-            </div>
-            <div class="right floated ui button edit-button" onclick="{saving}" if="{!!edit}">
-                Save
-            </div>
-            <div class="right floated ui button edit-button" onclick="{cancel_edit}"
-                 if="{!!edit}">Cancel
-            </div>
         </div>
         <div class="list-tile">
             <div class="biography">
                 <div id="bio" if={!!profile.github_info.bio}>{profile.github_info.bio}</div>
                 <div id="bio" if={!profile.github_info.bio}>No information found</div>
-                <div id="editor-container">
-                    <textarea id="editor"></textarea>
-                </div>
             </div>
         </div>
     </div>
@@ -843,14 +833,6 @@
             console.log(self.profiles)
             console.log("################################################################")
 
-            /*console.log("################################################################")
-            self.update({profile: self.parent.profile, competitions: self.parent.competitions})
-            console.log("################################################################")
-
-            console.log("################################################################")
-            console.log(self.parent.competitions)
-            console.log("################################################################")*/
-
             self.easymde = new EasyMDE({
                 element: document.getElementById("editor"),
                 renderingConfig: {
@@ -892,9 +874,6 @@
     </script>
 
     <style>
-        #editor-container {
-            height: auto;
-        }
 
         .primary-segment > .header {
             margin-top: 0 !important;
@@ -1031,31 +1010,19 @@
 </education-container>
 
 <education-tile>
-    <div class="name">Placeholder University</div>
-    <div class="degree">Bachelor's Degree, Test Science</div>
-    <div class="attended">2007-2011</div>
-    <div class="awards">
-    </div>
+    <div class="no-education">No information found</div>
+
+    <style>
+        .no-education {
+            color: #909090;
+        }
+    </style>
 </education-tile>
 
 <datasets-container class="primary-container">
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
-            My Datasets
-            <!--
-            <div class="right floated ui button edit-button" onclick="{edit_dataset}"
-                 if="{!edit_dataset}">Edit
-            </div>
-            <div class="right floated ui button edit-button" onclick="{add_dataset}"
-                 if="{!edit_dataset}">Add
-            </div>
-            <div class="right floated ui button edit-button" onclick="{save_dataset}"
-                 if="{!!edit_dataset}">Save
-            </div>
-            <div class="right floated ui button edit-button" onclick="{cancel_dataset}"
-                 if="{!!edit_dataset}">Cancel
-            </div>
-            -->
+            My Latest Datasets
         </div>
         <div class="container-content">
             <datasets-table></datasets-table>
@@ -1119,7 +1086,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr each="{dataset}">
+        <tr each="{datasets}">
             <td data-label="Name"><a href="#"><i class="download icon"></i>{name}</a></td>
             <td data-label="Type">{type}</td>
             <td data-label="Uploaded">{upload_date}</td>
@@ -1140,49 +1107,22 @@
                 <a href="#" onclick="{upload_dataset}"><i class="plus icon"></i>Add new dataset</a>
             </td>-->
         </tr>
+        <tr if="{!datasets}">
+            <td colspan="3" class="empty-datasets">No datasets found</td>
+        </tr>
         </tbody>
     </table>
 
     <script>
         var self = this
-        self.dataset = [
-            {
-                name: 'file3.zip',
-                _obj_type: 'dataset',
-                type: 'Ingestion Program',
-                upload_date: "05/14/15",
-                published: false,
-            },
-            {
-                name: 'file2.zip',
-                _obj_type: 'dataset',
-                type: 'Ingestion Program',
-                upload_date: "05/14/19",
-                published: true,
-            },
-            {
-                name: 'file1.zip',
-                _obj_type: 'dataset',
-                type: 'Ingestion Program',
-                upload_date: "05/14/26",
-                published: false,
-            },
-            {
-                name: 'file4.zip',
-                _obj_type: 'dataset',
-                type: 'Ingestion Program',
-                upload_date: "05/14/12",
-                published: false,
-            },
-            {
-                name: 'file5.zip',
-                _obj_type: 'dataset',
-                type: 'Ingestion Program',
-                upload_date: "05/14/10",
-                published: true,
-            }
-        ]
+
     </script>
+
+    <style>
+        .empty-datasets {
+            color: #909090;
+        }
+    </style>
 </datasets-table>
 
 <organization-container class="primary-container">

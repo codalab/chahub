@@ -17,7 +17,7 @@
                         {profile.github_info.bio}
                     </div>
                     <div class="social-buttons">
-                        <a href="{profile.github_info.html_url}" if="!!profile.html_url"
+                        <a href="{profile.github_info.html_url}" if="{!!profile.github_info.html_url}"
                            style="background-color: #582c80; color: white;"
                            class="ui circular github plus mini icon button">
                             <i class="github icon"></i>
@@ -65,22 +65,25 @@
                                 <table class="stats-table">
                                     <tr>
                                         <td class="category">Competitions Organized:</td>
-                                        <td class="statistic"></td>
+                                        <td class="statistic">{profile.organized_competitions.length | 0}</td>
                                         <td class="category">Organizer Since:</td>
-                                        <td class="statistic">02/11/2017</td>
+                                        <td class="statistic"></td>
                                     </tr>
                                     <tr>
                                         <td class="category">Total Participants:</td>
-                                        <td class="statistic">5201</td>
+                                        <td class="statistic">{profile.organized_competitions.participant_count | 0}
+                                        </td>
                                         <td class="category">Total Submissions:</td>
-                                        <td class="statistic">73,240</td>
+                                        <td class="statistic">{profile.organized_competitions.submission_count | 0}</td>
                                     </tr>
                                 </table>
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>My Featured Competitions</h3>
-                                <competition-tile-user each="{ profile.organized_competitions.slice(0,5) }" no-reorder class="item"></competition-tile-user>
-                                <p class="no-competitions" style="" if="{ profile.organized_competitions === undefined || profile.organized_competitions.length == 0 }">
+                                <competition-tile-user each="{ profile.organized_competitions.slice(0,5) }" no-reorder
+                                                       class="item"></competition-tile-user>
+                                <p class="no-competitions" style=""
+                                   if="{ profile.organized_competitions === undefined || profile.organized_competitions.length == 0 }">
                                     No competitions found for this user</p>
                             </div>
                         </div>
@@ -95,13 +98,11 @@
                                 <table class="stats-table">
                                     <tr>
                                         <td class="category">Submissions:</td>
-                                        <td class="statistic">1250</td>
+                                        <td class="statistic">{profile.created_solutions.length | 0}</td>
                                         <td class="category">User Since:</td>
-                                        <td class="statistic">09/12/2016</td>
+                                        <td class="statistic"></td>
                                     </tr>
                                     <tr>
-                                        <td class="category">Top 10 Finishes:</td>
-                                        <td class="statistic">1</td>
                                         <td class="category">Competitions Joined:</td>
                                         <td class="statistic">{profile.organized_competitions.length}</td>
                                     </tr>
@@ -109,7 +110,9 @@
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>Latest Submissions</h3>
-                                <submission-tile-user each="{ profile.submissions }" class="item"></submission-tile-user>
+                                <submission-tile-user if="{profile.submissions}" each="{ profile.submissions }"
+                                                      class="item"></submission-tile-user>
+                                <div if="{!profile.submissions}" class="no-competitions">No submissions found</div>
                             </div>
                         </div>
                     </div>
@@ -173,8 +176,8 @@
 
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
-                                <competition-tile each="{ profile.organized_competitions }" no-reorder
-                                                  class="item"></competition-tile>
+                                <competition-tile-user each="{ profile.organized_competitions }" no-reorder
+                                                       class="item"></competition-tile-user>
                             </div>
                             <div class="ui pagination menu">
                                 <a class="active item">
@@ -202,10 +205,12 @@
 
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
-                                <competition-tile if="{ profile.organized_competitions !== undefined && profile.organized_competitions.length < 0 }"
-                                                  each="{ profile.organized_competitions }" no-reorder
-                                                  class="item"></competition-tile>
-                                <p class="no-competitions" if="{ sorted_competitions === undefined || sorted_competitions.length == 0 }">
+                                <competition-tile
+                                        if="{ profile.organized_competitions !== undefined && profile.organized_competitions.length < 0 }"
+                                        each="{ profile.organized_competitions }" no-reorder
+                                        class="item"></competition-tile>
+                                <p class="no-competitions"
+                                   if="{ sorted_competitions === undefined || sorted_competitions.length == 0 }">
                                     No competitions found for this user</p>
                             </div>
                             <div class="ui pagination menu">
@@ -230,20 +235,13 @@
 
         <!---------- SUBMISSIONS TAB ----------->
         <div class="ui submissions tab" data-tab="submissions">
-            <submission-tab></submission-tab>
+            <submission-tab-user></submission-tab-user>
         </div>
 
         <!------------ DATASETS TAB ----------->
         <div class="ui datasets tab" data-tab="datasets">
             <div class="ui sixteen wide grid container">
-                <!-- <div class="segment-container datasets-segment ui segment sixteen wide">
-                    <div class="ui header">
-                        My Datasets
-                    </div>
-                    <div class="container-content"> -->
-                <datasets-table></datasets-table>
-                <!--</div>
-                 </div>-->
+                <datasets-table-user-tab></datasets-table-user-tab>
             </div>
         </div>
 
@@ -385,17 +383,17 @@
             console.log('updating user profile')
         }*/
 
-        self.update_user = function() {
+        self.update_user = function () {
             CHAHUB.api.get_user(PROFILE_OBJECTS)
-            .done(function (data) {
-                console.log(data)
-                self.profile = data
-                self.update()
-                CHAHUB.events.trigger("profile_loaded")
-            })
-            .fail(function (response) {
-                toastr.error("Unable to fetch user")
-            })
+                .done(function (data) {
+                    console.log(data)
+                    self.profile = data
+                    self.update()
+                    CHAHUB.events.trigger("profile_loaded")
+                })
+                .fail(function (response) {
+                    toastr.error("Unable to fetch user")
+                })
         }
 
         self.prepare_results = function () {
@@ -723,23 +721,11 @@
     <div class="bio-segment primary-segment ui segment sixteen wide">
         <div class="ui header">
             About Me
-            <div class="right floated ui button edit-button" onclick="{editing}" if="{!edit}">
-                Edit
-            </div>
-            <div class="right floated ui button edit-button" onclick="{saving}" if="{!!edit}">
-                Save
-            </div>
-            <div class="right floated ui button edit-button" onclick="{cancel_edit}"
-                 if="{!!edit}">Cancel
-            </div>
         </div>
         <div class="list-tile">
             <div class="biography">
                 <div id="bio" if={!!profile.github_info.bio}>{profile.github_info.bio}</div>
                 <div id="bio" if={!profile.github_info.bio}>No information found</div>
-                <div id="editor-container">
-                    <textarea id="editor"></textarea>
-                </div>
             </div>
         </div>
     </div>
@@ -759,84 +745,17 @@
         }
 
         CHAHUB.events.on('profile_loaded', function () {
-            alert("This was loaded")
             console.log("################################################################")
             console.log(self)
             console.log(self.parent.profile)
             self.update({profile: self.parent.profile})
-            //self.update_text()
             console.log(self)
             console.log("################################################################")
-            self.easymde = new EasyMDE({
-                element: document.getElementById("editor"),
-                renderingConfig: {
-                    markedOptions: {
-                        sanitize: true,
-                    }
-                }
-            });
-
-            $('#editor-container').hide()
-            //document.getElementById('bio').innerHTML = profile.github_info.bio
-        })
-
-        /*self.on('mount', function () {
-            console.log("################################################################")
-            console.log(self)
-            console.log(self.parent.profile)
-            //self.update({profile: self.opts})
-            //self.update_text()
-            console.log(self)
-            console.log("################################################################")
-            self.easymde = new EasyMDE({
-                element: document.getElementById("editor"),
-                renderingConfig: {
-                    markedOptions: {
-                        sanitize: true,
-                    }
-                }
-            });
-
-            $('#editor-container').hide()
-            //document.getElementById('bio').innerHTML = profile.github_info.bio
-        })*/
-
-        /*self.update_text = function () {
-            document.getElementById('bio').innerHTML = self.profile.opts.github_info.bio
-        }*/
-
-        self.editing = function () {
-            $('#bio', self.root)
-            self.edit = true
-            self.easymde.value(self.user.bio_markdown);
-            $('#editor-container').attr('style', 'display: block !important')
-            self.easymde.codemirror.refresh();
-        }
-
-        self.saving = function () {
-            self.edit = false
-            self.user.bio_markdown = self.easymde.value()
-            self.user.bio = marked(self.easymde.value())
-            $('#editor-container').attr('style', 'display: none !important')
-            document.getElementById('bio').innerHTML = self.user.bio
-        }
-
-        self.cancel_edit = function () {
-            self.edit = false
-            $('#editor-container').attr('style', 'display: none !important')
-        }
-
-        marked.setOptions({
-            sanitize: true,
         })
 
     </script>
 
     <style>
-        #editor-container {
-            height: auto;
-        }
-
         .primary-segment > .header {
             margin-top: 0 !important;
             margin-bottom: 0 !important;
@@ -972,31 +891,19 @@
 </education-container-user>
 
 <education-tile-user>
-    <div class="name">Placeholder University</div>
-    <div class="degree">Bachelor's Degree, Test Science</div>
-    <div class="attended">2007-2011</div>
-    <div class="awards">
-    </div>
+    <div class="no-education">No information found</div>
+
+    <style>
+        .no-education {
+            color: #909090;
+        }
+    </style>
 </education-tile-user>
 
 <datasets-container-user class="primary-container">
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
-            My Datasets
-            <!--
-            <div class="right floated ui button edit-button" onclick="{edit_dataset}"
-                 if="{!edit_dataset}">Edit
-            </div>
-            <div class="right floated ui button edit-button" onclick="{add_dataset}"
-                 if="{!edit_dataset}">Add
-            </div>
-            <div class="right floated ui button edit-button" onclick="{save_dataset}"
-                 if="{!!edit_dataset}">Save
-            </div>
-            <div class="right floated ui button edit-button" onclick="{cancel_dataset}"
-                 if="{!!edit_dataset}">Cancel
-            </div>
-            -->
+            My Latest Datasets
         </div>
         <div class="container-content">
             <datasets-table-user></datasets-table-user>
@@ -1070,6 +977,54 @@
         </tr>
         </thead>
         <tbody>
+        <tr each="{datasets_slice}">
+            <td data-label="Name"><a href="#"><i class="download icon"></i>{name}</a></td>
+            <td data-label="Type">{type}</td>
+            <td data-label="Uploaded">{upload_date}</td>
+
+            <!-- Bring back later for publishing, deleting, and adding new datasets
+            <td data-label="Public" class="center aligned column">
+                <div class="ui icon button public-button {green: published}"
+                     onclick="{publish}"><i class="file icon"></i>
+                </div>
+            </td>
+            <td data-label="Delete" class="center aligned column">
+                <a class="delete-button" href="#" onclick="{delete_dataset}">Delete</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <input type="file" id="dataset-upload" style="display:none"/>
+                <a href="#" onclick="{upload_dataset}"><i class="plus icon"></i>Add new dataset</a>
+            </td>-->
+        </tr>
+        </tbody>
+    </table>
+
+    <script>
+        var self = this
+
+        CHAHUB.events.on('profile_loaded', function () {
+            self.update({
+                datasets_slice: self.parent.profile.created_datasets.slice(0, 5),
+            })
+        })
+    </script>
+</datasets-table-user>
+
+<datasets-table-user-tab>
+    <table class="ui celled table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Uploaded</th>
+            <!-- Bring back later for publishing and deleting datasets
+            <th class="center aligned column">Public</th>
+            <th class="center aligned column">Delete</th> -->
+        </tr>
+        </thead>
+        <tbody>
         <tr each="{datasets}">
             <td data-label="Name"><a href="#"><i class="download icon"></i>{name}</a></td>
             <td data-label="Type">{type}</td>
@@ -1098,74 +1053,18 @@
         var self = this
 
         CHAHUB.events.on('profile_loaded', function () {
-            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
             console.log(self.parent.profile)
-            self.update({datasets: self.parent.profile.created_datasets.slice(0,5)})
-            console.log(self.datasets)
+            self.update({
+                datasets: self.parent.profile.created_datasets,
+            })
         })
-
-        self.datasets = [
-            {
-                name: 'file3.zip',
-                _obj_type: 'dataset',
-                type: 'Ingestion Program',
-                upload_date: "05/14/15",
-                published: false,
-            },
-            {
-                name: 'file2.zip',
-                _obj_type: 'dataset',
-                type: 'Ingestion Program',
-                upload_date: "05/14/19",
-                published: true,
-            },
-            {
-                name: 'file1.zip',
-                _obj_type: 'dataset',
-                type: 'Ingestion Program',
-                upload_date: "05/14/26",
-                published: false,
-            },
-            {
-                name: 'file4.zip',
-                _obj_type: 'dataset',
-                type: 'Ingestion Program',
-                upload_date: "05/14/12",
-                published: false,
-            },
-            {
-                name: 'file5.zip',
-                _obj_type: 'dataset',
-                type: 'Ingestion Program',
-                upload_date: "05/14/10",
-                published: true,
-            }
-        ]
     </script>
-</datasets-table-user>
+</datasets-table-user-tab>
 
 <organization-container-user class="primary-container">
     <div class="segment-container ui segment sixteen wide">
         <div class="ui header">
             My Organizations
-            <!--
-            <div class="right floated ui button edit-button" onclick="{edit_organization}"
-                 if="{!edit_organization}">
-                Edit
-            </div>
-            <div class="right floated ui button edit-button" onclick="{add_organization}"
-                 if="{!edit_organization}">
-                Add
-            </div>
-            <div class="right floated ui button edit-button" onclick="{save_organization}"
-                 if="{!!edit_organization}">
-                Save
-            </div>
-            <div class="right floated ui button edit-button" onclick="{cancel_organization}"
-                 if="{!!edit_organization}">
-                Cancel
-            </div>
-            -->
         </div>
         <div class="container-content">
             No information found
@@ -1375,7 +1274,8 @@
             </div>
             <div class="container-content">
                 <div class="ui middle aligned unstackable compact divided link items content-desktop">
-                    <submission-tile each="{ profile.submissions }" onclick="{show_table}" class="item"></submission-tile>
+                    <submission-tile each="{ submissions }" onclick="{show_table}"
+                                     class="item"></submission-tile>
                 </div>
             </div>
         </div>
@@ -1429,63 +1329,7 @@
                 participant_count: '190',
                 prize: '65400',
             },
-            {
-                logo: 'http://placeimg.com/202/202/any',
-                _obj_type: 'competition',
-                title: 'Trading bot',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '65400',
-            },
-            {
-                logo: 'http://placeimg.com/202/202/any',
-                _obj_type: 'competition',
-                title: 'Trading bot',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '65400',
-            },
-            {
-                logo: 'http://placeimg.com/202/202/any',
-                _obj_type: 'competition',
-                title: 'Trading bot',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '65400',
-            },
-            {
-                logo: 'http://placeimg.com/202/202/any',
-                _obj_type: 'competition',
-                title: 'Trading bot',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '65400',
-            },
-            {
-                logo: 'http://placeimg.com/202/202/any',
-                _obj_type: 'competition',
-                title: 'Trading bot',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '65400',
-            }
         ]
-
     </script>
 
     <style type="text/stylus">

@@ -335,7 +335,7 @@
                 transition: 'slide down'
             })
 
-            /*// Loading the search results
+            // Loading the search results
             if (DEFAULT_SEARCH_RESULTS) {
                 self.results = DEFAULT_SEARCH_RESULTS
                 self.update()
@@ -344,7 +344,7 @@
             }
 
             // Focus on search
-            self.refs.search.focus()*/
+            // self.refs.search.focus()
 
             //self.init_values_from_query_params()
         })
@@ -1078,36 +1078,17 @@
         <div class="description">
             <p>{github_info.bio || ''}</p>
         </div>
-        <div class="extra">
-            <div class="mobile_linewrap">
-                <span class="url"><a href="{url}">{url}</a></span>
-            </div>
-        </div>
         <span class="competitions-label ui right floated mini label tooltip" data-content="Competitions">
             <i class="trophy icon"></i>
-            <span class="label-text">30</span>
+            <span class="label-text">{organized_competitions_count}</span>
         </span>
         <span class="submissions-label ui right floated mini label tooltip" data-content="Submissions">
             <i class="archive icon"></i>
-            <span class="label-text">30</span>
+            <span class="label-text">{solutions_count}</span>
         </span>
         <span class="datasets-label ui right floated mini label tooltip" data-content="Datasets">
             <i class="upload icon"></i>
-            <span class="label-text">4</span>
-        </span>
-        <span class="button-group">
-            <button class="ui circular mini facebook icon button">
-                <i class="facebook icon"></i>
-            </button>
-            <button class="ui circular mini twitter icon button">
-                <i class="twitter icon"></i>
-            </button>
-            <button class="ui circular mini linkedin icon button">
-                <i class="linkedin icon"></i>
-            </button>
-            <button class="ui circular mini google plus icon button">
-                <i class="google plus icon"></i>
-            </button>
+            <span class="label-text">{datasets_count}</span>
         </span>
     </div>
 
@@ -1115,7 +1096,7 @@
         var self = this
 
         self.redirect_to_profile = function () {
-            window.open('/profiles/' + self.username);
+            window.open('/profiles/detail/' + self.username);
         }
 
         self.on("mount", function () {
@@ -1160,11 +1141,6 @@
         <div class="description">
             <p>{user.github_info.bio || ''}</p>
         </div>
-        <!--<div class="extra">
-            <div class="mobile_linewrap">
-                <span class="url"><a href="{url}">{url}</a></span>
-            </div>
-        </div>-->
         <span class="competitions-label ui right floated mini label tooltip" data-content="Competitions">
             <i class="trophy icon"></i>
             <span class="label-text">{organized_competitions_count}</span>
@@ -1175,35 +1151,24 @@
         </span>
         <span class="datasets-label ui right floated mini label tooltip" data-content="Datasets">
             <i class="upload icon"></i>
-            <span class="label-text">{datasets_count}</span>
+            <span class="label-text">{datasets.count}</span>
         </span>
-        <!--<span class="button-group">
-            <button class="ui circular mini facebook icon button">
-                <i class="facebook icon"></i>
-            </button>
-            <button class="ui circular mini twitter icon button">
-                <i class="twitter icon"></i>
-            </button>
-            <button class="ui circular mini linkedin icon button">
-                <i class="linkedin icon"></i>
-            </button>
-            <button class="ui circular mini google plus icon button">
-                <i class="google plus icon"></i>
-            </button>
-        </span>-->
     </div>
 
     <script>
         var self = this
 
         self.redirect_to_profile = function () {
-            window.open('/profiles/' + self.username);
+            window.open('/profiles/detail/' + self.username);
         }
 
         self.on("mount", function () {
-            console.log(self)
             $(".tooltip", self.root).popup()
         })
+
+        if (self.username === 'admin') {
+            console.log(self)
+        }
     </script>
 
     <style type="text/stylus">
