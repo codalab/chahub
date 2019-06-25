@@ -5,7 +5,7 @@ from datasets.models import Data, DataGroup
 
 
 class DataSerializer(BulkSerializerMixin, serializers.ModelSerializer):
-    producer = ProducerSerializer(required=False, validators=[])
+    # producer = ProducerSerializer(required=False, validators=[])
 
     class Meta:
         model = Data
