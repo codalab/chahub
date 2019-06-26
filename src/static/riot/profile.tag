@@ -9,25 +9,23 @@
                 <div class="holder">
                     <!--<img class="profile-img" src="{profile.github_info.avatar_url}" alt="placeholder">\-->
 
-                    <img show="{profile.github_info === undefined}" src="{URLS.STATIC('img/img-wireframe.png')}" class="profile-img" alt="profile-image">
-                    <img show="{profile.github_info !== undefined}" src="{profile.github_info.avatar_url}" class="profile-img" alt="profile-image">
+                    <img show="{!GITHUB_INFO_AVAILABLE}" src="{URLS.STATIC('img/img-wireframe.png')}" class="profile-img" alt="profile-image">
+                    <img show="{GITHUB_INFO_AVAILABLE}" src="{profile.user.github_info.avatar_url}" class="profile-img" alt="profile-image">
                 </div>
                 <div class="profile-user">
                     {profile.username}
-                    <div class="profile-brief">
-                        <div class="location">{profile.github_info.location}</div>
-                        <div class="occupation">{profile.github_info.company}</div>
-                        {profile.github_info.bio}
+                    <div show="{GITHUB_INFO_AVAILABLE}" class="profile-brief">
+                        <div class="location">{profile.user.github_info.location}</div>
+                        <div class="occupation">{profile.user.github_info.company}</div>
+                        {profile.user.github_info.bio}
                     </div>
                     <div class="social-buttons">
-                        <a href="{profile.github_info.html_url}" if="!!profile.html_url"
-                           style="background-color: #582c80; color: white;"
-                           class="ui circular github plus mini icon button">
+                        <a href="{profile.user.github_info.html_url}" show="{GITHUB_INFO_AVAILABLE && !!profile.user.html_url}" style="background-color: #582c80; color: white;" class="ui circular github plus mini icon button">
                             <i class="github icon"></i>
                         </a>
                     </div>
-                    <div class="languages">
-                        <div each="{language in profile.languages}" class="ui mini label">
+                    <div show="{GITHUB_INFO_AVAILABLE}" class="languages">
+                        <div each="{language in profile.user.languages}" class="ui mini label">
                             {language}
                         </div>
                     </div>
@@ -350,6 +348,16 @@
         self.profiles = []
         self.sorted_competitions = []
 
+        self.SINGLE_PROFILE = true
+        self.GITHUB_INFO_AVAILABLE = false
+
+        self.FIELDS_TO_UPDATE = [
+            'profile',
+            'competitions',
+            'datasets',
+            'submissions',
+            'profiles',
+        ]
 
         self.on('mount', function () {
             particlesJS.load('particles-js', "/static/particles/particles-profile.json", function () {
@@ -387,8 +395,15 @@
              })
              })*/
             if (PROFILE_MODE === 'profile' || PROFILE_OBJECTS.length === 1) {
+                self.SINGLE_PROFILE = true
                 CHAHUB.api.get_profile(PROFILE_OBJECTS[0])
                     .done(function (data) {
+                        if (data.user !== undefined && data.user !== null) {
+                            if (data.user.github_info !== undefined && data.user.github_info !== null) {
+                                self.GITHUB_INFO_AVAILABLE = true
+                            }
+                        }
+
                         //self.profiles.push(data)
                         self.profile = data
                         //console.log(self.profiles)
@@ -402,7 +417,14 @@
                 PROFILE_OBJECTS.forEach(function (profile_id) {
                     CHAHUB.api.get_profile(profile_id)
                         .done(function (data) {
+                            if (profile_id === PROFILE_OBJECTS[0]){
+                                self.profile = data
+                            }
                             self.profiles.push(data)
+                            self.competitions.push(data.organized_competitions)
+                            self.datasets.push(data.created_datasets)
+                            self.tasks.push(data.created_tasks)
+                            self.solutions.push(data.created_solutions)
                             console.log(self.profiles)
                             self.update()
                             //self.update_data()
@@ -412,6 +434,7 @@
                         })
                 })
             }
+            CHAHUB.events.trigger("profile_loaded")
         }
 
         /*self.update_data = function() {
@@ -785,18 +808,49 @@
             name: '',
             email: '',
             bio: '',
-            organized_competitions: []
+            competitions: [],
+            datasets: [],
+            submissions: []
         }
+        self.competitions = []
+        self.datasets = []
+        self.submissions = []
+        self.profiles = []
+        self.sorted_competitions = []
+
+        self.SINGLE_PROFILE = true
+        self.GITHUB_INFO_AVAILABLE = false
+
+        /*self.FIELDS_TO_UPDATE = [
+            'profile',
+            'competitions',
+            'datasets',
+            'submissions',
+            'profiles',
+        ]*/
 
         CHAHUB.events.on('profile_loaded', function () {
             alert("This was loaded")
+            self.parent.FIELDS_TO_UPDATE.forEach(function (field) {
+                self.update(field, self.parent[field])
+            })
+
             console.log("################################################################")
-            console.log(self)
-            console.log(self.parent.profile)
-            self.update({profile: self.parent.profile})
-            //self.update_text()
-            console.log(self)
+            console.log(self.profile)
+            console.log(self.competitions)
+            console.log(self.datasets)
+            console.log(self.submissions)
+            console.log(self.profiles)
             console.log("################################################################")
+
+            /*console.log("################################################################")
+            self.update({profile: self.parent.profile, competitions: self.parent.competitions})
+            console.log("################################################################")
+
+            console.log("################################################################")
+            console.log(self.parent.competitions)
+            console.log("################################################################")*/
+
             self.easymde = new EasyMDE({
                 element: document.getElementById("editor"),
                 renderingConfig: {

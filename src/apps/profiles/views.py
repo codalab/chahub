@@ -109,6 +109,10 @@ class MergeAccountsView(TemplateView):
 
 
 class ProfileView(TemplateView):
+    """This view returns to context either:
+        a) A user or list profiles
+        b) A specific profile
+    """
     template_name = 'profiles/profile.html'
 
     def get_context_data(self, **kwargs):

@@ -1,0 +1,41 @@
+{
+  "name": "chahub",
+  "scripts": {
+    "postdeploy": "bin/init_staging"
+  },
+  "env": {
+    "USE_SSL": "True",
+    "CHANNEL_BACKEND": "asgi_redis.RedisChannelLayer",
+    "GUNICORN_CMD_ARGS": "--workers=3",
+    "EMAIL_BACKEND": "django.core.mail.backends.smtp.EmailBackend"
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "addons": [
+    "heroku-postgresql",
+    "searchbox:starter",
+    "scheduler:standard",
+    {
+      "plan": "heroku-redis:hobby-dev",
+      "options": {
+        "maxmemory_policy": "volatile-lru"
+      }
+    }
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-pgbouncer"
+    },
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "heroku/python"
+    }
+
+  ]
+}

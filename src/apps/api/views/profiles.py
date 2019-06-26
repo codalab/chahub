@@ -11,7 +11,8 @@ from rest_framework.viewsets import ModelViewSet
 
 from api.authenticators import ProducerAuthentication
 from api.permissions import ProducerPermission
-from api.serializers.profiles import MyProfileSerializer, ProfileSerializer, AccountMergeRequestSerializer
+from api.serializers.profiles import MyProfileListSerializer, ProfileListSerializer, AccountMergeRequestSerializer, \
+    MyProfileDetailSerializer, ProfileDetailSerializer
 from api.views.mixins import BulkViewSetMixin
 from profiles.models import Profile
 
@@ -22,7 +23,7 @@ User = get_user_model()
 # ...that is, unless we need special private data from our own profile, like email
 class GetMyProfile(RetrieveAPIView, GenericAPIView):
     # queryset = User.objects.all()
-    serializer_class = MyProfileSerializer
+    serializer_class = MyProfileDetailSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self):
@@ -31,38 +32,25 @@ class GetMyProfile(RetrieveAPIView, GenericAPIView):
 
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = MyProfileSerializer
+    serializer_class = MyProfileDetailSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-    # def get_object(self):
-    #     return self.request.user
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return MyProfileListSerializer
+        return self.serializer_class
 
 
 class ProfileViewSet(BulkViewSetMixin, ModelViewSet):
     queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+    serializer_class = ProfileDetailSerializer
     authentication_classes = (ProducerAuthentication, SessionAuthentication, )
     permission_classes = (ProducerPermission, )
 
-
-    # def create(self, request, *args, **kwargs):
-    #     """Overriding this for the following reasons:
-    #
-    #     1. Returning the huge amount of HTML/etc. back by default by DRF was bad
-    #     2. We want to handle creating many competitions this way, and we do that
-    #        custom to make drf-writable-nested able to interpret everything easily"""
-    #
-        # serializer = self.get_serializer(data=request.data, partial=False, many=True)
-        # serializer.is_valid(raise_exception=False)
-        # if serializer.errors:
-        #     print(serializer.errors)
-        # else:
-        #     self.perform_create(serializer)
-        #
-        #
-        # return Response({}, status=status.HTTP_201_CREATED)
-        # # headers = self.get_success_headers(serializer.data)
-        # # return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ProfileListSerializer
+        return self.serializer_class
 
 
 @api_view(['POST'])

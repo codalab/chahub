@@ -69,7 +69,7 @@ class LinkedInUserInfoSerializer(ModelSerializer):
         ]
 
 
-class MyProfileSerializer(serializers.ModelSerializer):
+class MyProfileDetailSerializer(serializers.ModelSerializer):
     github_info = GithubUserInfoSerializer(read_only=True, required=False, many=False)
     organized_competitions = CompetitionSerializer(read_only=True, required=False, many=True)
     created_tasks = TaskSerializer(read_only=True, required=False, many=True)
@@ -89,12 +89,59 @@ class MyProfileSerializer(serializers.ModelSerializer):
             'created_datasets',
         ]
 
-class ProfileSerializer(BulkSerializerMixin, ModelSerializer):
+
+class MyProfileListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'name',
+            'email',
+            'id',
+            'github_info',
+            'organized_competitions',
+            'created_tasks',
+            'created_solutions',
+            'created_datasets',
+        ]
+
+class ProfileDetailSerializer(BulkSerializerMixin, ModelSerializer):
     from api.serializers.competitions import CompetitionSerializer
     from api.serializers.data import DataSerializer
     from api.serializers.tasks import TaskSerializer
     from api.serializers.tasks import SolutionSerializer
 
+    # producer = ProducerSerializer(required=False, validators=[])
+    organized_competitions = CompetitionSerializer(many=True, read_only=True)
+    datasets = DataSerializer(many=True, read_only=True)
+    tasks = TaskSerializer(many=True, read_only=True)
+    solutions = SolutionSerializer(many=True, read_only=True)
+    user = MyProfileDetailSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Profile
+        fields = [
+            'id',
+            'remote_id',
+            'producer',
+            'email',
+            'username',
+            'details',
+            'user',
+            'organized_competitions',
+            'datasets',
+            'tasks',
+            'solutions'
+        ]
+        read_only_fields = ['id']
+        extra_kwargs = {
+            'producer': {
+                # UniqueTogether validator messes this up
+                'validators': [],
+            }
+        }
+
+class ProfileListSerializer(BulkSerializerMixin, ModelSerializer):
     # producer = ProducerSerializer(required=False, validators=[])
     organized_competitions = CompetitionSerializer(many=True, read_only=True)
     datasets = DataSerializer(many=True, read_only=True)
@@ -123,26 +170,3 @@ class ProfileSerializer(BulkSerializerMixin, ModelSerializer):
                 'validators': [],
             }
         }
-
-    # def get_unique_together_validators(self):
-    #     '''
-    #     Overriding method to disable unique together checks
-    #     '''
-    #     return []
-    #
-    # def create(self, validated_data):
-    #     """
-    #     This creates *AND* updates based on the combination of (remote_id, producer)
-    #     """
-    #
-    #     try:
-    #         # If we have an existing instance from this producer
-    #         # with the same remote_id, update it instead of making a new one
-    #         instance = Profile.objects.get(
-    #             remote_id=validated_data.get('remote_id'),
-    #             producer=validated_data.get('producer')
-    #         )
-    #         return self.update(instance, validated_data)
-    #     except Profile.DoesNotExist:
-    #         new_instance = super().create(validated_data)
-    #         return new_instance
