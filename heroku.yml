@@ -5,4 +5,4 @@ build:
     elastic-search: docker/elastic_search/Dockerfile
     builder: Dockerfile.builder
 run:
-  web: bash -c "cd /app/src && /usr/local/bin/gunicorn asgi:application -w 2 -k uvicorn.workers.UvicornWorker -b :8888 --reload"
+  web: bash -c "cd ./src && /usr/local/bin/gunicorn asgi:application -w 2 -k uvicorn.workers.UvicornWorker -b :8888 --reload"
