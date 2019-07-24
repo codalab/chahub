@@ -336,7 +336,7 @@
                     //if (value === "ALL" || all_conditions_found) {
                     //    $(self.refs.object_types).dropdown('change values', 'ALL')
                     //}
-                    //self.search()
+                    self.search()
                 }
             })
 
