@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from api.serializers.competitions import CompetitionSerializer
+from api.serializers.competitions import CompetitionSerializer, CompetitionParticipantSerializer
 from api.serializers.data import DataSerializer
 from api.serializers.mixins import BulkSerializerMixin
 from api.serializers.producers import ProducerSerializer
@@ -14,6 +14,7 @@ from profiles.models import GithubUserInfo, LinkedInUserInfo, Profile, AccountMe
 User = get_user_model()
 
 logger = logging.getLogger(__name__)
+
 
 class AccountMergeRequestSerializer(ModelSerializer):
     class Meta:
@@ -105,6 +106,7 @@ class MyProfileListSerializer(serializers.ModelSerializer):
             'created_datasets',
         ]
 
+
 class ProfileDetailSerializer(BulkSerializerMixin, ModelSerializer):
     from api.serializers.competitions import CompetitionSerializer
     from api.serializers.data import DataSerializer
@@ -117,6 +119,7 @@ class ProfileDetailSerializer(BulkSerializerMixin, ModelSerializer):
     tasks = TaskSerializer(many=True, read_only=True)
     solutions = SolutionSerializer(many=True, read_only=True)
     user = MyProfileDetailSerializer(many=False, read_only=True)
+    participants = CompetitionParticipantSerializer(many=True, allow_null=True, required=False)
 
     class Meta:
         model = Profile
@@ -131,7 +134,8 @@ class ProfileDetailSerializer(BulkSerializerMixin, ModelSerializer):
             'organized_competitions',
             'datasets',
             'tasks',
-            'solutions'
+            'solutions',
+            'participants'
         ]
         read_only_fields = ['id']
         extra_kwargs = {
@@ -141,12 +145,13 @@ class ProfileDetailSerializer(BulkSerializerMixin, ModelSerializer):
             }
         }
 
+
 class ProfileListSerializer(BulkSerializerMixin, ModelSerializer):
-    # producer = ProducerSerializer(required=False, validators=[])
-    organized_competitions = CompetitionSerializer(many=True, read_only=True)
-    datasets = DataSerializer(many=True, read_only=True)
-    tasks = TaskSerializer(many=True, read_only=True)
-    solutions = SolutionSerializer(many=True, read_only=True)
+    producer = ProducerSerializer(required=False, validators=[])
+    # organized_competitions = CompetitionSerializer(many=True, read_only=True)
+    # datasets = DataSerializer(many=True, read_only=True)
+    # tasks = TaskSerializer(many=True, read_only=True)
+    # solutions = SolutionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Profile
@@ -158,10 +163,10 @@ class ProfileListSerializer(BulkSerializerMixin, ModelSerializer):
             'username',
             'details',
             'user',
-            'organized_competitions',
-            'datasets',
-            'tasks',
-            'solutions'
+            # 'organized_competitions',
+            # 'datasets',
+            # 'tasks',
+            # 'solutions'
         ]
         read_only_fields = ['id']
         extra_kwargs = {

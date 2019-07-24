@@ -23,14 +23,15 @@
                 </span>
                 <i class="dropdown icon"></i>
                 <span class="menu">
-                    <div class="header">Django Admin</div>
-                    <a show="{USER_IS_SUPERUSER}">
+                    <!-- Removed because RiotJS isn't properly switching on this condition -->
+                    <virtual if="{window.USER_IS_SUPERUSER}">
+                        <div class="header">Django Admin</div>
                         <a class="item" href="{ADMIN_URL}">Index</a>
                         <a class="item" href="{ADMIN_URL}competitions/">Competitions</a>
                         <a class="item" href="{ADMIN_URL}profiles/user/">Users</a>
                         <a class="item" href="{ADMIN_URL}producers">Producers</a>
-                    </a>
-                    <div class="ui divider"></div>
+                        <div class="ui divider"></div>
+                    </virtual>
                     <div class="header">Chasuite</div>
                         <a class="item" href="https://competitions.codalab.org/">Codalab</a>
                         <a class="item" href="https://chagrade.lri.fr/">Chagrade</a>
@@ -83,27 +84,27 @@
                                             <i class="globe icon"></i>
                                             <span class="label-text">All</span>
                                         </div>
-                                        <div class="item" data-value="users">
+                                        <div class="item" data-value="user">
                                             <i class="users icon"></i>
                                             <span class="label-text">Users</span>
                                         </div>
-                                        <div class="item" data-value="profiles">
+                                        <div class="item" data-value="profile">
                                             <i class="users icon"></i>
                                             <span class="label-text">Profiles</span>
                                         </div>
-                                        <div class="item" data-value="datasets">
+                                        <div class="item" data-value="dataset">
                                             <i class="file icon"></i>
                                             <span class="label-text">Datasets</span>
                                         </div>
-                                        <div class="item" data-value="competitions">
+                                        <div class="item" data-value="competition">
                                             <i class="desktop icon"></i>
                                             <span class="label-text">Competitions</span>
                                         </div>
-                                        <div class="item" data-value="tasks">
+                                        <div class="item" data-value="task">
                                             <i class="wrench icon"></i>
                                             <span class="label-text">Tasks</span>
                                         </div>
-                                        <div class="item" data-value="solutions">
+                                        <div class="item" data-value="solution">
                                             <i class="pallet icon"></i>
                                             <span class="label-text">Solutions</span>
                                         </div>
@@ -215,7 +216,29 @@
             </div>
         </div>
     </div>
-    <div id="mobile-grid" class="ui centered grid { fix-left: !show_stats }">
+    <div>
+        <div class="ui pagination menu">
+            <a class="item">
+                <
+            </a>
+            <div class="disabled item">
+                ...
+            </div>
+            <a class="item">
+                10
+            </a>
+            <a class="item">
+                11
+            </a>
+            <a class="item">
+                12
+            </a>
+        </div>
+    </div>
+    <div show="{loading}" class="ui active dimmer">
+        <div class="ui loader"></div>
+    </div>
+    <div show="{!loading}" id="mobile-grid" class="ui centered grid { fix-left: !show_stats }">
         <div id="mobile" class="sixteen wide tablet twelve wide computer column">
             <div class="ui stacked">
                 <div class="ui warning message"
@@ -229,9 +252,21 @@
                     Found { results.length } results
                 </div>
                 <div class="ui middle aligned unstackable compact divided link items content-desktop">
-                    <competition-tile each="{ results }" no-reorder class="item"></competition-tile>
+                    <!--<competition-tile each="{ results }" no-reorder class="item"></competition-tile>
                     <user-tile each="{results}" no-reorder class="item"></user-tile>
-                    <profile-tile each="{results}" no-reorder class="item"></profile-tile>
+                    <profile-tile each="{results}" no-reorder class="item"></profile-tile>-->
+                    <!--<div each="{result in results}" no-reorder class="item">
+                        {result._obj_type}
+                        <result-tile opts="{result}"></result-tile>
+                    </div>-->
+                    <virtual each="{result in results}" no-reorder>
+                        <!--{result._obj_type}-->
+                        <profile-tile result="{result}" class="item" if="{result._obj_type === 'profile' }"></profile-tile>
+                        <competition-tile result="{result}" class="item" if="{result._obj_type === 'competition' }"></competition-tile>
+                        <user-tile result="{result}" class="item" if="{result._obj_type === 'user' }"></user-tile>
+                        <!--<dataset-tile class="item" if="{result._obj_type === 'dataset' }"></dataset-tile>-->
+                        <!--<solution-tile class="item" if="{result._obj_type === 'solution' }"></solution-tile>-->
+                    </virtual>
                 </div>
                 <!--<div class="ui middle aligned compact link items content-mobile" style="margin-top: -1;">
                     <competition-mobile-tile each="{ results }" no-reorder class="item"
@@ -248,9 +283,11 @@
         var self = this
         self.results = []
         self.display_mode = 'list'
-        self.loading = true
+        self.loading = false
         self.old_filters = {}
         self.display_search_options = false
+
+        self.search_count = 0
 
         self.one('mount', function () {
             // header particles
@@ -293,13 +330,13 @@
 
             $(self.refs.object_types).dropdown({
                 onChange: function (text, value) {
-                    var selected_text = $(self.refs.object_types).dropdown('get value')
-                    var all_conditions_found = selected_text.indexOf("competitions") >= 0 && selected_text.indexOf("users") >= 0 && selected_text.indexOf("datasets") >= 0 && selected_text.indexOf("tasks") >= 0 && selected_text.indexOf("solutions") >= 0
+                    //var selected_text = $(self.refs.object_types).dropdown('get value')
+                    //var all_conditions_found = selected_text.indexOf("competition") >= 0 && selected_text.indexOf("user") >= 0 && selected_text.indexOf("dataset") >= 0 && selected_text.indexOf("task") >= 0 && selected_text.indexOf("solution") >= 0
 
-                    if (value === "all" || all_conditions_found) {
-                        $(self.refs.object_types).dropdown('change values', 'all')
-                    }
-                    self.search()
+                    //if (value === "ALL" || all_conditions_found) {
+                    //    $(self.refs.object_types).dropdown('change values', 'ALL')
+                    //}
+                    //self.search()
                 }
             })
 
@@ -344,9 +381,9 @@
             }
 
             // Focus on search
-            // self.refs.search.focus()
+            self.refs.search.focus()
 
-            //self.init_values_from_query_params()
+            self.init_values_from_query_params()
         })
 
         self.toggle_search_options = function () {
@@ -415,7 +452,7 @@
                 console.log("Loading default search results")
                 self.results = DEFAULT_SEARCH_RESULTS
                 self.showing_default_results = true
-                self.prepare_results()
+                //self.prepare_results()
                 self.update()
             } else {
                 // We have some search to perform, not just displaying default results
@@ -429,7 +466,7 @@
         self.input_updated = function () {
             delay(function () {
                 self.search()
-            }, 250)
+            }, 500)
         }
 
         self.prepare_results = function () {
@@ -459,6 +496,9 @@
         }
 
         self.search = function (query) {
+            self.loading = true
+            self.update()
+
             var filters = {q: query || self.refs.search.value}
 
             filters.start_date = self.refs.start_date.value || ''
@@ -485,19 +525,22 @@
             }
 
             console.log("Doing search with filters:")
-            console.log(filters)
+            //console.log(filters)
 
             self.old_filters = filters
-            self.loading = true
             self.update()
 
             CHAHUB.api.search(filters)
                 .done(function (data) {
+                    //self.search_count ++
+                    //console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+                    //console.log(self.search_count)
+                    //console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
                     self.loading = false
                     self.suggestions = data.suggestions
                     self.showing_default_results = data.showing_default_results
                     self.results = data.results
-                    console.log(data.results)
+                    //console.log(data.results)
                     self.prepare_results()
                     self.update()
                 })
@@ -850,30 +893,7 @@
     </style>
 </search-results>
 
-<search-result class="item">
-    <!--<div class="image">
-        <img src="https://semantic-ui.com/images/wireframe/image.png">
-        <img src="{ logo }">
-    </div>
-    <div class="content">
-        <a class="header">{ title }</a>
-        <div class="meta">
-            <span class="price">$1200</span>
-            <span class="stay">1 Month</span>
-        </div>
-        <div class="description">
-            <p>Blah blah lorem ipsum dolor sit amet, description about a competition.</p>
-        </div>
-        <div class="extra">
-            <div class="ui right floated primary button">
-                Participate
-                <i class="right chevron icon"></i>
-            </div>
-        </div>
-    </div>-->
-</search-result>
-
-<competition-tile show="{ _obj_type == 'competition' }" onclick="{redirect_to_url}">
+<competition-tile if="{ _obj_type == 'competition' }" onclick="{redirect_to_url}">
     <div class="floating-actions { is-admin: USER_IS_SUPERUSER }">
         <i class="icon green pencil alternate"
            onclick="{ edit_competition }"></i>
@@ -881,27 +901,27 @@
         <i class="icon { yellow: locked, unlock: locked, lock: !locked }" onclick="{ lock_competition}"></i>
     </div>
     <div class="ui tiny image">
-        <img src="{logo || URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">
+        <img src="{_.get(opts.result, 'logo') || static_image}" class="ui avatar image">
     </div>
     <div class="content">
         <div class="header">
-            {title}
+            {opts.result.title}
         </div>
         <div class="description">
-            <p>{description}</p>
+            <p>{opts.result.description}</p>
         </div>
         <div class="extra">
             <div class="mobile_linewrap">
-                <span class="url"><a href="{url}">{url_short(url)}</a></span>
+                <span class="url"><a href="{url}">{url_short(opts.result.url)}</a></span>
                 <span class="date">
-                {pretty_date(start)}
+                {pretty_date(opts.result.start)}
                 <virtual if="{end}">
-                    - {pretty_date(end)}
+                    - {pretty_date(opts.result.end)}
                 </virtual>
             </span>
                 <div class="mobile_labelwrap"></div>
                 <span class="participant_label ui right floated mini label tooltip" data-content="Participant count">
-                    <i class="user icon"></i> {participant_count}
+                    <i class="user icon"></i> {opts.result.participant_count}
                 </span>
                 <span class="deadline_label ui right floated mini label tooltip {red: !alert_icon}"
                       data-content="Deadline of the current phase"
@@ -913,7 +933,7 @@
                 </span>
                 <span class="prize_label ui right floated mini label tooltip" data-content="Prize Amount"
                       show="{prize}">
-                    <i class="yellow trophy icon"></i> {prize}
+                    <i class="yellow trophy icon"></i> {opts.result.prize}
                 </span>
             </div>
         </div>
@@ -921,6 +941,7 @@
 
     <script>
         var self = this
+        self.static_image = URLS.STATIC('img/img-wireframe.png')
 
         self.on("mount", function () {
             $(".tooltip", self.root).popup()
@@ -928,10 +949,13 @@
         })
 
         self.redirect_to_url = function () {
-            window.open(self.url, '_blank');
+            window.open(self.opts.result.url, '_blank');
         }
 
         self.url_short = function (url) {
+            if (!url){
+                return ''
+            }
             return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
         }
 
@@ -1067,28 +1091,48 @@
     </style>
 </competition-tile>
 
-<user-tile if="{ _obj_type == 'user' || _obj_type == 'profile' }" show="{ _obj_type == 'user' || _obj_type == 'profile' }" onclick="{redirect_to_profile}">
+<user-tile onclick="{redirect_to_profile}">
     <div class="ui tiny image">
-        <img src="{github_info.avatar_url || URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">
+        <!--<img src="{github_info.avatar_url || URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">-->
+        <img src="{_.get(_.get(opts.result, 'github_info', {}), 'avatar_url', URLS.STATIC('img/img-wireframe.png'))}" class="ui avatar image">
     </div>
     <div class="content">
         <div class="header">
-            {username}
+            {opts.result.username}
         </div>
         <div class="description">
-            <p>{github_info.bio || ''}</p>
+            <p>{_.get(_.get(opts.result, 'github_info', {}), 'bio', '')}</p>
+        </div>
+        <div class="extra">
+            <div class="mobile_linewrap">
+                <span class="url"><a href="{_.get(opts.result, 'url', '')}">{_.get(opts.result, 'url', '')}</a></span>
+            </div>
         </div>
         <span class="competitions-label ui right floated mini label tooltip" data-content="Competitions">
             <i class="trophy icon"></i>
-            <span class="label-text">{organized_competitions_count}</span>
+            <span class="label-text">{opts.result.organized_competitions_count}</span>
         </span>
         <span class="submissions-label ui right floated mini label tooltip" data-content="Submissions">
             <i class="archive icon"></i>
-            <span class="label-text">{solutions_count}</span>
+            <span class="label-text">{opts.result.solutions_count}</span>
         </span>
         <span class="datasets-label ui right floated mini label tooltip" data-content="Datasets">
             <i class="upload icon"></i>
-            <span class="label-text">{datasets_count}</span>
+            <span class="label-text">{opts.result.datasets_count}</span>
+        </span>
+        <span class="button-group">
+            <button class="ui circular mini facebook icon button">
+                <i class="facebook icon"></i>
+            </button>
+            <button class="ui circular mini twitter icon button">
+                <i class="twitter icon"></i>
+            </button>
+            <button class="ui circular mini linkedin icon button">
+                <i class="linkedin icon"></i>
+            </button>
+            <button class="ui circular mini google plus icon button">
+                <i class="google plus icon"></i>
+            </button>
         </span>
     </div>
 
@@ -1096,7 +1140,7 @@
         var self = this
 
         self.redirect_to_profile = function () {
-            window.open('/profiles/detail/' + self.username);
+            window.open('/profiles/detail/' + self.opts.result.username);
         }
 
         self.on("mount", function () {
@@ -1126,32 +1170,33 @@
 
 </user-tile>
 
-<profile-tile style="" if="{ _obj_type == 'profile' }" show="{ _obj_type == 'profile' }" onclick="{redirect_to_profile}">
+<profile-tile onclick="{redirect_to_profile}">
     <div class="ui tiny image">
-        <img show="{user.github_info === undefined}" src="{URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">
-        <img show="{user.github_info !== undefined}" src="{user.github_info.avatar_url}" class="ui avatar image">
+        <!--<img if="{user.github_info === undefined}" src="{URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">
+        <img if="{user.github_info !== undefined}" src="{user.github_info.avatar_url}" class="ui avatar image">-->
+        <img src="{_.get(_.get(user, 'github_info', {}), 'avatar_url', URLS.STATIC('img/img-wireframe.png'))}" class="ui avatar image">
     </div>
     <div class="content">
-        <div show="{user.github_info === undefined}" class="header">
-            {username}'s {producer.name} profile
+        <div class="header">
+            {opts.result.username}'s {_.get(_.get(opts.result, 'producer', {}), 'name', '')} profile
         </div>
-        <div show="{user.github_info !== undefined}" class="header">
+        <!--<div show="{user.github_info !== undefined}" class="header">
             {username}'s {producer.name} profile
-        </div>
+        </div>-->
         <div class="description">
-            <p>{user.github_info.bio || ''}</p>
+            <p>{_.get(_.get(opts.result.user, 'github_info', {}), 'bio', '')}</p>
         </div>
         <span class="competitions-label ui right floated mini label tooltip" data-content="Competitions">
             <i class="trophy icon"></i>
-            <span class="label-text">{organized_competitions_count}</span>
+            <span class="label-text">{opts.result.organized_competitions_count}</span>
         </span>
         <span class="submissions-label ui right floated mini label tooltip" data-content="Submissions">
             <i class="archive icon"></i>
-            <span class="label-text">{solutions_count}</span>
+            <span class="label-text">{opts.result.solutions_count}</span>
         </span>
         <span class="datasets-label ui right floated mini label tooltip" data-content="Datasets">
             <i class="upload icon"></i>
-            <span class="label-text">{datasets.count}</span>
+            <span class="label-text">{opts.result.datasets_count}</span>
         </span>
     </div>
 
@@ -1159,16 +1204,13 @@
         var self = this
 
         self.redirect_to_profile = function () {
-            window.open('/profiles/detail/' + self.username);
+            window.open('/profiles/detail/' + self.opts.result.producer.id + "/" + self.opts.result.remote_id);
         }
 
         self.on("mount", function () {
+            //console.log(self)
             $(".tooltip", self.root).popup()
         })
-
-        if (self.username === 'admin') {
-            console.log(self)
-        }
     </script>
 
     <style type="text/stylus">
@@ -1246,7 +1288,7 @@
             }
             endpoint
                 .done(function (data) {
-                    console.log("Received general stats")
+                    //console.log("Received general stats")
                     self.update({
                             producer_stats: [
                                 {label: "Competitions", count: num_formatter(data.competition_count, 1)},
@@ -1375,142 +1417,3 @@
         })
     </script>
 </competition-modal>
-
-<competition-card>
-    <!-- <div class="image">
-        <img src="https://i.imgur.com/n2XUSxU.png">
-    </div>
-    <div class="content">
-        <a class="header">{ title }</a>
-        <div class="meta">
-            <span class="date">Joined in 2013</span>
-        </div>
-        <div class="description">
-            Kristy is an art director living in New York.
-        </div>
-    </div>
-    <div class="extra content">
-        <a>
-            <i class="user icon"></i>
-            22 Friends
-        </a>
-    </div>
-
-    <script>
-    </script>
-
-    <style type="text/stylus">
-        :self
-            display block
-    </style>-->
-</competition-card>
-
-<competition-mobile-tile onclick="{redirect_to_url}">
-    <!--<h6 class="ui top attached header">
-        Dogs
-    </h6>
-    <div class="ui grid attached segment">
-        <div class="ui floating blue centered mini label tooltip" data-content="Participant count">
-            <p style="">{participant_count}</p>
-        </div>
-        <div class="ui tiny image" style="width: 40px;">
-            <img src="{logo}" style="margin-left: 1em; max-width: 3em; max-height: 3em;" class="ui avatar image">
-        </div>
-        <div class="content">
-            <div class="header">
-                {title}
-            </div>
-            <div class="description">
-                <p>{description}</p>
-            </div>
-            <div class="extra" style="margin-top: 0;">
-                <span style="font-size: .8em; color: rgba(0,0,255, 0.6);">{url}</span>
-                <span style="font-size: .8em;">
-                {pretty_date(start)}
-                <virtual if="{end}">
-                    - {pretty_date(end)}
-                </virtual>
-            </span>
-                <div class="ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
-                    <i class="yellow trophy icon"></i> {prize}
-                </div>
-                <div class="ui right floated red mini label tooltip"
-                     style="background-color: #db28289e;"
-                     data-content="Deadline of the current phase"
-                     show="{current_phase_deadline}">
-                    <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="ui attached message">
-        <div class="ui grid">
-            <div class="row">
-                <div class="ui two wide centered column" style="text-align: center;">
-                    <img src="{logo}" style="margin: 0em; max-width: 3em; max-height: 3em;"
-                         class="ui centered avatar image">
-                </div>
-                <div class="fourteen wide column">
-                    <div style="font-size: .95em;" class="header">
-                        {title}
-                    </div>
-                    <p style="font-size: .85em; color: rgba(0,0,0, 0.4);">{description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="ui attached fluid segment">
-        <div id="participant_label" class="ui floating centered mini label tooltip" data-content="Participant count">
-            <p style="">{participant_count}</p>
-        </div>
-        <div align="center" class="">
-            <div class="" style="margin-top: 0;">
-                <span style="font-size: .8em; color: rgba(0,0,255, 0.6);">{url}</span>
-            </div>
-            <div>
-                <span style="font-size: .8em;">
-                    {pretty_date(start)}
-                    <virtual if="{end}">
-                        - {pretty_date(end)}
-                    </virtual>
-                </span>
-            </div>
-            <div id="prize_label" class="ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
-                <i class="yellow trophy icon"></i> {prize}
-            </div>
-            <div class="ui right floated red mini label tooltip"
-                 style="background-color: #db28289e;"
-                 data-content="Deadline of the current phase"
-                 show="{current_phase_deadline}">
-                <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
-            </div>
-        </div>
-    </div>
-    </div>-->
-    <script>
-        var self = this
-
-        self.on("mount", function () {
-            $(".tooltip", self.root).popup()
-        })
-
-        self.redirect_to_url = function () {
-            window.open(self.url, '_blank');
-        }
-    </script>
-
-    <style type="text/stylus">
-        :scope
-            display block
-
-        .content
-            .description
-                margin-top 0 !important
-                color #808080 !important
-                font-size .9em !important
-
-            p
-                line-height 1.1em !important
-    </style>
-
-</competition-mobile-tile>

@@ -60,6 +60,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_full_name(self):
         return self.name
 
+    @property
+    def organized_competitions_count(self):
+        return self.organized_competitions.count() if self.organized_competitions else 0
+
+    @property
+    def datasets_count(self):
+        return self.created_datasets.count() if self.created_datasets else 0
+
+    @property
+    def tasks_count(self):
+        return self.created_tasks.count() if self.created_tasks else 0
+
+    @property
+    def solutions_count(self):
+        return self.created_solutions.count() if self.created_solutions else 0
+
 
 class Profile(models.Model):
     """

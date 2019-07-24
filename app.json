@@ -1,6 +1,5 @@
 {
   "name": "chahub",
-  "stack": "container",
   "scripts": {
     "postdeploy": "bin/init_staging"
   },
@@ -15,5 +14,28 @@
       "quantity": 1,
       "size": "free"
     }
-  }
+  },
+  "addons": [
+    "heroku-postgresql",
+    "searchbox:starter",
+    "scheduler:standard",
+    {
+      "plan": "heroku-redis:hobby-dev",
+      "options": {
+        "maxmemory_policy": "volatile-lru"
+      }
+    }
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-pgbouncer"
+    },
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "heroku/python"
+    }
+
+  ]
 }

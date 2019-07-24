@@ -54,6 +54,7 @@ class SignUpView(TemplateView):
             context['form'] = form
             return render(request, self.template_name, context)
 
+
 class MergeAccountsView(TemplateView):
     template_name = 'profiles/merge.html'
 

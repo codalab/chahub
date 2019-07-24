@@ -7,28 +7,25 @@
         <div class="ui profile-segment segment">
             <div class="ui container profile-header">
                 <div class="holder">
-                    <!--<img class="profile-img" src="{profile.github_info.avatar_url}" alt="placeholder">\-->
-
-                    <img show="{!GITHUB_INFO_AVAILABLE}" src="{URLS.STATIC('img/img-wireframe.png')}" class="profile-img" alt="profile-image">
-                    <img show="{GITHUB_INFO_AVAILABLE}" src="{profile.user.github_info.avatar_url}" class="profile-img" alt="profile-image">
+                    <img src="{ _.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'avatar_url', URLS.STATIC('img/img-wireframe.png')) }" class="profile-img" alt="profile-image">
                 </div>
                 <div class="profile-user">
-                    {profile.username}
+                    {_.get(profile, 'username', 'anonymous / N/A')}
                     <div show="{GITHUB_INFO_AVAILABLE}" class="profile-brief">
-                        <div class="location">{profile.user.github_info.location}</div>
-                        <div class="occupation">{profile.user.github_info.company}</div>
-                        {profile.user.github_info.bio}
+                        <div class="location">{_.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'location', '')}</div>
+                        <div class="occupation">{_.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'company', '')}</div>
+                        {_.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'bio', '')}
                     </div>
                     <div class="social-buttons">
-                        <a href="{profile.user.github_info.html_url}" show="{GITHUB_INFO_AVAILABLE && !!profile.user.html_url}" style="background-color: #582c80; color: white;" class="ui circular github plus mini icon button">
+                        <a href="{_.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'html_url', '')}" show="{ _.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'html_url', false) !== false }" style="background-color: #582c80; color: white;" class="ui circular github plus mini icon button">
                             <i class="github icon"></i>
                         </a>
                     </div>
-                    <div show="{GITHUB_INFO_AVAILABLE}" class="languages">
+                    <!--<div show="{GITHUB_INFO_AVAILABLE}" class="languages">
                         <div each="{language in profile.user.languages}" class="ui mini label">
                             {language}
                         </div>
-                    </div>
+                    </div>-->
 
                     <!-- <div class="ui large button msg-btn">Message Me</div>
                     <span class="ui icon large button follow-btn"><i class="user icon"></i>Follow</span> -->
@@ -66,7 +63,7 @@
                                 <table class="stats-table">
                                     <tr>
                                         <td class="category">Competitions Organized:</td>
-                                        <td class="statistic"></td>
+                                        <td class="statistic">{ _.get(profile, 'organized_competitions', []).length }</td>
                                         <td class="category">Organizer Since:</td>
                                         <td class="statistic">02/11/2017</td>
                                     </tr>
@@ -74,17 +71,15 @@
                                         <td class="category">Total Participants:</td>
                                         <td class="statistic">5201</td>
                                         <td class="category">Total Submissions:</td>
-                                        <td class="statistic">73,240</td>
+                                        <td class="statistic">_.get(profile, 'solutions', []).length</td>
                                     </tr>
                                 </table>
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>My Featured Competitions</h3>
-                                <competition-tile each="{ sorted_competitions }" no-reorder
-                                                  class="item"></competition-tile>
+                                <competition-tile each="{ _.get(profile, 'organized_competitions', []) }" no-reorder class="item"></competition-tile>
                                 <p class="no-competitions" style=""
-                                   if="{ sorted_competitions === undefined || sorted_competitions.length == 0 }">
-                                    No competitions found for this user</p>
+                                   if="{ _.get(profile, 'organized_competitions', []).length === 0 }">No competitions found for this user</p>
                             </div>
                         </div>
                     </div>
@@ -106,13 +101,13 @@
                                         <td class="category">Top 10 Finishes:</td>
                                         <td class="statistic">1</td>
                                         <td class="category">Competitions Joined:</td>
-                                        <td class="statistic">{profile.competitions.length}</td>
+                                        <td class="statistic">0</td>
                                     </tr>
                                 </table>
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>Latest Submissions</h3>
-                                <submission-tile each="{ submissions }" class="item"></submission-tile>
+                                <submission-tile each="{ _.get(profile, 'solutions', []) }" class="item"></submission-tile>
                             </div>
                         </div>
                     </div>
@@ -161,7 +156,7 @@
                                 <td class="category">Top 10 Finishes:</td>
                                 <td class="statistic">1</td>
                                 <td class="category">Competitions Joined:</td>
-                                <td class="statistic">{sorted_competitions.length }</td>
+                                <td class="statistic">{_.get(profile, 'organized_competitions', []).length }</td>
                             </tr>
                         </table>
                     </div>
@@ -781,8 +776,10 @@
         </div>
         <div class="list-tile">
             <div class="biography">
-                <div id="bio" if={!!profile.github_info.bio}>{profile.github_info.bio}</div>
-                <div id="bio" if={!profile.github_info.bio}>No information found</div>
+                <div id="bio">{_.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'bio', 'No information found')}</div>
+                <div id="editor-container">
+                    <textarea id="editor"></textarea>
+                </div>
             </div>
         </div>
     </div>
@@ -827,6 +824,7 @@
 
             console.log("################################################################")
             console.log(self.profile)
+            console.log(self.parent.profile)
             console.log(self.competitions)
             console.log(self.datasets)
             console.log(self.submissions)

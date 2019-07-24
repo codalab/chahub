@@ -52,7 +52,7 @@ services:
   # Elastic Search
   # --------------------------------------------------------------------------
   elastic-search:
-    image: elasticsearch:6.6.0
+    image: elasticsearch:5.6
     hostname: elastic-search
     restart: unless-stopped
     ports:

@@ -1,0 +1,6 @@
+var
+docker
+bin
+backups
+.circleci
+.pytest_cache

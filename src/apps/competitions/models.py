@@ -118,7 +118,7 @@ class Submission(models.Model):
 
 
 class CompetitionParticipant(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='participants',
+    profile = models.ForeignKey('profiles.Profile', null=True, blank=True, related_name='participants',
                              on_delete=models.SET_NULL)
     competition = models.ForeignKey(Competition, related_name='participants', on_delete=models.CASCADE)
 

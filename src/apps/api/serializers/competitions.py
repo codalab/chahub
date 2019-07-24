@@ -66,7 +66,7 @@ class CompetitionSerializer(BulkSerializerMixin, WritableNestedModelSerializer):
     # Also, Producer in this case comes from serializer context
     # producer = ProducerSerializer(required=False, validators=[])
     phases = PhaseSerializer(required=False, many=True)
-    participants = CompetitionParticipantSerializer(many=True, read_only=True)
+    participants = CompetitionParticipantSerializer(many=True, allow_null=True, required=False)
     admins = serializers.StringRelatedField(many=True, read_only=True)
     logo = serializers.URLField(required=False)
     _object_type = serializers.SerializerMethodField(read_only=True)

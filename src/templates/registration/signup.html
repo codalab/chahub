@@ -4,6 +4,11 @@
 {% block content %}
     <div class="ui middle aligned center aligned grid">
         <div class="column">
+            {% if form.non_field_errors %}
+            <div class="ui red message">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
             <h2 class="ui teal image header">
                 <img src="{% static "img/codalab-logo-fullcolor-positive.png" %}" style="width: 272px; height: 100px;"
                      class="image">
@@ -12,7 +17,6 @@
             <div class="ui stacked segment">
                 {% csrf_token %}
                 {% for field in form %}
-
                         <div class="field">
                             <div class="ui left icon input">
                                 {% if field.name == 'username' %}
@@ -27,12 +31,16 @@
                                 {% endif %}
                             </div>
                         </div>
-
+                        {% if field.errors %}
+                        <div class="ui red message">
+                            {{ field.errors }}
+                        </div>
+                        {% endif %}
                 {% endfor %}
                 <button class="ui fluid large teal submit button" type="submit">Create Account</button>
                 <div class="ui error message">
                     {% for error in form.errors %}
-                        {{ error }}
+                    {{ error }}
                     {% endfor %}
                 </div>
             </div>

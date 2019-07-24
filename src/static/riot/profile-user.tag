@@ -7,27 +7,28 @@
         <div class="ui profile-segment segment">
             <div class="ui container profile-header">
                 <div class="holder">
-                    <img class="profile-img" src="{profile.github_info.avatar_url}" alt="placeholder">
+                    <!--<img class="profile-img" src="{profile.github_info.avatar_url}" alt="placeholder">-->
+                    <img class="profile-img" src="{_.get(_.get(profile, 'github_info', {}), 'avatar_url', URLS.STATIC('img/img-wireframe.png'))}" alt="placeholder">
                 </div>
                 <div class="profile-user">
-                    {profile.username}
+                    {_.get(profile, 'username', 'anonymous / N/A')}
                     <div class="profile-brief">
-                        <div class="location">{profile.github_info.location}</div>
-                        <div class="occupation">{profile.github_info.company}</div>
-                        {profile.github_info.bio}
+                        <div class="location">{_.get(_.get(profile, 'github_info', {}), 'location', '')}</div>
+                        <div class="occupation">{_.get(_.get(profile, 'github_info', {}), 'company', '')}</div>
+                        {_.get(_.get(profile, 'github_info', {}), 'bio', '')}
                     </div>
                     <div class="social-buttons">
-                        <a href="{profile.github_info.html_url}" if="{!!profile.github_info.html_url}"
+                        <a href="{_.get(_.get(profile, 'github_info', {}), 'html_url', '')}" if="{_.get(_.get(profile, 'github_info', {}), 'html_url', false)} !== false"
                            style="background-color: #582c80; color: white;"
                            class="ui circular github plus mini icon button">
                             <i class="github icon"></i>
                         </a>
                     </div>
-                    <div class="languages">
+                    <!--<div class="languages">
                         <div each="{language in profile.languages}" class="ui mini label">
                             {language}
                         </div>
-                    </div>
+                    </div>-->
 
                     <!-- <div class="ui large button msg-btn">Message Me</div>
                     <span class="ui icon large button follow-btn"><i class="user icon"></i>Follow</span> -->
@@ -80,10 +81,9 @@
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>My Featured Competitions</h3>
-                                <competition-tile-user each="{ profile.organized_competitions.slice(0,5) }" no-reorder
-                                                       class="item"></competition-tile-user>
-                                <p class="no-competitions" style=""
-                                   if="{ profile.organized_competitions === undefined || profile.organized_competitions.length == 0 }">
+                                <!--<competition-tile-user each="{ profile.organized_competitions.slice(0,5) }" no-reorder class="item"></competition-tile-user>-->
+                                <competition-tile-user each="{ _.get(profile, 'organized_competitions', []).slice(0,5) }" no-reorder class="item"></competition-tile-user>
+                                <p class="no-competitions" style="" if="{ _.get(profile, 'organized_competitions', []).length === 0 }">
                                     No competitions found for this user</p>
                             </div>
                         </div>
@@ -110,9 +110,9 @@
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>Latest Submissions</h3>
-                                <submission-tile-user if="{profile.submissions}" each="{ profile.submissions }"
-                                                      class="item"></submission-tile-user>
-                                <div if="{!profile.submissions}" class="no-competitions">No submissions found</div>
+                                <submission-tile-user each="{ _.get(profile, 'created_solutions', []) }" class="item"></submission-tile-user>
+                                <p class="no-competitions" style="" if="{ _.get(profile, 'created_solutions', []).length === 0 }">
+                                    No solutions found for this user</p>
                             </div>
                         </div>
                     </div>
@@ -724,7 +724,8 @@
         </div>
         <div class="list-tile">
             <div class="biography">
-                <div id="bio" if={!!profile.github_info.bio}>{profile.github_info.bio}</div>
+                <!--<div id="bio" if={!!profile.github_info.bio}>{profile.github_info.bio}</div>-->
+                <div id="bio" if={!!profile.github_info.bio}>{_.get(_.get(profile, 'github_info', {}), '')}</div>
                 <div id="bio" if={!profile.github_info.bio}>No information found</div>
             </div>
         </div>

@@ -6,6 +6,27 @@ from rest_framework_extensions.cache.decorators import cache_response
 from api.caching import QueryParamsKeyConstructor
 from utils.search import get_search_client, get_results, get_default_search_results
 
+# from apps.search.documents import CompetitionDocument, UserDocument, ProfileDocument, TaskDocument, SolutionDocument, DatasetDocument
+from apps.search.documents import CompetitionDocument, ProfileDocument
+
+# DOCUMENT_MAPPINGS = {
+#     'competitions': CompetitionDocument,
+#     # 'users': UserDocument,
+#     'profiles': ProfileDocument,
+#     # 'tasks': TaskDocument,
+#     # 'solutions': SolutionDocument,
+#     # 'datasets': DatasetDocument
+# }
+
+OBJECT_LIST = [
+    'profile',
+    'competition',
+    'task',
+    'dataset',
+    'solution',
+    'user',
+]
+
 # TODO: This is farily UN-DRY so far. We should probably by default exclude published=False...
 EXTRA_FILTERS = {
     'competitions': {
@@ -49,7 +70,7 @@ EXTRA_FILTERS = {
 
 
 class SearchView(APIView):
-    @cache_response(key_func=QueryParamsKeyConstructor(), timeout=60)
+    # @cache_response(key_func=QueryParamsKeyConstructor(), timeout=60)
     def get(self, request, version="v1"):
         # Get search data
         query = request.GET.get('q', '')
@@ -59,6 +80,12 @@ class SearchView(APIView):
         start = request.GET.get('start_date')
         end = request.GET.get('end_date')
         producer = request.GET.get('producer')
+        page = request.GET.get('page', 1)
+        if type(page) != int:
+            try:
+                page = int(page) if int(page) > 0 else 1
+            except ValueError:
+                page = 1
 
         # Do we even have anything to search with?
         filters = (
@@ -78,59 +105,63 @@ class SearchView(APIView):
             "showing_default_results": False,
         }
 
-        print(empty_search)
+        print("Empty search?: {}".format(empty_search))
 
         if not empty_search:
             # Setup ES connection, excluding HTML text from our results
-            if object_types != 'ALL' or 'ALL' not in object_types:
+            # if object_types != 'ALL' or 'ALL' not in object_types:
                 object_types = [obj.strip() for obj in object_types.split(',')]
                 print(object_types)
-                ms = get_search_client(size=100, multi=True)
-                for obj_type in object_types:
-                    print(obj_type)
-                    new_search = Search(index=obj_type)
-                    extra_filters = EXTRA_FILTERS.get(obj_type, {})
-                    for filter_type in extra_filters:
-                        args = extra_filters[filter_type].get('args', ())
-                        kwargs = extra_filters[filter_type].get('kwargs', {})
-                        if filter_type == 'filter':
-                            new_search.filter(*args, **kwargs)
-                        if filter_type == 'source':
-                            new_search.source(*args, **kwargs)
-                    # Do search/filtering/sorting
-                    new_search = self._search(new_search, query, obj_types=[obj_type])
-                    new_search = self._filter(new_search, date_flags, start, end, producer, obj_types=[obj_type])
-                    new_search = self._sort(new_search, sorting, query, obj_types=[obj_type])
-                    ms = ms.add(new_search)
-                data["results"] = get_results(ms, multi=True)
-            else:
-                # Do search/filtering/sorting
-                s = get_search_client()
-                s = self._search(s, query)
-                s = self._filter(s, date_flags, start, end, producer)
-                s = self._sort(s, sorting, query)
+                s = get_search_client(100, page)
+                s = self._search(s, query, object_types)
+                s = self._filter(s, date_flags, start, end, producer, object_types)
+                s = self._sort(s, sorting, query, object_types)
+                # if object_types and object_types != 'ALL' or 'ALL' not in object_types:
+                matching_types = []
+                if object_types and object_types != 'ALL' and 'ALL' not in object_types:
+                    for object_type in object_types:
+                        matching_types.append({'match': {'_obj_type': object_type}})
+                else:
+                    for object_type in OBJECT_LIST:
+                        matching_types.append({'match': {'_obj_type': object_type}})
+                print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+                print(matching_types)
+                print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+                s = s.query('bool', should=matching_types, minimum_should_match=1)
+
                 data["results"] = get_results(s)
+
+                # s = s.query('bool', should=should, minimum_should_match=1)
+            # else:
+            #     Do search/filtering/sorting
+                # s = get_search_client()
+                # s = self._search(s, query)
+                # s = self._filter(s, date_flags, start, end, producer)
+                # s = self._sort(s, sorting, query)
+                # data["results"] = get_results(s)
 
         print("############################################")
         print(data["results"])
         print("############################################")
 
-        if not data["results"] or empty_search:
-            print("THERES NO RESULTS")
-            data["showing_default_results"] = True
-            data["results"] = get_default_search_results()
+        # if not data["results"] or empty_search:
+        #     print("THERES NO RESULTS")
+        #     data["showing_default_results"] = True
+        #     data["results"] = get_default_search_results()
 
         return Response(data)
 
     def _search(self, search, query, obj_types='ALL'):
         if query and query != ' ':
             fields = []
-            if 'competitions' in obj_types or obj_types == 'ALL':
-                fields += ["title^5", "description^3", "html_text^2", "created_by"]
-            if 'users' in obj_types or obj_types == 'ALL':
-                fields += ["email^10", "username^5", "name^3", "bio^2", "company"]
-            if 'profiles' in obj_types or obj_types == 'ALL':
-                fields += ["email^10", "username^5", "producer", "remote_id"]
+            if 'competition' in obj_types:
+                fields += ["title^3", "description^2", "html_text^2", "created_by"]
+            if 'user' in obj_types:
+                fields += ["email^3", "username^3", "name^3"]
+            if 'profile' in obj_types:
+                fields += ["email^3", "username^3", "name^3"]
+            if obj_types == 'ALL' or 'ALL' in obj_types:
+                fields += ['title^3', 'username^3', 'name^3']
             print(fields)
             # Remove duplicates
             fields = list(set(fields))
@@ -138,20 +169,20 @@ class SearchView(APIView):
                 "multi_match",
                 query=query,
                 type="best_fields",
-                fuzziness=1,
+                fuzziness=5,
                 # We cast to a set first to remove any duplicates.
                 fields=fields
             )
             # s = s.highlight('title', fragment_size=50)
             # s = s.suggest('suggestions', query, term={'field': 'title'})
-        else:
-            search = search.query(
-                "match_all"
-            )
+        # else:
+        #     search = search.query(
+        #         "match_all"
+        #     )
         return search
 
     def _filter(self, search, date_flags, start, end, producer, obj_types='ALL'):
-        if 'competitions' in obj_types or obj_types == 'ALL':
+        if 'competition' in obj_types:
             # This month/this year
             if date_flags == "this_month":
                 search = search.filter('range', start={
@@ -184,7 +215,7 @@ class SearchView(APIView):
     def _sort(self, search, sorting, query, obj_types='ALL'):
         # Make an empty list for our parameters
         sort_params = []
-        if 'competitions' in obj_types or obj_types=='ALL':
+        if 'competition' in obj_types:
             if sorting == 'participant_count':
                 sort_params.append('-participant_count')
             elif sorting == 'prize':
