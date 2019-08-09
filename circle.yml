@@ -9,7 +9,7 @@ jobs:
       - run: sudo pip install -r requirements.dev.txt
       - run: mkdir -p src/static/generated/
       - run: python manage.py collectstatic --no-input
-      - run: curl -sL https://deb.nodesource.com/setup_10.x | sudo bash - && sudo apt install nodejs && sudo npm install riot -g riot-compiler --save stylus -g
+      - run: curl -sL https://deb.nodesource.com/setup_10.x | sudo bash - && sudo apt install nodejs && sudo npm install riot@3.13.2 -g riot-compiler --save stylus -g
       - run: riot src/static/riot src/static/generated/riot.js --style stylus
       - run: stylus --compress --sourcemap-inline < src/static/stylus/index.styl > src/static/generated/output.css
       - run: python manage.py migrate

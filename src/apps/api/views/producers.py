@@ -6,7 +6,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from api.authenticators import ProducerAuthentication
 from api.permissions import ProducerPermission
-from api.serializers import competitions as serializers
+from api.serializers import producers as serializers
 from producers.models import Producer
 
 
