@@ -253,14 +253,14 @@ class Command(BaseCommand):
 
                 competition = _create_competition(options['fill-all-details'], data)
 
-                for i in tqdm(range(data['part_count']), ncols=100):
-                    _create_fake_participant(competition)
-
-                for i in tqdm(range(data['admin_count']), ncols=100):
-                    temp_part = _create_fake_participant(competition)
-                    competition.admins.add(temp_part)
-
-                competition.participant_count = CompetitionParticipant.objects.filter(competition=competition).count()
+                # for i in tqdm(range(data['part_count']), ncols=100):
+                #     _create_fake_participant(competition)
+                #
+                # for i in tqdm(range(data['admin_count']), ncols=100):
+                #     temp_part = _create_fake_participant(competition)
+                #     competition.admins.add(temp_part)
+                #
+                # competition.participant_count = CompetitionParticipant.objects.filter(competition=competition).count()
 
                 # Init some random dates for our first phase
                 temp_phase_start = timezone.now() + datetime.timedelta(days=random.randint(1, 35))
@@ -336,12 +336,12 @@ class Command(BaseCommand):
 
             competition = _create_competition(options['fill-all-details'], data)
 
-            for i in tqdm(range(data['part_count']), ncols=100):
-                _create_fake_participant(competition)
-
-            for i in tqdm(range(data['admin_count']), ncols=100):
-                temp_part = _create_fake_participant(competition)
-                competition.admins.add(temp_part)
+            # for i in tqdm(range(data['part_count']), ncols=100):
+            #     _create_fake_participant(competition)
+            #
+            # for i in tqdm(range(data['admin_count']), ncols=100):
+            #     temp_part = _create_fake_participant(competition)
+            #     competition.admins.add(temp_part)
 
             competition.participant_count = CompetitionParticipant.objects.filter(competition=competition).count()
 
