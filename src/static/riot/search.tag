@@ -51,13 +51,6 @@
             </span>
         </span>
 
-
-        <!--<div id="hamburger_button">
-            <div class="ui small icon button">
-                <i class="large bars icon"></i>
-            </div>
-        </div>-->
-
         <div id="top_row" class="ui row">
             <img id="brand_logo" src="static/img/temp_chahub_logo_beta.png">
             <img id="brand_logo_mobile" src="static/img/Chahub_C.png">
@@ -216,25 +209,6 @@
             </div>
         </div>
     </div>
-    <div>
-        <div class="ui pagination menu">
-            <a class="item">
-                <
-            </a>
-            <div class="disabled item">
-                ...
-            </div>
-            <a class="item">
-                10
-            </a>
-            <a class="item">
-                11
-            </a>
-            <a class="item">
-                12
-            </a>
-        </div>
-    </div>
     <div show="{loading}" class="ui active dimmer">
         <div class="ui loader"></div>
     </div>
@@ -252,19 +226,12 @@
                     Found { results.length } results
                 </div>
                 <div class="ui middle aligned unstackable compact divided link items content-desktop">
-                    <!--<competition-tile each="{ results }" no-reorder class="item"></competition-tile>
-                    <user-tile each="{results}" no-reorder class="item"></user-tile>
-                    <profile-tile each="{results}" no-reorder class="item"></profile-tile>-->
-                    <!--<div each="{result in results}" no-reorder class="item">
-                        {result._obj_type}
-                        <result-tile opts="{result}"></result-tile>
-                    </div>-->
                     <virtual each="{result in results}" no-reorder>
                         <!--{result._obj_type}-->
                         <profile-tile result="{result}" class="item" if="{result._obj_type === 'profile' }"></profile-tile>
                         <competition-tile result="{result}" class="item" if="{result._obj_type === 'competition' }"></competition-tile>
                         <user-tile result="{result}" class="item" if="{result._obj_type === 'user' }"></user-tile>
-                        <!--<dataset-tile class="item" if="{result._obj_type === 'dataset' }"></dataset-tile>-->
+                        <dataset-tile class="item" result="{result}" if="{result._obj_type === 'dataset' }"></dataset-tile>
                         <!--<solution-tile class="item" if="{result._obj_type === 'solution' }"></solution-tile>-->
                     </virtual>
                 </div>
@@ -278,6 +245,28 @@
             <show-stats></show-stats>
         </div>
     </div>
+    <div if="{!loading}" class="sixteen wide center aligned column">
+        <div style="margin-left: 25vw; margin-right: auto; width: 40vw;" class="ui centered pagination menu">
+            <a if="{page !== 1}" class="item" onclick="{prev_page}">
+                <
+            </a>
+            <a if="{page === 1}" class="disabled inverted item">
+                <
+            </a>
+            <a each="{page_number in page_range}" onclick="{set_specific_page.bind(this, page_number)}" class="item">
+                {page_number}
+            </a>
+            <div class="right menu">
+                <a if="{results.length !== 0}" class="item" onclick="{next_page}">
+                    >
+                </a>
+                <a if="{results.length === 0}" class="disabled inverted item">
+                    >
+                </a>
+            </div>
+        </div>
+    </div>
+
 
     <script>
         var self = this
@@ -286,6 +275,9 @@
         self.loading = false
         self.old_filters = {}
         self.display_search_options = false
+
+        self.page = 1
+        self.page_range = _.range(1,11)
 
         self.search_count = 0
 
@@ -314,15 +306,6 @@
                 }
             })
 
-            // Sidebar with overlay on
-            //$('.sidebar')
-            //    .sidebar({
-            //        transition: 'overlay',
-            //    })
-            //    .sidebar('attach events', '#hamburger_button');
-
-            //$(self.refs.time_filter).dropdown('setting', 'onChange', self.search);
-
             // Dropdown actions (listen AFTER we set dropdowns, so double search doesn't happen!)
             $(".dropdown", self.root).dropdown({
                 onChange: self.search
@@ -330,6 +313,7 @@
 
             $(self.refs.object_types).dropdown({
                 onChange: function (text, value) {
+                    <!-- TODO: Fix the logic with this. Was throwing a nasty JQuery error -->
                     //var selected_text = $(self.refs.object_types).dropdown('get value')
                     //var all_conditions_found = selected_text.indexOf("competition") >= 0 && selected_text.indexOf("user") >= 0 && selected_text.indexOf("dataset") >= 0 && selected_text.indexOf("task") >= 0 && selected_text.indexOf("solution") >= 0
 
@@ -386,20 +370,35 @@
             self.init_values_from_query_params()
         })
 
+        self.switch_page_utillity = function () {
+            self.page_range = _.range(self.page,self.page+11)
+            window.scrollTo(0, 0)
+        }
+
+        self.next_page = function () {
+            self.page ++
+            self.switch_page_utillity()
+            self.search()
+        }
+
+        self.prev_page = function () {
+            self.page --
+            self.switch_page_utillity()
+            self.search()
+        }
+
+        self.set_specific_page = function (page_number) {
+            self.page = page_number
+            self.switch_page_utillity()
+            self.search()
+        }
+
         self.toggle_search_options = function () {
             self.display_search_options = !self.display_search_options
             self.update()
         }
 
         self.set_time_dropdown_text = function () {
-            /*if(this.dataset.calendarType === 'start') {
-                self.refs.start_date.value = text
-            }
-
-            if(this.dataset.calendarType === 'end') {
-                self.refs.end_date.value = text
-            }*/
-
             if (self.refs.start_date.value && self.refs.end_date.value) {
                 var temp_string = self.refs.start_date.value + ' through ' + self.refs.end_date.value
                 $(self.refs.time_filter).dropdown('set text', temp_string)
@@ -501,6 +500,9 @@
 
             var filters = {q: query || self.refs.search.value}
 
+            // Pagination
+            filters.page = self.page
+
             filters.start_date = self.refs.start_date.value || ''
             filters.end_date = self.refs.end_date.value || ''
             filters.date_flags = $(self.refs.time_filter).dropdown('get value')
@@ -525,22 +527,16 @@
             }
 
             console.log("Doing search with filters:")
-            //console.log(filters)
 
             self.old_filters = filters
             self.update()
 
             CHAHUB.api.search(filters)
                 .done(function (data) {
-                    //self.search_count ++
-                    //console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-                    //console.log(self.search_count)
-                    //console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
                     self.loading = false
                     self.suggestions = data.suggestions
                     self.showing_default_results = data.showing_default_results
                     self.results = data.results
-                    //console.log(data.results)
                     self.prepare_results()
                     self.update()
                 })
@@ -1091,9 +1087,182 @@
     </style>
 </competition-tile>
 
+<dataset-tile if="{ _obj_type == 'dataset' }" onclick="{redirect_to_url}">
+    <div class="floating-actions { is-admin: USER_IS_SUPERUSER }">
+        <i class="icon green pencil alternate"
+           onclick="{ edit_dataset }"></i>
+        <i class="icon red delete" onclick="{ delete_dataset }"></i>
+        <i class="icon { yellow: locked, unlock: locked, lock: !locked }" onclick="{ lock_dataset}"></i>
+    </div>
+    <div class="ui tiny image">
+        <img src="{_.get(opts.result, 'logo') || static_image}" class="ui avatar image">
+    </div>
+    <div class="content">
+        <div class="header">
+            Dataset: {_.get(opts.result, 'name', '')}
+        </div>
+        <div class="description">
+            <p>{_.get(opts.result, 'description', '')}</p>
+        </div>
+        <div class="extra">
+            <p>Type: {_.get(opts.result, 'type', unknown)}</p>
+        </div>
+    </div>
+
+    <script>
+        var self = this
+        self.static_image = URLS.STATIC('img/img-wireframe.png')
+
+        self.on("mount", function () {
+            $(".tooltip", self.root).popup()
+            $(self.refs.modal).modal()
+        })
+
+        self.redirect_to_url = function () {
+            window.open(self.opts.result.url, '_blank');
+        }
+
+        self.url_short = function (url) {
+            if (!url){
+                return ''
+            }
+            return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
+        }
+
+        self.edit_competition = function (event) {
+            CHAHUB.events.trigger('competition_selected', event.item)
+            event.cancelBubble = true
+        }
+
+        self.delete_competition = function (event) {
+            // TODO - Need to delete the competition on confirm, else do nothing.
+            if (confirm(`Are you sure you want to delete "${event.item.title}?"`)) {
+                alert('Deleted')
+            }
+            event.cancelBubble = true
+        }
+
+        self.lock_competition = function (event) {
+            // TODO - Need to lock the competition and change icon/color to represent locked and unlocked state
+            event.cancelBubble = true
+        }
+    </script>
+
+    <style type="text/stylus">
+        :scope
+            display block
+            position relative
+
+        :scope:hover .floating-actions.is-admin
+            opacity 1
+
+        .floating-actions
+            position absolute
+            top 0
+            right 0
+            opacity 0
+            z-index 10
+
+        .content
+            .description
+                margin-top 0 !important
+                color #808080 !important
+                display block
+                font-size .9em !important
+
+            p
+                line-height 1.1em !important
+
+            @media screen and (max-width 645px)
+                padding-left 0.8em !important
+
+        .extra
+            margin-top 0
+            @media screen and (max-width 749px)
+                margin-bottom 0 !important
+
+            .url
+                font-size .8em
+                color rgba(0, 0, 255, 0.6) !important
+                white-space nowrap
+                overflow hidden
+                text-overflow ellipsis
+                max-width 90vw
+                display block !important
+                @media screen and (min-width 2560px)
+                    margin-bottom: 10px;
+                    overflow: visible;
+                @media screen and (max-width 750px) {
+                    margin-bottom: -6px;
+                }
+
+            .date
+                font-size 0.8em
+                color #8c8c8c !important
+
+        .ui.avatar.image
+            max-width 4em
+            @media screen and (max-width 750px)
+                max-width 3em
+            @media screen and (min-width 2560px)
+                max-width 8em
+
+        .ui.image
+            max-width 60px
+            display inline-grid !important
+            justify-content center
+            @media screen and (min-width 2560px)
+                max-width 240px
+
+        .participant_label
+            background-color #475e6f !important
+            border-color #475e6f !important
+            color #dfe3e5 !important
+            right 0
+            margin 0 2px !important
+            text-align right
+
+            .icon
+                float left
+
+        .prize_label
+            background-color rgba(99, 84, 14, 0.68) !important
+            border-color rgba(99, 84, 14, 0.68) !important
+            color #dee2e4 !important
+            margin 0 2px !important
+
+        .deadline_label
+            margin 0 2px !important
+
+        .mobile_linewrap
+            white-space nowrap
+            overflow hidden
+            text-overflow ellipsis
+            color rgba(0, 0, 255, 0.6)
+            margin-bottom 5px !important
+            margin-right 0 !important
+
+        .label
+            @media screen and (min-width 2560px)
+                font-size 1.2rem !important
+
+        .mobile_labelwrap
+            display block
+            @media screen and (min-width 500px)
+                display inline-block
+
+        @media screen and (min-width 2560px)
+            *
+                font-size 1.5rem !important
+
+            .header
+                font-size 2rem !important
+
+    </style>
+</dataset-tile>
+
 <user-tile onclick="{redirect_to_profile}">
     <div class="ui tiny image">
-        <!--<img src="{github_info.avatar_url || URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">-->
         <img src="{_.get(_.get(opts.result, 'github_info', {}), 'avatar_url', URLS.STATIC('img/img-wireframe.png'))}" class="ui avatar image">
     </div>
     <div class="content">
@@ -1121,7 +1290,7 @@
             <span class="label-text">{opts.result.datasets_count}</span>
         </span>
         <span class="button-group">
-            <button class="ui circular mini facebook icon button">
+            <!--<button class="ui circular mini facebook icon button">
                 <i class="facebook icon"></i>
             </button>
             <button class="ui circular mini twitter icon button">
@@ -1132,6 +1301,9 @@
             </button>
             <button class="ui circular mini google plus icon button">
                 <i class="google plus icon"></i>
+            </button>-->
+            <button if="{ _.get(_.get(opts.result, 'github_info', {}), 'html_url', false) }" class="ui light blue github square mini icon button" style="padding: 0.25em;">
+                <i class="large github square icon"></i>
             </button>
         </span>
     </div>
@@ -1172,9 +1344,7 @@
 
 <profile-tile onclick="{redirect_to_profile}">
     <div class="ui tiny image">
-        <!--<img if="{user.github_info === undefined}" src="{URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">
-        <img if="{user.github_info !== undefined}" src="{user.github_info.avatar_url}" class="ui avatar image">-->
-        <img src="{_.get(_.get(user, 'github_info', {}), 'avatar_url', URLS.STATIC('img/img-wireframe.png'))}" class="ui avatar image">
+        <img src="{_.get(_.get(opts.result.user, 'github_info', {}), 'avatar_url', URLS.STATIC('img/img-wireframe.png'))}" class="ui avatar image">
     </div>
     <div class="content">
         <div class="header">

@@ -6,12 +6,7 @@ from rest_framework.exceptions import ValidationError
 from api.serializers.mixins import BulkSerializerMixin
 from api.serializers.producers import ProducerSerializer
 from competitions.models import Competition, Phase, Submission, CompetitionParticipant
-
-
-class CompetitionParticipantSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CompetitionParticipant
-        fields = ['competition', 'user']
+from profiles.models import User, Profile
 
 
 class PhaseSerializer(WritableNestedModelSerializer):
@@ -61,14 +56,10 @@ class SubmissionSerializer(serializers.ModelSerializer):
 
 
 class CompetitionSerializer(BulkSerializerMixin, WritableNestedModelSerializer):
-    # Stop the "uniqueness" validation, we want to be able to update already
-    # existing models
-    # Also, Producer in this case comes from serializer context
-    # producer = ProducerSerializer(required=False, validators=[])
     phases = PhaseSerializer(required=False, many=True)
-    participants = CompetitionParticipantSerializer(many=True, allow_null=True, required=False)
     admins = serializers.StringRelatedField(many=True, read_only=True)
     logo = serializers.URLField(required=False)
+    # Extra field to mimic ESL results
     _object_type = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -84,7 +75,7 @@ class CompetitionSerializer(BulkSerializerMixin, WritableNestedModelSerializer):
             'logo',
             'url',
             'phases',
-            'participants',
+            # 'participants',
             'description',
             'end',
             'admins',
@@ -113,3 +104,54 @@ class CompetitionSerializer(BulkSerializerMixin, WritableNestedModelSerializer):
         if description:
             description = description.replace("<p>", "").replace("</p>", "")
         return description
+
+
+class CompetitionParticipantCreationSerializer(serializers.ModelSerializer):
+
+    competition = serializers.IntegerField()
+    user = serializers.IntegerField()
+
+    class Meta:
+        model = CompetitionParticipant
+        fields = ['competition', 'user', 'status']
+        validators = []
+        extra_kwargs = {
+            'producer': {
+                # UniqueTogether validator messes this up
+                'validators': [],
+            }
+        }
+
+    def validate_competition(self, competition):
+        return Competition.objects.get(remote_id=competition, producer=self.context.get('producer'))
+
+    def validate_user(self, user):
+        return Profile.objects.get(remote_id=user, producer=self.context.get('producer'))
+
+    # Override mixin
+    def create(self, validated_data):
+        """
+        This creates *AND* updates based on the combination of (remote_id, producer)
+        """
+        try:
+            # If we have an existing instance from this producer
+            # with the same remote_id, update it instead of making a new one
+            if not validated_data.get('user') or not validated_data.get('competition'):
+                return None
+            instance = self.Meta.model.objects.get(
+                user=validated_data.get('user'),
+                competition=validated_data.get('competition')
+            )
+            return self.update(instance, validated_data)
+        except self.Meta.model.DoesNotExist:
+            new_instance = super().create(validated_data)
+            return new_instance
+
+
+class CompetitionParticipantListSerializer(serializers.ModelSerializer):
+
+    competition = CompetitionSerializer(many=False, required=False, read_only=True)
+
+    class Meta:
+        model = CompetitionParticipant
+        fields = ['competition', 'user', 'status']

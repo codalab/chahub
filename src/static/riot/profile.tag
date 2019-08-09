@@ -11,7 +11,7 @@
                 </div>
                 <div class="profile-user">
                     {_.get(profile, 'username', 'anonymous / N/A')}
-                    <div show="{GITHUB_INFO_AVAILABLE}" class="profile-brief">
+                    <div show="{ _.get(_.get(profile, 'user', {}), 'github_info', false) }" class="profile-brief">
                         <div class="location">{_.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'location', '')}</div>
                         <div class="occupation">{_.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'company', '')}</div>
                         {_.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'bio', '')}
@@ -63,23 +63,26 @@
                                 <table class="stats-table">
                                     <tr>
                                         <td class="category">Competitions Organized:</td>
-                                        <td class="statistic">{ _.get(profile, 'organized_competitions', []).length }</td>
-                                        <td class="category">Organizer Since:</td>
-                                        <td class="statistic">02/11/2017</td>
+                                        <td class="statistic">{ _.get(profile_data, 'organized_competitions', []).length }</td>
+                                        <!--<td class="category">Organizer Since:</td>
+                                        <td class="statistic">02/11/2017</td>-->
                                     </tr>
-                                    <tr>
+                                    <!--<tr>
                                         <td class="category">Total Participants:</td>
                                         <td class="statistic">5201</td>
                                         <td class="category">Total Submissions:</td>
-                                        <td class="statistic">_.get(profile, 'solutions', []).length</td>
-                                    </tr>
+                                        <td class="statistic">{ _.get(profile_data, 'solutions', []).length }</td>
+                                    </tr>-->
                                 </table>
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
-                                <h3>My Featured Competitions</h3>
-                                <competition-tile each="{ _.get(profile, 'organized_competitions', []) }" no-reorder class="item"></competition-tile>
+                                <!--<h3>My Featured Competitions</h3>-->
+                                <virtual each="{ competition in _.get(profile_data, 'organized_competitions', []) }"
+                                         no-reorder>
+                                    <competition-tile result="{ competition }" class="item"></competition-tile>
+                                </virtual>
                                 <p class="no-competitions" style=""
-                                   if="{ _.get(profile, 'organized_competitions', []).length === 0 }">No competitions found for this user</p>
+                                   if="{ _.get(profile_data, 'organized_competitions', []).length === 0 }">No competitions found for this user</p>
                             </div>
                         </div>
                     </div>
@@ -93,21 +96,21 @@
                                 <table class="stats-table">
                                     <tr>
                                         <td class="category">Submissions:</td>
-                                        <td class="statistic">1250</td>
+                                        <td class="statistic">{ _.get(profile_data, 'solutions', []).length }</td>
                                         <td class="category">User Since:</td>
-                                        <td class="statistic">09/12/2016</td>
+                                        <td class="statistic">{ humanize_time(_.get(_.get(profile, 'details', {}), 'date_joined', '')) }</td>
                                     </tr>
                                     <tr>
-                                        <td class="category">Top 10 Finishes:</td>
-                                        <td class="statistic">1</td>
+                                        <!--<td class="category">Top 10 Finishes:</td>
+                                        <td class="statistic">1</td>-->
                                         <td class="category">Competitions Joined:</td>
-                                        <td class="statistic">0</td>
+                                        <td class="statistic">{ _.get(profile_data, 'organized_competitions', []).length }</td>
                                     </tr>
                                 </table>
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>Latest Submissions</h3>
-                                <submission-tile each="{ _.get(profile, 'solutions', []) }" class="item"></submission-tile>
+                                <submission-tile each="{ _.get(profile_data, 'solutions', []) }" class="item"></submission-tile>
                             </div>
                         </div>
                     </div>
@@ -134,29 +137,29 @@
                         <table class="stats-table">
                             <tr>
                                 <td class="category">Competitions Organized:</td>
-                                <td class="statistic">124</td>
-                                <td class="category">Organizer Since:</td>
-                                <td class="statistic">02/11/2017</td>
+                                <td class="statistic">{ _.get(profile_data, 'organized_competitions', []).length }</td>
+                                <!--<td class="category">Organizer Since:</td>
+                                <td class="statistic">02/11/2017</td>-->
                             </tr>
-                            <tr>
+                            <!--<tr>
                                 <td class="category">Total Participants:</td>
                                 <td class="statistic">5201</td>
                                 <td class="category">Total Submissions:</td>
                                 <td class="statistic">73,240</td>
-                            </tr>
+                            </tr>-->
                         </table>
                         <table class="stats-table">
                             <tr>
                                 <td class="category">Submissions:</td>
-                                <td class="statistic">1250</td>
+                                <td class="statistic">{ _.get(profile_data, 'solutions', []).length }</td>
                                 <td class="category">User Since:</td>
-                                <td class="statistic">09/12/2016</td>
+                                <td class="statistic">{ humanize_time(_.get(_.get(profile, 'details', {}), 'date_joined', '')) }</td>
                             </tr>
                             <tr>
-                                <td class="category">Top 10 Finishes:</td>
-                                <td class="statistic">1</td>
+                                <!--<td class="category">Top 10 Finishes:</td>
+                                <td class="statistic">1</td>-->
                                 <td class="category">Competitions Joined:</td>
-                                <td class="statistic">{_.get(profile, 'organized_competitions', []).length }</td>
+                                <td class="statistic">{_.get(profile_data, 'participating_competitions', []).length }</td>
                             </tr>
                         </table>
                     </div>
@@ -170,10 +173,11 @@
                             <div class="stat-breakdown">
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
-                                <competition-tile each="{ sorted_competitions }" no-reorder
-                                                  class="item"></competition-tile>
+                                <virtual each="{ competition in _.get(profile_data, 'organized_competitions', []) }" no-reorder>
+                                    <competition-tile result="{ competition }" class="item"></competition-tile>
+                                </virtual>
                                 <p class="no-competitions"
-                                   if="{ sorted_competitions === undefined || sorted_competitions.length == 0 }">
+                                   if="{ _.get(profile_data, 'organized_competitions', true) || _.get(profile_data, 'organized_competitions', []).length == 0 }">
                                     No competitions found for this user</p>
                             </div>
                             <div class="ui pagination menu">
@@ -202,12 +206,11 @@
 
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
-                                <competition-tile
-                                        if="{ sorted_competitions !== undefined && sorted_competitions.length < 0 }"
-                                        each="{ sorted_competitions }" no-reorder
-                                        class="item"></competition-tile>
+                                <virtual each="{ competition in _.get(profile_data, 'participating_competitions', []) }" no-reorder>
+                                <competition-tile result="{ competition }" class="item"></competition-tile>
+                                </virtual>
                                 <p class="no-competitions"
-                                   if="{ sorted_competitions === undefined || sorted_competitions.length == 0 }">
+                                   if="{ _.get(profile_data, 'participating_competitions', true) || _.get(profile_data, 'participating_competitions', []).length == 0 }">
                                     No competitions found for this user</p>
                             </div>
                             <div class="ui pagination menu">
@@ -238,14 +241,7 @@
         <!------------ DATASETS TAB ----------->
         <div class="ui datasets tab" data-tab="datasets">
             <div class="ui sixteen wide grid container">
-                <!-- <div class="segment-container datasets-segment ui segment sixteen wide">
-                    <div class="ui header">
-                        My Datasets
-                    </div>
-                    <div class="container-content"> -->
                 <datasets-table></datasets-table>
-                <!--</div>
-                 </div>-->
             </div>
         </div>
 
@@ -339,6 +335,15 @@
             datasets: [],
             submissions: []
         }
+
+        self.profile_data = {
+            organized_competitions: [],
+            participating_competitions: [],
+            solutions: [],
+            datasets: [],
+            tasks: [],
+        }
+
         self.competitions = []
         self.datasets = []
         self.submissions = []
@@ -346,7 +351,6 @@
         self.sorted_competitions = []
 
         self.SINGLE_PROFILE = true
-        self.GITHUB_INFO_AVAILABLE = false
 
         self.FIELDS_TO_UPDATE = [
             'profile',
@@ -377,35 +381,28 @@
             self.update_profiles();
         })
 
+        self.update_profile_data = function(data) {
+            data.participants.forEach(function (participant){
+                self.profile_data.participating_competitions.push(participant.competition)
+            })
+
+            self.profile_data.organized_competitions = _.merge(self.profile_data.organized_competitions, data.organized_competitions)
+            self.profile_data.datasets = _.merge(self.profile_data.datasets, data.datasets)
+            self.profile_data.tasks = _.merge(self.profile_data.tasks, data.tasks)
+            self.profile_data.solutions = _.merge(self.profile_data.solutions, data.solutions)
+        }
+
         self.update_profiles = function () {
-            //self.update({profiles: []})
-            /*PROFILE_OBJECTS.forEach(function (profile_id) {
-             CHAHUB.api.get_profile(profile_id)
-             .done(function (data) {
-             self.profiles.push(data)
-             console.log(self.profiles)
-             self.update()
-             self.update_data()
-             })
-             .fail(function (response) {
-             toastr.error("Failed to retrieve profile: " + profile_id)
-             })
-             })*/
             if (PROFILE_MODE === 'profile' || PROFILE_OBJECTS.length === 1) {
                 self.SINGLE_PROFILE = true
                 CHAHUB.api.get_profile(PROFILE_OBJECTS[0])
                     .done(function (data) {
-                        if (data.user !== undefined && data.user !== null) {
-                            if (data.user.github_info !== undefined && data.user.github_info !== null) {
-                                self.GITHUB_INFO_AVAILABLE = true
-                            }
-                        }
-
-                        //self.profiles.push(data)
                         self.profile = data
-                        //console.log(self.profiles)
+
+                        self.update_profile_data(data)
+
                         self.update()
-                        //self.update_data()
+                        CHAHUB.events.trigger("profile_loaded", self.profile_data)
                     })
                     .fail(function (response) {
                         toastr.error("Failed to retrieve profile: " + profile_id)
@@ -417,36 +414,18 @@
                             if (profile_id === PROFILE_OBJECTS[0]){
                                 self.profile = data
                             }
-                            self.profiles.push(data)
-                            self.competitions.push(data.organized_competitions)
-                            self.datasets.push(data.created_datasets)
-                            self.tasks.push(data.created_tasks)
-                            self.solutions.push(data.created_solutions)
-                            console.log(self.profiles)
+
+                            self.update_profile_data(data)
+
                             self.update()
-                            //self.update_data()
+                            CHAHUB.events.trigger("profile_loaded", self.profile_data)
                         })
                         .fail(function (response) {
                             toastr.error("Failed to retrieve profile: " + profile_id)
                         })
                 })
             }
-            CHAHUB.events.trigger("profile_loaded")
         }
-
-        /*self.update_data = function() {
-         self.profiles.forEach(function (profile) {
-         CHAHUB.api.get_profile_competitions(profile.producer, profile.remote_id)
-         .done(function (data) {
-         self.competitions.concat(data)
-         console.log(self.competitions)
-         self.update()
-         })
-         .fail(function (response) {
-         toastr.error("Failed to retrieve competitions for creator ID: " + profile.remote_id + " for producer: " + profile.producer + "!")
-         })
-         })
-         }*/
 
         self.prepare_results = function () {
             self.sorted_competitions.forEach(function (comp_result) {
@@ -786,50 +765,14 @@
 
     <script>
         var self = this
-        self.profile = {
-            github_info: {
-                avatar_url: '',
-                bio: ''
-            },
-            username: '',
-            name: '',
-            email: '',
-            bio: '',
-            competitions: [],
-            datasets: [],
-            submissions: []
-        }
-        self.competitions = []
-        self.datasets = []
-        self.submissions = []
-        self.profiles = []
-        self.sorted_competitions = []
-
-        self.SINGLE_PROFILE = true
-        self.GITHUB_INFO_AVAILABLE = false
-
-        /*self.FIELDS_TO_UPDATE = [
-            'profile',
-            'competitions',
-            'datasets',
-            'submissions',
-            'profiles',
-        ]*/
+        self.profile = self.parent.profile
+        self.profile_data = self.parent.profile_data
 
         CHAHUB.events.on('profile_loaded', function () {
-            alert("This was loaded")
             self.parent.FIELDS_TO_UPDATE.forEach(function (field) {
-                self.update(field, self.parent[field])
+                self[field] = self.parent[field]
             })
-
-            console.log("################################################################")
-            console.log(self.profile)
-            console.log(self.parent.profile)
-            console.log(self.competitions)
-            console.log(self.datasets)
-            console.log(self.submissions)
-            console.log(self.profiles)
-            console.log("################################################################")
+            self.update()
 
             self.easymde = new EasyMDE({
                 element: document.getElementById("editor"),
@@ -1084,7 +1027,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr each="{datasets}">
+        <tr each="{_.get(profile_data, 'datasets', [])}">
             <td data-label="Name"><a href="#"><i class="download icon"></i>{name}</a></td>
             <td data-label="Type">{type}</td>
             <td data-label="Uploaded">{upload_date}</td>
@@ -1113,6 +1056,13 @@
 
     <script>
         var self = this
+
+        self.called = 0
+
+        CHAHUB.events.on('profile_loaded', function (profile_data) {
+            self.profile_data = profile_data
+            self.update()
+        })
 
     </script>
 
@@ -1354,7 +1304,8 @@
             </div>
             <div class="container-content">
                 <div class="ui middle aligned unstackable compact divided link items content-desktop">
-                    <submission-tile each="{ submissions }" onclick="{show_table}" class="item"></submission-tile>
+                    <submission-tile each="{ _.get(profile_data, 'solutions', []) }" onclick="{show_table}" class="item"></submission-tile>
+                    <p if="{ _.get(profile_data, 'solutions', []).length === 0 }">No submissions found for this user</p>
                 </div>
             </div>
         </div>
@@ -1373,6 +1324,11 @@
 
     <script>
         var self = this
+
+        CHAHUB.events.on('profile_loaded', function (profile_data) {
+            self.profile_data = profile_data
+            self.update()
+        })
 
         self.submissions = [
             {

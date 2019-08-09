@@ -7,7 +7,6 @@
         <div class="ui profile-segment segment">
             <div class="ui container profile-header">
                 <div class="holder">
-                    <!--<img class="profile-img" src="{profile.github_info.avatar_url}" alt="placeholder">-->
                     <img class="profile-img" src="{_.get(_.get(profile, 'github_info', {}), 'avatar_url', URLS.STATIC('img/img-wireframe.png'))}" alt="placeholder">
                 </div>
                 <div class="profile-user">
@@ -18,7 +17,7 @@
                         {_.get(_.get(profile, 'github_info', {}), 'bio', '')}
                     </div>
                     <div class="social-buttons">
-                        <a href="{_.get(_.get(profile, 'github_info', {}), 'html_url', '')}" if="{_.get(_.get(profile, 'github_info', {}), 'html_url', false)} !== false"
+                        <a href="{_.get(_.get(profile, 'github_info', {}), 'html_url', '')}" if="{_.get(_.get(profile, 'github_info', {}), 'html_url', false)}"
                            style="background-color: #582c80; color: white;"
                            class="ui circular github plus mini icon button">
                             <i class="github icon"></i>
@@ -48,7 +47,7 @@
                 <a class="item" data-tab="datasets">
                     Datasets
                 </a>
-                <a class="item" data-tab="edit">
+                <a if="{window.IS_OWN_PROFILE}" class="item" data-tab="edit">
                     Account
                 </a>
             </div>
@@ -139,29 +138,29 @@
                         <table class="stats-table">
                             <tr>
                                 <td class="category">Competitions Organized:</td>
-                                <td class="statistic">124</td>
-                                <td class="category">Organizer Since:</td>
-                                <td class="statistic">02/11/2017</td>
+                                <td class="statistic">{_.get(profile, 'organized_competitions', []).length}</td>
+                                <!--<td class="category">Organizer Since:</td>
+                                <td class="statistic">02/11/2017</td>-->
                             </tr>
                             <tr>
-                                <td class="category">Total Participants:</td>
-                                <td class="statistic">5201</td>
+                                <!--<td class="category">Total Participants:</td>
+                                <td class="statistic">5201</td>-->
                                 <td class="category">Total Submissions:</td>
-                                <td class="statistic">73,240</td>
+                                <td class="statistic">{_.get(profile, 'created_solutions', []).length}</td>
                             </tr>
                         </table>
                         <table class="stats-table">
                             <tr>
                                 <td class="category">Submissions:</td>
-                                <td class="statistic">1250</td>
+                                <td class="statistic">{_.get(profile, 'created_solutions', []).length}</td>
                                 <td class="category">User Since:</td>
-                                <td class="statistic">09/12/2016</td>
+                                <td class="statistic">{pretty_date(profile.date_joined)}</td>
                             </tr>
                             <tr>
                                 <td class="category">Top 10 Finishes:</td>
                                 <td class="statistic">1</td>
                                 <td class="category">Competitions Joined:</td>
-                                <td class="statistic">{sorted_competitions.length }</td>
+                                <td class="statistic">{participants.length }</td>
                             </tr>
                         </table>
                     </div>
@@ -205,12 +204,13 @@
 
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
-                                <competition-tile
-                                        if="{ profile.organized_competitions !== undefined && profile.organized_competitions.length < 0 }"
-                                        each="{ profile.organized_competitions }" no-reorder
-                                        class="item"></competition-tile>
+                                <virtual if="{ _.get(profile_data, 'participating_competitions', false) }"
+                                         each="{ competition in _.get(profile_data, 'participating_competitions', []) }"
+                                         no-reorder>
+                                    <competition-tile result="{competition}" class="item"></competition-tile>
+                                </virtual>
                                 <p class="no-competitions"
-                                   if="{ sorted_competitions === undefined || sorted_competitions.length == 0 }">
+                                   if="{ _.get(profile_data, 'participating_competitions', false) } || _.get(profile_data, 'participating_competitions', []).length === 0">
                                     No competitions found for this user</p>
                             </div>
                             <div class="ui pagination menu">
@@ -334,11 +334,17 @@
             organized_competitions: []
         }
         self.organized_competitions = []
+
+        self.profile_data = {
+            participants: [],
+            participating_competitions: []
+        }
+
         self.participating_competitions = []
         self.datasets = []
         self.submissions = []
         self.sorted_competitions = []
-
+        self.participants = []
 
         self.on('mount', function () {
             particlesJS.load('particles-js', "/static/particles/particles-profile.json", function () {
@@ -361,33 +367,19 @@
             self.update_user();
         })
 
-        /*self.update_information = function () {
-            CHAHUB.api.get_profile(profile["id"])
-                .done(function (data) {
-                    self.update({
-                        profile: data
-                    })
-
-                    if (self.profile.competitions !== undefined || self.profile.competitions.length > 0) {
-                        self.sorted_competitions = self.profile.competitions.slice(0);
-                        self.sorted_competitions.sort(function (a, b) {
-                            return b.participant_count - a.participant_count;
-                        });
-                        self.prepare_results()
-                    }
-                    self.update()
-                })
-                .fail(function (response) {
-
-                })
-            console.log('updating user profile')
-        }*/
-
         self.update_user = function () {
             CHAHUB.api.get_user(PROFILE_OBJECTS)
                 .done(function (data) {
                     console.log(data)
                     self.profile = data
+                    data.profiles.forEach(function (profile) {
+                        profile.participants.forEach(function (participant) {
+                            self.profile_data.participants.push(participant)
+                        })
+                    })
+                    self.profile_data.participants.forEach(function (participant) {
+                        self.profile_data.participating_competitions.push(participant.competition)
+                    })
                     self.update()
                     CHAHUB.events.trigger("profile_loaded")
                 })
@@ -746,12 +738,8 @@
         }
 
         CHAHUB.events.on('profile_loaded', function () {
-            console.log("################################################################")
-            console.log(self)
-            console.log(self.parent.profile)
+
             self.update({profile: self.parent.profile})
-            console.log(self)
-            console.log("################################################################")
         })
 
     </script>
@@ -981,7 +969,7 @@
         <tr each="{datasets_slice}">
             <td data-label="Name"><a href="#"><i class="download icon"></i>{name}</a></td>
             <td data-label="Type">{type}</td>
-            <td data-label="Uploaded">{upload_date}</td>
+            <td data-label="Uploaded">{created_when}</td>
 
             <!-- Bring back later for publishing, deleting, and adding new datasets
             <td data-label="Public" class="center aligned column">
@@ -1275,7 +1263,7 @@
             </div>
             <div class="container-content">
                 <div class="ui middle aligned unstackable compact divided link items content-desktop">
-                    <submission-tile each="{ submissions }" onclick="{show_table}"
+                    <submission-tile each="{_.get(profile, 'created_solutions', [])}" onclick="{show_table}"
                                      class="item"></submission-tile>
                 </div>
             </div>
@@ -1331,6 +1319,10 @@
                 prize: '65400',
             },
         ]
+
+        CHAHUB.events.on('profile_loaded', function () {
+            self.update({profile: self.parent.profile})
+        })
     </script>
 
     <style type="text/stylus">

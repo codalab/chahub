@@ -11,8 +11,8 @@ from rest_framework.viewsets import ModelViewSet
 
 from api.authenticators import ProducerAuthentication
 from api.permissions import ProducerPermission
-from api.serializers.profiles import MyProfileListSerializer, ProfileListSerializer, AccountMergeRequestSerializer, \
-    MyProfileDetailSerializer, ProfileDetailSerializer
+from api.serializers.profiles import MyProfileListSerializer, BaseProfileSerializer, AccountMergeRequestSerializer, \
+    MyProfileDetailSerializer, ProfileDetailSerializer, ProfileCreateSerializer
 from api.views.mixins import BulkViewSetMixin
 from profiles.models import Profile
 
@@ -49,7 +49,9 @@ class ProfileViewSet(BulkViewSetMixin, ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'list':
-            return ProfileListSerializer
+            return BaseProfileSerializer
+        if self.action == 'create':
+            return ProfileCreateSerializer
         return self.serializer_class
 
 
@@ -62,7 +64,6 @@ def create_merge_request(request, version):
             'master_account': master_account.id,
             'secondary_account': secondary_account.id
         }
-        print(data)
         serializer = AccountMergeRequestSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         if serializer.errors:
@@ -76,5 +77,4 @@ def create_merge_request(request, version):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     except (User.DoesNotExist, KeyError):
-        # raise Http404("No users with emails matching found.")
         return Response({'error': 'No matching users found.'}, status=status.HTTP_404_NOT_FOUND)

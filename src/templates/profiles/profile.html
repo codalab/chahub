@@ -2,8 +2,6 @@
 {% load static %}
 
 {% block content %}
-
-
     <script>
 
         {% if object_mode %}
@@ -13,6 +11,11 @@
             PROFILE_OBJECTS = {{ objects }}
         {% endif %}
 
+        {% if IS_OWN_PROFILE %}
+            IS_OWN_PROFILE = true
+        {% else %}
+            IS_OWN_PROFILE = false
+        {% endif %}
 {#        CHAHUB.events.trigger("profile_loaded")#}
     </script>
 

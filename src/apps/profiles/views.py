@@ -122,6 +122,8 @@ class ProfileView(TemplateView):
         producer = self.kwargs.pop('producer', None)
         remote_id = self.kwargs.pop('remote_id', None)
 
+        context['IS_OWN_PROFILE'] = False
+
         # If we're given a username, and not a producer, or a remote_id
         if username and not (producer or remote_id):
             user, profiles = None, None
@@ -138,6 +140,8 @@ class ProfileView(TemplateView):
             if user and not profiles:
                 context['object_mode'] = 'user'
                 context['objects'] = user.pk
+                if self.request.user.is_authenticated:
+                    context['IS_OWN_PROFILE'] = True if user.pk == self.request.user.pk else False
             # If we got profiles instead of a user
             elif profiles and not user:
                 context['object_mode'] = 'profile_list'

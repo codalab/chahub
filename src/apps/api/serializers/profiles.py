@@ -3,13 +3,14 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from api.serializers.competitions import CompetitionSerializer, CompetitionParticipantSerializer
-from api.serializers.data import DataSerializer
 from api.serializers.mixins import BulkSerializerMixin
 from api.serializers.producers import ProducerSerializer
-from api.serializers.tasks import TaskSerializer, SolutionSerializer
-from competitions.models import Competition, CompetitionParticipant
 from profiles.models import GithubUserInfo, LinkedInUserInfo, Profile, AccountMergeRequest
+
+from api.serializers.competitions import CompetitionSerializer, CompetitionParticipantListSerializer
+from api.serializers.data import DataSerializer
+from api.serializers.tasks import TaskSerializer
+from api.serializers.tasks import SolutionSerializer
 
 User = get_user_model()
 
@@ -70,56 +71,12 @@ class LinkedInUserInfoSerializer(ModelSerializer):
         ]
 
 
-class MyProfileDetailSerializer(serializers.ModelSerializer):
-    github_info = GithubUserInfoSerializer(read_only=True, required=False, many=False)
-    organized_competitions = CompetitionSerializer(read_only=True, required=False, many=True)
-    created_tasks = TaskSerializer(read_only=True, required=False, many=True)
-    created_solutions = SolutionSerializer(read_only=True, required=False, many=True)
-    created_datasets = DataSerializer(read_only=True, required=False, many=True)
-    class Meta:
-        model = User
-        fields = [
-            'username',
-            'name',
-            'email',
-            'id',
-            'github_info',
-            'organized_competitions',
-            'created_tasks',
-            'created_solutions',
-            'created_datasets',
-        ]
-
-
-class MyProfileListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = [
-            'username',
-            'name',
-            'email',
-            'id',
-            'github_info',
-            'organized_competitions',
-            'created_tasks',
-            'created_solutions',
-            'created_datasets',
-        ]
-
-
-class ProfileDetailSerializer(BulkSerializerMixin, ModelSerializer):
-    from api.serializers.competitions import CompetitionSerializer
-    from api.serializers.data import DataSerializer
-    from api.serializers.tasks import TaskSerializer
-    from api.serializers.tasks import SolutionSerializer
-
-    # producer = ProducerSerializer(required=False, validators=[])
+class UserProfileDetailSerializer(BulkSerializerMixin, ModelSerializer):
     organized_competitions = CompetitionSerializer(many=True, read_only=True)
     datasets = DataSerializer(many=True, read_only=True)
     tasks = TaskSerializer(many=True, read_only=True)
     solutions = SolutionSerializer(many=True, read_only=True)
-    user = MyProfileDetailSerializer(many=False, read_only=True)
-    participants = CompetitionParticipantSerializer(many=True, allow_null=True, required=False)
+    participants = CompetitionParticipantListSerializer(many=True, allow_null=True, required=False)
 
     class Meta:
         model = Profile
@@ -135,7 +92,7 @@ class ProfileDetailSerializer(BulkSerializerMixin, ModelSerializer):
             'datasets',
             'tasks',
             'solutions',
-            'participants'
+            'participants',
         ]
         read_only_fields = ['id']
         extra_kwargs = {
@@ -146,12 +103,58 @@ class ProfileDetailSerializer(BulkSerializerMixin, ModelSerializer):
         }
 
 
-class ProfileListSerializer(BulkSerializerMixin, ModelSerializer):
-    producer = ProducerSerializer(required=False, validators=[])
-    # organized_competitions = CompetitionSerializer(many=True, read_only=True)
-    # datasets = DataSerializer(many=True, read_only=True)
-    # tasks = TaskSerializer(many=True, read_only=True)
-    # solutions = SolutionSerializer(many=True, read_only=True)
+class MyProfileDetailSerializer(serializers.ModelSerializer):
+    github_info = GithubUserInfoSerializer(read_only=True, required=False, many=False)
+    organized_competitions = CompetitionSerializer(read_only=True, required=False, many=True)
+    created_tasks = TaskSerializer(read_only=True, required=False, many=True)
+    created_solutions = SolutionSerializer(read_only=True, required=False, many=True)
+    created_datasets = DataSerializer(read_only=True, required=False, many=True)
+    profiles = UserProfileDetailSerializer(read_only=True, required=False, many=True)
+
+
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'name',
+            'email',
+            'id',
+            'date_joined',
+            'github_info',
+            'organized_competitions',
+            'created_tasks',
+            'created_solutions',
+            'created_datasets',
+            'profiles',
+        ]
+
+
+class MyProfileListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'name',
+            'email',
+            'id',
+            'date_joined',
+            'github_info',
+            'organized_competitions',
+            'created_tasks',
+            'created_solutions',
+            'created_datasets',
+        ]
+
+
+# Different Profile Serializers
+class ProfileDetailSerializer(BulkSerializerMixin, ModelSerializer):
+    organized_competitions = CompetitionSerializer(many=True, read_only=True)
+    datasets = DataSerializer(many=True, read_only=True)
+    tasks = TaskSerializer(many=True, read_only=True)
+    solutions = SolutionSerializer(many=True, read_only=True)
+    # TODO: Look more into the effects of removing this. I believe we added it so we could display details
+    user = MyProfileDetailSerializer(many=False, read_only=True)
+    participants = CompetitionParticipantListSerializer(many=True, allow_null=True, required=False)
 
     class Meta:
         model = Profile
@@ -163,10 +166,67 @@ class ProfileListSerializer(BulkSerializerMixin, ModelSerializer):
             'username',
             'details',
             'user',
-            # 'organized_competitions',
-            # 'datasets',
-            # 'tasks',
-            # 'solutions'
+            'organized_competitions',
+            'datasets',
+            'tasks',
+            'solutions',
+            'participants',
+        ]
+        read_only_fields = ['id']
+        extra_kwargs = {
+            'producer': {
+                # UniqueTogether validator messes this up
+                'validators': [],
+            }
+        }
+
+
+class ProfileCreateSerializer(BulkSerializerMixin, ModelSerializer):
+    organized_competitions = CompetitionSerializer(many=True, read_only=True)
+    datasets = DataSerializer(many=True, read_only=True)
+    tasks = TaskSerializer(many=True, read_only=True)
+    solutions = SolutionSerializer(many=True, read_only=True)
+    # TODO: Look more into the effects of removing this. I believe we added it so we could display details
+    participants = CompetitionParticipantListSerializer(many=True, allow_null=True, required=False)
+
+    class Meta:
+        model = Profile
+        fields = [
+            'id',
+            'remote_id',
+            'producer',
+            'email',
+            'username',
+            'details',
+            'user',
+            'organized_competitions',
+            'datasets',
+            'tasks',
+            'solutions',
+            'participants',
+        ]
+        read_only_fields = ['id']
+        extra_kwargs = {
+            'producer': {
+                # UniqueTogether validator messes this up
+                'validators': [],
+            }
+        }
+
+
+class BaseProfileSerializer(BulkSerializerMixin, ModelSerializer):
+    producer = ProducerSerializer(required=False, validators=[])
+
+    class Meta:
+        model = Profile
+        fields = [
+            'id',
+            'remote_id',
+            'producer',
+            'email',
+            'username',
+            'details',
+            'user',
         ]
         read_only_fields = ['id']
         extra_kwargs = {

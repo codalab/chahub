@@ -118,9 +118,12 @@ class Submission(models.Model):
 
 
 class CompetitionParticipant(models.Model):
-    profile = models.ForeignKey('profiles.Profile', null=True, blank=True, related_name='participants',
-                             on_delete=models.SET_NULL)
-    competition = models.ForeignKey(Competition, related_name='participants', on_delete=models.CASCADE)
+    competition = models.ForeignKey(Competition, on_delete=models.CASCADE, related_name='participants', null=True, blank=True)
+    user = models.ForeignKey('profiles.Profile',on_delete=models.CASCADE, related_name='participants', null=True, blank=True)
+    status = models.CharField(default='', max_length=128)
+
+    class Meta:
+        unique_together = ['user', 'competition']
 
     def __unicode__(self):
         return str(self.user.username)

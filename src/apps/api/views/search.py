@@ -9,15 +9,6 @@ from utils.search import get_search_client, get_results, get_default_search_resu
 # from apps.search.documents import CompetitionDocument, UserDocument, ProfileDocument, TaskDocument, SolutionDocument, DatasetDocument
 from apps.search.documents import CompetitionDocument, ProfileDocument
 
-# DOCUMENT_MAPPINGS = {
-#     'competitions': CompetitionDocument,
-#     # 'users': UserDocument,
-#     'profiles': ProfileDocument,
-#     # 'tasks': TaskDocument,
-#     # 'solutions': SolutionDocument,
-#     # 'datasets': DatasetDocument
-# }
-
 OBJECT_LIST = [
     'profile',
     'competition',
@@ -27,50 +18,8 @@ OBJECT_LIST = [
     'user',
 ]
 
-# TODO: This is farily UN-DRY so far. We should probably by default exclude published=False...
-EXTRA_FILTERS = {
-    'competitions': {
-        'filter': {
-            'args': ('term',),
-            'kwargs': {
-                'published': True
-            }
-        },
-        'source': {
-            'kwargs': {
-                'excludes': ["html_text"]
-            }
-        }
-    },
-    'tasks': {
-        'filter': {
-            'args': ('term',),
-            'kwargs': {
-                'published': True
-            }
-        }
-    },
-    'solutions': {
-        'filter': {
-            'args': ('term',),
-            'kwargs': {
-                'published': True
-            }
-        }
-    },
-    'datasets': {
-        'filter': {
-            'args': ('term',),
-            'kwargs': {
-                'published': True
-            }
-        }
-    },
-}
-
-
 class SearchView(APIView):
-    # @cache_response(key_func=QueryParamsKeyConstructor(), timeout=60)
+    @cache_response(key_func=QueryParamsKeyConstructor(), timeout=60)
     def get(self, request, version="v1"):
         # Get search data
         query = request.GET.get('q', '')
@@ -108,15 +57,11 @@ class SearchView(APIView):
         print("Empty search?: {}".format(empty_search))
 
         if not empty_search:
-            # Setup ES connection, excluding HTML text from our results
-            # if object_types != 'ALL' or 'ALL' not in object_types:
                 object_types = [obj.strip() for obj in object_types.split(',')]
-                print(object_types)
                 s = get_search_client(100, page)
                 s = self._search(s, query, object_types)
                 s = self._filter(s, date_flags, start, end, producer, object_types)
                 s = self._sort(s, sorting, query, object_types)
-                # if object_types and object_types != 'ALL' or 'ALL' not in object_types:
                 matching_types = []
                 if object_types and object_types != 'ALL' and 'ALL' not in object_types:
                     for object_type in object_types:
@@ -124,31 +69,8 @@ class SearchView(APIView):
                 else:
                     for object_type in OBJECT_LIST:
                         matching_types.append({'match': {'_obj_type': object_type}})
-                print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-                print(matching_types)
-                print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
                 s = s.query('bool', should=matching_types, minimum_should_match=1)
-
                 data["results"] = get_results(s)
-
-                # s = s.query('bool', should=should, minimum_should_match=1)
-            # else:
-            #     Do search/filtering/sorting
-                # s = get_search_client()
-                # s = self._search(s, query)
-                # s = self._filter(s, date_flags, start, end, producer)
-                # s = self._sort(s, sorting, query)
-                # data["results"] = get_results(s)
-
-        print("############################################")
-        print(data["results"])
-        print("############################################")
-
-        # if not data["results"] or empty_search:
-        #     print("THERES NO RESULTS")
-        #     data["showing_default_results"] = True
-        #     data["results"] = get_default_search_results()
-
         return Response(data)
 
     def _search(self, search, query, obj_types='ALL'):
@@ -162,7 +84,6 @@ class SearchView(APIView):
                 fields += ["email^3", "username^3", "name^3"]
             if obj_types == 'ALL' or 'ALL' in obj_types:
                 fields += ['title^3', 'username^3', 'name^3']
-            print(fields)
             # Remove duplicates
             fields = list(set(fields))
             search = search.query(
@@ -173,12 +94,6 @@ class SearchView(APIView):
                 # We cast to a set first to remove any duplicates.
                 fields=fields
             )
-            # s = s.highlight('title', fragment_size=50)
-            # s = s.suggest('suggestions', query, term={'field': 'title'})
-        # else:
-        #     search = search.query(
-        #         "match_all"
-        #     )
         return search
 
     def _filter(self, search, date_flags, start, end, producer, obj_types='ALL'):
@@ -222,9 +137,8 @@ class SearchView(APIView):
                 sort_params.append('-prize')
             elif sorting == 'deadline':
                 sort_params.append('current_phase_deadline')
-
-            # If '_score' is the first sort parameter, the participant sorting gets overridden and the results are mostly
-            # relevancy based instead of being based on whatever sorting we desire. Append it last here.
+        # If '_score' is the first sort parameter, the participant sorting gets overridden and the results are mostly
+        # relevancy based instead of being based on whatever sorting we desire. Append it last here.
         if query:
             sort_params.append('_score')
         return search.sort(*sort_params)

@@ -138,18 +138,6 @@ class UserDocument(DocType):
     def prepare__obj_type(self, instance):
         return 'user'
 
-    # def prepare_organized_competitions_count(self, instance):
-    #     return instance.organized_competitions.count() if instance.organized_competitions else 0
-    #
-    # def prepare_datasets_count(self, instance):
-    #     return instance.created_datasets.count() if instance.created_datasets else 0
-    #
-    # def prepare_tasks_count(self, instance):
-    #     return instance.created_tasks.count() if instance.created_tasks else 0
-    #
-    # def prepare_solutions_count(self, instance):
-    #     return instance.created_solutions.count() if instance.created_solutions else 0
-
 
 @chahub_index.doc_type
 class ProfileDocument(DocType):

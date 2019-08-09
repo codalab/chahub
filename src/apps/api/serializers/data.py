@@ -5,8 +5,6 @@ from datasets.models import Data, DataGroup
 
 
 class DataSerializer(BulkSerializerMixin, serializers.ModelSerializer):
-    # producer = ProducerSerializer(required=False, validators=[])
-
     class Meta:
         model = Data
         fields = [
@@ -17,15 +15,12 @@ class DataSerializer(BulkSerializerMixin, serializers.ModelSerializer):
             'name',
             'type',
             'description',
-            'is_public'
-        ]
-        read_only_fields = (
-            'owner',
-            'key',
+            'is_public',
+            'key',  # Double check that we want this around
             'created_by',
             'created_when',
             'uploaded_when'
-        )
+        ]
 
 
 class DataGroupSerializer(serializers.ModelSerializer):
