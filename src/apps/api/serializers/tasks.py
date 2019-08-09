@@ -1,9 +1,9 @@
-from django.conf import settings
 from rest_framework import serializers
 
 from api.serializers.mixins import BulkSerializerMixin
 from api.serializers.producers import ProducerSerializer
 from tasks.models import Task, Solution
+
 
 class TaskSerializer(BulkSerializerMixin, serializers.ModelSerializer):
     producer = ProducerSerializer(required=False, validators=[])

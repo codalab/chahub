@@ -51,7 +51,7 @@
             }
             CHAHUB.api.create_merge(data)
                 .done(function (data) {
-                    console.log(data)
+                    toastr.success("Succesfully made request!")
                 })
                 .fail(function (error) {
                     toastr.error("Error submitting merge request; " + error.responseJSON['error'])

@@ -5,7 +5,6 @@ from django.core.mail import send_mail
 from django.template.loader import get_template
 
 from producers.models import Producer
-from profiles.models import User, AccountMergeRequest
 
 
 def validate_next_url(next_url):
@@ -15,6 +14,7 @@ def validate_next_url(next_url):
         return True
     else:
         return False
+
 
 def send_templated_email(template_name, context, **kwargs):
     subject = kwargs.get('subject')
@@ -34,8 +34,6 @@ def send_templated_email(template_name, context, **kwargs):
     # text_content = html_code.render_to_string(context)
     text_content = plain_text.render(context)
     html_content = html_code.render(context)
-
-    print(html_content)
 
     send_mail(
         subject=subject,

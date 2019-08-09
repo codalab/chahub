@@ -1,6 +1,6 @@
 from django.conf import settings
 from elasticsearch import Elasticsearch
-from elasticsearch_dsl import Search, MultiSearch
+from elasticsearch_dsl import Search
 
 OBJECT_LIST = [
     'profile',

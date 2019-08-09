@@ -1,12 +1,9 @@
-from django.core.exceptions import ObjectDoesNotExist
 from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 from api.serializers.mixins import BulkSerializerMixin
-from api.serializers.producers import ProducerSerializer
 from competitions.models import Competition, Phase, Submission, CompetitionParticipant
-from profiles.models import User, Profile
+from profiles.models import Profile
 
 
 class PhaseSerializer(WritableNestedModelSerializer):

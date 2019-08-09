@@ -3,9 +3,6 @@ import uuid
 from django.conf import settings
 from django.db import models
 
-from settings.base import BundleStorage
-from utils.data import PathWrapper
-
 
 class Task(models.Model):
     creator_id = models.IntegerField()
@@ -85,4 +82,3 @@ class Solution(models.Model):
 
     def __str__(self):
         return f"Solution - {self.data.name} - ({self.id})"
-

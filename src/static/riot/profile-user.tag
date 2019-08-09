@@ -370,7 +370,6 @@
         self.update_user = function () {
             CHAHUB.api.get_user(PROFILE_OBJECTS)
                 .done(function (data) {
-                    console.log(data)
                     self.profile = data
                     data.profiles.forEach(function (profile) {
                         profile.participants.forEach(function (participant) {

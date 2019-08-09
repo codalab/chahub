@@ -3,9 +3,6 @@ import uuid
 from django.conf import settings
 from django.db import models
 
-from settings.base import BundleStorage
-from utils.data import PathWrapper
-
 
 class Data(models.Model):
     creator_id = models.IntegerField()

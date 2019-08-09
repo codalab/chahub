@@ -3,7 +3,6 @@ import uuid
 from django.conf import settings
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, UserManager
 from django.core.exceptions import ValidationError
-from django.core.mail import send_mail
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.urls import reverse

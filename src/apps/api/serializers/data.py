@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from api.serializers.mixins import BulkSerializerMixin
-from api.serializers.producers import ProducerSerializer
 from datasets.models import Data, DataGroup
 
 

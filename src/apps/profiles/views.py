@@ -1,7 +1,4 @@
-import json
-
-import requests
-from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect, HttpResponseForbidden
+from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 from django.contrib.auth import get_user_model, authenticate, login
@@ -13,21 +10,6 @@ from profiles.utils import validate_next_url
 
 User = get_user_model()
 
-
-# def sign_up(request):
-#     # return HttpResponse("Not implemented yet!")
-#
-#     if request.method == 'POST':
-#         form = ChahubCreationForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             # return HttpResponse("User created successfully!")
-#             return redirect('/')
-#         else:
-#             return render(request, 'registration/signup.html', {'form': form})
-#     else:
-#         form = ChahubCreationForm()
-#         return render(request, 'registration/signup.html', {'form': form})
 
 class SignUpView(TemplateView):
     template_name = 'registration/signup.html'
@@ -80,33 +62,6 @@ class MergeAccountsView(TemplateView):
             # else:
             #     raise Http404("Could not find a valid merge request for that key.")
         return self.render_to_response(context)
-
-
-# Todo: Make this into a class based view
-# def profile(request, username):
-#     context = {}
-#     user = None
-#     profiles = None
-#     try:
-#         user = User.objects.get(username=username)
-#         print(user)
-#     except User.DoesNotExist:
-#         profiles = Profile.objects.filter(username=username)
-#         if profiles.first():
-#             profiles = profiles.filter(username=profiles.first().username)
-#         else:
-#             profiles = None
-#
-#     if user and not profiles:
-#         context['object_mode'] = 'user'
-#         context['objects'] = user.pk
-#     elif profiles and not user:
-#         context['object_mode'] = 'profile'
-#         context['objects'] = [profile.pk for profile in profiles]
-#     else:
-#         raise Http404("No profile or user could be found for that username!")
-#
-#     return render(request, 'profiles/profile.html', context)
 
 
 class ProfileView(TemplateView):

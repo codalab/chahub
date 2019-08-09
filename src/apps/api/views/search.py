@@ -1,13 +1,9 @@
-from elasticsearch_dsl import Search
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_extensions.cache.decorators import cache_response
 
 from api.caching import QueryParamsKeyConstructor
 from utils.search import get_search_client, get_results, get_default_search_results
-
-# from apps.search.documents import CompetitionDocument, UserDocument, ProfileDocument, TaskDocument, SolutionDocument, DatasetDocument
-from apps.search.documents import CompetitionDocument, ProfileDocument
 
 OBJECT_LIST = [
     'profile',
@@ -17,6 +13,7 @@ OBJECT_LIST = [
     'solution',
     'user',
 ]
+
 
 class SearchView(APIView):
     @cache_response(key_func=QueryParamsKeyConstructor(), timeout=60)

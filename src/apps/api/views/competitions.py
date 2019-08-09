@@ -1,7 +1,4 @@
-from rest_framework import status
-from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, ListModelMixin
-from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.viewsets import ModelViewSet
 
 from api.authenticators import ProducerAuthentication
 from api.permissions import ProducerPermission
