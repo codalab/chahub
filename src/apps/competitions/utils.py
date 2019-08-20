@@ -33,6 +33,7 @@ def competition_download_image(competition_pk):
         return
     if not resp.ok:
         logger.info(f"Failed to retrieve logo from {comp.logo_url}")
+        return
     content_type = resp.headers.get('Content_Type')
     logger.info(
         "Response; Status: {0}, Content-Type: {1}".format(resp.status_code, content_type.lower())
