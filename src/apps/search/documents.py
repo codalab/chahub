@@ -242,18 +242,14 @@ class TaskDocument(DocType):
     is_public = fields.BooleanField()
 
     remote_ingestion_program = fields.IntegerField()
-    # ingestion_program = fields.TextField()
 
     remote_input_data = fields.TextField()
-    # input_data = fields.TextField()
 
     ingestion_only_during_scoring = fields.BooleanField()
 
     remote_reference_data = fields.TextField()
-    # reference_data = fields.TextField()
 
     remote_scoring_program = fields.TextField()
-    # scoring_program = fields.TextField()
 
     _obj_type = fields.TextField()
 

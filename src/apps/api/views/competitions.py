@@ -18,10 +18,6 @@ class CompetitionParticipantViewSet(BulkViewSetMixin, ModelViewSet):
             return serializers.CompetitionParticipantCreationSerializer
         return self.serializer_class
 
-    def get_queryset(self):
-        qs = self.queryset
-        return qs
-
 
 # NOTE: We don't have delete mixin
 class CompetitionViewSet(BulkViewSetMixin, ModelViewSet):

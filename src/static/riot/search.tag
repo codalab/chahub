@@ -23,7 +23,6 @@
                 </span>
                 <i class="dropdown icon"></i>
                 <span class="menu">
-                    <!-- Removed because RiotJS isn't properly switching on this condition -->
                     <virtual if="{window.USER_IS_SUPERUSER}">
                         <div class="header">Django Admin</div>
                         <a class="item" href="{ADMIN_URL}">Index</a>
@@ -246,7 +245,7 @@
         </div>
     </div>
     <div if="{!loading}" class="sixteen wide center aligned column">
-        <div style="margin-left: 25vw; margin-right: auto; width: 40vw;" class="ui centered pagination menu">
+        <div style="" class="ui pagination menu custom-pagination">
             <a if="{page !== 1}" class="item" onclick="{prev_page}">
                 <
             </a>
@@ -551,6 +550,13 @@
     </script>
 
     <style type="text/stylus">
+
+        .custom-pagination {
+            margin-left: 25vw !important;
+            margin-right: auto !important;
+            width: 40vw !important;
+        }
+
         #particle_header
             // This is for the particles js animations to fit to this
             position relative

@@ -43,7 +43,7 @@ class SearchView(APIView):
             producer,
             object_types,
         )
-        empty_search = all(not f for f in filters)
+        empty_search = not any(filters)
 
         # Get results and prepare them
         data = {
@@ -51,23 +51,23 @@ class SearchView(APIView):
             "showing_default_results": False,
         }
 
-        print("Empty search?: {}".format(empty_search))
+        print(f"Empty search?: {empty_search}")
 
         if not empty_search:
-                object_types = [obj.strip() for obj in object_types.split(',')]
-                s = get_search_client(100, page)
-                s = self._search(s, query, object_types)
-                s = self._filter(s, date_flags, start, end, producer, object_types)
-                s = self._sort(s, sorting, query, object_types)
-                matching_types = []
-                if object_types and object_types != 'ALL' and 'ALL' not in object_types:
-                    for object_type in object_types:
-                        matching_types.append({'match': {'_obj_type': object_type}})
-                else:
-                    for object_type in OBJECT_LIST:
-                        matching_types.append({'match': {'_obj_type': object_type}})
-                s = s.query('bool', should=matching_types, minimum_should_match=1)
-                data["results"] = get_results(s)
+            object_types = [obj.strip() for obj in object_types.split(',')]
+            s = get_search_client(100, page)
+            s = self._search(s, query, object_types)
+            s = self._filter(s, date_flags, start, end, producer, object_types)
+            s = self._sort(s, sorting, query, object_types)
+            matching_types = []
+            if object_types and object_types != 'ALL' and 'ALL' not in object_types:
+                for object_type in object_types:
+                    matching_types.append({'match': {'_obj_type': object_type}})
+            else:
+                for object_type in OBJECT_LIST:
+                    matching_types.append({'match': {'_obj_type': object_type}})
+            s = s.query('bool', should=matching_types, minimum_should_match=1)
+            data["results"] = get_results(s)
         return Response(data)
 
     def _search(self, search, query, obj_types='ALL'):
@@ -75,9 +75,7 @@ class SearchView(APIView):
             fields = []
             if 'competition' in obj_types:
                 fields += ["title^3", "description^2", "html_text^2", "created_by"]
-            if 'user' in obj_types:
-                fields += ["email^3", "username^3", "name^3"]
-            if 'profile' in obj_types:
+            if 'user' in obj_types or 'profile':
                 fields += ["email^3", "username^3", "name^3"]
             if obj_types == 'ALL' or 'ALL' in obj_types:
                 fields += ['title^3', 'username^3', 'name^3']

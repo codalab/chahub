@@ -15,7 +15,7 @@ class Task(models.Model):
 
     # TODO: We might have to convert this to a char to handle it nicely, or set the value on serializer _create or something?
     # This will be how we access download URLS
-    key = models.UUIDField(default=uuid.uuid4, blank=True, unique=True)
+    key = models.UUIDField(default=uuid.uuid4, blank=True)
 
     # We can keep this, and allow null/blank. If the user has a chahub_id attached to their profile
     # (Or some such field when connecting), and have that sent across so we can associate this dataset back here with their user.
@@ -45,7 +45,7 @@ class Task(models.Model):
     scoring_program = models.ForeignKey('datasets.Data', on_delete=models.SET_NULL, null=True, blank=True, related_name="task_scoring_programs")
 
     class Meta:
-        unique_together = ['producer', 'remote_id']
+        unique_together = ['producer', 'remote_id', 'key']
 
     def __str__(self):
         return f"Task - {self.name} - ({self.id})"
@@ -64,7 +64,7 @@ class Solution(models.Model):
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True)
 
     # TODO: We might have to convert this to a char to handle it nicely, or set the value on serializer _create or something?
-    key = models.UUIDField(default=uuid.uuid4, blank=True, unique=True)
+    key = models.UUIDField(default=uuid.uuid4, blank=True)
 
     uploaded_when = models.DateTimeField(auto_now_add=True)
 
@@ -73,12 +73,12 @@ class Solution(models.Model):
     # tasks = models.ManyToManyField(Task, related_name="solutions")
     tasks = models.ManyToManyField(Task, related_name="solutions")
 
-    data = models.ForeignKey('datasets.Data', null=True, blank=True, on_delete=models.SET_NULL)
+    data = models.ForeignKey('datasets.Data', null=True, blank=True, on_delete=models.CASCADE)
 
     is_public = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = ['producer', 'remote_id']
+        unique_together = ['producer', 'remote_id', 'key']
 
     def __str__(self):
         return f"Solution - {self.data.name} - ({self.id})"

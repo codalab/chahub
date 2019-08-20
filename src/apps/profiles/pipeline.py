@@ -30,35 +30,35 @@ LINKEDIN_FIELDS = [
 ]
 
 
+def _handle_external_user_data(user, data, response, fields_list, data_field_name, data_model):
+    data['uid'] = response.get('id')
+    for field in fields_list:
+        data[field] = response.get(field)
+    # if not user.github_info:
+    if not getattr(user, data_field_name, None):
+        new_info = data_model.objects.create(**data)
+        # user.github_info = new_info
+        setattr(user, data_field_name, new_info)
+    else:
+        # Only update if they're the same remote id
+        # if user.github_info.uid == data['uid']:
+        if getattr(user.github_info, 'uid', None) and getattr(user.github_info, 'uid', None) == data.get('uid'):
+            data_model.objects.filter(uid=data.get('uid').update(**data))
+    user.save()
+
+
 def _create_user_data(user, response, backend_name):
     data = {}
     # --------------------------- Github ----------------------
     if backend_name == 'github':
-        data['uid'] = response.get('id')
-        for field in GITHUB_FIELDS:
-            data[field] = response.get(field)
-        if not user.github_info:
-            new_github_info = GithubUserInfo.objects.create(**data)
-            user.github_info = new_github_info
-        else:
-            # Only update if they're the same remote id
-            if user.github_info.uid == data['uid']:
-                GithubUserInfo.objects.filter(uid=data['uid']).update(**data)
+        _handle_external_user_data(user=user, data=data, response=response, fields_list=GITHUB_FIELDS,
+                                   data_field_name='github_info', data_model=GithubUserInfo)
     # --------------------------- Docker ----------------------
     elif backend_name == 'docker':
         pass
     elif backend_name == 'linkedin-oauth2':
-        data['uid'] = response.get('id')
-        for field in LINKEDIN_FIELDS:
-            data[field] = response.get(field)
-        if not user.linkedin_info:
-            new_linkedin_info = LinkedInUserInfo.objects.create(**data)
-            user.linkedin_info = new_linkedin_info
-        else:
-            # Only update if they're the same remote id
-            if user.linkedin_info.uid == data['uid']:
-                LinkedInUserInfo.objects.filter(uid=data['uid']).update(**data)
-    user.save()
+        _handle_external_user_data(user=user, data=data, response=response, fields_list=LINKEDIN_FIELDS,
+                                   data_field_name='linkedin_info', data_model=LinkedInUserInfo)
 
 
 def user_details(user, **kwargs):

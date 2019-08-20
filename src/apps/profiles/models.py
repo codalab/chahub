@@ -7,6 +7,8 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.urls import reverse
 
+from apps.profiles.utils import send_templated_email
+
 from producers.models import Producer
 
 
@@ -164,39 +166,33 @@ class AccountMergeRequest(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ['master_account', 'secondary_account']
+
     def clean(self, *args, **kwargs):
         # add custom validation here
         if self.master_account == self.secondary_account:
             raise ValidationError("Cannot create a merge request between the same account")
         super().clean(*args, **kwargs)
 
-    # def save(self, *args, **kwargs):
-    #     self.full_clean()
-    #     super().save(*args, **kwargs)
-
-    class Meta:
-        unique_together = ['master_account', 'secondary_account']
-
     @property
     def absolute_url(self):
-        return '{0}{1}'.format(settings.SITE_DOMAIN, reverse('profiles:merge', kwargs={'merge_key': self.key}))
+        return f'{settings.SITE_DOMAIN}{reverse("profiles:merge", kwargs={"merge_key": self.key})}'
 
     def save(self, *args, **kwargs):
-        # self.full_clean()
         email_kwargs = {
-            'subject': 'test',
-            'recipient_list': ['tyler@ckcollab.com'],
+            'subject': f'Chahub Account Merge Request From: {self.master_account.email}',
+            'recipient_list': [self.secondary_account.email],
             'fail_silently': False
         }
         context = {
             'user': self.secondary_account,
             'requester': self.master_account,
             'merge': self,
-            'static': '{}/static'.format(settings.SITE_DOMAIN),
-            'signature_img': '{}/static/img/temp_chahub_logo_beta.png'.format(settings.SITE_DOMAIN)
+            'static': f'{settings.SITE_DOMAIN}/static',
+            'signature_img': f'{settings.SITE_DOMAIN}/static/img/temp_chahub_logo_beta.png'
         }
         template_name = 'email/merge/merge_request'
-        from apps.profiles.utils import send_templated_email
         send_templated_email(template_name, context, **email_kwargs)
 
         return super(AccountMergeRequest, self).save(*args, **kwargs)
@@ -204,6 +200,8 @@ class AccountMergeRequest(models.Model):
     def merge_accounts(self):
         merge_fields = ['organized_competitions', 'datasets', 'tasks', 'profiles']
         for field in merge_fields:
-            for obj in getattr(self.secondary_account, field):
-                obj.user = self.master_account
-                obj.save()
+            qs = getattr(self.secondary_account, field)
+            qs.update(user=self.master_account)
+            # for obj in getattr(self.secondary_account, field):
+            #     obj.user = self.master_account
+            #     obj.save()

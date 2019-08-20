@@ -20,12 +20,12 @@ class Data(models.Model):
     type = models.CharField(max_length=64)
     description = models.TextField(blank=True, null=True)
 
-    key = models.UUIDField(default=uuid.uuid4, blank=True, unique=True)
+    key = models.UUIDField(default=uuid.uuid4, blank=True)
 
     is_public = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = ['producer', 'remote_id']
+        unique_together = ['producer', 'remote_id', 'key']
 
     def __str__(self):
         return f"Dataset - {self.name} - ({self.id})"

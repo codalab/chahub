@@ -56,24 +56,15 @@ class ProfileViewSet(BulkViewSetMixin, ModelViewSet):
 
 @api_view(['POST'])
 def create_merge_request(request, version):
-    try:
-        master_account = User.objects.get(email=request.data['master_account'])
-        secondary_account = User.objects.get(email=request.data['master_account'])
-        data = {
-            'master_account': master_account.id,
-            'secondary_account': secondary_account.id
-        }
-        serializer = AccountMergeRequestSerializer(data=data)
+        if not request.data.get('master_account') or not request.data.get('secondary_account'):
+            return Response("Master account and or secondary account not provided!", status=status.HTTP_400_BAD_REQUEST)
+        serializer = AccountMergeRequestSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         if serializer.errors:
-            print(serializer.errors)
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         else:
             try:
                 serializer.save()
             except ValidationError as error:
                 return Response({'error': error.messages[0]}, status=status.HTTP_404_NOT_FOUND)
-
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    except (User.DoesNotExist, KeyError):
-        return Response({'error': 'No matching users found.'}, status=status.HTTP_404_NOT_FOUND)

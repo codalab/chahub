@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   #-----------------------------------------------
   #   Web Service
@@ -30,7 +30,7 @@ services:
   # Database
   # --------------------------------------------------------------------------
   postgres:
-    image: postgres:9.6.3
+    image: postgres:9.6.15
     hostname: chahub-postgres
     restart: unless-stopped
     ports:

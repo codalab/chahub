@@ -7,7 +7,7 @@
         <div class="ui profile-segment segment">
             <div class="ui container profile-header">
                 <div class="holder">
-                    <img class="profile-img" src="{_.get(_.get(profile, 'github_info', {}), 'avatar_url', URLS.STATIC('img/img-wireframe.png'))}" alt="placeholder">
+                    <img class="profile-img" src="{_.get(_.get(profile, 'github_info', {}), 'avatar_url', URLS.STATIC('img/img-wireframe.png'))}" alt="user-github-avatar">
                 </div>
                 <div class="profile-user">
                     {_.get(profile, 'username', 'anonymous / N/A')}
@@ -23,6 +23,7 @@
                             <i class="github icon"></i>
                         </a>
                     </div>
+                    <!-- TODO: Pull this? Can we populate this information? -->
                     <!--<div class="languages">
                         <div each="{language in profile.languages}" class="ui mini label">
                             {language}
@@ -65,24 +66,24 @@
                                 <table class="stats-table">
                                     <tr>
                                         <td class="category">Competitions Organized:</td>
-                                        <td class="statistic">{profile.organized_competitions.length | 0}</td>
-                                        <td class="category">Organizer Since:</td>
-                                        <td class="statistic"></td>
+                                        <td class="statistic">{ _.get(profile, 'organized_competitions', []).length }</td>
+                                        <!--<td class="category">Organizer Since:</td>
+                                        <td class="statistic"></td>-->
                                     </tr>
-                                    <tr>
+                                    <!-- TODO: Can we populate this information? -->
+                                    <!--<tr>
                                         <td class="category">Total Participants:</td>
-                                        <td class="statistic">{profile.organized_competitions.participant_count | 0}
+                                        <td class="statistic">{profile.organized_competitions.participant_count || 0}
                                         </td>
                                         <td class="category">Total Submissions:</td>
-                                        <td class="statistic">{profile.organized_competitions.submission_count | 0}</td>
-                                    </tr>
+                                        <td class="statistic">{profile.organized_competitions.submission_count || 0}</td>
+                                    </tr>-->
                                 </table>
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>My Featured Competitions</h3>
-                                <!--<competition-tile-user each="{ profile.organized_competitions.slice(0,5) }" no-reorder class="item"></competition-tile-user>-->
                                 <competition-tile-user each="{ _.get(profile, 'organized_competitions', []).slice(0,5) }" no-reorder class="item"></competition-tile-user>
-                                <p class="no-competitions" style="" if="{ _.get(profile, 'organized_competitions', []).length === 0 }">
+                                <p class="no-competitions" if="{ _.get(profile, 'organized_competitions', []).length === 0 }">
                                     No competitions found for this user</p>
                             </div>
                         </div>
@@ -97,26 +98,27 @@
                                 <table class="stats-table">
                                     <tr>
                                         <td class="category">Submissions:</td>
-                                        <td class="statistic">{profile.created_solutions.length | 0}</td>
+                                        <td class="statistic">{ _.get(profile, 'created_solutions', []).length }</td>
                                         <td class="category">User Since:</td>
-                                        <td class="statistic"></td>
+                                        <td class="statistic">{ pretty_date(_.get(profile, 'date_joined', '')) }</td>
                                     </tr>
                                     <tr>
                                         <td class="category">Competitions Joined:</td>
                                         <td class="statistic">{profile.organized_competitions.length}</td>
+                                        <td class="statistic">{ _.get(profile, 'participating_competitions', []).length }</td>
                                     </tr>
                                 </table>
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>Latest Submissions</h3>
                                 <submission-tile-user each="{ _.get(profile, 'created_solutions', []) }" class="item"></submission-tile-user>
-                                <p class="no-competitions" style="" if="{ _.get(profile, 'created_solutions', []).length === 0 }">
+                                <p class="no-competitions" if="{ _.get(profile, 'created_solutions', []).length === 0 }">
                                     No solutions found for this user</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <about-me-user opts={profile}></about-me-user>
+                <about-me-user></about-me-user>
                 <div class="flex-content flex-row">
                     <education-container-user class="education-container"></education-container-user>
                     <datasets-container-user class="datasets-container"></datasets-container-user>
@@ -154,13 +156,13 @@
                                 <td class="category">Submissions:</td>
                                 <td class="statistic">{_.get(profile, 'created_solutions', []).length}</td>
                                 <td class="category">User Since:</td>
-                                <td class="statistic">{pretty_date(profile.date_joined)}</td>
+                                <td class="statistic">{ pretty_date(_.get(profile, 'date_joined', '')) }</td>
                             </tr>
                             <tr>
-                                <td class="category">Top 10 Finishes:</td>
-                                <td class="statistic">1</td>
+                                <!--<td class="category">Top 10 Finishes:</td>
+                                <td class="statistic">1</td>-->
                                 <td class="category">Competitions Joined:</td>
-                                <td class="statistic">{participants.length }</td>
+                                <td class="statistic">{ _.get(profile, 'participating_competitions', []).length }</td>
                             </tr>
                         </table>
                     </div>
@@ -171,14 +173,14 @@
                     <div class="ui header">Competitions I'm Running</div>
                     <div class="ui content flex-content">
                         <div class="list-comps">
-                            <div class="stat-breakdown">
+                            <!--<div class="stat-breakdown">
 
-                            </div>
+                            </div>-->
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <competition-tile-user each="{ profile.organized_competitions }" no-reorder
                                                        class="item"></competition-tile-user>
                             </div>
-                            <div class="ui pagination menu">
+                            <!--<div class="ui pagination menu">
                                 <a class="active item">
                                     1
                                 </a>
@@ -191,7 +193,7 @@
                                 <a class="item">
                                     4
                                 </a>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -210,10 +212,10 @@
                                     <competition-tile result="{competition}" class="item"></competition-tile>
                                 </virtual>
                                 <p class="no-competitions"
-                                   if="{ _.get(profile_data, 'participating_competitions', false) } || _.get(profile_data, 'participating_competitions', []).length === 0">
+                                   if="{ _.get(profile_data, 'participating_competitions', []).length === 0 }">
                                     No competitions found for this user</p>
                             </div>
-                            <div class="ui pagination menu">
+                            <!--<div class="ui pagination menu">
                                 <a class="active item">
                                     1
                                 </a>
@@ -226,7 +228,7 @@
                                 <a class="item">
                                     4
                                 </a>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -279,9 +281,8 @@
                     <div class="field">
                         <label>User Name</label>
                         <div class="no-edit">username</div>
-                        <div class="field-description">You cannot change your user name. Other Chahub users will
-                            not
-                            see this name.
+                        <div class="field-description">
+                            You cannot change your user name. Other Chahub users will not see this name.
                         </div>
                     </div>
                     <hr>
@@ -311,9 +312,9 @@
                         </div>
                     </div>
                     <hr>
-                    <div class="delete">
+                    <!--<div class="delete">
                         <a href="#">Delete account...</a>
-                    </div>
+                    </div>-->
                     <button class="ui button" type="submit">Submit</button>
                 </form>
             </div>
@@ -351,6 +352,7 @@
                 console.log('callback - particles.js config loaded');
             })
 
+            //$('.secondary.pointing.menu .item', self.root).tab({
             $('.secondary.pointing.menu .item').tab({
                 onVisible: function () {
                     $('.ui.sticky')
@@ -363,7 +365,6 @@
             });
 
             $('.ui.checkbox').checkbox();
-            //self.update_information();
             self.update_user();
         })
 
@@ -400,61 +401,61 @@
             })
         }
 
-        self.submissions = [
-            {
-                logo: 'http://placeimg.com/206/206/any',
-                _obj_type: 'competition',
-                title: 'Find Stuff in Data',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '10',
-                prize: '1200',
-            },
-            {
-                logo: 'http://placeimg.com/207/207/any',
-                _obj_type: 'competition',
-                title: 'Chance of a Car Running into a Tree',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '1090',
-                prize: '2400',
-            },
-            {
-                logo: 'http://placeimg.com/208/208/any',
-                _obj_type: 'competition',
-                title: 'Trading bot',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '65400',
-            }
-        ]
+        //self.submissions = [
+        //    {
+        //        logo: 'http://placeimg.com/206/206/any',
+        //        _obj_type: 'competition',
+        //        title: 'Find Stuff in Data',
+        //        description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+        //        url: 'https://google.com/',
+        //        start: '2018-01-29',
+        //        end: '2021-06-29',
+        //        participant_count: '10',
+        //        prize: '1200',
+        //    },
+        //    {
+        //        logo: 'http://placeimg.com/207/207/any',
+        //        _obj_type: 'competition',
+        //        title: 'Chance of a Car Running into a Tree',
+        //        description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+        //        url: 'https://google.com/',
+        //        start: '2018-01-29',
+        //        end: '2021-06-29',
+        //        participant_count: '1090',
+        //        prize: '2400',
+        //    },
+        //    {
+        //        logo: 'http://placeimg.com/208/208/any',
+        //        _obj_type: 'competition',
+        //        title: 'Trading bot',
+        //        description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
+        //        url: 'https://google.com/',
+        //        start: '2018-01-29',
+        //        end: '2021-06-29',
+        //        participant_count: '190',
+        //        prize: '65400',
+        //    }
+        //]
 
         self.publish = function (event) {
-            var txt;
+            //var txt;
 
             if (event.item.published) {
                 var r = confirm("Are you sure you want to make this dataset private?");
                 if (r === true) {
-                    txt = "This dataset is now private";
+                    //txt = "This dataset is now private";
                     return event.item.published = false;
                 } else {
-                    txt = "This dataset is still public";
+                    //txt = "This dataset is still public";
                     return event.item.published = true;
                 }
             } else {
                 var r = confirm("Are you sure you want to publish this dataset?");
                 if (r === true) {
-                    txt = "This dataset is now public!";
+                    //txt = "This dataset is now public!";
                     return event.item.published = true;
                 } else {
-                    txt = "This dataset is still private";
+                    //txt = "This dataset is still private";
                     return event.item.published = false;
                 }
 
@@ -715,9 +716,8 @@
         </div>
         <div class="list-tile">
             <div class="biography">
-                <!--<div id="bio" if={!!profile.github_info.bio}>{profile.github_info.bio}</div>-->
-                <div id="bio" if={!!profile.github_info.bio}>{_.get(_.get(profile, 'github_info', {}), '')}</div>
-                <div id="bio" if={!profile.github_info.bio}>No information found</div>
+                <div id="bio" if="{_.get(profile, 'github_info', false)}">{_.get(_.get(profile, 'github_info', {}), 'bio', '')}</div>
+                <div id="bio" if="{_.get(profile, 'github_info', true)}">No information found</div>
             </div>
         </div>
     </div>
@@ -737,7 +737,6 @@
         }
 
         CHAHUB.events.on('profile_loaded', function () {
-
             self.update({profile: self.parent.profile})
         })
 
@@ -902,8 +901,6 @@
         var self = this
 
         CHAHUB.events.on('profile_loaded', function () {
-            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            console.log(self.parent.profile)
             self.update({profile: self.parent.profile})
         })
     </script>

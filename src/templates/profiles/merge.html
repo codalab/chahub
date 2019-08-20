@@ -6,9 +6,8 @@
 
     <script>
         {% if message %}
-            MESSAGE = "{{ message }}"
             $('document').ready(function(){
-                toastr.success(MESSAGE)
+                toastr.success("{{ message }}")
             });
         {% endif %}
     </script>

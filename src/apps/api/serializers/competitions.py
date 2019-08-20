@@ -125,24 +125,20 @@ class CompetitionParticipantCreationSerializer(serializers.ModelSerializer):
     def validate_user(self, user):
         return Profile.objects.get(remote_id=user, producer=self.context.get('producer'))
 
-    # Override mixin
     def create(self, validated_data):
         """
         This creates *AND* updates based on the combination of (remote_id, producer)
         """
-        try:
-            # If we have an existing instance from this producer
-            # with the same remote_id, update it instead of making a new one
-            if not validated_data.get('user') or not validated_data.get('competition'):
-                return None
-            instance = self.Meta.model.objects.get(
-                user=validated_data.get('user'),
-                competition=validated_data.get('competition')
-            )
-            return self.update(instance, validated_data)
-        except self.Meta.model.DoesNotExist:
-            new_instance = super().create(validated_data)
-            return new_instance
+        user = validated_data.pop('user', None)
+        competition = validated_data.pop('competition', None)
+        if not user or not competition:
+            raise self.Meta.model.DoesNotExist("Competition and or user are None!")
+        instance = self.Meta.model.objects.update_or_create(
+            user=user,
+            competition=competition,
+            defaults=validated_data
+        )
+        return instance
 
 
 class CompetitionParticipantListSerializer(serializers.ModelSerializer):

@@ -18,20 +18,16 @@ def validate_next_url(next_url):
 
 def send_templated_email(template_name, context, **kwargs):
     subject = kwargs.get('subject')
-    # message = kwargs.get('message')
-    from_email = kwargs.get('from_email')
+    from_email = kwargs.get('from_email', settings.DEFAULT_FROM_EMAIL)
     recipient_list = kwargs.get('recipient_list')
-    fail_silently = kwargs.get('fail_silently')
+    fail_silently = kwargs.get('fail_silently', False)
 
     if not subject or not recipient_list:
         raise KeyError("Subject and recipient list not in email kwargs!")
 
-    plain_text = get_template('{}.txt'.format(template_name))
-    html_code = get_template('{}.html'.format(template_name))
+    plain_text = get_template(f'{template_name}.txt')
+    html_code = get_template(f'{template_name}.html')
 
-    # context = {}
-
-    # text_content = html_code.render_to_string(context)
     text_content = plain_text.render(context)
     html_content = html_code.render(context)
 

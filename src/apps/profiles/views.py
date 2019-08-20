@@ -27,9 +27,10 @@ class SignUpView(TemplateView):
                                     password=form.cleaned_data['password1'],
                                     )
             login(request, new_user)
-            if self.request.GET.get('next'):
-                if validate_next_url(self.request.GET.get('next')):
-                    return HttpResponseRedirect(self.request.GET.get('next'))
+            next_url = self.request.query_params.get('next')
+            if next_url:
+                if validate_next_url(next_url):
+                    return HttpResponseRedirect(next_url)
             return redirect('/')
         else:
             context = self.get_context_data()
@@ -54,7 +55,7 @@ class MergeAccountsView(TemplateView):
                 merge_request.delete()
                 self.request.session['message'] = 'Successfully merged accounts'
                 return redirect('profiles:merge_success')
-            except:
+            except AccountMergeRequest.DoesNotExist:
                 raise Http404("Could not find a merge request with that key.")
         else:
             if self.request.session.get('message'):
@@ -86,11 +87,12 @@ class ProfileView(TemplateView):
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
                 profiles = Profile.objects.filter(username=username)
-                if profiles.first():
-                    # Refine our query further based on the first result, matching usernames
-                    profiles = profiles.filter(username=profiles.first().username)
-                else:
-                    profiles = None
+                # Todo: I think we wanted to refine based on email, not username (IE: All returned profiles belong to the same email
+                # if profiles.exists():
+                #     # Refine our query further based on the first result, matching usernames
+                #     profiles = profiles.filter(username=profiles.first().username)
+                # else:
+                #     profiles = None
             # If we got a user instead of profiles
             if user and not profiles:
                 context['object_mode'] = 'user'
@@ -105,7 +107,7 @@ class ProfileView(TemplateView):
             else:
                 raise Http404("No profile or user could be found for that username!")
         # If we're not given a username and we're given a specific producer and remote_id
-        elif not username and (producer or remote_id):
+        elif not username and (producer and remote_id):
             try:
                 profile = Profile.objects.get(remote_id=remote_id, producer=producer)
                 context['object_mode'] = 'profile'

@@ -154,11 +154,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
     'social_core.pipeline.social_auth.social_user',
-    #'social_core.pipeline.user.create_user',
     'social_core.pipeline.social_auth.associate_user',
-    # 'social_core.pipeline.social_auth.load_extra_data',
-    # 'social_core.pipeline.user.user_details',
-    # 'social_core.pipeline.social_auth.associate_by_email',
     'profiles.pipeline.user_details',
 )
 
@@ -371,6 +367,5 @@ LOGO_BASE_WIDTH = 350
 # =============================================================================
 
 VALID_REDIRECT_DOMAINS = [
-    'www.google.com',
-    'localhost'
+    'localhost',
 ]
