@@ -34,16 +34,9 @@ def _handle_external_user_data(user, data, response, fields_list, data_field_nam
     data['uid'] = response.get('id')
     for field in fields_list:
         data[field] = response.get(field)
-    # if not user.github_info:
-    if not getattr(user, data_field_name, None):
-        new_info = data_model.objects.create(**data)
-        # user.github_info = new_info
-        setattr(user, data_field_name, new_info)
-    else:
-        # Only update if they're the same remote id
-        # if user.github_info.uid == data['uid']:
-        if getattr(user.github_info, 'uid', None) and getattr(user.github_info, 'uid', None) == data.get('uid'):
-            data_model.objects.filter(uid=data.get('uid').update(**data))
+    object, created = data_model.objects.get_or_create(user=user, defaults=data)
+    if not created:
+        data_model.objects.filter(pk=object.pk).update(**data)
     user.save()
 
 
