@@ -201,16 +201,16 @@ class ProfileDocument(DocType):
         return 'profile'
 
     def prepare_organized_competitions_count(self, instance):
-        return instance.organized_competitions.count() if instance.organized_competitions else 0
+        return instance.organized_competitions.count()
 
     def prepare_datasets_count(self, instance):
-        return instance.datasets.count() if instance.datasets else 0
+        return instance.datasets.count()
 
     def prepare_tasks_count(self, instance):
-        return instance.tasks.count() if instance.tasks else 0
+        return instance.tasks.count()
 
     def prepare_solutions_count(self, instance):
-        return instance.solutions.count() if instance.solutions else 0
+        return instance.solutions.count()
 
 
 @chahub_index.doc_type

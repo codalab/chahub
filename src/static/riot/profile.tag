@@ -7,17 +7,25 @@
         <div class="ui profile-segment segment">
             <div class="ui container profile-header">
                 <div class="holder">
-                    <img src="{ _.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'avatar_url', URLS.STATIC('img/img-wireframe.png')) }" class="profile-img" alt="profile-image">
+                    <img src="{ _.get(_.get(_.get(profile_data, 'user', {}), 'github_info', {}), 'avatar_url', URLS.STATIC('img/img-wireframe.png')) }"
+                         class="profile-img" alt="profile-image">
                 </div>
                 <div class="profile-user">
-                    {_.get(profile, 'username', 'anonymous / N/A')}
+                    {_.get(_.get(profile_data, 'user', {}), 'username', 'Anonymous / N/A')}
                     <div show="{ _.get(_.get(profile, 'user', {}), 'github_info', false) }" class="profile-brief">
-                        <div class="location">{_.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'location', '')}</div>
-                        <div class="occupation">{_.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'company', '')}</div>
-                        {_.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'bio', '')}
+                        <div class="location">{_.get(_.get(_.get(profile_data, 'user', {}), 'github_info', {}), 'location',
+                            '')}
+                        </div>
+                        <div class="occupation">{_.get(_.get(_.get(profile_data, 'user', {}), 'github_info', {}), 'company',
+                            '')}
+                        </div>
+                        {_.get(_.get(_.get(profile_data, 'user', {}), 'github_info', {}), 'bio', '')}
                     </div>
                     <div class="social-buttons">
-                        <a href="{_.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'html_url', '')}" show="{ _.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'html_url', false) !== false }" style="background-color: #582c80; color: white;" class="ui circular github plus mini icon button">
+                        <a href="{_.get(_.get(_.get(profile_data, 'user', {}), 'github_info', {}), 'html_url', '')}"
+                           show="{ _.get(_.get(_.get(profile_data, 'user', {}), 'github_info', {}), 'html_url', false) !== false }"
+                           style="background-color: #582c80; color: white;"
+                           class="ui circular github plus mini icon button">
                             <i class="github icon"></i>
                         </a>
                     </div>
@@ -30,7 +38,7 @@
                     <!-- <div class="ui large button msg-btn">Message Me</div>
                     <span class="ui icon large button follow-btn"><i class="user icon"></i>Follow</span> -->
                 </div>
-                <recent-container-user></recent-container-user>
+                <recent-container></recent-container>
             </div>
             <div id="profile-menu" class="ui secondary pointing menu">
                 <a class="active item" data-tab="details">
@@ -51,7 +59,6 @@
             </div>
         </div>
 
-
         <!------------ HOME TAB ----------->
         <div class="ui active details tab" data-tab="details">
             <div class="ui sixteen wide grid container">
@@ -63,7 +70,8 @@
                                 <table class="stats-table">
                                     <tr>
                                         <td class="category">Competitions Organized:</td>
-                                        <td class="statistic">{ _.get(profile_data, 'organized_competitions', []).length }</td>
+                                        <td class="statistic">{ _.get(profile_data, 'organized_competitions', []).length }
+                                        </td>
                                         <!--<td class="category">Organizer Since:</td>
                                         <td class="statistic">02/11/2017</td>-->
                                     </tr>
@@ -98,19 +106,24 @@
                                         <td class="category">Submissions:</td>
                                         <td class="statistic">{ _.get(profile_data, 'solutions', []).length }</td>
                                         <td class="category">User Since:</td>
-                                        <td class="statistic">{ humanize_time(_.get(_.get(profile, 'details', {}), 'date_joined', '')) }</td>
+                                        <td class="statistic">{ humanize_time(_.get(_.get(profile, 'details', {}),
+                                            'date_joined', '')) }
+                                        </td>
                                     </tr>
                                     <tr>
                                         <!--<td class="category">Top 10 Finishes:</td>
                                         <td class="statistic">1</td>-->
                                         <td class="category">Competitions Joined:</td>
-                                        <td class="statistic">{ _.get(profile_data, 'organized_competitions', []).length }</td>
+                                        <td class="statistic">{ _.get(profile_data, 'organized_competitions', []).length
+                                            }
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
                                 <h3>Latest Submissions</h3>
-                                <submission-tile each="{ _.get(profile_data, 'solutions', []) }" class="item"></submission-tile>
+                                <submission-tile each="{ _.get(profile_data, 'solutions', []) }"
+                                                 class="item"></submission-tile>
                             </div>
                         </div>
                     </div>
@@ -153,13 +166,16 @@
                                 <td class="category">Submissions:</td>
                                 <td class="statistic">{ _.get(profile_data, 'solutions', []).length }</td>
                                 <td class="category">User Since:</td>
-                                <td class="statistic">{ humanize_time(_.get(_.get(profile, 'details', {}), 'date_joined', '')) }</td>
+                                <td class="statistic">{ humanize_time(_.get(_.get(profile, 'details', {}),
+                                    'date_joined', '')) }
+                                </td>
                             </tr>
                             <tr>
                                 <!--<td class="category">Top 10 Finishes:</td>
                                 <td class="statistic">1</td>-->
                                 <td class="category">Competitions Joined:</td>
-                                <td class="statistic">{_.get(profile_data, 'participating_competitions', []).length }</td>
+                                <td class="statistic">{_.get(profile_data, 'participating_competitions', []).length }
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -173,7 +189,8 @@
                             <div class="stat-breakdown">
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
-                                <virtual each="{ competition in _.get(profile_data, 'organized_competitions', []) }" no-reorder>
+                                <virtual each="{ competition in _.get(profile_data, 'organized_competitions', []) }"
+                                         no-reorder>
                                     <competition-tile result="{ competition }" class="item"></competition-tile>
                                 </virtual>
                                 <p class="no-competitions"
@@ -206,8 +223,9 @@
 
                             </div>
                             <div class="ui middle aligned unstackable no-margin compact divided link items content-desktop">
-                                <virtual each="{ competition in _.get(profile_data, 'participating_competitions', []) }" no-reorder>
-                                <competition-tile result="{ competition }" class="item"></competition-tile>
+                                <virtual each="{ competition in _.get(profile_data, 'participating_competitions', []) }"
+                                         no-reorder>
+                                    <competition-tile result="{ competition }" class="item"></competition-tile>
                                 </virtual>
                                 <p class="no-competitions"
                                    if="{ _.get(profile_data, 'participating_competitions', true) || _.get(profile_data, 'participating_competitions', []).length == 0 }">
@@ -254,16 +272,16 @@
                             Connect with Github
                         </div>
                         <div class="container-content">
-                            <div class="field" if="{!profile.github_info}">
+                            <div class="field">
                                 <label>Connect with github</label>
                                 <a class="ui large blue button" href="/social/login/github">Login</a>
                             </div>
-                            <div class="field" if="{!!profile.github_info}">
+                            <!--<div class="field" if="{!!profile.github_info}">
                                 <label>Connect with github</label>
                                 <a class="ui large disabled blue button"
                                    href="/social/login/github">Login</a>
                                 <i>You are already connected!</i>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -322,21 +340,10 @@
 
     <script>
         var self = this
-        self.profile = {
-            github_info: {
-                avatar_url: '',
-                bio: ''
-            },
-            username: '',
-            name: '',
-            email: '',
-            bio: '',
-            competitions: [],
-            datasets: [],
-            submissions: []
-        }
 
         self.profile_data = {
+            user: {},
+            github_info: {},
             organized_competitions: [],
             participating_competitions: [],
             solutions: [],
@@ -344,26 +351,22 @@
             tasks: [],
         }
 
-        self.competitions = []
-        self.datasets = []
-        self.submissions = []
-        self.profiles = []
-        self.sorted_competitions = []
-
-        self.SINGLE_PROFILE = true
-
-        self.FIELDS_TO_UPDATE = [
-            'profile',
-            'competitions',
+        self.fields_to_merge = [
+            'organized_competitions',
             'datasets',
-            'submissions',
-            'profiles',
+            'tasks',
+            'solutions',
         ]
 
         self.on('mount', function () {
             particlesJS.load('particles-js', "/static/particles/particles-profile.json", function () {
                 console.log('callback - particles.js config loaded');
             })
+
+            if (_.get(self.opts, 'objects', false)) {
+                self.objects = JSON.parse(self.opts.objects)
+                self.update()
+            }
 
             $('.secondary.pointing.menu .item').tab({
                 onVisible: function () {
@@ -377,53 +380,67 @@
             });
 
             $('.ui.checkbox').checkbox();
-            //self.update_information();
             self.update_profiles();
         })
 
-        self.update_profile_data = function(data) {
-            data.participants.forEach(function (participant){
-                self.profile_data.participating_competitions.push(participant.competition)
-            })
+        self._profile_data_update = function (data) {
+            if (_.get(data, 'participants', false)) {
+                data.participants.forEach(function (participant) {
+                    self.profile_data.participating_competitions.push(participant.competition)
+                })
+            }
 
-            self.profile_data.organized_competitions = _.merge(self.profile_data.organized_competitions, data.organized_competitions)
-            self.profile_data.datasets = _.merge(self.profile_data.datasets, data.datasets)
-            self.profile_data.tasks = _.merge(self.profile_data.tasks, data.tasks)
-            self.profile_data.solutions = _.merge(self.profile_data.solutions, data.solutions)
+            self.fields_to_merge.forEach(function (field) {
+                self.profile_data[field] = _.merge(self.profile_data[field], data[field])
+            })
+        }
+
+        self._user_profile_data_update = function (data) {
+            data.profiles.forEach(function( profile ) {
+                self._profile_data_update(profile)
+            })
         }
 
         self.update_profiles = function () {
-            if (PROFILE_MODE === 'profile' || PROFILE_OBJECTS.length === 1) {
-                self.SINGLE_PROFILE = true
-                CHAHUB.api.get_profile(PROFILE_OBJECTS[0])
+            if (self.opts.mode === 'user') {
+                CHAHUB.api.get_user(self.opts.objects)
                     .done(function (data) {
-                        self.profile = data
-
-                        self.update_profile_data(data)
-
+                        self.profile_data.user = data
+                        if (_.get(data, 'github_info', false)) {
+                            self.profile_data.github_info = data.github_info
+                        }
+                        self._user_profile_data_update(data)
+                        self.update()
+                        CHAHUB.events.trigger("profile_loaded", self.profile_data)
+                    })
+                    .fail(function (response) {
+                        toastr.error("Failed to retrieve profile: " + self.opts.objects[0])
+                    })
+            } else {
+                if (!Array.isArray(self.objects)) {
+                    self.objects = [self.objects]
+                }
+                CHAHUB.api.get_profiles(self.objects)
+                    .done(function (data) {
+                        data.forEach(function (profile) {
+                            if (_.get(profile, 'user', false)) {
+                                if (_.isEmpty(self.profile_data.user)) {
+                                    self.profile_data.user = profile.user
+                                    if (_.get(profile.user, 'github_info', false)) {
+                                        if (_.isEmpty(self.profile_data.github_info)) {
+                                            self.profile_data.github_info = profile.user.github_info
+                                        }
+                                    }
+                                }
+                            }
+                            self._profile_data_update(profile)
+                        })
                         self.update()
                         CHAHUB.events.trigger("profile_loaded", self.profile_data)
                     })
                     .fail(function (response) {
                         toastr.error("Failed to retrieve profile: " + profile_id)
                     })
-            } else {
-                PROFILE_OBJECTS.forEach(function (profile_id) {
-                    CHAHUB.api.get_profile(profile_id)
-                        .done(function (data) {
-                            if (profile_id === PROFILE_OBJECTS[0]){
-                                self.profile = data
-                            }
-
-                            self.update_profile_data(data)
-
-                            self.update()
-                            CHAHUB.events.trigger("profile_loaded", self.profile_data)
-                        })
-                        .fail(function (response) {
-                            toastr.error("Failed to retrieve profile: " + profile_id)
-                        })
-                })
             }
         }
 
@@ -439,42 +456,6 @@
                 }
             })
         }
-
-        self.submissions = [
-            {
-                logo: 'http://placeimg.com/206/206/any',
-                _obj_type: 'competition',
-                title: 'Find Stuff in Data',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '10',
-                prize: '1200',
-            },
-            {
-                logo: 'http://placeimg.com/207/207/any',
-                _obj_type: 'competition',
-                title: 'Chance of a Car Running into a Tree',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '1090',
-                prize: '2400',
-            },
-            {
-                logo: 'http://placeimg.com/208/208/any',
-                _obj_type: 'competition',
-                title: 'Trading bot',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '65400',
-            }
-        ]
 
         self.publish = function (event) {
             var txt;
@@ -755,7 +736,9 @@
         </div>
         <div class="list-tile">
             <div class="biography">
-                <div id="bio">{_.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'bio', 'No information found')}</div>
+                <div id="bio">{_.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'bio', 'No information
+                    found')}
+                </div>
                 <div id="editor-container">
                     <textarea id="editor"></textarea>
                 </div>
@@ -765,13 +748,8 @@
 
     <script>
         var self = this
-        self.profile = self.parent.profile
-        self.profile_data = self.parent.profile_data
-
-        CHAHUB.events.on('profile_loaded', function () {
-            self.parent.FIELDS_TO_UPDATE.forEach(function (field) {
-                self[field] = self.parent[field]
-            })
+        CHAHUB.events.on('profile_loaded', function (profile_data) {
+            self.profile_data = profile_data
             self.update()
 
             self.easymde = new EasyMDE({
@@ -1056,9 +1034,6 @@
 
     <script>
         var self = this
-
-        self.called = 0
-
         CHAHUB.events.on('profile_loaded', function (profile_data) {
             self.profile_data = profile_data
             self.update()
@@ -1304,7 +1279,8 @@
             </div>
             <div class="container-content">
                 <div class="ui middle aligned unstackable compact divided link items content-desktop">
-                    <submission-tile each="{ _.get(profile_data, 'solutions', []) }" onclick="{show_table}" class="item"></submission-tile>
+                    <submission-tile each="{ _.get(profile_data, 'solutions', []) }" onclick="{show_table}"
+                                     class="item"></submission-tile>
                     <p if="{ _.get(profile_data, 'solutions', []).length === 0 }">No submissions found for this user</p>
                 </div>
             </div>
@@ -1329,98 +1305,6 @@
             self.profile_data = profile_data
             self.update()
         })
-
-        self.submissions = [
-            {
-                logo: 'http://placeimg.com/200/200/any',
-                _obj_type: 'competition',
-                title: 'Find Stuff in Data',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '10',
-                prize: '1200',
-            },
-            {
-                logo: 'http://placeimg.com/201/201/any',
-                _obj_type: 'competition',
-                title: 'Chance of a Car Running into a Tree',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '1090',
-                prize: '2400',
-            },
-            {
-                logo: 'http://placeimg.com/202/202/any',
-                _obj_type: 'competition',
-                title: 'Trading bot',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '65400',
-            },
-            {
-                logo: 'http://placeimg.com/202/202/any',
-                _obj_type: 'competition',
-                title: 'Trading bot',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '65400',
-            },
-            {
-                logo: 'http://placeimg.com/202/202/any',
-                _obj_type: 'competition',
-                title: 'Trading bot',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '65400',
-            },
-            {
-                logo: 'http://placeimg.com/202/202/any',
-                _obj_type: 'competition',
-                title: 'Trading bot',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '65400',
-            },
-            {
-                logo: 'http://placeimg.com/202/202/any',
-                _obj_type: 'competition',
-                title: 'Trading bot',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '65400',
-            },
-            {
-                logo: 'http://placeimg.com/202/202/any',
-                _obj_type: 'competition',
-                title: 'Trading bot',
-                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit...",
-                url: 'https://google.com/',
-                start: '2018-01-29',
-                end: '2021-06-29',
-                participant_count: '190',
-                prize: '65400',
-            }
-        ]
-
     </script>
 
     <style type="text/stylus">

@@ -46,8 +46,17 @@ class ProfileViewSet(BulkViewSetMixin, ModelViewSet):
     authentication_classes = (ProducerAuthentication, SessionAuthentication, )
     permission_classes = (ProducerPermission, )
 
+    def get_queryset(self):
+        pks_list = self.request.query_params.getlist('pk')
+        if pks_list:
+            return self.queryset.filter(pk__in=pks_list)
+        return self.queryset
+
     def get_serializer_class(self):
         if self.action == 'list':
+            # If we're getting back multiple profiles through the query parameter, give more information
+            if self.request.query_params.getlist('pk'):
+                return ProfileDetailSerializer
             return BaseProfileSerializer
         if self.action == 'create':
             return ProfileCreateSerializer

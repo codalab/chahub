@@ -2,25 +2,5 @@
 {% load static %}
 
 {% block content %}
-    <script>
-
-        {% if object_mode %}
-            PROFILE_MODE = "{{ object_mode }}"
-        {% endif %}
-        {% if objects %}
-            PROFILE_OBJECTS = {{ objects }}
-        {% endif %}
-
-        {% if IS_OWN_PROFILE %}
-            IS_OWN_PROFILE = true
-        {% else %}
-            IS_OWN_PROFILE = false
-        {% endif %}
-    </script>
-
-    {% if object_mode == 'user' %}
-        <profile-page-user></profile-page-user>
-    {% elif object_mode == 'profile' or object_mode == 'profile_list' %}
-        <profile-page></profile-page>
-    {% endif %}
+        <profile-page objects="{{ objects|escapejs|safe }}" mode="{{ object_mode }}"></profile-page>
 {% endblock %}

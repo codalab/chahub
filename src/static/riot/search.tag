@@ -2,10 +2,10 @@
     <competition-modal></competition-modal>
     <div id="particle_header" class="ui centered grid">
         <span hide="{ embedded }">
-            <a hide="{USER_AUTHENTICATED}" href="/accounts/login/"
+            <a hide="{SITE.state.user.is_aiut}" href="/accounts/login/"
                class="ui login-button button">LOGIN
             </a>
-            <span hide="{USER_AUTHENTICATED}" class="ui login-button chasuite dropdown button item">
+            <span hide="{SITE.state.user.is_aiut}" class="ui login-button chasuite dropdown button item">
                 CHASUITE
                 <i class="dropdown icon"></i>
                 <span class="menu">
@@ -16,19 +16,19 @@
                 </span>
             </span>
 
-            <span show="{USER_AUTHENTICATED}" class="ui login-button dropdown button item">
+            <span show="{SITE.state.user.is_aiut}" class="ui login-button dropdown button item">
                 <span class="text">
                     <i class="icon user outline"></i>
-                    {USERNAME}
+                    {SITE.state.user.username}
                 </span>
                 <i class="dropdown icon"></i>
                 <span class="menu">
-                    <virtual if="{window.USER_IS_SUPERUSER}">
+                    <virtual if="{window.SITE.state.user.is_superuser}">
                         <div class="header">Django Admin</div>
-                        <a class="item" href="{ADMIN_URL}">Index</a>
-                        <a class="item" href="{ADMIN_URL}competitions/">Competitions</a>
-                        <a class="item" href="{ADMIN_URL}profiles/user/">Users</a>
-                        <a class="item" href="{ADMIN_URL}producers">Producers</a>
+                        <a class="item" href="{URLS.ADMIN}">Index</a>
+                        <a class="item" href="{URLS.ADMIN}competitions/">Competitions</a>
+                        <a class="item" href="{URLS.ADMIN}profiles/user/">Users</a>
+                        <a class="item" href="{URLS.ADMIN}producers">Producers</a>
                         <div class="ui divider"></div>
                     </virtual>
                     <div class="header">Chasuite</div>
@@ -38,7 +38,7 @@
                         <a class="item" href="#">Chagle</a>
                     <div class="ui divider"></div>
                     <div class="header">My Account</div>
-                    <a class="item" href="/profiles/{USERNAME}">
+                    <a class="item" href="/profiles/{SITE.state.user.username}">
                         <i class="icon user"></i>
                         My profile
                     </a>
@@ -246,20 +246,14 @@
     </div>
     <div if="{!loading}" class="sixteen wide center aligned column">
         <div style="" class="ui pagination menu custom-pagination">
-            <a if="{page !== 1}" class="item" onclick="{prev_page}">
-                <
-            </a>
-            <a if="{page === 1}" class="disabled inverted item">
+            <a onclick="{prev_page}" class="{disabled: page === 1} inverted item">
                 <
             </a>
             <a each="{page_number in page_range}" onclick="{set_specific_page.bind(this, page_number)}" class="item">
                 {page_number}
             </a>
             <div class="right menu">
-                <a if="{results.length !== 0}" class="item" onclick="{next_page}">
-                    >
-                </a>
-                <a if="{results.length === 0}" class="disabled inverted item">
+                <a onclick="{next_page}" class="{disabled: results.length === 0} inverted item">
                     >
                 </a>
             </div>
@@ -896,7 +890,7 @@
 </search-results>
 
 <competition-tile if="{ _obj_type == 'competition' }" onclick="{redirect_to_url}">
-    <div class="floating-actions { is-admin: USER_IS_SUPERUSER }">
+    <div class="floating-actions { is-admin: SITE.state.user.is_superuser }">
         <i class="icon green pencil alternate"
            onclick="{ edit_competition }"></i>
         <i class="icon red delete" onclick="{ delete_competition }"></i>
@@ -1094,7 +1088,7 @@
 </competition-tile>
 
 <dataset-tile if="{ _obj_type == 'dataset' }" onclick="{redirect_to_url}">
-    <div class="floating-actions { is-admin: USER_IS_SUPERUSER }">
+    <div class="floating-actions { is-admin: SITE.state.user.is_superuser }">
         <i class="icon green pencil alternate"
            onclick="{ edit_dataset }"></i>
         <i class="icon red delete" onclick="{ delete_dataset }"></i>
@@ -1384,7 +1378,6 @@
         }
 
         self.on("mount", function () {
-            //console.log(self)
             $(".tooltip", self.root).popup()
         })
     </script>
@@ -1464,7 +1457,6 @@
             }
             endpoint
                 .done(function (data) {
-                    //console.log("Received general stats")
                     self.update({
                             producer_stats: [
                                 {label: "Competitions", count: num_formatter(data.competition_count, 1)},
@@ -1587,7 +1579,6 @@
             self.refs.competition_title.value = self.selected_competition.title
             self.refs.competition_description.value = self.selected_competition.description
             self.refs.competition_logo.value = self.selected_competition.logo
-            //console.log(self)
             self.update()
             $(self.refs.modal).modal('show')
         })

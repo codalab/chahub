@@ -24,7 +24,7 @@ services:
     tty: true
     logging:
       options:
-        max-size: "500k"
+        max-size: "20k"
         max-file: "10"
   # --------------------------------------------------------------------------
   # Database
@@ -46,7 +46,7 @@ services:
     env_file: .env
     logging:
       options:
-        max-size: "200k"
+        max-size: "20k"
     container_name: chahub-postgres
   # --------------------------------------------------------------------------
   # Elastic Search
@@ -62,7 +62,7 @@ services:
     env_file: .env
     logging:
       options:
-        max-size: "200k"
+        max-size: "20k"
     container_name: elastic-search
   #-----------------------------------------------
   #   Local development helper, rebuilds RiotJS/Stylus on change
@@ -75,5 +75,5 @@ services:
       - .:/app
     logging:
       options:
-        max-size: "500k"
+        max-size: "20k"
         max-file: "10"

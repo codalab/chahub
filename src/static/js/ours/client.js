@@ -49,6 +49,18 @@ CHAHUB.api = {
     get_profile: function(id) {
         return CHAHUB.api.request('GET', URLS.API + "profiles/" + id + "/")
     },
+    //get_profiles: function(query_data) {
+    get_profiles: function(objects) {
+        var query_string = ""
+        objects.forEach(function(object_pk) {
+            if (object_pk == objects[0]) {
+                query_string += '?pk=' + object_pk
+            } else {
+                query_string += '&pk=' + object_pk
+            }
+        })
+        return CHAHUB.api.request('GET', URLS.API + "profiles/" + query_string)
+    },
     // Merge requests
     create_merge: function(data) {
         return CHAHUB.api.request('POST', URLS.API + "create_merge_request/", data)

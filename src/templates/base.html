@@ -144,40 +144,30 @@
             header_particles: "{% static "particles/header.json" %}"
         },
         API: "/api/v1/",
+        ADMIN: "{% url 'admin:index' %}",
         STATIC: function (asset_url) {
             return "{{ STATIC_URL }}" + asset_url
         }
     }
-    {% if producers %}
-        PRODUCERS = JSON.parse("{{ producers|escapejs }}")
-    {% endif %}
-    {% if default_search_results %}
-        DEFAULT_SEARCH_RESULTS = JSON.parse("{{ default_search_results|escapejs }}")
-    {% else %}
-        DEFAULT_SEARCH_RESULTS = undefined
-    {% endif %}
-    USER_AUTHENTICATED = "{{ user.is_authenticated }}" === "True"
 
-    USER_IS_SUPERUSER = "{{ user.is_superuser }}" === "True"
-
-    USERNAME = "{{ user.username }}"
-
-    ADMIN_URL = "{% url 'admin:index' %}"
-
-    /*if ("{{ user.is_superuser }}" === "True") {
-        $(document).ready(function () {
-            var comp_tile = $(' competition-tile.item');
-
-            comp_tile.on({
-                mouseenter: function () {
-                    $(this).find('.actions').show()
-                },
-                mouseleave: function () {
-                    $(this).find('.actions').hide()
-                }
-            });
-        })
-    }*/
+    //Using Generic SITE here instead of Chahub because we already declare the variable CHAHUB in client.js
+    SITE = {
+        state: {
+            user: {
+                username: "{{ user.username }}",
+                is_authenticated: "{{ user.is_authenticated }}" === "True",
+                is_superuser: "{{ user.is_superuser }}" === "True",
+            },
+            {% if producers %}
+                producers: JSON.parse("{{ producers|escapejs }}"),
+            {% endif %}
+            {% if default_search_results %}
+                default_search_results: JSON.parse("{{ default_search_results|escapejs }}"),
+            {% else %}
+                default_search_results: undefined,
+            {% endif %}
+        }
+    }
 
 </script>
 

@@ -1,3 +1,5 @@
+import json
+
 from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render, redirect
 
@@ -93,7 +95,7 @@ class ProfileView(TemplateView):
                 #     profiles = profiles.filter(username=profiles.first().username)
                 # else:
                 #     profiles = None
-            # If we got a user instead of profiles
+                # If we got a user instead of profiles
             if user and not profiles:
                 context['object_mode'] = 'user'
                 context['objects'] = user.pk
@@ -111,7 +113,7 @@ class ProfileView(TemplateView):
             try:
                 profile = Profile.objects.get(remote_id=remote_id, producer=producer)
                 context['object_mode'] = 'profile'
-                context['objects'] = [profile.pk]
+                context['objects'] = profile.pk
             except Profile.DoesNotExist:
                 raise Http404("No profile could be found matching that producer and remote_id")
         else:
