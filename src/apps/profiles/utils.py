@@ -10,17 +10,14 @@ from producers.models import Producer
 def validate_next_url(next_url):
     valid_producer_domains = [urlparse(producer.url).netloc for producer in Producer.objects.all()]
     parsed_uri = urlparse(next_url)
-    if parsed_uri.netloc in valid_producer_domains or settings.VALID_REDIRECT_DOMAINS:
-        return True
-    else:
-        return False
+    return parsed_uri.netloc in valid_producer_domains or settings.VALID_REDIRECT_DOMAINS
 
 
-def send_templated_email(template_name, context, **kwargs):
-    subject = kwargs.get('subject')
-    from_email = kwargs.get('from_email', settings.DEFAULT_FROM_EMAIL)
-    recipient_list = kwargs.get('recipient_list')
-    fail_silently = kwargs.get('fail_silently', False)
+def send_templated_email(template_name, context, **email_opts):
+    subject = email_opts.get('subject')
+    from_email = email_opts.get('from_email', settings.DEFAULT_FROM_EMAIL)
+    recipient_list = email_opts.get('recipient_list')
+    fail_silently = email_opts.get('fail_silently', False)
 
     if not subject or not recipient_list:
         raise KeyError("Subject and recipient list not in email kwargs!")

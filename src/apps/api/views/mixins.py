@@ -1,9 +1,9 @@
-# NOTE: We don't have delete mixin
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
 
-class BulkViewSetMixin(object):
+class ProducerModelViewSet(ModelViewSet):
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['producer'] = self.request.user

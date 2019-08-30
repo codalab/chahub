@@ -12,7 +12,7 @@ from api.authenticators import ProducerAuthentication
 from api.permissions import ProducerPermission
 from api.serializers.profiles import MyProfileListSerializer, BaseProfileSerializer, AccountMergeRequestSerializer, \
     MyProfileDetailSerializer, ProfileDetailSerializer, ProfileCreateSerializer
-from api.views.mixins import BulkViewSetMixin
+from api.views.mixins import ProducerModelViewSet
 from profiles.models import Profile
 
 User = get_user_model()
@@ -40,7 +40,7 @@ class UserViewSet(ModelViewSet):
         return self.serializer_class
 
 
-class ProfileViewSet(BulkViewSetMixin, ModelViewSet):
+class ProfileViewSet(ProducerModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileDetailSerializer
     authentication_classes = (ProducerAuthentication, SessionAuthentication, )

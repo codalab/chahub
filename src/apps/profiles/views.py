@@ -100,11 +100,11 @@ class ProfileView(TemplateView):
                 context['object_mode'] = 'user'
                 context['objects'] = user.pk
                 if self.request.user.is_authenticated:
-                    context['IS_OWN_PROFILE'] = True if user.pk == self.request.user.pk else False
+                    context['IS_OWN_PROFILE'] = user.pk == self.request.user.pk
             # If we got profiles instead of a user
             elif profiles and not user:
                 context['object_mode'] = 'profile_list'
-                context['objects'] = [profile.pk for profile in profiles]
+                context['objects'] = profiles.values_list('pk', flat=True)
             # Neither
             else:
                 raise Http404("No profile or user could be found for that username!")

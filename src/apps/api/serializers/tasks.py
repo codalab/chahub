@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
-from api.serializers.mixins import BulkSerializerMixin
+from api.serializers.mixins import ProducerValidationSerializerMixin
 from api.serializers.producers import ProducerSerializer
 from tasks.models import Task, Solution
 
 
-class TaskSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+class TaskSerializer(ProducerValidationSerializerMixin, serializers.ModelSerializer):
     producer = ProducerSerializer(required=False, validators=[])
 
     class Meta:
@@ -33,7 +33,7 @@ class TaskSerializer(BulkSerializerMixin, serializers.ModelSerializer):
         ]
 
 
-class SolutionSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+class SolutionSerializer(ProducerValidationSerializerMixin, serializers.ModelSerializer):
     producer = ProducerSerializer(required=False, validators=[])
     tasks = TaskSerializer(many=True)
 

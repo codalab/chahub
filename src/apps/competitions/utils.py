@@ -10,10 +10,9 @@ from django.core.files.base import ContentFile
 
 from competitions.models import Competition
 
-from requests.exceptions import ConnectionError as RequestsConnectionError
+from requests.exceptions import ConnectionError
 
 logger = logging.getLogger(__name__)
-
 
 def competition_download_image(competition_pk):
     try:
@@ -28,7 +27,7 @@ def competition_download_image(competition_pk):
         return
     try:
         resp = requests.get(comp.logo_url)
-    except RequestsConnectionError:
+    except ConnectionError:
         logger.info(f"Failed to retrieve logo from {comp.logo_url}")
         return
     if not resp.ok:

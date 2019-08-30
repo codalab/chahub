@@ -1,7 +1,7 @@
 from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
 
-from api.serializers.mixins import BulkSerializerMixin
+from api.serializers.mixins import ProducerValidationSerializerMixin
 from competitions.models import Competition, Phase, Submission, CompetitionParticipant
 from profiles.models import Profile
 
@@ -52,7 +52,7 @@ class SubmissionSerializer(serializers.ModelSerializer):
         return instance
 
 
-class CompetitionSerializer(BulkSerializerMixin, WritableNestedModelSerializer):
+class CompetitionSerializer(ProducerValidationSerializerMixin, WritableNestedModelSerializer):
     phases = PhaseSerializer(required=False, many=True)
     admins = serializers.StringRelatedField(many=True, read_only=True)
     logo = serializers.URLField(required=False)
@@ -133,7 +133,7 @@ class CompetitionParticipantCreationSerializer(serializers.ModelSerializer):
         competition = validated_data.pop('competition', None)
         if not user or not competition:
             raise self.Meta.model.DoesNotExist("Competition and or user are None!")
-        instance = self.Meta.model.objects.update_or_create(
+        instance, _ = self.Meta.model.objects.update_or_create(
             user=user,
             competition=competition,
             defaults=validated_data
@@ -142,7 +142,6 @@ class CompetitionParticipantCreationSerializer(serializers.ModelSerializer):
 
 
 class CompetitionParticipantListSerializer(serializers.ModelSerializer):
-
     competition = CompetitionSerializer(many=False, required=False, read_only=True)
 
     class Meta:

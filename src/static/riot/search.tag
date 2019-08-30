@@ -2,10 +2,10 @@
     <competition-modal></competition-modal>
     <div id="particle_header" class="ui centered grid">
         <span hide="{ embedded }">
-            <a hide="{SITE.state.user.is_aiut}" href="/accounts/login/"
+            <a hide="{CHAHUB.state.user.is_authenticated}" href="/accounts/login/"
                class="ui login-button button">LOGIN
             </a>
-            <span hide="{SITE.state.user.is_aiut}" class="ui login-button chasuite dropdown button item">
+            <span hide="{CHAHUB.state.user.is_authenticated}" class="ui login-button chasuite dropdown button item">
                 CHASUITE
                 <i class="dropdown icon"></i>
                 <span class="menu">
@@ -16,14 +16,14 @@
                 </span>
             </span>
 
-            <span show="{SITE.state.user.is_aiut}" class="ui login-button dropdown button item">
+            <span show="{CHAHUB.state.user.is_authenticated}" class="ui login-button dropdown button item">
                 <span class="text">
                     <i class="icon user outline"></i>
-                    {SITE.state.user.username}
+                    {CHAHUB.state.user.username}
                 </span>
                 <i class="dropdown icon"></i>
                 <span class="menu">
-                    <virtual if="{window.SITE.state.user.is_superuser}">
+                    <virtual if="{CHAHUB.state.user.is_superuser}">
                         <div class="header">Django Admin</div>
                         <a class="item" href="{URLS.ADMIN}">Index</a>
                         <a class="item" href="{URLS.ADMIN}competitions/">Competitions</a>
@@ -38,7 +38,7 @@
                         <a class="item" href="#">Chagle</a>
                     <div class="ui divider"></div>
                     <div class="header">My Account</div>
-                    <a class="item" href="/profiles/{SITE.state.user.username}">
+                    <a class="item" href="/profiles/{CHAHUB.state.user.username}">
                         <i class="icon user"></i>
                         My profile
                     </a>
@@ -363,26 +363,26 @@
             self.init_values_from_query_params()
         })
 
-        self.switch_page_utillity = function () {
+        self.switch_page_utility = function () {
             self.page_range = _.range(self.page,self.page+11)
             window.scrollTo(0, 0)
         }
 
         self.next_page = function () {
             self.page ++
-            self.switch_page_utillity()
+            self.switch_page_utility()
             self.search()
         }
 
         self.prev_page = function () {
             self.page --
-            self.switch_page_utillity()
+            self.switch_page_utility()
             self.search()
         }
 
         self.set_specific_page = function (page_number) {
             self.page = page_number
-            self.switch_page_utillity()
+            self.switch_page_utility()
             self.search()
         }
 
@@ -506,10 +506,7 @@
 
             // TODO: Set this from input. Spaces are alright, they will get stripped.
             // Just a string list. Should probably pass this as a JSON string list, and decode on the other side?
-            filters.object_types = $(self.refs.object_types).dropdown('get value')
-            if (filters.object_types === '') {
-                filters.object_types = 'ALL'
-            }
+            filters.object_types = $(self.refs.object_types).dropdown('get value') || 'ALL'
 
             // Remove any unused filters so we don't do empty searches
             dict_remove_empty_values(filters)
@@ -890,14 +887,14 @@
 </search-results>
 
 <competition-tile if="{ _obj_type == 'competition' }" onclick="{redirect_to_url}">
-    <div class="floating-actions { is-admin: SITE.state.user.is_superuser }">
+    <div class="floating-actions { is-admin: CHAHUB.state.user.is_superuser }">
         <i class="icon green pencil alternate"
            onclick="{ edit_competition }"></i>
         <i class="icon red delete" onclick="{ delete_competition }"></i>
         <i class="icon { yellow: locked, unlock: locked, lock: !locked }" onclick="{ lock_competition}"></i>
     </div>
     <div class="ui tiny image">
-        <img src="{_.get(opts.result, 'logo') || static_image}" class="ui avatar image">
+        <img src="{_.get(opts.result, 'logo', static_image)}" class="ui avatar image">
     </div>
     <div class="content">
         <div class="header">
@@ -1088,14 +1085,14 @@
 </competition-tile>
 
 <dataset-tile if="{ _obj_type == 'dataset' }" onclick="{redirect_to_url}">
-    <div class="floating-actions { is-admin: SITE.state.user.is_superuser }">
+    <div class="floating-actions { is-admin: CHAHUB.state.user.is_superuser }">
         <i class="icon green pencil alternate"
            onclick="{ edit_dataset }"></i>
         <i class="icon red delete" onclick="{ delete_dataset }"></i>
         <i class="icon { yellow: locked, unlock: locked, lock: !locked }" onclick="{ lock_dataset}"></i>
     </div>
     <div class="ui tiny image">
-        <img src="{_.get(opts.result, 'logo') || static_image}" class="ui avatar image">
+        <img src="{_.get(opts.result, 'logo', static_image)}" class="ui avatar image">
     </div>
     <div class="content">
         <div class="header">
@@ -1105,7 +1102,7 @@
             <p>{_.get(opts.result, 'description', '')}</p>
         </div>
         <div class="extra">
-            <p>Type: {_.get(opts.result, 'type', unknown)}</p>
+            <p>Type: {_.get(opts.result, 'type', 'unknown')}</p>
         </div>
     </div>
 
@@ -1452,7 +1449,7 @@
             var urlParams = new URLSearchParams(window.location.search);
             var producer_query = urlParams.get('producer');
             var endpoint = CHAHUB.api.get_producer_stats()
-            if (producer_query != null && producer_query != undefined) {
+            if (!!producer_query) {
                 endpoint = CHAHUB.api.get_producer(producer_query)
             }
             endpoint

@@ -2,14 +2,13 @@ import logging
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from api.serializers.mixins import BulkSerializerMixin
+from api.serializers.mixins import ProducerValidationSerializerMixin
 from api.serializers.producers import ProducerSerializer
 from profiles.models import GithubUserInfo, LinkedInUserInfo, Profile, AccountMergeRequest
 
 from api.serializers.competitions import CompetitionSerializer, CompetitionParticipantListSerializer
 from api.serializers.data import DataSerializer
-from api.serializers.tasks import TaskSerializer
-from api.serializers.tasks import SolutionSerializer
+from api.serializers.tasks import TaskSerializer, SolutionSerializer
 
 User = get_user_model()
 
@@ -30,7 +29,6 @@ class AccountMergeRequestSerializer(serializers.ModelSerializer):
 
 
 class GithubUserInfoSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = GithubUserInfo
         fields = [
@@ -60,7 +58,6 @@ class GithubUserInfoSerializer(serializers.ModelSerializer):
 
 
 class LinkedInUserInfoSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = LinkedInUserInfo
         fields = [
@@ -70,7 +67,7 @@ class LinkedInUserInfoSerializer(serializers.ModelSerializer):
         ]
 
 
-class UserProfileDetailSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+class UserProfileDetailSerializer(ProducerValidationSerializerMixin, serializers.ModelSerializer):
     organized_competitions = CompetitionSerializer(many=True, read_only=True)
     datasets = DataSerializer(many=True, read_only=True)
     tasks = TaskSerializer(many=True, read_only=True)
@@ -103,13 +100,12 @@ class UserProfileDetailSerializer(BulkSerializerMixin, serializers.ModelSerializ
 
 
 class MyProfileDetailSerializer(serializers.ModelSerializer):
-    github_info = GithubUserInfoSerializer(read_only=True, required=False, many=False)
+    github_info = GithubUserInfoSerializer(read_only=True, required=False)
     organized_competitions = CompetitionSerializer(read_only=True, required=False, many=True)
     created_tasks = TaskSerializer(read_only=True, required=False, many=True)
     created_solutions = SolutionSerializer(read_only=True, required=False, many=True)
     created_datasets = DataSerializer(read_only=True, required=False, many=True)
     profiles = UserProfileDetailSerializer(read_only=True, required=False, many=True)
-
 
     class Meta:
         model = User
@@ -146,13 +142,13 @@ class MyProfileListSerializer(serializers.ModelSerializer):
 
 
 # Different Profile Serializers
-class ProfileDetailSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+class ProfileDetailSerializer(ProducerValidationSerializerMixin, serializers.ModelSerializer):
     organized_competitions = CompetitionSerializer(many=True, read_only=True)
     datasets = DataSerializer(many=True, read_only=True)
     tasks = TaskSerializer(many=True, read_only=True)
     solutions = SolutionSerializer(many=True, read_only=True)
     # TODO: Look more into the effects of removing this. I believe we added it so we could display details
-    user = MyProfileDetailSerializer(many=False, read_only=True)
+    user = MyProfileDetailSerializer(read_only=True)
     participants = CompetitionParticipantListSerializer(many=True, allow_null=True, required=False)
 
     class Meta:
@@ -174,11 +170,7 @@ class ProfileDetailSerializer(BulkSerializerMixin, serializers.ModelSerializer):
         read_only_fields = ['id']
 
 
-class ProfileCreateSerializer(BulkSerializerMixin, serializers.ModelSerializer):
-    organized_competitions = CompetitionSerializer(many=True, read_only=True)
-    datasets = DataSerializer(many=True, read_only=True)
-    tasks = TaskSerializer(many=True, read_only=True)
-    solutions = SolutionSerializer(many=True, read_only=True)
+class ProfileCreateSerializer(ProducerValidationSerializerMixin, serializers.ModelSerializer):
     # TODO: Look more into the effects of removing this. I believe we added it so we could display details
     participants = CompetitionParticipantListSerializer(many=True, allow_null=True, required=False)
 
@@ -207,7 +199,7 @@ class ProfileCreateSerializer(BulkSerializerMixin, serializers.ModelSerializer):
         }
 
 
-class BaseProfileSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+class BaseProfileSerializer(ProducerValidationSerializerMixin, serializers.ModelSerializer):
     producer = ProducerSerializer(required=False, validators=[])
 
     class Meta:

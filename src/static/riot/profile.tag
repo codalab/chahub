@@ -7,23 +7,23 @@
         <div class="ui profile-segment segment">
             <div class="ui container profile-header">
                 <div class="holder">
-                    <img src="{ _.get(_.get(_.get(profile_data, 'user', {}), 'github_info', {}), 'avatar_url', URLS.STATIC('img/img-wireframe.png')) }"
+                    <img src="{ _.get(profile_data, 'user.github_info.avatar_url', URLS.STATIC('img/img-wireframe.png')) }"
                          class="profile-img" alt="profile-image">
                 </div>
                 <div class="profile-user">
-                    {_.get(_.get(profile_data, 'user', {}), 'username', 'Anonymous / N/A')}
-                    <div show="{ _.get(_.get(profile, 'user', {}), 'github_info', false) }" class="profile-brief">
-                        <div class="location">{_.get(_.get(_.get(profile_data, 'user', {}), 'github_info', {}), 'location',
-                            '')}
+                    { _.get(profile_data, 'user.username, 'Anonymous / N/A') }
+                    <div show="{ _.get( profile_data, 'github_info', false }" class="profile-brief">
+                        <div class="location">
+                            { _.get(profile_data, 'github_info.location', '') }
                         </div>
-                        <div class="occupation">{_.get(_.get(_.get(profile_data, 'user', {}), 'github_info', {}), 'company',
-                            '')}
+                        <div class="occupation">
+                            { _.get(profile_data, 'github_info.company', '') }
                         </div>
-                        {_.get(_.get(_.get(profile_data, 'user', {}), 'github_info', {}), 'bio', '')}
+                        { _.get(profile_data, 'user.github_info.bio', '') }
                     </div>
                     <div class="social-buttons">
-                        <a href="{_.get(_.get(_.get(profile_data, 'user', {}), 'github_info', {}), 'html_url', '')}"
-                           show="{ _.get(_.get(_.get(profile_data, 'user', {}), 'github_info', {}), 'html_url', false) !== false }"
+                        <a href="{ _.get(profile_data, 'user.github_info.html_url', '') }"
+                           show="{ _.get(profile_data, 'user.github_info.html_url, false) }"
                            style="background-color: #582c80; color: white;"
                            class="ui circular github plus mini icon button">
                             <i class="github icon"></i>
@@ -70,7 +70,7 @@
                                 <table class="stats-table">
                                     <tr>
                                         <td class="category">Competitions Organized:</td>
-                                        <td class="statistic">{ _.get(profile_data, 'organized_competitions', []).length }
+                                        <td class="statistic">{ _.get(profile_data, 'organized_competitions.length', 0) }
                                         </td>
                                         <!--<td class="category">Organizer Since:</td>
                                         <td class="statistic">02/11/2017</td>-->
@@ -90,7 +90,7 @@
                                     <competition-tile result="{ competition }" class="item"></competition-tile>
                                 </virtual>
                                 <p class="no-competitions" style=""
-                                   if="{ _.get(profile_data, 'organized_competitions', []).length === 0 }">No competitions found for this user</p>
+                                   if="{ _.get(profile_data, 'organized_competitions.length', 0) }">No competitions found for this user</p>
                             </div>
                         </div>
                     </div>
@@ -104,18 +104,17 @@
                                 <table class="stats-table">
                                     <tr>
                                         <td class="category">Submissions:</td>
-                                        <td class="statistic">{ _.get(profile_data, 'solutions', []).length }</td>
+                                        <td class="statistic">{ _.get(profile_data, 'solutions.length', 0) }</td>
                                         <td class="category">User Since:</td>
-                                        <td class="statistic">{ humanize_time(_.get(_.get(profile, 'details', {}),
-                                            'date_joined', '')) }
+                                        <!-- TODO: This is probably not the same between profiles/users. Double check -->
+                                        <td class="statistic">{ humanize_time( _.get(profile_data, 'user.date_joined', '') ) }
                                         </td>
                                     </tr>
                                     <tr>
                                         <!--<td class="category">Top 10 Finishes:</td>
                                         <td class="statistic">1</td>-->
                                         <td class="category">Competitions Joined:</td>
-                                        <td class="statistic">{ _.get(profile_data, 'organized_competitions', []).length
-                                            }
+                                        <td class="statistic">{ _.get(profile_data, 'organized_competitions.length', 0) }
                                         </td>
                                     </tr>
                                 </table>
@@ -150,7 +149,7 @@
                         <table class="stats-table">
                             <tr>
                                 <td class="category">Competitions Organized:</td>
-                                <td class="statistic">{ _.get(profile_data, 'organized_competitions', []).length }</td>
+                                <td class="statistic">{ _.get(profile_data, 'organized_competitions.length', 0) }</td>
                                 <!--<td class="category">Organizer Since:</td>
                                 <td class="statistic">02/11/2017</td>-->
                             </tr>
@@ -164,17 +163,16 @@
                         <table class="stats-table">
                             <tr>
                                 <td class="category">Submissions:</td>
-                                <td class="statistic">{ _.get(profile_data, 'solutions', []).length }</td>
+                                <td class="statistic">{ _.get(profile_data, 'solutions.length', 0) }</td>
                                 <td class="category">User Since:</td>
-                                <td class="statistic">{ humanize_time(_.get(_.get(profile, 'details', {}),
-                                    'date_joined', '')) }
+                                <td class="statistic">{ humanize_time( _.get(profile_data, 'user.date_joined', '') ) }
                                 </td>
                             </tr>
                             <tr>
                                 <!--<td class="category">Top 10 Finishes:</td>
                                 <td class="statistic">1</td>-->
                                 <td class="category">Competitions Joined:</td>
-                                <td class="statistic">{_.get(profile_data, 'participating_competitions', []).length }
+                                <td class="statistic">{_.get(profile_data, 'participating_competitions.length', 0) }
                                 </td>
                             </tr>
                         </table>
@@ -194,7 +192,7 @@
                                     <competition-tile result="{ competition }" class="item"></competition-tile>
                                 </virtual>
                                 <p class="no-competitions"
-                                   if="{ _.get(profile_data, 'organized_competitions', true) || _.get(profile_data, 'organized_competitions', []).length == 0 }">
+                                   if="{ _.get(profile_data, 'organized_competitions.length', 0) === 0 }">
                                     No competitions found for this user</p>
                             </div>
                             <div class="ui pagination menu">
@@ -228,7 +226,7 @@
                                     <competition-tile result="{ competition }" class="item"></competition-tile>
                                 </virtual>
                                 <p class="no-competitions"
-                                   if="{ _.get(profile_data, 'participating_competitions', true) || _.get(profile_data, 'participating_competitions', []).length == 0 }">
+                                   if="{ _.get(profile_data, 'participating_competitions', []).length == 0 }">
                                     No competitions found for this user</p>
                             </div>
                             <div class="ui pagination menu">
@@ -306,7 +304,7 @@
                     <div class="five wide field">
                         <label>Display Name</label>
                         <div class="field-current">
-                            <span onclick="editfield(event)" class="display-name active">displayname</span>
+                            <span onclick="{ editfield }" class="display-name active">displayname</span>
                             <input class="hidden" type="text" name="display-name"
                                    placeholder="displayname"></div>
                         <div class="field-description">This is the name other Chahub users will see.</div>
@@ -315,7 +313,7 @@
                     <div class="five wide field">
                         <label>Email Address</label>
                         <div class="field-current">
-                            <span onclick="editfield(event)" class="email active">email</span>
+                            <span onclick="{ editfield }" class="email active">email</span>
                             <input class="hidden" type="text" name="email"
                                    placeholder="email">
                         </div>
@@ -363,7 +361,7 @@
                 console.log('callback - particles.js config loaded');
             })
 
-            if (_.get(self.opts, 'objects', false)) {
+            if (_.get(self.opts, 'objects')) {
                 self.objects = JSON.parse(self.opts.objects)
                 self.update()
             }
@@ -417,20 +415,15 @@
                         toastr.error("Failed to retrieve profile: " + self.opts.objects[0])
                     })
             } else {
-                if (!Array.isArray(self.objects)) {
-                    self.objects = [self.objects]
-                }
+                self.objects = _.isArray(self.objects) ? self.objects : [self.objects]
                 CHAHUB.api.get_profiles(self.objects)
                     .done(function (data) {
                         data.forEach(function (profile) {
-                            if (_.get(profile, 'user', false)) {
-                                if (_.isEmpty(self.profile_data.user)) {
-                                    self.profile_data.user = profile.user
-                                    if (_.get(profile.user, 'github_info', false)) {
-                                        if (_.isEmpty(self.profile_data.github_info)) {
-                                            self.profile_data.github_info = profile.user.github_info
-                                        }
-                                    }
+                            if (_.get(profile, 'user', false) && _.isEmpty(self.profile_data.user))
+                            {
+                                self.profile_data.user = profile.user
+                                if (_.get(profile.user, 'github_info', false) && _.isEmpty(self.profile_data.github_info)) {
+                                        self.profile_data.github_info = profile.user.github_info
                                 }
                             }
                             self._profile_data_update(profile)
@@ -456,51 +449,6 @@
                 }
             })
         }
-
-        self.publish = function (event) {
-            var txt;
-
-            if (event.item.published) {
-                var r = confirm("Are you sure you want to make this dataset private?");
-                if (r === true) {
-                    txt = "This dataset is now private";
-                    return event.item.published = false;
-                } else {
-                    txt = "This dataset is still public";
-                    return event.item.published = true;
-                }
-            } else {
-                var r = confirm("Are you sure you want to publish this dataset?");
-                if (r === true) {
-                    txt = "This dataset is now public!";
-                    return event.item.published = true;
-                } else {
-                    txt = "This dataset is still private";
-                    return event.item.published = false;
-                }
-
-            }
-        }
-
-        self.delete_dataset = function (event) {
-            var txt;
-
-            var r = confirm("Are you sure you want to delete this dataset?");
-            if (r === true) {
-                txt = "This dataset has been deleted!";
-                // TODO: Delete this item from the model
-            } else {
-                txt = "This dataset is still public";
-            }
-            event.preventDefault();
-        }
-
-        self.upload_dataset = function (event) {
-            $('#dataset-upload').trigger('click');
-            event.preventDefault();
-            // TODO: Needs modal for Name, Type, and Public
-        }
-
     </script>
 
     <style>
@@ -736,8 +684,8 @@
         </div>
         <div class="list-tile">
             <div class="biography">
-                <div id="bio">{_.get(_.get(_.get(profile, 'user', {}), 'github_info', {}), 'bio', 'No information
-                    found')}
+                <div id="bio">
+                    { _.get(profile_data, 'github_info.bio', 'No information found') }
                 </div>
                 <div id="editor-container">
                     <textarea id="editor"></textarea>
@@ -752,44 +700,9 @@
             self.profile_data = profile_data
             self.update()
 
-            self.easymde = new EasyMDE({
-                element: document.getElementById("editor"),
-                renderingConfig: {
-                    markedOptions: {
-                        sanitize: true,
-                    }
-                }
-            });
-
             $('#editor-container').hide()
             //document.getElementById('bio').innerHTML = profile.github_info.bio
         })
-
-        self.editing = function () {
-            $('#bio', self.root)
-            self.edit = true
-            self.easymde.value(self.user.bio_markdown);
-            $('#editor-container').attr('style', 'display: block !important')
-            self.easymde.codemirror.refresh();
-        }
-
-        self.saving = function () {
-            self.edit = false
-            self.user.bio_markdown = self.easymde.value()
-            self.user.bio = marked(self.easymde.value())
-            $('#editor-container').attr('style', 'display: none !important')
-            document.getElementById('bio').innerHTML = self.user.bio
-        }
-
-        self.cancel_edit = function () {
-            self.edit = false
-            $('#editor-container').attr('style', 'display: none !important')
-        }
-
-        marked.setOptions({
-            sanitize: true,
-        })
-
     </script>
 
     <style>
@@ -851,34 +764,6 @@
             <education-tile></education-tile>
         </div>
     </div>
-
-    <script>
-
-        self.edit_education = function () {
-            $('#bio', self.root)
-            self.edit_education = true
-            self.simplemde.value(self.user.bio_markdown);
-            $('#editor-container').attr('style', 'display: block !important')
-            self.simplemde.codemirror.refresh();
-        }
-
-        self.add_education = function () {
-            self.edit_education = true
-        }
-
-        self.save_education = function () {
-            self.edit_education = false
-            self.user.bio_markdown = self.simplemde.value()
-            self.user.bio = marked(self.simplemde.value())
-            $('#editor-container').attr('style', 'display: none !important')
-            document.getElementById('bio').innerHTML = self.user.bio
-        }
-
-        self.cancel_edit = function () {
-            self.edit_education = false
-            $('#editor-container').attr('style', 'display: none !important')
-        }
-    </script>
 
     <style>
         .primary-container {
@@ -1281,7 +1166,7 @@
                 <div class="ui middle aligned unstackable compact divided link items content-desktop">
                     <submission-tile each="{ _.get(profile_data, 'solutions', []) }" onclick="{show_table}"
                                      class="item"></submission-tile>
-                    <p if="{ _.get(profile_data, 'solutions', []).length === 0 }">No submissions found for this user</p>
+                    <p if="{ _.get(profile_data, 'solutions.length', 0) === 0 }">No submissions found for this user</p>
                 </div>
             </div>
         </div>
@@ -1307,7 +1192,7 @@
         })
     </script>
 
-    <style type="text/stylus">
+    <style>
         :scope
             display block
 
@@ -1346,7 +1231,7 @@
 
 <submission-tile>
     <div class="ui tiny image">
-        <img src="{logo || 'http://placeimg.com/203/203/any' }" class="ui avatar image">
+        <img src="{logo || URLS.STATIC('img/img-wireframe.png') }" class="ui avatar image">
     </div>
     <div class="content">
         <div class="header">

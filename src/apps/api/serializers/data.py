@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from api.serializers.mixins import BulkSerializerMixin
+from api.serializers.mixins import ProducerValidationSerializerMixin
 from datasets.models import Data, DataGroup
 
 
-class DataSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+class DataSerializer(ProducerValidationSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = Data
         fields = [

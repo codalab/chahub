@@ -86,7 +86,7 @@ class Profile(models.Model):
     remote_id = models.IntegerField()
     producer = models.ForeignKey(Producer, related_name='profiles', on_delete=models.CASCADE)
     email = models.EmailField()
-    username = models.CharField(max_length=150, default=uuid.uuid4)  # Required, but not unique
+    username = models.CharField(max_length=150)  # Required, but not unique
 
     user = models.ForeignKey(User, related_name='profiles', on_delete=models.SET_NULL, null=True, blank=True)
 
