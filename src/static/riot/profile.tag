@@ -1193,11 +1193,13 @@
     </script>
 
     <style>
-        :scope
-            display block
+        :scope {
+            display: block;
+        }
 
-        .sixteen.wide.grid
+        .sixteen.wide.grid {
             padding-top: 1em;
+        }
 
         .segment-container {
             padding: 0 !important;

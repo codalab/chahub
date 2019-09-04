@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from api.serializers.mixins import ProducerValidationSerializerMixin
+from api.serializers.producers import ProducerSerializer
 from competitions.models import Competition, Phase, Submission, CompetitionParticipant
 from profiles.models import Profile
 
@@ -87,7 +88,7 @@ class CompetitionListSerializer(serializers.ModelSerializer):
         }
 
 
-class CompetitionSerializer(ProducerValidationSerializerMixin, WritableNestedModelSerializer):
+class CompetitionDetailSerializer(ProducerValidationSerializerMixin, WritableNestedModelSerializer):
     phases = PhaseSerializer(required=False, many=True)
     admins = serializers.StringRelatedField(many=True, read_only=True)
     logo = serializers.URLField(required=False)
@@ -177,7 +178,7 @@ class CompetitionParticipantCreationSerializer(serializers.ModelSerializer):
 
 
 class CompetitionParticipantListSerializer(serializers.ModelSerializer):
-    competition = CompetitionSerializer(many=False, required=False, read_only=True)
+    competition = CompetitionDetailSerializer(many=False, required=False, read_only=True)
 
     class Meta:
         model = CompetitionParticipant

@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from api.serializers.competitions import CompetitionSerializer, CompetitionParticipantListSerializer
+from api.serializers.competitions import CompetitionParticipantListSerializer, CompetitionDetailSerializer
 from api.serializers.data import DataSerializer
 from api.serializers.mixins import ProducerValidationSerializerMixin
 from api.serializers.producers import ProducerSerializer
@@ -74,7 +74,7 @@ class LinkedInUserInfoSerializer(serializers.ModelSerializer):
 
 
 class UserProfileDetailSerializer(ProducerValidationSerializerMixin, serializers.ModelSerializer):
-    organized_competitions = CompetitionSerializer(many=True, read_only=True)
+    organized_competitions = CompetitionDetailSerializer(many=True, read_only=True)
     datasets = DataSerializer(many=True, read_only=True)
     tasks = TaskSerializer(many=True, read_only=True)
     solutions = SolutionSerializer(many=True, read_only=True)
@@ -107,7 +107,7 @@ class UserProfileDetailSerializer(ProducerValidationSerializerMixin, serializers
 
 class MyProfileDetailSerializer(serializers.ModelSerializer):
     github_info = GithubUserInfoSerializer(read_only=True, required=False)
-    organized_competitions = CompetitionSerializer(read_only=True, required=False, many=True)
+    organized_competitions = CompetitionDetailSerializer(read_only=True, required=False, many=True)
     created_tasks = TaskSerializer(read_only=True, required=False, many=True)
     created_solutions = SolutionSerializer(read_only=True, required=False, many=True)
     created_datasets = DataSerializer(read_only=True, required=False, many=True)
@@ -149,7 +149,7 @@ class MyProfileListSerializer(serializers.ModelSerializer):
 
 # Different Profile Serializers
 class ProfileDetailSerializer(ProducerValidationSerializerMixin, serializers.ModelSerializer):
-    organized_competitions = CompetitionSerializer(many=True, read_only=True)
+    organized_competitions = CompetitionDetailSerializer(many=True, read_only=True)
     datasets = DataSerializer(many=True, read_only=True)
     tasks = TaskSerializer(many=True, read_only=True)
     solutions = SolutionSerializer(many=True, read_only=True)
