@@ -1,6 +1,6 @@
 Django==2.1.7
 psycopg2-binary==2.7.6.1
-whitenoise==4.1
+whitenoise==4.1.2
 djangorestframework==3.8.2
 #django-rest-swagger==2.1.2
 #drf-openapi==1.0.0
@@ -17,7 +17,7 @@ django-extensions==1.9.0
 channels==2.1.2
 #daphne==2.2.2
 gunicorn==19.9.0
-uvicorn==0.3.21
+uvicorn==0.7.1
 asgi_redis==1.4.3
 drf-writable-nested==0.5.0
 drf-extensions==0.3.1
@@ -31,3 +31,4 @@ Pillow==5.0.0
 django-storages[azure,google]==1.7.1
 boto3==1.9.86
 urllib3<1.25,>=1.21.1
+django-querycount==0.7.0

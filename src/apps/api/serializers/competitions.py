@@ -1,5 +1,7 @@
+from django.core.exceptions import ObjectDoesNotExist
 from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from api.serializers.mixins import ProducerValidationSerializerMixin
 from competitions.models import Competition, Phase, Submission, CompetitionParticipant
@@ -9,7 +11,7 @@ from profiles.models import Profile
 class PhaseSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Phase
-        fields = [
+        fields = (
             'id',
             # 'competition',
             'index',
@@ -17,8 +19,8 @@ class PhaseSerializer(WritableNestedModelSerializer):
             'end',
             'name',
             'description',
-            'is_active'
-        ]
+            'is_active',
+        )
 
 
 class SubmissionSerializer(serializers.ModelSerializer):
@@ -27,13 +29,13 @@ class SubmissionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Submission
-        fields = [
+        fields = (
             'remote_id',
             'competition',  # on write only
             'phase_index',  # on write this is the phase index within the competition, NOT a PK
             'submitted_at',
-            'participant'
-        ]
+            'participant',
+        )
 
     def validate(self, attrs):
         competition = Competition.objects.get(
@@ -52,6 +54,39 @@ class SubmissionSerializer(serializers.ModelSerializer):
         return instance
 
 
+class CompetitionListSerializer(serializers.ModelSerializer):
+    producer = ProducerSerializer(required=False, validators=[])
+    logo = serializers.URLField()
+
+    class Meta:
+        model = Competition
+        fields = (
+            'id',
+            'remote_id',
+            'title',
+            'producer',
+            'created_by',
+            'start',
+            'logo',
+            'url',
+            'description',
+            'end',
+            'is_active',
+            'participant_count',
+            'html_text',
+            'current_phase_deadline',
+            'prize',
+            'published'
+        )
+        validators = []
+        extra_kwargs = {
+            'producer': {
+                # UniqueTogether validator messes this up
+                'validators': [],
+            }
+        }
+
+
 class CompetitionSerializer(ProducerValidationSerializerMixin, WritableNestedModelSerializer):
     phases = PhaseSerializer(required=False, many=True)
     admins = serializers.StringRelatedField(many=True, read_only=True)
@@ -61,7 +96,7 @@ class CompetitionSerializer(ProducerValidationSerializerMixin, WritableNestedMod
 
     class Meta:
         model = Competition
-        fields = [
+        fields = (
             'id',
             'remote_id',
             'title',
@@ -85,7 +120,7 @@ class CompetitionSerializer(ProducerValidationSerializerMixin, WritableNestedMod
             'published',
             'user',
             '_object_type'
-        ]
+        )
         validators = []
         extra_kwargs = {
             'producer': {
