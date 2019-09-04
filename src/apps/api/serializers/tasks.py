@@ -10,7 +10,7 @@ class TaskSerializer(ProducerValidationSerializerMixin, serializers.ModelSeriali
 
     class Meta:
         model = Task
-        fields = [
+        fields = (
             'creator_id',
             'remote_id',
             'producer',
@@ -23,14 +23,14 @@ class TaskSerializer(ProducerValidationSerializerMixin, serializers.ModelSeriali
             'ingestion_only_during_scoring',
             'reference_data',
             'scoring_program'
-        ]
-        read_only_fields = [
+        )
+        read_only_fields = (
             'owner',
             'key',
             'created_by',
             'created_when',
             'uploaded_when',
-        ]
+        )
 
 
 class SolutionSerializer(ProducerValidationSerializerMixin, serializers.ModelSerializer):
@@ -39,7 +39,7 @@ class SolutionSerializer(ProducerValidationSerializerMixin, serializers.ModelSer
 
     class Meta:
         model = Solution
-        fields = [
+        fields = (
             'creator_id',
             'remote_id',
             'user',
@@ -50,4 +50,4 @@ class SolutionSerializer(ProducerValidationSerializerMixin, serializers.ModelSer
             'tasks',
             'data',
             'is_public'
-        ]
+        )

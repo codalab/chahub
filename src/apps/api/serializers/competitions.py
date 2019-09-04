@@ -144,7 +144,7 @@ class CompetitionParticipantCreationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CompetitionParticipant
-        fields = ['competition', 'user', 'status']
+        fields = ('competition', 'user', 'status')
         validators = []
         extra_kwargs = {
             'producer': {
@@ -180,4 +180,4 @@ class CompetitionParticipantListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CompetitionParticipant
-        fields = ['competition', 'user', 'status']
+        fields = ('competition', 'user', 'status')

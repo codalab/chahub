@@ -6,7 +6,7 @@ from datasets.models import Data, DataGroup
 class DataSerializer(ProducerValidationSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = Data
-        fields = [
+        fields = (
             'creator_id',
             'remote_id',
             'producer',
@@ -19,15 +19,15 @@ class DataSerializer(ProducerValidationSerializerMixin, serializers.ModelSeriali
             'created_by',
             'created_when',
             'uploaded_when'
-        ]
+        )
 
 
 class DataGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataGroup
-        fields = [
+        fields = (
             'created_by',
             'created_when',
             'name',
             'datas'
-        ]
+        )

@@ -19,14 +19,14 @@ logger = logging.getLogger(__name__)
 class AccountMergeRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountMergeRequest
-        fields = [
+        fields = (
             'master_account',
             'secondary_account',
             'created'
-        ]
-        read_only_fields = [
+        )
+        read_only_fields = (
             'created'
-        ]
+        )
 
     def validate(self, attrs):
         if attrs['master_account'] == attrs['secondary_account']:
@@ -37,7 +37,7 @@ class AccountMergeRequestSerializer(serializers.ModelSerializer):
 class GithubUserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = GithubUserInfo
-        fields = [
+        fields = (
             'uid',
             'login',
             'avatar_url',
@@ -60,17 +60,17 @@ class GithubUserInfoSerializer(serializers.ModelSerializer):
             'repos_url',
             'events_url',
             'received_events_url'
-        ]
+        )
 
 
 class LinkedInUserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = LinkedInUserInfo
-        fields = [
+        fields = (
             'uid',
             'firstName',
             'lastName'
-        ]
+        )
 
 
 class UserProfileDetailSerializer(ProducerValidationSerializerMixin, serializers.ModelSerializer):
@@ -82,7 +82,7 @@ class UserProfileDetailSerializer(ProducerValidationSerializerMixin, serializers
 
     class Meta:
         model = Profile
-        fields = [
+        fields = (
             'id',
             'remote_id',
             'producer',
@@ -95,8 +95,8 @@ class UserProfileDetailSerializer(ProducerValidationSerializerMixin, serializers
             'tasks',
             'solutions',
             'participants',
-        ]
-        read_only_fields = ['id']
+        )
+        read_only_fields = ('id',)
         extra_kwargs = {
             'producer': {
                 # UniqueTogether validator messes this up
@@ -115,7 +115,7 @@ class MyProfileDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = [
+        fields = (
             'username',
             'name',
             'email',
@@ -127,13 +127,13 @@ class MyProfileDetailSerializer(serializers.ModelSerializer):
             'created_solutions',
             'created_datasets',
             'profiles',
-        ]
+        )
 
 
 class MyProfileListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = [
+        fields = (
             'username',
             'name',
             'email',
@@ -144,7 +144,7 @@ class MyProfileListSerializer(serializers.ModelSerializer):
             'created_tasks',
             'created_solutions',
             'created_datasets',
-        ]
+        )
 
 
 # Different Profile Serializers
@@ -159,7 +159,7 @@ class ProfileDetailSerializer(ProducerValidationSerializerMixin, serializers.Mod
 
     class Meta:
         model = Profile
-        fields = [
+        fields = (
             'id',
             'remote_id',
             'producer',
@@ -172,8 +172,8 @@ class ProfileDetailSerializer(ProducerValidationSerializerMixin, serializers.Mod
             'tasks',
             'solutions',
             'participants',
-        ]
-        read_only_fields = ['id']
+        )
+        read_only_fields = ('id',)
 
 
 class ProfileCreateSerializer(ProducerValidationSerializerMixin, serializers.ModelSerializer):
@@ -182,7 +182,7 @@ class ProfileCreateSerializer(ProducerValidationSerializerMixin, serializers.Mod
 
     class Meta:
         model = Profile
-        fields = [
+        fields = (
             'id',
             'remote_id',
             'producer',
@@ -195,8 +195,8 @@ class ProfileCreateSerializer(ProducerValidationSerializerMixin, serializers.Mod
             'tasks',
             'solutions',
             'participants',
-        ]
-        read_only_fields = ['id']
+        )
+        read_only_fields = ('id',)
         extra_kwargs = {
             'producer': {
                 # UniqueTogether validator messes this up
@@ -210,7 +210,7 @@ class BaseProfileSerializer(ProducerValidationSerializerMixin, serializers.Model
 
     class Meta:
         model = Profile
-        fields = [
+        fields = (
             'id',
             'remote_id',
             'producer',
@@ -218,8 +218,8 @@ class BaseProfileSerializer(ProducerValidationSerializerMixin, serializers.Model
             'username',
             'details',
             'user',
-        ]
-        read_only_fields = ['id']
+        )
+        read_only_fields = ('id',)
         extra_kwargs = {
             'producer': {
                 # UniqueTogether validator messes this up
