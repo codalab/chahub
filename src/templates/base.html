@@ -15,19 +15,17 @@
     <meta property="og:image"
           content="https://{{ request.get_host }}{% static 'img/chahub_logo_with_background.png' %}"/>
 
-    <link rel="icon" type="image/ico" href="{% static 'img/favicon.ico' %}"/>
-    <!-- Semantic -->
+    <!-- CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
-    <!-- Markdown Editor -->
     <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
-    <!-- Datepicker -->
-    <link rel="stylesheet" href="{% static "css/calendar.min.css" %}">
-    <!-- Compiled stylus -->
-    <link rel="stylesheet" href="{% static "generated/output.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
-    <!-- Toastr -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
+
+    <!-- Ours -->
+    <link rel="icon" type="image/ico" href="{% static 'img/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static "css/calendar.min.css" %}">
+    <link rel="stylesheet" href="{% static "generated/output.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
 
     {% block extra_head %}
     {% endblock %}
@@ -101,6 +99,7 @@
     </div>
 </div>
 
+<!-- CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"
             integrity="sha256-7/yoZS3548fXSRXqc/xYzjsmuW3sFKzuvOCHd06Pmps=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -108,6 +107,9 @@
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.6.1/marked.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<!-- Ours -->
 <script src="{% static "js/calendar.min.js" %}"></script>
 <script src="{% static "js/luxon.js" %}"></script>
 <script src="{% static "js/riot.js" %}"></script>
@@ -118,7 +120,6 @@
 <script src="{% static "js/ours/client.js" %}"></script>
 <script src="{% static "js/ours/init.js" %}"></script>
 <script src="{% static "js/ours/router.js" %}"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="{% static "js/reconnecting-websocket.min.js" %}"></script>
 
 <script>
@@ -133,22 +134,15 @@
             return "{{ STATIC_URL }}" + asset_url
         }
     }
-
-    CHAHUB.state.user.is_authenticated = {{ user.is_authenticated }}
-    CHAHUB.state.user.is_superuser = {{ user.is_superuser }}
-    {% if user.username %}
-        CHAHUB.state.user.username = {{ user.username }}
-    {% else %}
-        CHAHUB.state.user.username = 'Anonymous'
-    {% endif %}
-    {% if produers %}
-        CHAHUB.state.producers = JSON.parse("{{ producers|escapejs }}")
-    {% endif %}
-    {% if default_search_results %}
-        CHAHUB.state.default_search_results = JSON.parse("{{ default_search_results|escapejs }}")
-    {% else %}
-        CHAHUB.state.default_search_results = undefined
-    {% endif %}
+    CHAHUB.state= {
+        user: {
+            is_authenticated: "{{ user.is_authenticated }}",
+            is_superuser: "{{ user.is_superuser }}",
+            username: "{{ user.username|default:"Anonymous" }}",
+        },
+        producers: JSON.parse("{{ producers|escapejs|default:"[]" }}"),
+        default_search_results: JSON.parse("{{ default_search_results|escapejs|default:"[]" }}")
+    }
 
 </script>
 

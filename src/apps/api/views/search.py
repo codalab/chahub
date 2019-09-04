@@ -70,7 +70,7 @@ class SearchView(APIView):
             data["results"] = get_results(s)
         return Response(data)
 
-    def _search(self, search, query, obj_types='ALL'):
+    def _search(self, search, query, obj_types):
         if query and query != ' ':
             fields = []
             if 'competition' in obj_types:
@@ -91,7 +91,7 @@ class SearchView(APIView):
             )
         return search
 
-    def _filter(self, search, date_flags, start, end, producer, obj_types='ALL'):
+    def _filter(self, search, date_flags, start, end, producer, obj_types):
         if 'competition' in obj_types:
             # This month/this year
             if date_flags == "this_month":
@@ -122,7 +122,7 @@ class SearchView(APIView):
                 search = search.filter('term', producer__id=producer)
         return search
 
-    def _sort(self, search, sorting, query, obj_types='ALL'):
+    def _sort(self, search, sorting, query, obj_types):
         # Make an empty list for our parameters
         sort_params = []
         if 'competition' in obj_types:

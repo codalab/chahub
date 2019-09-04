@@ -13,14 +13,8 @@ def validate_next_url(next_url):
     return parsed_uri.netloc in valid_producer_domains or settings.VALID_REDIRECT_DOMAINS
 
 
-def send_templated_email(template_name, context, **email_opts):
-    subject = email_opts.get('subject')
-    from_email = email_opts.get('from_email', settings.DEFAULT_FROM_EMAIL)
-    recipient_list = email_opts.get('recipient_list')
-    fail_silently = email_opts.get('fail_silently', False)
-
-    if not subject or not recipient_list:
-        raise KeyError("Subject and recipient list not in email kwargs!")
+def send_templated_email(template_name, context, subject, recipient_list, from_email=None, fail_silently=False):
+    from_email = from_email or settings.DEFAULT_FROM_EMAIL
 
     plain_text = get_template(f'{template_name}.txt')
     html_code = get_template(f'{template_name}.html')

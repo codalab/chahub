@@ -51,6 +51,7 @@ def _create_user_data(user, response, backend_name):
     # --------------------------- Docker ----------------------
     elif backend_name == 'docker':
         pass
+    # --------------------------- LinkedIn ----------------------
     elif backend_name == 'linkedin-oauth2':
         _handle_external_user_data(
             user=user,

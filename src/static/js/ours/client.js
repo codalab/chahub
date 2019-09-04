@@ -1,7 +1,5 @@
 var CHAHUB = {}
 
-CHAHUB.URLS = []  // Set in base.html
-CHAHUB.state = {} // Set in base.html
 CHAHUB.events = riot.observable()
 
 CHAHUB.api = {

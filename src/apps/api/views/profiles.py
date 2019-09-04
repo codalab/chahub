@@ -65,15 +65,7 @@ class ProfileViewSet(ProducerModelViewSet):
 
 @api_view(['POST'])
 def create_merge_request(request, version):
-        if not request.data.get('master_account') or not request.data.get('secondary_account'):
-            return Response("Master account and or secondary account not provided!", status=status.HTTP_400_BAD_REQUEST)
-        serializer = AccountMergeRequestSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        if serializer.errors:
-            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            try:
-                serializer.save()
-            except ValidationError as error:
-                return Response({'error': error.messages[0]}, status=status.HTTP_404_NOT_FOUND)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    serializer = AccountMergeRequestSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, status=status.HTTP_201_CREATED)

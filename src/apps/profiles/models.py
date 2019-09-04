@@ -180,11 +180,8 @@ class AccountMergeRequest(models.Model):
         return f'{settings.SITE_DOMAIN}{reverse("profiles:merge", kwargs={"merge_key": self.key})}'
 
     def save(self, *args, **kwargs):
-        email_kwargs = {
-            'subject': f'Chahub Account Merge Request From: {self.master_account.email}',
-            'recipient_list': [self.secondary_account.email],
-            'fail_silently': False
-        }
+        subject = f'Chahub Account Merge Request From: {self.master_account.email}'
+        recipient_list = [self.secondary_account.email],
         context = {
             'user': self.secondary_account,
             'requester': self.master_account,
@@ -193,15 +190,12 @@ class AccountMergeRequest(models.Model):
             'signature_img': f'{settings.SITE_DOMAIN}/static/img/temp_chahub_logo_beta.png'
         }
         template_name = 'email/merge/merge_request'
-        send_templated_email(template_name, context, **email_kwargs)
+        send_templated_email(template_name, context, subject, recipient_list)
 
-        return super(AccountMergeRequest, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def merge_accounts(self):
         merge_fields = ['organized_competitions', 'datasets', 'tasks', 'profiles']
         for field in merge_fields:
             qs = getattr(self.secondary_account, field)
             qs.update(user=self.master_account)
-            # for obj in getattr(self.secondary_account, field):
-            #     obj.user = self.master_account
-            #     obj.save()

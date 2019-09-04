@@ -1,7 +1,7 @@
 from rest_framework.exceptions import ValidationError
 
 
-class ProducerValidationSerializerMixin():
+class ProducerValidationSerializerMixin:
     def get_unique_together_validators(self):
         '''
         Overriding method to disable unique together checks

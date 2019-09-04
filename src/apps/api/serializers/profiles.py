@@ -1,14 +1,15 @@
 import logging
+
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-
-from api.serializers.mixins import ProducerValidationSerializerMixin
-from api.serializers.producers import ProducerSerializer
-from profiles.models import GithubUserInfo, LinkedInUserInfo, Profile, AccountMergeRequest
+from rest_framework.exceptions import ValidationError
 
 from api.serializers.competitions import CompetitionSerializer, CompetitionParticipantListSerializer
 from api.serializers.data import DataSerializer
+from api.serializers.mixins import ProducerValidationSerializerMixin
+from api.serializers.producers import ProducerSerializer
 from api.serializers.tasks import TaskSerializer, SolutionSerializer
+from profiles.models import GithubUserInfo, LinkedInUserInfo, Profile, AccountMergeRequest
 
 User = get_user_model()
 
@@ -26,6 +27,11 @@ class AccountMergeRequestSerializer(serializers.ModelSerializer):
         read_only_fields = [
             'created'
         ]
+
+    def validate(self, attrs):
+        if attrs['master_account'] == attrs['secondary_account']:
+            raise ValidationError('Master account and secondary account cannot be the same')
+        return attrs
 
 
 class GithubUserInfoSerializer(serializers.ModelSerializer):
