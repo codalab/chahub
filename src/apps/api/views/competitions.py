@@ -1,4 +1,5 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework import status
+from rest_framework.response import Response
 
 from api.authenticators import ProducerAuthentication
 from api.pagination import BasicPagination
@@ -42,7 +43,6 @@ class SubmissionViewSet(ProducerModelViewSet):
     authentication_classes = (ProducerAuthentication,)
     permission_classes = (ProducerPermission,)
     pagination_class = BasicPagination
-
 
     def create(self, request, *args, **kwargs):
         """Overriding this so we return an empty response instead of the details of the created object"""

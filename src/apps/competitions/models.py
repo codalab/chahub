@@ -8,7 +8,7 @@ class Competition(models.Model):
     # created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     created_by = models.TextField(null=True, blank=True)
     creator_id = models.IntegerField(null=True, blank=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='organized_competitions') # Added so we can tie back to Chahub Users
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='organized_competitions')  # Added so we can tie back to Chahub Users
     created_when = models.DateTimeField(auto_now_add=True)
     start = models.DateTimeField(null=True, blank=True)
     title = models.TextField()
@@ -119,7 +119,7 @@ class Submission(models.Model):
 
 class CompetitionParticipant(models.Model):
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE, related_name='participants', null=True, blank=True)
-    user = models.ForeignKey('profiles.Profile',on_delete=models.CASCADE, related_name='participants', null=True, blank=True)
+    user = models.ForeignKey('profiles.Profile', on_delete=models.CASCADE, related_name='participants', null=True, blank=True)
     status = models.CharField(default='', max_length=128)
 
     class Meta:

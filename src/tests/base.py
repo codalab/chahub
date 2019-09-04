@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class ATCTestHelpersMixin(object):
+class ChahubTestHelpersMixin:
 
     def login(self):
         User.objects.create_user(username='test', password='test')
@@ -20,7 +20,7 @@ class ATCTestHelpersMixin(object):
 
 
 @pytest.mark.e2e
-class SeleniumTestCase(ATCTestHelpersMixin, StaticLiveServerTestCase):
+class SeleniumTestCase(ChahubTestHelpersMixin, StaticLiveServerTestCase):
     urls = 'urls'  # TODO: what the F is this???
     serialized_rollback = True
 

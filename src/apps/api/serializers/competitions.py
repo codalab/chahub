@@ -1,7 +1,5 @@
-from django.core.exceptions import ObjectDoesNotExist
 from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 from api.serializers.mixins import ProducerValidationSerializerMixin
 from api.serializers.producers import ProducerSerializer

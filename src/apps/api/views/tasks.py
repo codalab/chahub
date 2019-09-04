@@ -1,5 +1,3 @@
-from rest_framework.viewsets import ModelViewSet
-
 from api.authenticators import ProducerAuthentication
 from api.permissions import ProducerPermission
 from api.serializers import tasks as serializers

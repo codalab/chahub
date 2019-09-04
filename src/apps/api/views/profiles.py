@@ -1,10 +1,8 @@
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
+from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view
 from rest_framework.generics import GenericAPIView, RetrieveAPIView
-
-from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 

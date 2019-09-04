@@ -1,18 +1,17 @@
-import requests
 import logging
-
 from io import BytesIO
 
+import requests
 from PIL import Image
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
+from requests.exceptions import ConnectionError
 
 from competitions.models import Competition
 
-from requests.exceptions import ConnectionError
-
 logger = logging.getLogger(__name__)
+
 
 def competition_download_image(competition_pk):
     try:

@@ -18,7 +18,7 @@ def get_search_client(size=100, page=1):
     # s = s.filter('term', published=True)
     # s = s.source(excludes=["html_text"])
     s = s.extra(size=size)
-    lower_bound = (page-1) * size
+    lower_bound = (page - 1) * size
     upper_bound = lower_bound + size
     s = s[lower_bound:upper_bound]
     return s

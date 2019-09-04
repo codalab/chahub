@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework_extensions.cache.decorators import cache_response
 
 from api.caching import QueryParamsKeyConstructor
-from utils.search import get_search_client, get_results, get_default_search_results
+from utils.search import get_search_client, get_results
 
 OBJECT_LIST = [
     'profile',

@@ -5,14 +5,13 @@ from time import sleep
 
 
 class TestChangingProviderAndResultsChange(SeleniumTestCase):
-
     def test_changing_provider_changes_url_and_search_results(self):
         #  Creates Two Providers, and Two Competitions
         #  Assign Competitions to the two separate Providers - "tag" them through the url
         prod1 = Producer.objects.create(
             name='Prod1Testing'
         )
-        comp1 = Competition.objects.create(  # noqa
+        Competition.objects.create(
             title='Fake Competition1',
             producer=prod1,
             is_active=True,
@@ -22,7 +21,7 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
         prod2 = Producer.objects.create(
             name='Prod2Testing'
         )
-        comp2 = Competition.objects.create(  # noqa
+        Competition.objects.create(
             title='Even Faker Competition2',
             producer=prod2,
             is_active=True,
