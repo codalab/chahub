@@ -5,10 +5,19 @@
                 <div class="eight wide column">
                     <div class="ui message account-merge-message">
                         <h2 class="ui header">Merge two accounts</h2>
-                        <div class="ui center aligned segment">
+                        <div class="ui success message" show="{message}">
+                            <div class="header">
+                                Success
+                            </div>
+                            <p>
+                                Accounts successfully merged.<br>
+                                Return <a href="/">Home</a>.
+                            </p>
+                        </div>
+                        <div class="ui center aligned segment" show="{!message}">
                             <div class="ui error message" show="{!_.isEmpty(errors)}">
                                 <div class="header">
-                                    Form Errors:
+                                    Form Errors
                                 </div>
                                 <ul class="list">
                                     <li each="{error in errors}">
@@ -16,15 +25,16 @@
                                     </li>
                                 </ul>
                             </div>
+
                             <form class="ui form" onsubmit="{create_merge_request}">
                                 <div class="fields account-merge-field">
-                                    <div class="inline sixteen wide field {error: _.includes(error_fields, 'master_account')}">
+                                    <div class="inline sixteen wide field">
                                         <label>Master Account Email:</label>
                                         <input ref="master_account" type="text">
                                     </div>
                                 </div>
                                 <div class="fields">
-                                    <div class="inline sixteen wide field {error: _.includes(error_fields, 'secondary_account')}">
+                                    <div class="inline sixteen wide field">
                                         <label>Secondary Account Email:</label>
                                         <input ref="secondary_account" type="text">
                                     </div>
@@ -41,7 +51,19 @@
     <script>
         var self = this
         self.errors = []
-        self.error_fields = []
+
+        self.on('mount', function () {
+            self.message = self.opts.message
+            self.update()
+        })
+
+        self.clear_form = function () {
+            self.refs.master_account.value = ''
+            self.refs.secondary_account.value = ''
+            self.errors = []
+            self.update()
+        }
+
         self.create_merge_request = function (e) {
             e.preventDefault()
             let data = {
@@ -51,14 +73,14 @@
 
             CHAHUB.api.create_merge(data)
                 .done(function (data) {
+                    self.clear_form()
                     toastr.success("Successfully made request!")
                 })
                 .fail(function (error) {
+                    console.log(error)
                     error = error.responseJSON
-                    self.error_fields = _.keys(error)
-                    self.errors = _.map(_.flatten(_.values(error)), error => error.replace('Object', 'User'))
+                    self.errors = _.uniq(_.flatten(_.values(error)))
                     self.update()
-                    toastr.error("Error submitting merge request")
                 })
         }
     </script>

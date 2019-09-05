@@ -159,8 +159,8 @@ class LinkedInUserInfo(models.Model):
 
 
 class AccountMergeRequest(models.Model):
-    master_account = models.ForeignKey(User, to_field='email', related_name='primary_merge_requests', on_delete=models.CASCADE)
-    secondary_account = models.ForeignKey(User, to_field='email', related_name='secondary_merge_requests', on_delete=models.CASCADE)
+    master_account = models.ForeignKey(User, related_name='primary_merge_requests', on_delete=models.CASCADE)
+    secondary_account = models.ForeignKey(User, related_name='secondary_merge_requests', on_delete=models.CASCADE)
     key = models.UUIDField(default=uuid.uuid4, unique=True)
 
     created = models.DateTimeField(auto_now_add=True)

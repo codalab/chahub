@@ -28,7 +28,7 @@ class SignUpView(TemplateView):
                 password=form.cleaned_data['password1'],
             )
             login(request, new_user)
-            next_url = self.request.query_params.get('next')
+            next_url = self.request.GET.get('next')
             if next_url:
                 if validate_next_url(next_url):
                     return HttpResponseRedirect(next_url)
@@ -42,6 +42,7 @@ class SignUpView(TemplateView):
 class MergeAccountsView(TemplateView):
     template_name = 'profiles/merge.html'
 
+    # TODO: We should require login? Not just a uuid key?
     def get(self, request, *args, **kwargs):
         # if not self.request.user.is_authenticated:
         #     return HttpResponseForbidden()

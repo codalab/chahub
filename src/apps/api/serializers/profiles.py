@@ -3,6 +3,7 @@ import logging
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from rest_framework.validators import UniqueTogetherValidator
 
 from api.serializers.competitions import CompetitionParticipantListSerializer, CompetitionDetailSerializer
 from api.serializers.data import DataSerializer
@@ -17,8 +18,18 @@ logger = logging.getLogger(__name__)
 
 
 class AccountMergeRequestSerializer(serializers.ModelSerializer):
+    master_account = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='email', error_messages={'does_not_exist': "Bad Request"})
+    secondary_account = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='email', error_messages={'does_not_exist': "Bad Request"})
+
     class Meta:
         model = AccountMergeRequest
+        validators = [
+            UniqueTogetherValidator(
+                queryset=AccountMergeRequest.objects.all(),
+                fields=('master_account', 'secondary_account'),
+                message='Merge request already exists'
+            )
+        ]
         fields = (
             'master_account',
             'secondary_account',
@@ -30,7 +41,7 @@ class AccountMergeRequestSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if attrs['master_account'] == attrs['secondary_account']:
-            raise ValidationError('Master account and secondary account cannot be the same')
+            raise ValidationError('Master account and secondary account emails cannot be the same')
         return attrs
 
 

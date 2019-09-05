@@ -6,7 +6,7 @@
         <a href="/"><img id="brand_logo" src="{% static 'img/temp_chahub_logo_beta.png' %}"></a>
     </div>
 
-    <merge-accounts></merge-accounts>
+    <merge-accounts message="{{ message }}"></merge-accounts>
 
 {% endblock %}
 
@@ -14,9 +14,6 @@
 <script>
         $('document').ready(function () {
             particlesJS.load('particles-js', "/static/particles/particles-profile.json", function () {})
-            {% if message %}
-                toastr.success("{{ message }}")
-            {% endif %}
         })
     </script>
 {% endblock %}
