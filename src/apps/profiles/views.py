@@ -23,9 +23,10 @@ class SignUpView(TemplateView):
         form = ChahubCreationForm(self.request.POST)
         if form.is_valid():
             form.save()
-            new_user = authenticate(username=form.cleaned_data['username'],
-                                    password=form.cleaned_data['password1'],
-                                    )
+            new_user = authenticate(
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password1'],
+            )
             login(request, new_user)
             next_url = self.request.query_params.get('next')
             if next_url:
@@ -93,7 +94,7 @@ class ProfileView(TemplateView):
                 #     profiles = profiles.filter(username=profiles.first().username)
                 # else:
                 #     profiles = None
-                # If we got a user instead of profiles
+            # If we got a user instead of profiles
             if user and not profiles:
                 context['object_mode'] = 'user'
                 context['objects'] = user.pk

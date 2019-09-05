@@ -2,16 +2,21 @@
 {% load static %}
 
 {% block content %}
-
-
-    <script>
-        {% if message %}
-            $('document').ready(function(){
-                toastr.success("{{ message }}")
-            });
-        {% endif %}
-    </script>
+    <div id="particles-js">
+        <a href="/"><img id="brand_logo" src="{% static 'img/temp_chahub_logo_beta.png' %}"></a>
+    </div>
 
     <merge-accounts></merge-accounts>
 
+{% endblock %}
+
+{% block extra_body %}
+<script>
+        $('document').ready(function () {
+            particlesJS.load('particles-js', "/static/particles/particles-profile.json", function () {})
+            {% if message %}
+                toastr.success("{{ message }}")
+            {% endif %}
+        })
+    </script>
 {% endblock %}

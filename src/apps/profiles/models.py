@@ -2,7 +2,6 @@ import uuid
 
 from django.conf import settings
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, UserManager
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.urls import reverse
@@ -160,20 +159,14 @@ class LinkedInUserInfo(models.Model):
 
 
 class AccountMergeRequest(models.Model):
-    master_account = models.ForeignKey(User, related_name='primary_merge_requests', on_delete=models.CASCADE)
-    secondary_account = models.ForeignKey(User, related_name='secondary_merge_requests', on_delete=models.CASCADE)
+    master_account = models.ForeignKey(User, to_field='email', related_name='primary_merge_requests', on_delete=models.CASCADE)
+    secondary_account = models.ForeignKey(User, to_field='email', related_name='secondary_merge_requests', on_delete=models.CASCADE)
     key = models.UUIDField(default=uuid.uuid4, unique=True)
 
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ['master_account', 'secondary_account']
-
-    def clean(self, *args, **kwargs):
-        # add custom validation here
-        if self.master_account == self.secondary_account:
-            raise ValidationError("Cannot create a merge request between the same account")
-        super().clean(*args, **kwargs)
 
     @property
     def absolute_url(self):

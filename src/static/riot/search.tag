@@ -16,7 +16,7 @@
                 </span>
             </span>
 
-            <span show="{CHAHUB.state.user.is_authenticated}" class="ui login-button dropdown button item">
+            <span if="{CHAHUB.state.user.is_authenticated}" class="ui login-button dropdown button item">
                 <span class="text">
                     <i class="icon user outline"></i>
                     {CHAHUB.state.user.username}
@@ -350,8 +350,8 @@
             })
 
             // Loading the search results
-            if (DEFAULT_SEARCH_RESULTS) {
-                self.results = DEFAULT_SEARCH_RESULTS
+            if (!_.isEmpty(CHAHUB.state.default_search_results)) {
+                self.results = CHAHUB.state.default_search_results
                 self.update()
             } else {
                 self.search()
@@ -392,14 +392,15 @@
         }
 
         self.set_time_dropdown_text = function () {
+            let temp_string;
             if (self.refs.start_date.value && self.refs.end_date.value) {
-                var temp_string = self.refs.start_date.value + ' through ' + self.refs.end_date.value
+                temp_string = self.refs.start_date.value + ' through ' + self.refs.end_date.value
                 $(self.refs.time_filter).dropdown('set text', temp_string)
             } else if (self.refs.start_date.value) {
-                var temp_string = 'Starting from ' + self.refs.start_date.value
+                temp_string = 'Starting from ' + self.refs.start_date.value
                 $(self.refs.time_filter).dropdown('set text', temp_string)
             } else if (self.refs.end_date.value) {
-                var temp_string = 'End by ' + self.refs.end_date.value
+                temp_string = 'End by ' + self.refs.end_date.value
                 $(self.refs.time_filter).dropdown('set text', temp_string)
             }
         }
@@ -440,9 +441,9 @@
             // For iframes we might want to hide producer selection
             self.embedded = params.embedded
 
-            if (DEFAULT_SEARCH_RESULTS && $.isEmptyObject(params)) {
+            if (!_.isEmpty(CHAHUB.state.default_search_results) && _.isEmpty(params)) {
                 console.log("Loading default search results")
-                self.results = DEFAULT_SEARCH_RESULTS
+                self.results = CHAHUB.state.default_search_results
                 self.showing_default_results = true
                 //self.prepare_results()
                 self.update()

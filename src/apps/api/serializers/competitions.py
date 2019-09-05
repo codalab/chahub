@@ -45,7 +45,7 @@ class SubmissionSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        instance, _ = Submission.objects.update_or_create(
+        instance, created = Submission.objects.update_or_create(
             remote_id=validated_data.pop('remote_id'),
             phase=validated_data.pop('phase'),
             defaults=validated_data
@@ -167,7 +167,7 @@ class CompetitionParticipantCreationSerializer(serializers.ModelSerializer):
         competition = validated_data.pop('competition', None)
         if not user or not competition:
             raise self.Meta.model.DoesNotExist("Competition and or user are None!")
-        instance, _ = self.Meta.model.objects.update_or_create(
+        instance, created = self.Meta.model.objects.update_or_create(
             user=user,
             competition=competition,
             defaults=validated_data

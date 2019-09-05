@@ -31,6 +31,10 @@
     {% endblock %}
 
     <style>
+        #particles-js {
+            max-height: 10vh;
+        }
+
         body {
             background: rgb(255, 255, 255) !important;
         }
@@ -136,8 +140,9 @@
     }
     CHAHUB.state= {
         user: {
-            is_authenticated: "{{ user.is_authenticated }}",
-            is_superuser: "{{ user.is_superuser }}",
+            // calling {  } === "True" turns python bools into js bools
+            is_authenticated: "{{ user.is_authenticated }}" === "True",
+            is_superuser: "{{ user.is_superuser }}" === "True",
             username: "{{ user.username|default:"Anonymous" }}",
         },
         producers: JSON.parse("{{ producers|escapejs|default:"[]" }}"),

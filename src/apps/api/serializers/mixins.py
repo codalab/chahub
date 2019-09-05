@@ -16,7 +16,7 @@ class ProducerValidationSerializerMixin:
         producer = validated_data.pop('producer', None)
         if not remote_id or not producer:
             raise self.Meta.model.DoesNotExist("Producer and or remote_id are None!")
-        instance, _ = self.Meta.model.objects.update_or_create(
+        instance, created = self.Meta.model.objects.update_or_create(
             remote_id=remote_id,
             producer=producer,
             defaults=validated_data

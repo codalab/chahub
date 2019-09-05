@@ -29,5 +29,5 @@ class DataGroupSerializer(serializers.ModelSerializer):
             'created_by',
             'created_when',
             'name',
-            'datas'
+            'datas',
         )
