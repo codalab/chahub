@@ -145,6 +145,9 @@ class GithubUserInfo(models.Model):
     events_url = models.URLField(max_length=100, null=True, blank=True)
     received_events_url = models.URLField(max_length=100, null=True, blank=True)
 
+    def __str__(self):
+        return f"{getattr(self, 'user', self.login)} GitHub user info"
+
 
 # No use yet
 class DockerUserInfo(models.Model):

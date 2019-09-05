@@ -31,9 +31,6 @@
     {% endblock %}
 
     <style>
-        #particles-js {
-            max-height: 10vh;
-        }
 
         body {
             background: rgb(255, 255, 255) !important;
@@ -136,6 +133,10 @@
         ADMIN: "{% url 'admin:index' %}",
         STATIC: function (asset_url) {
             return "{{ STATIC_URL }}" + asset_url
+        },
+        MY_PROFILE: {% if request.user.is_authenticated %}"{% url 'profiles:user_profile' username=request.user.username %}"{% else %}""{% endif %},
+        SOCIAL_BEGIN: {
+            GITHUB: "{% url 'social:begin' 'github' %}"
         }
     }
     CHAHUB.state= {

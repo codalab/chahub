@@ -37,28 +37,33 @@ def _handle_external_user_data(user, response, fields_list, data_model):
     for field in fields_list:
         data[field] = response.get(field)
     instance, created = data_model.objects.update_or_create(user=user, defaults=data)
+    return instance
 
 
 def _create_user_data(user, response, backend_name):
     # --------------------------- Github ----------------------
     if backend_name == 'github':
-        _handle_external_user_data(
+        info = _handle_external_user_data(
             user=user,
             response=response,
             fields_list=GITHUB_FIELDS,
             data_model=GithubUserInfo
         )
+        user.github_info = info
+        user.save()
     # --------------------------- Docker ----------------------
     elif backend_name == 'docker':
         pass
     # --------------------------- LinkedIn ----------------------
     elif backend_name == 'linkedin-oauth2':
-        _handle_external_user_data(
+        info = _handle_external_user_data(
             user=user,
             response=response,
             fields_list=LINKEDIN_FIELDS,
             data_model=LinkedInUserInfo
         )
+        user.linkedin_info = info
+        user.save()
 
 
 def user_details(user, **kwargs):

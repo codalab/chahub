@@ -11,8 +11,8 @@
                          class="profile-img" alt="profile-image">
                 </div>
                 <div class="profile-user">
-                    { _.get(profile_data, 'user.username, 'Anonymous / N/A') }
-                    <div show="{ _.get( profile_data, 'github_info', false }" class="profile-brief">
+                    { _.get(profile_data, 'user.username', 'Anonymous / N/A') }
+                    <div show="{ _.get( profile_data, 'github_info', false) }" class="profile-brief">
                         <div class="location">
                             { _.get(profile_data, 'github_info.location', '') }
                         </div>
@@ -23,7 +23,7 @@
                     </div>
                     <div class="social-buttons">
                         <a href="{ _.get(profile_data, 'user.github_info.html_url', '') }"
-                           show="{ _.get(profile_data, 'user.github_info.html_url, false) }"
+                           show="{ _.get(profile_data, 'user.github_info.html_url', false) }"
                            style="background-color: #582c80; color: white;"
                            class="ui circular github plus mini icon button">
                             <i class="github icon"></i>
@@ -79,7 +79,7 @@
                                         <td class="category">Total Participants:</td>
                                         <td class="statistic">5201</td>
                                         <td class="category">Total Submissions:</td>
-                                        <td class="statistic">{ _.get(profile_data, 'solutions', []).length }</td>
+                                        <td class="statistic">{ _.get(profile_data, 'solutions', []).length) }</td>
                                     </tr>-->
                                 </table>
                             </div>
@@ -272,7 +272,7 @@
                         <div class="container-content">
                             <div class="field">
                                 <label>Connect with github</label>
-                                <a class="ui large blue button" href="/social/login/github">Login</a>
+                                <a class="ui large blue button" href="{URLS.SOCIAL_BEGIN.GITHUB}">Login</a>
                             </div>
                             <!--<div class="field" if="{!!profile.github_info}">
                                 <label>Connect with github</label>
@@ -296,15 +296,14 @@
                         <label>User Name</label>
                         <div class="no-edit">username</div>
                         <div class="field-description">You cannot change your user name. Other Chahub users will
-                            not
-                            see this name.
+                            not see this name.
                         </div>
                     </div>
                     <hr>
                     <div class="five wide field">
                         <label>Display Name</label>
                         <div class="field-current">
-                            <span onclick="{ editfield }" class="display-name active">displayname</span>
+                            <span class="display-name active">displayname</span>
                             <input class="hidden" type="text" name="display-name"
                                    placeholder="displayname"></div>
                         <div class="field-description">This is the name other Chahub users will see.</div>
@@ -313,7 +312,7 @@
                     <div class="five wide field">
                         <label>Email Address</label>
                         <div class="field-current">
-                            <span onclick="{ editfield }" class="email active">email</span>
+                            <span class="email active">email</span>
                             <input class="hidden" type="text" name="email"
                                    placeholder="email">
                         </div>
@@ -432,7 +431,7 @@
                         CHAHUB.events.trigger("profile_loaded", self.profile_data)
                     })
                     .fail(function (response) {
-                        toastr.error("Failed to retrieve profile: " + profile_id)
+                        toastr.error("Failed to retrieve profile")
                     })
             }
         }
@@ -636,7 +635,7 @@
         }
 
         .datasets.tab datasets-table {
-            width: auto;
+            width: 100%;
             min-width: 50% !important;
             padding: 0 !important;
             margin: 3em auto !important;
@@ -1164,8 +1163,7 @@
             </div>
             <div class="container-content">
                 <div class="ui middle aligned unstackable compact divided link items content-desktop">
-                    <submission-tile each="{ _.get(profile_data, 'solutions', []) }" onclick="{show_table}"
-                                     class="item"></submission-tile>
+                    <submission-tile each="{ _.get(profile_data, 'solutions', []) }" class="item"></submission-tile>
                     <p if="{ _.get(profile_data, 'solutions.length', 0) === 0 }">No submissions found for this user</p>
                 </div>
             </div>
@@ -1205,10 +1203,6 @@
             padding: 0 !important;
             height: 100%;
             width: 100%;
-        }
-
-        #submission-container {
-            margin: 0 150px;
         }
 
         .segment-container > .header {

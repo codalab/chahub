@@ -38,7 +38,7 @@
                         <a class="item" href="#">Chagle</a>
                     <div class="ui divider"></div>
                     <div class="header">My Account</div>
-                    <a class="item" href="/profiles/{CHAHUB.state.user.username}">
+                    <a class="item" href="{URLS.MY_PROFILE}">
                         <i class="icon user"></i>
                         My profile
                     </a>
