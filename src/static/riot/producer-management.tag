@@ -43,7 +43,7 @@
             <td class="center aligned">
                 <div class="ui small basic icon buttons">
                     <button class="ui button" onclick="{ edit.bind(this, producer) }"><i class="edit icon"></i></button>
-                    <button class="ui button" onclick="{ delete.bind(this, producer) }"><i class="red delete icon"></i></button>
+                    <button class="ui button" onclick="{ delete_producer.bind(this, producer) }"><i class="red delete icon"></i></button>
                 </div>
             </td>
         </tr>
@@ -168,7 +168,7 @@
 
                         // Clean up errors to not be arrays but plain text
                         Object.keys(errors).map(function (key, index) {
-                            errors[key] = errors[key].join('; ')
+                            errors[key] = _.isArray(errors[key]) ? errors[key].join('; ') : errors[key]
                         })
 
                         self.update({errors: errors})
@@ -176,7 +176,7 @@
                 })
         }
 
-        self.delete = function (producer) {
+        self.delete_producer = function (producer) {
             if (confirm("Are you sure you want to delete this?")) {
                 CHAHUB.api.delete_producer(producer.id)
                     .done(function () {

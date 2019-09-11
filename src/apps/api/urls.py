@@ -16,6 +16,7 @@ router = SimpleRouter()
 router.register('producers', ProducerViewSet)
 router.register('competitions', competitions.CompetitionViewSet)
 router.register('submissions', competitions.SubmissionViewSet)
+router.register('users', profiles.UserViewSet)
 
 # Documentation details
 schema_view = get_schema_view(
@@ -34,8 +35,8 @@ schema_view = get_schema_view(
 urlpatterns = [
     url('^', include(router.urls)),
     url('query/', search.SearchView.as_view()),
-    url('my_profile/', profiles.GetMyProfile.as_view()),
     url('producer_stats/', producers.producer_statistics, name='producer_stats'),
+    url('create_merge_request/', profiles.create_merge_request, name='create_merge_request'),
 
     url('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 

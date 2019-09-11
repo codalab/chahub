@@ -22,6 +22,7 @@ if ADMINS:
     ADMINS = [(a.split('@')[0], a) for a in ADMINS.split(',')]
 
 SITE_ID = 1
+SITE_DOMAIN = os.environ.get('SITE_DOMAIN', 'http://localhost:8888')
 
 THIRD_PARTY_APPS = (
     'django.contrib.sites',
@@ -115,8 +116,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# AUTH_USER_MODEL = 'profiles.User'
-
 # =============================================================================
 # Logging
 # =============================================================================
@@ -192,7 +191,7 @@ SERVER_EMAIL = os.environ.get('SERVER_EMAIL', 'noreply@chahub.org')
 # =============================================================================
 # Debugging
 # =============================================================================
-DEBUG = os.environ.get('DEBUG', True)
+DEBUG = os.environ.get('DEBUG', False)
 
 if DEBUG:
     INSTALLED_APPS += ('debug_toolbar',)

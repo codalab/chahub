@@ -1,8 +1,11 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 app_name = "profiles"
 urlpatterns = [
-    url(r'^signup', views.sign_up, name="signup"),
+    path('signup', views.SignUpView.as_view(), name="signup"),
+    path('detail/<str:username>', views.UserView.as_view(), name="user_profile"),
+    path('merge/<uuid:merge_key>', views.MergeAccountsView.as_view(), name="finalize_merge"),
+    path('merge/', views.MergeAccountsView.as_view(), name="merge")
 ]

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div id="particles-js">
+        <a href="/"><img id="brand_logo" src="{% static 'img/temp_chahub_logo_beta.png' %}"></a>
+    </div>
+
+    <merge-accounts message="{{ message }}"></merge-accounts>
+
+{% endblock %}
+
+{% block extra_body %}
+    <script>
+        $('document').ready(function () {
+            particlesJS.load('particles-js', "/static/particles/particles-profile.json", function () {})
+        })
+    </script>
+    <style>
+        #particles-js {
+            max-height: 10vh;
+        }
+    </style>
+{% endblock %}

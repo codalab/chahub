@@ -2,10 +2,14 @@ var CHAHUB = {}
 
 CHAHUB.api = {
     request: function (method, url, data) {
+        if(method.toLowerCase() !== "get") {
+            data = JSON.stringify(data)
+        }
+
         return $.ajax({
             type: method,
             url: url,
-            data: JSON.stringify(data),
+            data: data,
             contentType: "application/json",
             dataType: 'json'
         })
@@ -35,5 +39,17 @@ CHAHUB.api = {
     // Producer Stats
     get_producer_stats: function() {
         return CHAHUB.api.request('GET', URLS.API + "producer_stats/")
+    },
+    // ------------------------------------------------------------------------
+    // Users
+    get_user: function(id) {
+        return CHAHUB.api.request('GET', URLS.API + "users/" + id + "/")
+    },
+    delete_user: function(id) {
+        return CHAHUB.api.request('DELETE', `${URLS.API}users/${id}/`)
+    },
+    // Merge requests
+    create_merge: function(data) {
+        return CHAHUB.api.request('POST', URLS.API + "create_merge_request/", data)
     },
 }

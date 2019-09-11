@@ -2,19 +2,8 @@
     <competition-modal></competition-modal>
     <div id="particle_header" class="ui centered grid">
         <span hide="{ embedded }">
-            <a id="login-button" hide="{USER_AUTHENTICATED}" href="/accounts/login/"
-               class="ui button">LOGIN
-            </a>
-            <a id="login-button" show="{USER_AUTHENTICATED}" href="/accounts/logout/"
-               class="ui button">LOGOUT
-            </a>
+            <user-button></user-button>
         </span>
-
-        <!--<div id="hamburger_button">
-            <div class="ui small icon button">
-                <i class="large bars icon"></i>
-            </div>
-        </div>-->
 
         <div id="top_row" class="ui row">
             <img id="brand_logo" src="static/img/temp_chahub_logo_beta.png">
@@ -124,7 +113,7 @@
                         <div class="active item" data-value="">
                             All
                         </div>
-                        <virtual each="{PRODUCERS}">
+                        <virtual each="{CHAHUB.state.producers}">
                             <div class="item" data-value="{id}">{name}</div>
                         </virtual>
                     </div>
@@ -241,17 +230,6 @@
                 transition: 'slide down'
             })
 
-            /*// Loading the search results
-            if (DEFAULT_SEARCH_RESULTS) {
-                self.results = DEFAULT_SEARCH_RESULTS
-                self.update()
-            } else {
-                self.search()
-            }
-
-            // Focus on search
-            self.refs.search.focus()*/
-
             self.init_values_from_query_params()
         })
 
@@ -323,9 +301,9 @@
             // For iframes we might want to hide producer selection
             self.embedded = params.embedded
 
-            if (DEFAULT_SEARCH_RESULTS && $.isEmptyObject(params)) {
+            if (CHAHUB.state.default_search_results && _.isEmpty(params)) {
                 console.log("Loading default search results")
-                self.results = DEFAULT_SEARCH_RESULTS
+                self.results = CHAHUB.state.default_search_results
                 self.showing_default_results = true
                 self.prepare_results()
                 self.update()
@@ -609,16 +587,6 @@
             .icon
                 color #e2e2e2 !important
 
-        #login-button
-            position absolute
-            right 20px
-            top 15px
-            z-index 1000
-            @media screen and (max-width 767px)
-                display none
-            @media screen and (min-width 2560px)
-                font-size 1.4rem
-
         .ui.button
             margin-top 10px
             color #e2e2e2
@@ -757,7 +725,7 @@
 </search-result>
 
 <competition-tile onclick="{redirect_to_url}">
-    <div class="floating-actions { is-admin: USER_IS_SUPERUSER }">
+    <div class="floating-actions { is-admin: CHAHUB.state.user.is_superuser }">
         <i class="icon green pencil alternate"
            onclick="{ edit_competition }"></i>
         <i class="icon red delete" onclick="{ delete_competition }"></i>

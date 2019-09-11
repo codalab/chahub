@@ -15,40 +15,11 @@
           content="https://{{ request.get_host }}{% static 'img/chahub_logo_with_background.png' %}"/>
 
     <link rel="icon" type="image/ico" href="{% static 'img/favicon.ico' %}"/>
-
-    <!-- JQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!-- Riot -->
-    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/3.11.2/riot+compiler.min.js"></script>#}
-    <!-- Semantic -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-
-    <!-- Datepicker -->
     <link rel="stylesheet" href="{% static "css/calendar.min.css" %}">
-    <script src="{% static "js/calendar.min.js" %}"></script>
-    <script src="{% static "js/luxon.js" %}"></script>
-
-    <script src="{% static "js/riot.js" %}"></script>
-    <script src="{% static "js/riot-route.js" %}"></script>
-    <script src="{% static "js/jquery.form.serializer.js" %}"></script>
-
-    <!-- Riot tags -->
-    <script src="{% static "generated/riot.js" %}"></script>
-    <!-- Our JS -->
-    <script src="{% static "js/ours/utils.js" %}"></script>
-    <script src="{% static "js/ours/client.js" %}"></script>
-    <script src="{% static "js/ours/init.js" %}"></script>
-    <script src="{% static "js/ours/router.js" %}"></script>
-
-    <!-- Compiled stylus -->
     <link rel="stylesheet" href="{% static "generated/output.css" %}">
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <script src="{% static "js/reconnecting-websocket.min.js" %}"></script>
 
     {% block extra_head %}
     {% endblock %}
@@ -122,6 +93,22 @@
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="{% static "js/calendar.min.js" %}"></script>
+<script src="{% static "js/luxon.js" %}"></script>
+<script src="{% static "js/riot.js" %}"></script>
+<script src="{% static "js/riot-route.js" %}"></script>
+<script src="{% static "js/jquery.form.serializer.js" %}"></script>
+<script src="{% static "generated/riot.js" %}"></script>
+<script src="{% static "js/ours/utils.js" %}"></script>
+<script src="{% static "js/ours/client.js" %}"></script>
+<script src="{% static "js/ours/init.js" %}"></script>
+<script src="{% static "js/ours/router.js" %}"></script>
+<script src="{% static "js/reconnecting-websocket.min.js" %}"></script>
 <script>
     // Load in URLs or other django generated goodies
     URLS = {
@@ -129,36 +116,32 @@
             header_particles: "{% static "particles/header.json" %}"
         },
         API: "/api/v1/",
+        ADMIN: "{% url 'admin:index' %}",
+        HOME: "{% url 'pages:index' %}",
+        LOGIN: "{% url 'login' %}",
+        LOGOUT: "{% url 'logout' %}",
+        MERGE_ACCOUNTS: "{% url 'profiles:merge' %}",
+        OAUTH: "{% url 'oauth2_provider:list' %}",
+        PRODUCERS: "{% url 'producers:management' %}",
         STATIC: function (asset_url) {
             return "{{ STATIC_URL }}" + asset_url
+        },
+        MY_PROFILE: {% if request.user.is_authenticated %}"{% url 'profiles:user_profile' username=request.user.username %}"{% else %}""{% endif %},
+        SOCIAL_BEGIN: {
+            GITHUB: "{% url 'social:begin' 'github' %}"
         }
     }
-    {% if producers %}
-        PRODUCERS = JSON.parse("{{ producers|escapejs }}")
-    {% endif %}
-    {% if default_search_results %}
-        DEFAULT_SEARCH_RESULTS = JSON.parse("{{ default_search_results|escapejs }}")
-    {% else %}
-        DEFAULT_SEARCH_RESULTS = undefined
-    {% endif %}
-    USER_AUTHENTICATED = "{{ user.is_authenticated }}" === "True"
+    CHAHUB.state= {
+        user: {
+            // calling {  } === "True" turns python bools into js bools
+            is_authenticated: "{{ user.is_authenticated }}" === "True",
+            is_superuser: "{{ user.is_superuser }}" === "True",
+            username: "{{ user.username|default:"Anonymous" }}",
+        },
+        producers: JSON.parse("{{ producers|escapejs|default:"[]" }}"),
+        default_search_results: JSON.parse("{{ default_search_results|escapejs|default:"[]" }}")
+    }
 
-    USER_IS_SUPERUSER = "{{ user.is_superuser }}" === "True"
-
-    /*if ("{{ user.is_superuser }}" === "True") {
-        $(document).ready(function () {
-            var comp_tile = $(' competition-tile.item');
-
-            comp_tile.on({
-                mouseenter: function () {
-                    $(this).find('.actions').show()
-                },
-                mouseleave: function () {
-                    $(this).find('.actions').hide()
-                }
-            });
-        })
-    }*/
 </script>
 
 {% block extra_body %}

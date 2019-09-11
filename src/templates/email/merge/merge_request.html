@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <style>
+        body {
+            background: rgb(255, 255, 255) !important;
+        }
+
+        body.pushable > .pusher {
+            background: rgb(255, 255, 255) !important;
+        }
+
+        .footer.pusher {
+            min-height: 0 !important;
+            z-index: unset;
+            background: rgb(255, 255, 255) !important;
+        }
+
+        #chafooter {
+            padding: 10px;
+            background: rgb(255, 255, 255) !important;
+        }
+
+        body.pushable > #chafooter {
+            background: rgb(255, 255, 255) !important;
+        }
+
+        body.pushable {
+            background: rgb(255, 255, 255) !important;
+        }
+
+        .ui.uncover.sidebar {
+            z-index: 3 !important;
+        }
+    </style>
+</head>
+<body>
+<div class="ui container message">
+    <h2>Hello {{ user.username }},</h2>
+
+    <p>A user with the email {{ requester.email }} has requested to merge your account into theirs on Chahub.</p>
+
+    <p>If you did not request this merge, contact us at info@codalab.org.</p>
+    <p>If you did request this merge, please follow the link below:</p>
+    <a style="margin-top: 2.5vh; margin-bottom: 2.5vh;" class="ui large blue button" href="{{ merge.absolute_url }}">Merge Accounts</a>
+    <br>
+    <p style="">Thanks,<br>
+        Codalab Team
+    </p>
+    <img src="http://chahub.org/static/img/codalab-logo-fullcolor-positive.png" alt="Codalab Logo" style="display:block" width="136" height="50">
+</div>
+</body>
+</html>

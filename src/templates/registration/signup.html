@@ -29,7 +29,13 @@
                         </div>
 
                 {% endfor %}
-                <button class="ui fluid large teal submit button" type="submit">Create Account</button>
+                <div class="field">
+                    <button class="ui fluid large teal submit button" type="submit">Create Account</button>
+                </div>
+                <div class="field">
+                    <a class="ui fluid large icon button" href="{% url 'social:begin' 'github' %}"><i class="github icon"></i>Login with GitHub</a>
+                </div>
+
                 <div class="ui error message">
                     {% for error in form.errors %}
                         {{ error }}

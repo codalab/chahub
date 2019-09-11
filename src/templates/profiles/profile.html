@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div id="particles-js">
+        <a href="/"><img id="brand_logo" src="{% static 'img/temp_chahub_logo_beta.png' %}"></a>
+    </div>
+    <profile-page user_pk="{{ user_pk }}" admin="{{ admin }}"></profile-page>
+{% endblock %}
+
+{% block extra_body %}
+    <script>
+        $('document').ready(function () {
+            particlesJS.load('particles-js', "/static/particles/particles-profile.json", function () {})
+        })
+    </script>
+{% endblock %}
