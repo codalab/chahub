@@ -20,6 +20,9 @@ class UserViewSet(ModelViewSet):
         else:
             return UserDetailSerializer
 
+    def get_queryset(self):
+        return super().get_queryset().select_related('github_user_info')
+
 
 @api_view(['POST'])
 def create_merge_request(request, version):

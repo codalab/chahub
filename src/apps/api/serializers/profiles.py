@@ -75,7 +75,6 @@ class UserDetailSerializer(serializers.ModelSerializer):
             'id',
             'date_joined',
             'github_user_info',
-            'date_joined'
         )
 
 
@@ -90,5 +89,4 @@ class MyUserDetailSerializer(serializers.ModelSerializer):
             'id',
             'date_joined',
             'github_user_info',
-            'date_joined'
         )
