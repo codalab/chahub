@@ -94,6 +94,9 @@ class Profile(models.Model):
     class Meta:
         unique_together = ['remote_id', 'producer']
 
+    def __str__(self):
+        return f'{self.username} profile'
+
     @property
     def organized_competitions(self):
         from competitions.models import Competition

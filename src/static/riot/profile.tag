@@ -24,7 +24,6 @@
                     <div class="social-buttons">
                         <a href="{ _.get(profile_data, 'user.github_info.html_url', '') }"
                            show="{ _.get(profile_data, 'user.github_info.html_url', false) }"
-                           style="background-color: #582c80; color: white;"
                            class="ui circular github plus mini icon button">
                             <i class="github icon"></i>
                         </a>
@@ -38,7 +37,8 @@
                     <!-- <div class="ui large button msg-btn">Message Me</div>
                     <span class="ui icon large button follow-btn"><i class="user icon"></i>Follow</span> -->
                 </div>
-                <recent-container></recent-container>
+                <!--Todo get real recent activity-->
+                <!--<recent-container></recent-container>-->
             </div>
             <div id="profile-menu" class="ui secondary pointing menu">
                 <a class="active item" data-tab="details">
@@ -451,6 +451,11 @@
     </script>
 
     <style>
+        .circular.github.button {
+            background-color: #582c80;
+            color: white;
+        }
+
         .details {
             margin: 0 -1em
         }
@@ -1100,6 +1105,7 @@
             Recent Activity
         </div>
         <div class="container-content">
+            <!--TODO get real data-->
             <div class="list-activity">
                 <div class="list-tile">
                     <a href="#">Competition: Finding relevant data on ice floes</a>

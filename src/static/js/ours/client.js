@@ -4,10 +4,14 @@ CHAHUB.events = riot.observable()
 
 CHAHUB.api = {
     request: function (method, url, data) {
+        if(method.toLowerCase() !== "get") {
+            data = JSON.stringify(data)
+        }
+
         return $.ajax({
             type: method,
             url: url,
-            data: JSON.stringify(data),
+            data: data,
             contentType: "application/json",
             dataType: 'json'
         })
@@ -48,20 +52,8 @@ CHAHUB.api = {
     },
     // ------------------------------------------------------------------------
     // Profiles
-    get_profile: function(id) {
-        return CHAHUB.api.request('GET', URLS.API + "profiles/" + id + "/")
-    },
-    //get_profiles: function(query_data) {
-    get_profiles: function(objects) {
-        var query_string = ""
-        objects.forEach(function(object_pk) {
-            if (object_pk == objects[0]) {
-                query_string += '?pk=' + object_pk
-            } else {
-                query_string += '&pk=' + object_pk
-            }
-        })
-        return CHAHUB.api.request('GET', URLS.API + "profiles/" + query_string)
+    get_profiles: function(pks) {
+        return CHAHUB.api.request('GET', URLS.API + "profiles/", {pk: pks})
     },
     // Merge requests
     create_merge: function(data) {

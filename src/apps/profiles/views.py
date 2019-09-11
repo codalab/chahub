@@ -80,8 +80,6 @@ class ProfileView(TemplateView):
         producer = self.kwargs.pop('producer', None)
         remote_id = self.kwargs.pop('remote_id', None)
 
-        context['IS_OWN_PROFILE'] = False
-
         # If we're given a username, and not a producer, or a remote_id
         if username and not (producer or remote_id):
             user, profiles = None, None
@@ -89,18 +87,15 @@ class ProfileView(TemplateView):
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
                 profiles = Profile.objects.filter(username=username)
-                # Todo: I think we wanted to refine based on email, not username (IE: All returned profiles belong to the same email
-                # if profiles.exists():
-                #     # Refine our query further based on the first result, matching usernames
-                #     profiles = profiles.filter(username=profiles.first().username)
-                # else:
-                #     profiles = None
+                if profiles.exists():
+                    # Refine our query further based on the first result, matching emails
+                    profiles = profiles.filter(email__in=profiles.values_list('email', flat=True))
+                else:
+                    profiles = None
             # If we got a user instead of profiles
             if user and not profiles:
                 context['object_mode'] = 'user'
                 context['objects'] = user.pk
-                if self.request.user.is_authenticated:
-                    context['IS_OWN_PROFILE'] = user.pk == self.request.user.pk
             # If we got profiles instead of a user
             elif profiles and not user:
                 context['object_mode'] = 'profile_list'

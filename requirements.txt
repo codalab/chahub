@@ -32,3 +32,4 @@ django-storages[azure,google]==1.7.1
 boto3==1.9.86
 urllib3<1.25,>=1.21.1
 django-querycount==0.7.0
+bpython==0.18
