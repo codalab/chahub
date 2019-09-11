@@ -79,8 +79,7 @@ class Command(BaseCommand):
                 if not options['user']:
                     temp_username = str(uuid.uuid4())
                     temp_email = "{}.mailinator.com".format(temp_username)
-                    temp_name = "Bot_{}".format(temp_username)
-                    temp_user = CodalabUser.objects.create(username=temp_username, name=temp_name, email=temp_email)
+                    temp_user = CodalabUser.objects.create(username=temp_username, email=temp_email)
 
                 # If no temp_title, generate a new one
                 if not options['title']:

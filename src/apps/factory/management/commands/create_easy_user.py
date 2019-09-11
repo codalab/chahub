@@ -33,8 +33,7 @@ class Command(BaseCommand):
                 temp_bot_username = "{0}_{1}_{2}".format(fake.user_name(), str(uuid.uuid4())[0:8],
                                                          str(uuid.uuid4())[0:8])
                 temp_bot_email = fake.email()
-                temp_bot_name = fake.name()
-                CodalabUser.objects.create(username=temp_bot_username, name=temp_bot_name, email=temp_bot_email)
+                CodalabUser.objects.create(username=temp_bot_username, email=temp_bot_email)
             except:
                 print(colored('Failed to create user', 'red'))
         print(

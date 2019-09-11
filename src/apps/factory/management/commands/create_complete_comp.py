@@ -215,9 +215,8 @@ class Command(BaseCommand):
                     # Append a bit of UUID to help us get uniques
                     temp_bot_username = "{0}_{1}_{2}".format(fake.user_name(), str(uuid.uuid4())[0:8], str(uuid.uuid4())[0:8])
                     temp_bot_email = fake.email()
-                    temp_bot_name = fake.name()
 
-                    temp_bot = CodalabUser.objects.create(username=temp_bot_username, name=temp_bot_name,
+                    temp_bot = CodalabUser.objects.create(username=temp_bot_username,
                                                           email=temp_bot_email)
 
                     # Grab our succesfully made user

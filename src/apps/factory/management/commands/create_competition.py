@@ -22,7 +22,6 @@ def _create_fake_user():
         temp_email = "{0}{1}{2}".format(temp_email.split('@')[0] + "@", random.randint(1, 9999), temp_email.split('@')[1])
         new_user = CodalabUser.objects.create(
             username="{0}{1}".format(fake.user_name(), random.randint(1, 9999)),
-            name=fake.name(),
             email=temp_email,
         )
         # print(colored("Successfully created new user!", 'green'))
