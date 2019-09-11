@@ -28,10 +28,6 @@ class AccountMergeRequestSerializer(serializers.ModelSerializer):
         fields = (
             'master_account',
             'secondary_account',
-            'created'
-        )
-        read_only_fields = (
-            'created',
         )
 
     def validate(self, attrs):

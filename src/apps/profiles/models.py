@@ -27,10 +27,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     def get_short_name(self):
-        return self.name
+        return self.username
 
     def get_full_name(self):
-        return self.name
+        return self.username
 
 
 class GithubUserInfo(models.Model):
