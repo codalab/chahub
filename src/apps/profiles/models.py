@@ -1,11 +1,11 @@
 import uuid
 
-from django.conf import settings
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, UserManager
 from django.db import models
+from django.db.models import Case, When, Value, F
 from django.urls import reverse
 
-from .utils import send_templated_email
+from utils.email import send_templated_email
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -31,6 +31,79 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_full_name(self):
         return self.username
+
+    def add_email_address(self, email):
+        self.email_addresses.create(email=email)
+        self.refresh_profiles()
+
+    def refresh_profiles(self):
+        Profile.objects.filter(
+            email__in=self.email_addresses.filter(verified=True).values_list('email', flat=True)
+        ).exclude(user=self).update(user=self)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Make sure an email address object exists for this users email address
+        if not self.email_addresses.filter(email=self.email).exists():
+            self.add_email_address(self.email)
+
+
+class EmailAddress(models.Model):
+    user = models.ForeignKey(User, related_name='email_addresses', on_delete=models.CASCADE)
+    email = models.EmailField(max_length=200, unique=True)
+    verified = models.BooleanField(default=False)
+    primary = models.BooleanField(default=False)
+    verification_key = models.UUIDField(default=uuid.uuid4, unique=True)
+
+    def __str__(self):
+        return self.email
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if not self.verified:
+            self.send_verification_email()
+
+    @property
+    def absolute_url(self):
+        return reverse("profiles:verify_email", kwargs={"verification_key": self.verification_key})
+
+    def send_verification_email(self):
+        template_name = "email/email_verification/verification_request"
+        context = {
+            "absolute_url": self.absolute_url,
+            "user": self.user,
+        }
+        subject = "Verify Email Address"
+        recipient_list = [self.email]
+        send_templated_email(
+            template_name=template_name,
+            context=context,
+            subject=subject,
+            recipient_list=recipient_list
+        )
+
+    def make_primary(self):
+        if not self.verified:
+            raise Exception('Primary emails must be verified')
+        self.user.email_addresses.update(primary=Case(
+            When(id=F('id'), then=Value(True)),
+            default=False
+        ))
+
+    def verify(self):
+        self.verified = True
+        self.save()
+        self.user.refresh_profiles()
+
+
+class Profile(models.Model):
+    user = models.ForeignKey(User, related_name='profiles', on_delete=models.SET_NULL, null=True, blank=True)
+    email = models.EmailField(max_length=200, unique=True, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not hasattr(self, 'user') and EmailAddress.objects.filter(email=self.email).exists():
+            self.user = EmailAddress.objects.get(email=self.email).user
+            self.save()
 
 
 class GithubUserInfo(models.Model):
@@ -80,7 +153,7 @@ class AccountMergeRequest(models.Model):
 
     @property
     def absolute_url(self):
-        return f'{settings.SITE_DOMAIN}{reverse("profiles:finalize_merge", kwargs={"merge_key": self.key})}'
+        return reverse("profiles:finalize_merge", kwargs={"merge_key": self.key})
 
     def save(self, *args, **kwargs):
         subject = f'Chahub Account Merge Request From: {self.master_account.email}'
@@ -88,9 +161,7 @@ class AccountMergeRequest(models.Model):
         context = {
             'user': self.secondary_account,
             'requester': self.master_account,
-            'merge': self,
-            'static': f'{settings.SITE_DOMAIN}/static',
-            'signature_img': f'{settings.SITE_DOMAIN}/static/img/temp_chahub_logo_beta.png'
+            'absolute_url': self.absolute_url,
         }
         template_name = 'email/merge/merge_request'
         send_templated_email(template_name, context, subject, recipient_list)
@@ -102,3 +173,5 @@ class AccountMergeRequest(models.Model):
             git_info = self.secondary_account.github_user_info
             git_info.user = self.master_account
             git_info.save()
+        self.secondary_account.email_addresses.update(user=self.master_account)
+        self.secondary_account.profiles.update(user=self.master_account)

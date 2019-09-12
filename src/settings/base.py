@@ -22,7 +22,6 @@ if ADMINS:
     ADMINS = [(a.split('@')[0], a) for a in ADMINS.split(',')]
 
 SITE_ID = 1
-SITE_DOMAIN = os.environ.get('SITE_DOMAIN', 'http://localhost:8888')
 
 THIRD_PARTY_APPS = (
     'django.contrib.sites',

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <style>
+        html, body {
+            background-color: #f7f7f7;
+            font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: "Segoe UI", Segoe, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-weight: lighter;
+            font-style: normal;
+            color: #666666;
+            text-rendering: optimizeLegibility;
+            margin-top: 0.2em;
+            margin-bottom: 0.5em;
+            line-height: 1.2125em;
+        }
+        a, a:hover, a:visited, a:active {
+            color: #739cb9;
+        }
+        pre {
+            font-family: sans-serif;
+        }
+
+        #header {
+            padding-bottom: 20px;
+        }
+        #signature {
+            padding-top: 20px;
+        }
+        #footer {
+            margin-top: 100px;
+            color: #ccc;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="header">
+    <h1>Hello{% if user %} {{ user.username }}{% endif %},</h1>
+</div>
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+<div id="signature">
+    <p>Thanks,</p>
+
+    <strong>CodaLab Team</strong>
+</div>
+
+<div id="footer">
+    <p><img src="http://chahub.org/static/img/codalab-logo-fullcolor-positive.png" alt="Codalab Logo" style="display:block" width="136" height="50"></p>
+</div>
+</body>
+</html>

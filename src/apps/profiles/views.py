@@ -1,11 +1,11 @@
 from django.contrib.auth import get_user_model, authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 
 from profiles.forms import ChahubCreationForm
-from profiles.models import AccountMergeRequest
+from profiles.models import AccountMergeRequest, EmailAddress
 from profiles.utils import validate_next_url
 
 User = get_user_model()
@@ -77,3 +77,12 @@ class UserView(TemplateView):
         except User.DoesNotExist:
             raise Http404('No user found with that username.')
         return context
+
+
+def verify_email(request, verification_key):
+    email = get_object_or_404(EmailAddress, verification_key=verification_key)
+    email.verify()
+    context = {
+        "email_address": email.email,
+    }
+    return render(request, 'profiles/email_verified.html', context)

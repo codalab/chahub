@@ -1,0 +1,7 @@
+Hello{% if user %} {{ user.username }}{% endif %},
+{% block title %}{% endblock %}
+
+{% block content %}{% endblock %}
+
+Thanks,
+CodaLab Team

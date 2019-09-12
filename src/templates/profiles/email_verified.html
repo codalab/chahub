@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div id="particles-js">
+        <a href="/"><img id="brand_logo" src="{% static 'img/temp_chahub_logo_beta.png' %}"></a>
+    </div>
+    <user-button></user-button>
+    <div class="ui center aligned grid container success-segment">
+        <div class="row">
+            <div class="eight wide column">
+                <div class="ui segment">
+                    <div class="ui success message">
+                        Email address: {{ email }} verified!
+                    </div>
+                    <a class="ui fluid primary button" href="{% url 'pages:index' %}">Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_body %}
+    <script>
+        $('document').ready(function () {
+            particlesJS.load('particles-js', "/static/particles/particles-profile.json", function () {
+            })
+        })
+    </script>
+    <style>
+        #particles-js {
+            max-height: 10vh;
+        }
+        .success-segment {
+            padding-top: 2vh !important;
+        }
+    </style>
+{% endblock %}
