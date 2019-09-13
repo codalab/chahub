@@ -1,8 +1,10 @@
 import uuid
 
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, UserManager
+from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.db.models import Case, When, Value, F
+from django.db.models import Case, When, Value, F, Q
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 
 from utils.email import send_templated_email
@@ -32,20 +34,29 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_full_name(self):
         return self.username
 
-    def add_email_address(self, email):
-        self.email_addresses.create(email=email)
+    def add_email(self, email, primary=False):
+        # TODO: add catch integrity error from already existing email address
+        self.email_addresses.create(email=email, primary=primary)
         self.refresh_profiles()
+
+    def resend_verification_email(self, email_pk):
+        email = get_object_or_404(EmailAddress, user=self, id=email_pk)
+        email.send_verification_email()
 
     def refresh_profiles(self):
         Profile.objects.filter(
-            email__in=self.email_addresses.filter(verified=True).values_list('email', flat=True)
-        ).exclude(user=self).update(user=self)
+            Q(email__in=self.email_addresses.filter(verified=True).values_list('email', flat=True)) |
+            Q(user=self)
+        ).distinct().update(user=Case(
+            When(email__in=self.email_addresses.filter(verified=True).values_list('email', flat=True), then=Value(self.id)),
+            default=None
+        ))
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         # Make sure an email address object exists for this users email address
         if not self.email_addresses.filter(email=self.email).exists():
-            self.add_email_address(self.email)
+            self.add_email(self.email, primary=True)
 
 
 class EmailAddress(models.Model):
@@ -97,13 +108,23 @@ class EmailAddress(models.Model):
 
 
 class Profile(models.Model):
+    remote_id = models.IntegerField()
     user = models.ForeignKey(User, related_name='profiles', on_delete=models.SET_NULL, null=True, blank=True)
-    email = models.EmailField(max_length=200, unique=True, null=True, blank=True)
+    username = models.CharField(max_length=150)  # Required, but not unique
+    email = models.EmailField(max_length=200, null=True, blank=True)
+    producer = models.ForeignKey('producers.Producer', related_name='profiles', on_delete=models.CASCADE)
+    details = JSONField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ['remote_id', 'producer']
+
+    def __str__(self):
+        return f"{self.user.username if self.user else self.username}'s {self.producer.name} Profile"
 
     def save(self, *args, **kwargs):
         if not hasattr(self, 'user') and EmailAddress.objects.filter(email=self.email).exists():
             self.user = EmailAddress.objects.get(email=self.email).user
-            self.save()
+        super().save(*args, **kwargs)
 
 
 class GithubUserInfo(models.Model):

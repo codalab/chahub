@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
 
-from profiles.models import GithubUserInfo, AccountMergeRequest
+from profiles.models import GithubUserInfo, AccountMergeRequest, Profile, EmailAddress
 
 User = get_user_model()
 
@@ -65,28 +65,88 @@ class GithubUserInfoSerializer(serializers.ModelSerializer):
         )
 
 
+class ProfileCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = (
+            'id',
+            'remote_id',
+            'email',
+            'username',
+            'producer',
+            'details',
+        )
+        # TODO: this has to be a bad idea, right?
+        validators = []
+        extra_kwargs = {
+            'id': {'read_only': True},
+        }
+
+    def create(self, validated_data):
+        instance, created = Profile.objects.update_or_create(
+            remote_id=validated_data.pop('remote_id'),
+            producer=validated_data.pop('producer'),
+            defaults=validated_data
+        )
+        return instance
+
+
+class ProfileDetailSerializer(serializers.ModelSerializer):
+    producer = serializers.CharField(source='producer.name')
+
+    class Meta:
+        model = Profile
+        fields = (
+            'id',
+            'remote_id',
+            'username',
+            'producer'
+        )
+
+
+class EmailAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmailAddress
+        fields = (
+            'id',
+            'email',
+            'verified',
+            'primary',
+            'user',
+        )
+        extra_kwargs = {
+            'user': {'write_only': True},
+        }
+
+
 class UserDetailSerializer(serializers.ModelSerializer):
     github_user_info = GithubUserInfoSerializer(read_only=True, required=False)
+    profiles = ProfileDetailSerializer(read_only=True, many=True)
 
     class Meta:
         model = User
         fields = (
-            'username',
             'id',
+            'username',
             'date_joined',
             'github_user_info',
+            'profiles',
         )
 
 
 class MyUserDetailSerializer(serializers.ModelSerializer):
     github_user_info = GithubUserInfoSerializer(read_only=True, required=False)
+    profiles = ProfileDetailSerializer(read_only=True, many=True)
+    email_addresses = EmailAddressSerializer(read_only=True, many=True)
 
     class Meta:
         model = User
         fields = (
+            'id',
             'username',
             'email',
-            'id',
             'date_joined',
             'github_user_info',
+            'profiles',
+            'email_addresses',
         )

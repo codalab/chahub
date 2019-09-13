@@ -40,10 +40,25 @@
         <!------------ DETAILS TAB ----------->
         <div class="ui active details tab" data-tab="details">
             <div class="ui grid container">
-                <div class="row">
-                    <div class="sixteen wide column">
-                        <em>User Details Under Construction</em>
-                    </div>
+                <div class="sixteen wide column">
+                    <h3>Profiles</h3>
+                    <table class="ui table">
+                        <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Producer</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr each="{profile in _.get(user, 'profiles', [])}">
+                            <td>{profile.username}</td>
+                            <td>{profile.producer}</td>
+                        </tr>
+                        <tr if="{_.isEmpty(_.get(user, 'profiles'))}">
+                            <td colspan="2" class="center aligned"><em>No Profiles Yet!</em></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -52,11 +67,36 @@
         <div class="ui account tab" data-tab="account" if="{opts.admin === 'True'}">
             <div class="ui grid container">
                 <div class="row">
+                    <table class="ui celled table">
+                        <thead>
+                        <tr>
+                            <th>Email Address</th>
+                            <th>Primary</th>
+                            <th>Verified</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr each="{email in _.get(user, 'email_addresses', [])}">
+                            <td>{email.email}</td>
+                            <!--TODO add icons here instead of "*"-->
+                            <td>{ email.primary ? "*" : "" }</td>
+                            <td>{ email.verified ? "*" : "" }</td>
+                            <td>
+                                <div if="{!email.verified}" class="ui button" onclick="{resend_verification_email.bind(this, email.id)}">Resend Email</div>
+                                <div class="ui red button" onclick="{delete_email.bind(this, email.id)}">Delete Email</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
                     <div class="sixteen wide column">
                         <div class="ui form">
-                            <div class="ui basic red button" onclick="{show_delete_modal}">Delete Account</div>
-                            <a class="ui button" href="{URLS.MERGE_ACCOUNTS}">Merge Accounts</a>
-                            <a class="ui icon button" href="{URLS.SOCIAL_BEGIN.GITHUB}"><i class="github icon"></i> Connect with GitHub</a>
+                            <a class="ui small icon button" href="{URLS.SOCIAL_BEGIN.GITHUB}"><i class="github icon"></i> Connect with GitHub</a>
+                            <a class="ui small button" href="{URLS.MERGE_ACCOUNTS}">Merge Accounts</a>
+                            <div class="ui small button" onclick="{show_email_modal}">Add Email Address</div>
+                            <div class="ui small right floated basic red button" onclick="{show_delete_modal}">Delete Account</div>
                         </div>
                     </div>
                 </div>
@@ -66,7 +106,7 @@
 
 
     <div ref="delete_modal" class="ui modal">
-        <div class="ui header">
+        <div class="header">
             Delete Account?
         </div>
         <div class="content">
@@ -75,8 +115,25 @@
         </div>
         <div class="actions">
             <div class="ui basic small red button" onclick="{delete_user}">Delete Account</div>
-
             <div class="ui small cancel button">Cancel</div>
+        </div>
+    </div>
+
+    <div ref="email_modal" class="ui mini modal">
+        <div class="header">
+            Add Email Address
+        </div>
+        <div class="content">
+            <form class="ui form" onsubmit="{add_email}">
+                <div class="ui field">
+                    <label>Email Address</label>
+                    <input type="email" placeholder="user@example.com" ref="email_address">
+                </div>
+            </form>
+        </div>
+        <div class="actions">
+            <div class="ui small cancel button">Cancel</div>
+            <div class="ui small green submit button">Submit</div>
         </div>
     </div>
     <script>
@@ -86,24 +143,72 @@
 
         self.on('mount', function () {
             $('.secondary.pointing.menu .item', self.root).tab()
-            self.update_profiles()
+            self.update_user()
+            $(self.refs.email_modal).modal({
+                onHidden: function () {
+                    $(self.refs.email_address).val('')
+                }
+            })
         })
 
         self.show_delete_modal = function () {
             $(self.refs.delete_modal).modal('show')
         }
 
-        self.delete_user = function () {
-            if(confirm("Are you REALLY sure you want to delete this account?")) {
-                CHAHUB.api.delete_user(self.opts.user_pk)
+        self.show_email_modal = function () {
+            $(self.refs.email_modal).modal('show')
+        }
+
+        self.add_email = function (data) {
+            data.preventDefault()
+            let email_address = $(self.refs.email_address).val()
+            if (email_address) {
+                CHAHUB.api.add_email(self.opts.user_pk, email_address)
                     .done(function (data) {
-                        toastr.success('Successfully Deleted User')
-                        location = URLS.HOME
+                        toastr.success('Email address added. A verification email has been sent')
+                        self.update_user()
+                    })
+                    .fail(function (response) {
+                        toastr.error('Could not add email address')
+                    })
+
+            }
+
+            $(self.refs.email_modal).modal('hide')
+        }
+
+        self.delete_email = function (email_pk) {
+            if (confirm('Are you sure you want to delete this email address?')) {
+                CHAHUB.api.delete_email(self.opts.user_pk, email_pk)
+                    .done(function () {
+                        toastr.success('Email address deleted')
+                        self.update_user()
+                    })
+                    .fail(function () {
+                        toastr.error('Could not delete email address')
                     })
             }
         }
 
-        self.update_profiles = function () {
+        self.resend_verification_email = function (email_pk) {
+            CHAHUB.api.resend_verification_email(self.opts.user_pk, email_pk)
+                .done(function () {
+                    toastr.success('Email sent!')
+                })
+                .fail(function () {
+                    toastr.error('Could not resend email')
+                })
+        }
+
+        self.delete_user = function () {
+            CHAHUB.api.delete_user(self.opts.user_pk)
+                .done(function (data) {
+                    toastr.success('Successfully Deleted User')
+                    location = URLS.HOME
+                })
+        }
+
+        self.update_user = function () {
             CHAHUB.api.get_user(self.opts.user_pk)
                 .done(function (data) {
                     self.user = data

@@ -81,6 +81,8 @@ class UserView(TemplateView):
 
 def verify_email(request, verification_key):
     email = get_object_or_404(EmailAddress, verification_key=verification_key)
+    if email.verified:
+        return redirect('pages:index')
     email.verify()
     context = {
         "email_address": email.email,

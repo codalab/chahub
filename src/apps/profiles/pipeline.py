@@ -47,6 +47,7 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
             appended_int += 1
         fields['username'] = f"{fields['username']}_{appended_int}"
         user = strategy.create_user(**fields)
+    user.save()
     return {
         'is_new': True,
         'user': user
@@ -62,4 +63,5 @@ def user_details(user, **kwargs):
         if backend.name == 'github':
             data = {field: response.get(field) for field in GITHUB_FIELDS}
             data['uid'] = response.get('id')
+            # TODO: search on uid also? catch integrity errors
             GithubUserInfo.objects.update_or_create(user=user, defaults=data)
