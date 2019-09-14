@@ -40,25 +40,27 @@
         <!------------ DETAILS TAB ----------->
         <div class="ui active details tab" data-tab="details">
             <div class="ui grid container">
-                <div class="sixteen wide column">
-                    <h3>Profiles</h3>
-                    <table class="ui table">
-                        <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>Producer</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr each="{profile in _.get(user, 'profiles', [])}">
-                            <td>{profile.username}</td>
-                            <td>{profile.producer}</td>
-                        </tr>
-                        <tr if="{_.isEmpty(_.get(user, 'profiles'))}">
-                            <td colspan="2" class="center aligned"><em>No Profiles Yet!</em></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div class="row">
+                    <div class="sixteen wide column">
+                        <h3>Profiles</h3>
+                        <table class="ui table">
+                            <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Producer</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr each="{profile in _.get(user, 'profiles', [])}">
+                                <td>{profile.username}</td>
+                                <td>{profile.producer}</td>
+                            </tr>
+                            <tr if="{_.isEmpty(_.get(user, 'profiles'))}">
+                                <td colspan="2" class="center aligned"><em>No Profiles Yet!</em></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -84,7 +86,8 @@
                             <td>{ email.verified ? "*" : "" }</td>
                             <td>
                                 <div if="{!email.verified}" class="ui button" onclick="{resend_verification_email.bind(this, email.id)}">Resend Email</div>
-                                <div class="ui red button" onclick="{delete_email.bind(this, email.id)}">Delete Email</div>
+                                <div if="{!email.primary}" class="ui red button" onclick="{delete_email.bind(this, email.id)}">Delete Email</div>
+                                <div if="{!email.primary && email.verified}" class="ui blue button" onclick="{make_primary_email.bind(this, email.id)}">Make Primary Email</div>
                             </td>
                         </tr>
                         </tbody>
@@ -186,6 +189,19 @@
                     })
                     .fail(function () {
                         toastr.error('Could not delete email address')
+                    })
+            }
+        }
+
+        self.make_primary_email = function (email_pk) {
+            if (confirm("Are you sure you want to make this your primary email account?")) {
+                CHAHUB.api.make_primary_email(self.opts.user_pk, email_pk)
+                    .done(function () {
+                        toastr.success('Primary Account Changed')
+                        self.update_user()
+                    })
+                    .fail(function () {
+                        toastr.error('Error changing primary email')
                     })
             }
         }

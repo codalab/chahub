@@ -14,6 +14,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 # =============================================================================
 ALLOWED_HOSTS = ['*']
 USE_X_FORWARDED_HOST = True
+VALID_REDIRECT_DOMAINS = os.environ.get('VALID_REDIRECT_DOMAINS', ['localhost:8888'])
 
 # Example ADMINS = example@test.com,example2@test.com
 ADMINS = os.environ.get('ADMINS')

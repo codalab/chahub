@@ -1,7 +1,9 @@
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, action
+from rest_framework.generics import RetrieveAPIView, GenericAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -12,6 +14,14 @@ from api.serializers.profiles import AccountMergeRequestSerializer, UserDetailSe
 from profiles.models import Profile, EmailAddress
 
 User = get_user_model()
+
+
+class GetMyProfile(RetrieveAPIView, GenericAPIView):
+    serializer_class = MyUserDetailSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        return self.request.user
 
 
 class UserViewSet(ModelViewSet):
@@ -49,14 +59,27 @@ class UserViewSet(ModelViewSet):
 
     @action(detail=True, methods=('DELETE',))
     def remove_email_address(self, request, pk, version):
-        user = self.get_object()
-        if request.user != user and not request.user.is_staff and not request.user.is_superuser:
-            return Response({}, status=status.HTTP_403_FORBIDDEN)
         email_pk = request.data.get('email_pk')
         if not email_pk:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
-        EmailAddress.objects.filter(user=user, id=email_pk).delete()
+        user = self.get_object()
+        email = get_object_or_404(EmailAddress, id=email_pk, user=user)
+        if request.user != user and not request.user.is_staff and not request.user.is_superuser or email.primary or user.email_addresses.count() == 1:
+            return Response({}, status=status.HTTP_403_FORBIDDEN)
+        email.delete()
         user.refresh_profiles()
+        return Response({}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=('POST',))
+    def change_primary_email(self, request, pk, version):
+        email_pk = request.data.get('email_pk')
+        if not email_pk:
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
+        user = self.get_object()
+        email = get_object_or_404(EmailAddress, id=email_pk, user=user)
+        if request.user != user and not request.user.is_staff and not request.user.is_superuser:
+            return Response({}, status=status.HTTP_403_FORBIDDEN)
+        email.make_primary()
         return Response({}, status=status.HTTP_200_OK)
 
 

@@ -71,7 +71,9 @@ class EmailAddress(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        if not self.verified:
+        if self.verified:
+            self.user.refresh_profiles()
+        else:
             self.send_verification_email()
 
     @property
@@ -97,14 +99,13 @@ class EmailAddress(models.Model):
         if not self.verified:
             raise Exception('Primary emails must be verified')
         self.user.email_addresses.update(primary=Case(
-            When(id=F('id'), then=Value(True)),
+            When(id=self.id, then=Value(True)),
             default=False
         ))
 
     def verify(self):
         self.verified = True
         self.save()
-        self.user.refresh_profiles()
 
 
 class Profile(models.Model):
@@ -122,8 +123,8 @@ class Profile(models.Model):
         return f"{self.user.username if self.user else self.username}'s {self.producer.name} Profile"
 
     def save(self, *args, **kwargs):
-        if not hasattr(self, 'user') and EmailAddress.objects.filter(email=self.email).exists():
-            self.user = EmailAddress.objects.get(email=self.email).user
+        if not self.user and EmailAddress.objects.filter(email=self.email, verified=True).exists():
+            self.user = EmailAddress.objects.get(email=self.email, verified=True).user
         super().save(*args, **kwargs)
 
 

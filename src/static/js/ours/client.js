@@ -60,6 +60,9 @@ CHAHUB.api = {
     delete_email: function (user_pk, email_pk) {
         return CHAHUB.api.request('DELETE', `users/${user_pk}/remove_email_address/`, {email_pk: email_pk})
     },
+    make_primary_email: function (user_pk, email_pk) {
+        return CHAHUB.api.request('POST', `users/${user_pk}/change_primary_email/`, {email_pk: email_pk})
+    },
     // Merge requests
     create_merge: function(data) {
         return CHAHUB.api.request('POST', URLS.API + "create_merge_request/", data)
