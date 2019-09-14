@@ -81,13 +81,12 @@
                         <tbody>
                         <tr each="{email in _.get(user, 'email_addresses', [])}">
                             <td>{email.email}</td>
-                            <!--TODO add icons here instead of "*"-->
-                            <td>{ email.primary ? "*" : "" }</td>
-                            <td>{ email.verified ? "*" : "" }</td>
+                            <td><i class="icon {check: email.primary}"></i></td>
+                            <td><i class="icon {check: email.verified}"></i></td>
                             <td>
-                                <div if="{!email.verified}" class="ui button" onclick="{resend_verification_email.bind(this, email.id)}">Resend Email</div>
-                                <div if="{!email.primary}" class="ui red button" onclick="{delete_email.bind(this, email.id)}">Delete Email</div>
-                                <div if="{!email.primary && email.verified}" class="ui blue button" onclick="{make_primary_email.bind(this, email.id)}">Make Primary Email</div>
+                                <div if="{!email.verified}" class="ui tiny right floated button" onclick="{resend_verification_email.bind(this, email.id)}">Resend Email</div>
+                                <div if="{!email.primary}" class="ui tiny right floated red button" onclick="{delete_email.bind(this, email.id)}">Delete Email</div>
+                                <div if="{!email.primary && email.verified}" class="ui tiny right floated blue button" onclick="{make_primary_email.bind(this, email.id)}">Make Primary Email</div>
                             </td>
                         </tr>
                         </tbody>

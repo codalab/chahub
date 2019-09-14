@@ -195,5 +195,5 @@ class AccountMergeRequest(models.Model):
             git_info = self.secondary_account.github_user_info
             git_info.user = self.master_account
             git_info.save()
-        self.secondary_account.email_addresses.update(user=self.master_account)
+        self.secondary_account.email_addresses.update(user=self.master_account, primary=False)
         self.secondary_account.profiles.update(user=self.master_account)
