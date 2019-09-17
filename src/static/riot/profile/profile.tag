@@ -48,18 +48,27 @@
                             <tr>
                                 <th>Username</th>
                                 <th>Producer</th>
+                                <th class="right aligned" width="200px">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr each="{profile in _.get(user, 'profiles', [])}">
                                 <td>{profile.username}</td>
                                 <td>{profile.producer}</td>
+                                <td class="right aligned">
+                                    <div class="ui red tiny icon button" onclick="{show_delete_profile_modal.bind(this, profile.id)}"><i class="trash alternate icon"></i></div>
+                                </td>
                             </tr>
                             <tr if="{_.isEmpty(_.get(user, 'profiles'))}">
                                 <td colspan="2" class="center aligned"><em>No Profiles Yet!</em></td>
                             </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="sixteen wide column">
+                        <p><em>More data coming soon!</em></p>
                     </div>
                 </div>
             </div>
@@ -73,32 +82,59 @@
                         <thead>
                         <tr>
                             <th>Email Address</th>
-                            <th>Primary</th>
-                            <th>Verified</th>
-                            <th>Actions</th>
+                            <th width="100px" class="center aligned">Primary</th>
+                            <th width="100px" class="center aligned">Verified</th>
+                            <th width="100px" class="center aligned">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr each="{email in _.get(user, 'email_addresses', [])}">
+                        <tr each="{email in _.orderBy(_.get(user, 'email_addresses', []), filter_primary)}" class="{grey-row: !email.verified}">
                             <td>{email.email}</td>
-                            <td><i class="icon {check: email.primary}"></i></td>
-                            <td><i class="icon {check: email.verified}"></i></td>
-                            <td>
-                                <div if="{!email.verified}" class="ui tiny right floated button" onclick="{resend_verification_email.bind(this, email.id)}">Resend Email</div>
-                                <div if="{!email.primary}" class="ui tiny right floated red button" onclick="{delete_email.bind(this, email.id)}">Delete Email</div>
-                                <div if="{!email.primary && email.verified}" class="ui tiny right floated blue button" onclick="{make_primary_email.bind(this, email.id)}">Make Primary Email</div>
+                            <td class="center aligned"><i class="icon {check: email.primary}"></i></td>
+                            <td class="center aligned"><i class="icon {check: email.verified}"></i></td>
+                            <td class="center aligned">
+                                <div if="{!email.primary}"
+                                     class="ui tiny right floated red icon button"
+                                     data-tooltip="Delete Email Address"
+                                     data-inverted=""
+                                     onclick="{delete_email.bind(this, email.id)}">
+                                    <i class="trash alternate icon"></i>
+                                </div>
+                                <div if="{!email.verified}"
+                                     class="ui tiny right floated icon button"
+                                     data-tooltip="Resend Verification Email"
+                                     data-inverted=""
+                                     onclick="{resend_verification_email.bind(this, email.id)}">
+                                    <i class="paper plane icon"></i>
+                                </div>
+                                <div if="{!email.primary && email.verified}"
+                                     class="ui tiny right floated blue icon button"
+                                     data-tooltip="Make Primary Email Address"
+                                     data-inverted=""
+                                     onclick="{make_primary_email.bind(this, email.id)}">
+                                    <i class="user circle icon"></i>
+                                </div>
                             </td>
                         </tr>
                         </tbody>
+                        <tfoot>
+                        <tr>
+                            <th colspan="4">
+                                <button class="ui tiny inverted green icon button" onclick="{ show_email_modal }">
+                                    <i class="add circle icon"></i> Add Email Address
+                                </button>
+                            </th>
+                        </tr>
+                        </tfoot>
                     </table>
                 </div>
+                <div class="ui divider"></div>
                 <div class="row">
                     <div class="sixteen wide column">
                         <div class="ui form">
                             <a class="ui small icon button" href="{URLS.SOCIAL_BEGIN.GITHUB}"><i class="github icon"></i> Connect with GitHub</a>
                             <a class="ui small button" href="{URLS.MERGE_ACCOUNTS}">Merge Accounts</a>
-                            <div class="ui small button" onclick="{show_email_modal}">Add Email Address</div>
-                            <div class="ui small right floated basic red button" onclick="{show_delete_modal}">Delete Account</div>
+                            <div class="ui small right floated basic red button" onclick="{show_delete_account_modal}">Delete Account</div>
                         </div>
                     </div>
                 </div>
@@ -107,7 +143,7 @@
     </div>
 
 
-    <div ref="delete_modal" class="ui modal">
+    <div ref="delete_account_modal" class="ui modal">
         <div class="header">
             Delete Account?
         </div>
@@ -117,6 +153,21 @@
         </div>
         <div class="actions">
             <div class="ui basic small red button" onclick="{delete_user}">Delete Account</div>
+            <div class="ui small cancel button">Cancel</div>
+        </div>
+    </div>
+
+    <div ref="delete_profile_modal" class="ui modal">
+        <div class="header">
+            Delete This Profile?
+        </div>
+        <div class="content">
+            <p>Are you sure you want to delete this profile? This cannot be undone!</p>
+            <p>Deleting this profile will mean any stats from this profile on this producer can never
+            be connected to an account on chahub again.</p>
+        </div>
+        <div class="actions">
+            <div class="ui basic small red button" onclick="{delete_profile}">Delete Account</div>
             <div class="ui small cancel button">Cancel</div>
         </div>
     </div>
@@ -142,6 +193,7 @@
         var self = this
 
         self.user = {}
+        self.selected_profile_id = undefined
 
         self.on('mount', function () {
             $('.secondary.pointing.menu .item', self.root).tab()
@@ -153,8 +205,16 @@
             })
         })
 
-        self.show_delete_modal = function () {
-            $(self.refs.delete_modal).modal('show')
+        self.filter_primary = o => !o.primary
+
+        self.show_delete_account_modal = function () {
+            $(self.refs.delete_account_modal).modal('show')
+        }
+
+        self.show_delete_profile_modal = function (selected_profile_id) {
+            self.selected_profile_id = selected_profile_id
+            self.update()
+            $(self.refs.delete_profile_modal).modal('show')
         }
 
         self.show_email_modal = function () {
@@ -215,6 +275,20 @@
                 })
         }
 
+        self.delete_profile = function () {
+            $(self.refs.delete_profile_modal).modal('hide')
+            CHAHUB.api.delete_profile(self.opts.user_pk, self.selected_profile_id)
+                .done(function () {
+                    toastr.success('Profile deleted')
+                    self.update_user()
+                })
+                .fail(function () {
+                    toastr.error('Error deleting profile')
+                })
+            self.selected_profile_id = undefined
+
+        }
+
         self.delete_user = function () {
             CHAHUB.api.delete_user(self.opts.user_pk)
                 .done(function (data) {
@@ -261,7 +335,7 @@
             background-color #582c80
             color white
 
-        .details
+        .details, .account
             margin 0 -1em
 
         .details > .container
@@ -272,6 +346,9 @@
             margin 1em
             padding 0
 
+        .grey-row
+            background #f9fafb
+            color #808080
 
         .competition-segment .flex-content
             flex-direction column

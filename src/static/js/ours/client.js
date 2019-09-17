@@ -49,6 +49,9 @@ CHAHUB.api = {
     delete_user: function(id) {
         return CHAHUB.api.request('DELETE', `users/${id}/`)
     },
+    delete_profile: function (user_pk, profile_pk) {
+        return CHAHUB.api.request('DELETE', `users/${user_pk}/scrub_profile/`, {profile_pk: profile_pk})
+    },
     // ------------------------------------------------------------------------
     // Email
     add_email: function(user_pk, email_address) {

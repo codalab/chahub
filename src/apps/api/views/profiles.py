@@ -88,6 +88,19 @@ class UserViewSet(ModelViewSet):
         email.make_primary()
         return Response({}, status=status.HTTP_200_OK)
 
+    @action(detail=True, methods=('DELETE',), url_name='scrub_profile')
+    def scrub_profile(self, request, pk, version):
+        profile_pk = request.data.get('profile_pk')
+        if not profile_pk:
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
+        user = self.get_object()
+        profile = get_object_or_404(Profile, user=user, id=profile_pk)
+        if not self.has_permission(request, user):
+            return Response({}, status=status.HTTP_403_FORBIDDEN)
+        profile.scrubbed = True
+        profile.save()
+        return Response({}, status=status.HTTP_200_OK)
+
 
 class ProfileViewSet(ModelViewSet):
     queryset = Profile.objects.all()

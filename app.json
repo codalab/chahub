@@ -17,7 +17,7 @@
   },
   "addons": [
     "heroku-postgresql",
-    "searchbox:starter",
+    "searchbox:starter --es_version=5.3",
     "scheduler:standard",
     {
       "plan": "heroku-redis:hobby-dev",

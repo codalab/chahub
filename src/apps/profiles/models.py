@@ -110,18 +110,25 @@ class EmailAddress(models.Model):
 class Profile(models.Model):
     remote_id = models.IntegerField()
     user = models.ForeignKey(User, related_name='profiles', on_delete=models.SET_NULL, null=True, blank=True)
-    username = models.CharField(max_length=150)  # Required, but not unique
+    username = models.CharField(max_length=150, null=True, blank=True)  # Required, but not unique
     email = models.EmailField(max_length=200, null=True, blank=True)
     producer = models.ForeignKey('producers.Producer', related_name='profiles', on_delete=models.CASCADE)
     details = JSONField(null=True, blank=True)
+    scrubbed = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ['remote_id', 'producer']
 
     def __str__(self):
-        return f"{self.user.username if self.user else self.username}'s {self.producer.name} Profile"
+        return f"{self.user.username if self.user else self.username or self.remote_id}'s {self.producer.name} Profile"
 
     def save(self, *args, **kwargs):
+        if self.scrubbed:
+            self.user = None
+            self.username = None
+            self.email = None
+            self.details = None
+
         if not self.user and EmailAddress.objects.filter(email=self.email, verified=True).exists():
             self.user = EmailAddress.objects.get(email=self.email, verified=True).user
         super().save(*args, **kwargs)

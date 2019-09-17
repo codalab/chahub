@@ -11,7 +11,7 @@ echo 'create successful'
 exit" &&
 
 docker-compose exec django bash -c "
-python managet.py search_index --delete -f &&
+python manage.py search_index --delete -f &&
 python manage.py migrate &&
 python manage.py create_user admin@admin.com admin test --super-user
 exit"
