@@ -91,7 +91,7 @@ class ProfileCreateSerializer(serializers.ModelSerializer):
         return instance
 
 
-class ProfileDetailSerializer(serializers.ModelSerializer):
+class ProfileSerializer(serializers.ModelSerializer):
     producer = serializers.CharField(source='producer.name')
 
     class Meta:
@@ -119,9 +119,9 @@ class EmailAddressSerializer(serializers.ModelSerializer):
         }
 
 
-class UserDetailSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     github_user_info = GithubUserInfoSerializer(read_only=True, required=False)
-    profiles = ProfileDetailSerializer(read_only=True, many=True)
+    profiles = ProfileSerializer(read_only=True, many=True)
 
     class Meta:
         model = User
@@ -134,9 +134,9 @@ class UserDetailSerializer(serializers.ModelSerializer):
         )
 
 
-class MyUserDetailSerializer(serializers.ModelSerializer):
+class MyUserSerializer(serializers.ModelSerializer):
     github_user_info = GithubUserInfoSerializer(read_only=True, required=False)
-    profiles = ProfileDetailSerializer(read_only=True, many=True)
+    profiles = ProfileSerializer(read_only=True, many=True)
     email_addresses = EmailAddressSerializer(read_only=True, many=True)
 
     class Meta:

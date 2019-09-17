@@ -53,7 +53,7 @@ OUR_APPS = (
     'profiles',
     'sockets',
     'producers',
-    'factory',
+    'commands',
 )
 INSTALLED_APPS = THIRD_PARTY_APPS + OUR_APPS
 

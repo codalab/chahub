@@ -3,7 +3,9 @@ import uuid
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, UserManager
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.db.models import Case, When, Value, F, Q
+from django.db.models import Case, When, Value, Q
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 
@@ -52,6 +54,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             default=None
         ))
 
+    @property
+    def primary_email(self):
+        return self.email_addresses.filter(primary=True).values_list('email', flat=True).first()
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         # Make sure an email address object exists for this users email address
@@ -69,21 +75,14 @@ class EmailAddress(models.Model):
     def __str__(self):
         return self.email
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.verified:
-            self.user.refresh_profiles()
-        else:
-            self.send_verification_email()
-
     @property
-    def absolute_url(self):
+    def verification_url(self):
         return reverse("profiles:verify_email", kwargs={"verification_key": self.verification_key})
 
     def send_verification_email(self):
         template_name = "email/email_verification/verification_request"
         context = {
-            "absolute_url": self.absolute_url,
+            "verification_url": self.verification_url,
             "user": self.user,
         }
         subject = "Verify Email Address"
@@ -197,3 +196,11 @@ class AccountMergeRequest(models.Model):
             git_info.save()
         self.secondary_account.email_addresses.update(user=self.master_account, primary=False)
         self.secondary_account.profiles.update(user=self.master_account)
+
+
+@receiver(post_save, sender=EmailAddress)
+def email_save_handler(sender, instance, **kwargs):
+    if instance.verified:
+        instance.user.refresh_profiles()
+    else:
+        instance.send_verification_email()

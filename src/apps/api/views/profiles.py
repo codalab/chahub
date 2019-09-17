@@ -9,15 +9,15 @@ from rest_framework.viewsets import ModelViewSet
 
 from api.authenticators import ProducerAuthentication
 from api.permissions import ProducerPermission
-from api.serializers.profiles import AccountMergeRequestSerializer, UserDetailSerializer, MyUserDetailSerializer, \
-    ProfileDetailSerializer, ProfileCreateSerializer
+from api.serializers.profiles import AccountMergeRequestSerializer, UserSerializer, MyUserSerializer, \
+    ProfileSerializer, ProfileCreateSerializer
 from profiles.models import Profile, EmailAddress
 
 User = get_user_model()
 
 
 class GetMyProfile(RetrieveAPIView, GenericAPIView):
-    serializer_class = MyUserDetailSerializer
+    serializer_class = MyUserSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self):
@@ -27,65 +27,71 @@ class GetMyProfile(RetrieveAPIView, GenericAPIView):
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = UserDetailSerializer
+    serializer_class = UserSerializer
 
     def get_serializer_class(self):
         user = self.get_object()
-        if self.request.user == user or self.request.user.is_superuser or self.request.user.is_staff:
-            return MyUserDetailSerializer
-        else:
-            return UserDetailSerializer
+        if self.has_permission(self.request, user):
+            return MyUserSerializer
+        return UserSerializer
 
     def get_queryset(self):
         return super().get_queryset().select_related('github_user_info')
 
-    @action(detail=True, methods=('POST',))
+    def has_permission(self, request, user):
+        return request.user == user or request.user.is_superuser or request.user.is_staff
+
+    @action(detail=True, methods=('POST',), url_name='add_email_address')
     def add_email_address(self, request, pk, version):
-        user = self.get_object()
         email_address = request.data.get('email_address')
         if not email_address:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
+        user = self.get_object()
+        if not self.has_permission(request, user):
+            return Response({}, status=status.HTTP_403_FORBIDDEN)
         user.add_email(email_address)
         return Response({}, status=status.HTTP_201_CREATED)
 
-    @action(detail=True, methods=('POST',))
+    @action(detail=True, methods=('POST',), url_name="resend_verification_email")
     def resend_verification_email(self, request, pk, version):
-        user = self.get_object()
         email_pk = request.data.get('email_pk')
         if not email_pk:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
+        user = self.get_object()
+        if not self.has_permission(request, user):
+            return Response({}, status=status.HTTP_403_FORBIDDEN)
         user.resend_verification_email(email_pk)
         return Response({}, status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=('DELETE',))
+    @action(detail=True, methods=('DELETE',), url_name="remove_email_address")
     def remove_email_address(self, request, pk, version):
         email_pk = request.data.get('email_pk')
         if not email_pk:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
         user = self.get_object()
         email = get_object_or_404(EmailAddress, id=email_pk, user=user)
-        if request.user != user and not request.user.is_staff and not request.user.is_superuser or email.primary or user.email_addresses.count() == 1:
+        if not self.has_permission(request, user) or email.primary or user.email_addresses.count() == 1:
             return Response({}, status=status.HTTP_403_FORBIDDEN)
         email.delete()
         user.refresh_profiles()
         return Response({}, status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=('POST',))
+    @action(detail=True, methods=('POST',), url_name="change_primary_email")
     def change_primary_email(self, request, pk, version):
         email_pk = request.data.get('email_pk')
         if not email_pk:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
         user = self.get_object()
-        email = get_object_or_404(EmailAddress, id=email_pk, user=user)
-        if request.user != user and not request.user.is_staff and not request.user.is_superuser:
+        if not self.has_permission(request, user):
             return Response({}, status=status.HTTP_403_FORBIDDEN)
+        email = get_object_or_404(EmailAddress, id=email_pk, user=user)
         email.make_primary()
         return Response({}, status=status.HTTP_200_OK)
 
 
 class ProfileViewSet(ModelViewSet):
     queryset = Profile.objects.all()
-    serializer_class = ProfileDetailSerializer
+    serializer_class = ProfileSerializer
     authentication_classes = (ProducerAuthentication, SessionAuthentication, )
     permission_classes = (ProducerPermission, )
 
@@ -98,7 +104,7 @@ class ProfileViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'create':
             return ProfileCreateSerializer
-        return self.serializer_class
+        return ProfileSerializer
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
