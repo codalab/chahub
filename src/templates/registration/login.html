@@ -2,52 +2,63 @@
 {% load static %}
 
 {% block content %}
-<div class="ui middle aligned center aligned grid">
-    <div class="column">
-        {% if form.non_field_errors %}
-        <div class="ui red message">
-            {{ form.non_field_errors }}
-        </div>
-        {% endif %}
-        <h2 class="ui teal image header">
-            <img src="{% static 'img/temp_chahub_logo_beta.png' %}" class="image" style="width: 350px; opacity: 0.75;">
-        </h2>
-        <form class="ui large form" method="POST">
-            <div class="ui stacked segment">
-                {% csrf_token %}
-                <div class="field">
-                    <div class="ui left icon input">
-                        <i class="user icon"></i>
-                        <input type="text" name="username" id="id_username" placeholder="username" value="{{ form.username.value | default_if_none:''}}">
+    <div class="ui center aligned grid">
+        <div class="column">
+            <h2 class="ui image header">
+                <a href="/"><img src="{% static 'img/temp_chahub_logo_beta.png' %}" class="image"
+                                 style="width: 350px; opacity: 0.75;"></a>
+            </h2>
+            <form class="ui large form" method="POST">
+                <div class="ui stacked segment">
+                    <h2 class="ui left aligned header">Log In</h2>
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="ui red message">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" name="username" id="id_username" placeholder="username"
+                                   value="{{ form.username.value | default_if_none:'' }}">
+                        </div>
                     </div>
-                </div>
-                {% if form.username.errors %}
-                <div class="ui red message">
-                    {{ form.username.errors }}
-                </div>
-                {% endif %}
-                <div class="field">
-                    <div class="ui left icon input">
-                        <i class="write icon"></i>
-                        <input type="password" name="password" id="id_password" placeholder="password" value="{{ form.password.value | default_if_none:'' }}">
+                    {% if form.username.errors %}
+                        <div class="ui red message">
+                            {{ form.username.errors }}
+                        </div>
+                    {% endif %}
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="write icon"></i>
+                            <input type="password" name="password" id="id_password" placeholder="password"
+                                   value="{{ form.password.value | default_if_none:'' }}">
+                        </div>
                     </div>
+                    {% if form.password.errors %}
+                        <div class="ui red message">
+                            {{ form.password.errors }}
+                        </div>
+                    {% endif %}
+                    <button class="ui fluid large teal submit button" type="submit">Login</button>
+                    <div class="ui error message">
+                        {% for error in form.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    <div class="ui horizontal divider" style="padding-bottom: 5px; padding-top: 5px;">
+                        &nbsp;&nbsp;&nbsp;&nbsp; Or &nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                    <div class="field">
+                        <a class="ui fluid large basic icon button" href="{% url 'social:begin' 'github' %}">
+                            <i class="github icon"></i>Login with GitHub</a>
+                    </div>
+                    <div>New to us? <a href="{% url 'profiles:signup' %}">Sign Up</a></div>
+
                 </div>
-                {% if form.password.errors %}
-                <div class="ui red message">
-                    {{ form.password.errors }}
-                </div>
-                {% endif %}
-                <button class="ui fluid large teal submit button" type="submit">Login</button>
-                <div class="ui error message">
-                    {% for error in form.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-            </div>
-        </form>
-        <div class="ui message">
-            New to us? <a href="{% url 'profiles:signup' %}">Sign Up</a>
+            </form>
         </div>
     </div>
-</div>
 {% endblock %}

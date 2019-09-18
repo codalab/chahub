@@ -2,46 +2,105 @@
 {% load static %}
 
 {% block content %}
-    <div class="ui middle aligned center aligned grid">
+    <div class="ui center aligned grid">
         <div class="column">
-            <h2 class="ui teal image header">
-                <img src="{% static "img/codalab-logo-fullcolor-positive.png" %}" style="width: 272px; height: 100px;"
-                     class="image">
+            <h2 class="ui image header">
+                <a href="/"><img src="{% static 'img/temp_chahub_logo_beta.png' %}" class="image"
+                                 style="width: 350px; opacity: 0.75;"></a>
             </h2>
             <form class="ui large form" method="POST">
-            <div class="ui stacked segment">
-                {% csrf_token %}
-                {% for field in form %}
-
-                        <div class="field">
-                            <div class="ui left icon input">
-                                {% if field.name == 'username' %}
-                                    <i class="user icon"></i>
-                                    <input type="text" name="{{ field.name }}" placeholder="{{ field.name }}">
-                                {% elif field.name == 'email' %}
-                                    <i class="mail icon"></i>
-                                    <input type="text" name="{{ field.name }}" placeholder="{{ field.name }}">
-                                {% else %}
-                                    <i class="write icon"></i>
-                                    <input type="password" name="{{ field.name }}" placeholder="password">
-                                {% endif %}
-                            </div>
+                <div class="ui stacked segment">
+                    <h2 class="ui left aligned header">Sign Up</h2>
+                    {% csrf_token %}
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text"
+                                   name="username"
+                                   placeholder="username"
+                                   id="id_username"
+                                   value="{{ form.username.value|default:'' }}"
+                                   maxlength="{{ form.username.field.max_length }}"
+                                   required>
                         </div>
+                    </div>
+                    {% if form.username.errors %}
+                        <div class="ui red message">
+                            {{ form.username.errors }}
+                        </div>
+                    {% endif %}
 
-                {% endfor %}
-                <div class="field">
-                    <button class="ui fluid large teal submit button" type="submit">Create Account</button>
-                </div>
-                <div class="field">
-                    <a class="ui fluid large icon button" href="{% url 'social:begin' 'github' %}"><i class="github icon"></i>Login with GitHub</a>
-                </div>
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="envelope icon"></i>
+                            <input type="email"
+                                   name="email"
+                                   placeholder="email"
+                                   id="id_email"
+                                   value="{{ form.email.value|default:'' }}"
+                                   maxlength="{{ form.email.field.max_length }}"
+                                   required>
+                        </div>
+                    </div>
+                    {% if form.email.errors %}
+                        <div class="ui red message">
+                            {{ form.email.errors }}
+                        </div>
+                    {% endif %}
 
-                <div class="ui error message">
-                    {% for error in form.errors %}
-                        {{ error }}
-                    {% endfor %}
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="lock icon"></i>
+                            <input type="password"
+                                   name="password1"
+                                   placeholder="password"
+                                   id="id_password1"
+                                   value="{{ form.password1.value|default:'' }}"
+                                   maxlength="{{ form.password1.field.max_length }}"
+                                   required>
+                        </div>
+                    </div>
+                    {% if form.password1.errors %}
+                        <div class="ui red message">
+                            {{ form.password1.errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="lock icon"></i>
+                            <input type="password"
+                                   name="password2"
+                                   placeholder="confirm password"
+                                   id="id_password2"
+                                   value="{{ form.password2.value|default:'' }}"
+                                   maxlength="{{ form.password2.field.max_length }}"
+                                   required>
+                        </div>
+                    </div>
+                    {% if form.password2.errors %}
+                        <div class="ui red message">
+                            {{ form.password2.errors }}
+                        </div>
+                    {% endif %}
+                    <div class="field">
+                        <button class="ui fluid large teal submit button" type="submit">Create Account</button>
+                    </div>
+
+                    <div class="ui horizontal divider" style="padding-bottom: 5px; padding-top: 5px;">
+                        &nbsp;&nbsp;&nbsp;&nbsp; Or &nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                    <div class="field">
+                        <a class="ui fluid large basic icon button" href="{% url 'social:begin' 'github' %}">
+                            <i class="github icon"></i>Login with GitHub</a>
+                    </div>
+                    <div>Or <a href="{% url 'login' %}">Log in</a> instead.</div>
+                    <div class="ui error message">
+                        {% for error in form.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
             </form>
         </div>
     </div>
