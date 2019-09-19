@@ -1,9 +1,6 @@
 #!/bin/sh
 
 set -e
-
+python manage.py search_index --delete -f
 python manage.py create_user admin@admin.com admin admin --super-user
 python manage.py create_competition --amount 3 --fill-all-details True --fail-on-exception True
-
-# Rebuild elasticsearch indexes if we need to
-echo "Y" | python manage.py search_index --rebuild
