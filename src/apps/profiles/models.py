@@ -8,6 +8,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
+from django.utils.timezone import now
 
 from utils.email import send_templated_email
 
@@ -170,39 +171,71 @@ class GithubUserInfo(models.Model):
 
 
 class AccountMergeRequest(models.Model):
-    master_account = models.ForeignKey(User, related_name='primary_merge_requests', on_delete=models.CASCADE)
-    secondary_account = models.ForeignKey(User, related_name='secondary_merge_requests', on_delete=models.CASCADE)
-    key = models.UUIDField(default=uuid.uuid4, unique=True)
-
+    master_account = models.ForeignKey('EmailAddress', related_name='primary_merge_requests', on_delete=models.SET_NULL, null=True)
+    secondary_account = models.ForeignKey('EmailAddress', related_name='secondary_merge_requests', on_delete=models.SET_NULL, null=True)
+    master_key = models.UUIDField(default=uuid.uuid4, unique=True)
+    secondary_key = models.UUIDField(default=uuid.uuid4, unique=True)
+    master_confirmation = models.BooleanField(default=False)
+    secondary_confirmation = models.BooleanField(default=False)
+    completed = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
+    emails_sent = models.BooleanField(default=False)
+    metadata = JSONField(blank=True, default=dict)
+
+    def __str__(self):
+        return f"Merge Request ({self.pk}) for master account ({self.master_account.email})"
 
     class Meta:
         unique_together = ['master_account', 'secondary_account']
 
     @property
-    def absolute_url(self):
-        return reverse("profiles:finalize_merge", kwargs={"merge_key": self.key})
+    def master_verification_url(self):
+        return reverse("profiles:confirm_merge", kwargs={"merge_key": self.master_key})
 
-    def save(self, *args, **kwargs):
-        subject = f'Chahub Account Merge Request From: {self.master_account.email}'
-        recipient_list = [self.secondary_account.email],
+    @property
+    def secondary_verification_url(self):
+        return reverse("profiles:confirm_merge", kwargs={"merge_key": self.secondary_key})
+
+    def send_confirmation_email(self, recipient, verification_url):
+        subject = f'Chahub Account Merge Request'
+        recipient_list = [recipient.email],
         context = {
-            'user': self.secondary_account,
-            'requester': self.master_account,
-            'absolute_url': self.absolute_url,
+            'secondary_account': self.secondary_account,
+            'master_account': self.master_account,
+            'verification_url': verification_url,
         }
         template_name = 'email/merge/merge_request'
         send_templated_email(template_name, context, subject, recipient_list)
 
+    def save(self, *args, **kwargs):
+        if not self.emails_sent:
+            self.send_confirmation_email(self.master_account, self.master_verification_url)
+            self.send_confirmation_email(self.secondary_account, self.secondary_verification_url)
+            self.emails_sent = True
+            self.metadata['emails_sent_at'] = str(now())
+        if self.master_account:
+            self.metadata['master_account_email'] = self.master_account.email
+            self.metadata['master_account_user_id'] = self.master_account.user.id
+        if self.secondary_account:
+            self.metadata['secondary_account'] = self.secondary_account.email
+            self.metadata['secondary_account_user_id'] = self.secondary_account.user.id
+        self.metadata['last_updated'] = str(now())
+
         return super().save(*args, **kwargs)
 
     def merge_accounts(self):
-        if hasattr(self.secondary_account, 'github_user_info'):
-            git_info = self.secondary_account.github_user_info
-            git_info.user = self.master_account
+        secondary_user = self.secondary_account.user
+        master_user = self.master_account.user
+        if hasattr(secondary_user, 'github_user_info'):
+            git_info = secondary_user.github_user_info
+            git_info.user = master_user
             git_info.save()
-        self.secondary_account.email_addresses.update(user=self.master_account, primary=False)
-        self.secondary_account.profiles.update(user=self.master_account)
+        secondary_user.email_addresses.update(user=master_user, primary=False)
+        secondary_user.profiles.update(user=master_user)
+        secondary_user.delete()
+        self.completed = True
+        self.metadata['completed_at'] = str(now())
+        self.save()
 
 
 @receiver(post_save, sender=EmailAddress)

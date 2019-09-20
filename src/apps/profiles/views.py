@@ -1,7 +1,9 @@
 from django.contrib.auth import get_user_model, authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.timezone import now
 from django.views.generic import TemplateView
 
 from profiles.forms import ChahubCreationForm
@@ -48,13 +50,24 @@ class MergeAccountsView(LoginRequiredMixin, TemplateView):
         if merge_key:
             # Do merge stuff then redirect
             try:
-                merge_request = AccountMergeRequest.objects.get(key=merge_key)
-                if self.request.user not in [merge_request.master_account, merge_request.secondary_account]:
+                merge_request = AccountMergeRequest.objects.get(Q(master_key=merge_key) | Q(secondary_key=merge_key))
+                if self.request.user not in [merge_request.master_account.user, merge_request.secondary_account.user]:
                     raise Http404("You must be logged in as one of the users whose accounts you are merging")
-                merge_request.merge_accounts()
-                merge_request.secondary_account.delete()
-                merge_request.delete()
-                self.request.session['message'] = 'Successfully merged accounts'
+                if merge_key == merge_request.master_key:
+                    merge_request.master_confirmation = True
+                    merge_request.metadata['master_confirmation_at'] = str(now())
+                    self.request.session['message'] = 'Successfully Confirmed Master Account. Please confirm the Secondary Account'
+                elif merge_key == merge_request.secondary_key:
+                    merge_request.secondary_confirmation = True
+                    merge_request.metadata['secondary_confirmation_at'] = str(now())
+                    self.request.session['message'] = 'Successfully Confirmed Secondary Account. Please confirm the Master Account'
+                else:
+                    # Shouldn't be possible to hit this, probably
+                    raise Http404("Error")
+                merge_request.save()
+                if merge_request.master_confirmation and merge_request.secondary_confirmation:
+                    merge_request.merge_accounts()
+                    self.request.session['message'] = 'Successfully merged accounts'
                 return redirect('profiles:merge')
             except AccountMergeRequest.DoesNotExist:
                 raise Http404("Could not find a merge request with that key.")

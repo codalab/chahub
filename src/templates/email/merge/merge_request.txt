@@ -1,8 +1,9 @@
 {% extends 'email/base_email.txt' %}
 {% block content %}
-A user with the email {{requester.email}} has requested to merge your account into theirs on Chahub.
+A merge request has been created to merge the ChaHub account belonging to {{ secondary_account.email }}
+into the account belonging to {{ master_account.email }}.
 
 If you did not request this merge, please contact us at info@codalab.org.
 If you did request this merge, please follow the link below:
-http://{{ site.domain }}{{absolute_url}}
+http://{{ site.domain }}{{ verification_url }}
 {% endblock %}

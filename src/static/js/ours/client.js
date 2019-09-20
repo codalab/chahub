@@ -68,6 +68,6 @@ CHAHUB.api = {
     },
     // Merge requests
     create_merge: function(data) {
-        return CHAHUB.api.request('POST', URLS.API + "create_merge_request/", data)
+        return CHAHUB.api.request('POST', "create_merge_request/", data)
     },
 }

@@ -1,6 +1,7 @@
 import logging
 
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
@@ -11,10 +12,23 @@ User = get_user_model()
 
 logger = logging.getLogger(__name__)
 
+ERROR_MESSAGES = {
+    'does_not_exist': 'Please make sure the emails you entered are valid and are the primary email '
+                      'addresses on the accounts you want to merge.'
+}
+
 
 class AccountMergeRequestSerializer(serializers.ModelSerializer):
-    master_account = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='email', error_messages={'does_not_exist': "Bad Request"})
-    secondary_account = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='email', error_messages={'does_not_exist': "Bad Request"})
+    master_account = serializers.SlugRelatedField(
+        queryset=EmailAddress.objects.filter(primary=True),
+        slug_field='email',
+        error_messages=ERROR_MESSAGES
+    )
+    secondary_account = serializers.SlugRelatedField(
+        queryset=EmailAddress.objects.filter(primary=True),
+        slug_field='email',
+        error_messages=ERROR_MESSAGES
+    )
 
     class Meta:
         model = AccountMergeRequest
@@ -33,6 +47,12 @@ class AccountMergeRequestSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs['master_account'] == attrs['secondary_account']:
             raise ValidationError('Master account and secondary account emails cannot be the same')
+        if EmailAddress.objects.filter(
+                Q(email=attrs['master_account']) | Q(email=attrs['secondary_account'])
+        ).values_list('user', flat=True).distinct().count() != 2:
+            # This shouldn't be able to happen anyway, since users should only be able to have one primary email address
+            # But checking this anyway for extra bug protection
+            raise ValidationError('Master account and secondary account emails must belong to different users')
         return attrs
 
 
