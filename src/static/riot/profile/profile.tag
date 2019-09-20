@@ -179,14 +179,15 @@
         <div class="content">
             <form class="ui form" onsubmit="{add_email}">
                 <div class="ui field">
-                    <label>Email Address</label>
+                    <label>Email Address<span data-tooltip="Email Addresses must be unique. They cannot belong to any other user." data-inverted="">
+                    <i class="ui circle question icon"></i></span></label>
                     <input type="email" placeholder="user@example.com" ref="email_address">
                 </div>
             </form>
         </div>
         <div class="actions">
             <div class="ui small cancel button">Cancel</div>
-            <div class="ui small green submit button">Submit</div>
+            <div class="ui small green submit button" onclick="{add_email}">Submit</div>
         </div>
     </div>
     <script>

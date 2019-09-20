@@ -217,7 +217,7 @@ class AccountMergeRequest(models.Model):
             self.metadata['master_account_email'] = self.master_account.email
             self.metadata['master_account_user_id'] = self.master_account.user.id
         if self.secondary_account:
-            self.metadata['secondary_account'] = self.secondary_account.email
+            self.metadata['secondary_account_email'] = self.secondary_account.email
             self.metadata['secondary_account_user_id'] = self.secondary_account.user.id
         self.metadata['last_updated'] = str(now())
 

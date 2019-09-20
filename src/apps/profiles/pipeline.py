@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from social_core.pipeline.user import USER_FIELDS
 
-from profiles.models import GithubUserInfo
+from profiles.models import GithubUserInfo, EmailAddress
 
 GITHUB_FIELDS = [
     'login',
@@ -39,6 +39,11 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
                   for name in backend.setting('USER_FIELDS', USER_FIELDS))
     if not fields:
         return
+    email = fields.get('email')
+    email_objects = EmailAddress.objects.filter(email=email)
+    if email_objects.exists():
+        user = email_objects.first().user
+        return {'is_new': False, 'user': user}
     try:
         user = strategy.create_user(**fields)
     except IntegrityError:
