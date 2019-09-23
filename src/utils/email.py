@@ -6,7 +6,11 @@ from django.contrib.sites.models import Site
 
 def send_templated_email(template_name, context, subject, recipient_list, from_email=None, fail_silently=False):
     from_email = from_email or settings.DEFAULT_FROM_EMAIL
-    context["site"] = Site.objects.get_current()
+    try:
+        site_domain = Site.objects.get_current().domain
+    except Site.DoesNotExist:
+        site_domain = 'example.com'
+    context["site_domain"] = site_domain
     plain_text = get_template(f'{template_name}.txt')
     html_code = get_template(f'{template_name}.html')
 
