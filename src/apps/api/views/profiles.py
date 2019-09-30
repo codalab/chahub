@@ -49,8 +49,11 @@ class UserViewSet(ModelViewSet):
         user = self.get_object()
         if not self.has_permission(request, user):
             return Response({}, status=status.HTTP_403_FORBIDDEN)
-        user.add_email(email_address)
-        return Response({}, status=status.HTTP_201_CREATED)
+        email = user.add_email(email_address)
+        if email:
+            return Response({'added email': email.email}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=('POST',), url_name="resend_verification_email")
     def resend_verification_email(self, request, pk, version):

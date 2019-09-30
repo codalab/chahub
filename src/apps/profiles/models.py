@@ -38,11 +38,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.username
 
     def add_email(self, email, primary=False):
-        # TODO: add catch integrity error from already existing email address
-        self.email_addresses.create(email=email, primary=primary)
-        self.refresh_profiles()
+        if not EmailAddress.objects.filter(email=email).exists():
+            email = self.email_addresses.create(email=email, primary=primary)
+            self.refresh_profiles()
+            return email
+        else:
+            return False
 
     def resend_verification_email(self, email_pk):
+        # TODO: add celery and handle sending emails as a celery task
         email = get_object_or_404(EmailAddress, user=self, id=email_pk)
         email.send_verification_email()
 
@@ -81,6 +85,7 @@ class EmailAddress(models.Model):
         return reverse("profiles:verify_email", kwargs={"verification_key": self.verification_key})
 
     def send_verification_email(self):
+        # TODO: add celery and handle sending emails as a celery task
         template_name = "email/email_verification/verification_request"
         context = {
             "verification_url": self.verification_url,
@@ -96,6 +101,7 @@ class EmailAddress(models.Model):
         )
 
     def make_primary(self):
+        # TODO: decide if we want this to also change the email address field on the user model.
         if not self.verified:
             raise Exception('Primary emails must be verified')
         self.user.email_addresses.update(primary=Case(
@@ -129,8 +135,7 @@ class Profile(models.Model):
             self.username = None
             self.email = None
             self.details = None
-
-        if not self.user and EmailAddress.objects.filter(email=self.email, verified=True).exists():
+        elif not self.user and EmailAddress.objects.filter(email=self.email, verified=True).exists():
             self.user = EmailAddress.objects.get(email=self.email, verified=True).user
         super().save(*args, **kwargs)
 
@@ -177,10 +182,14 @@ class AccountMergeRequest(models.Model):
     secondary_key = models.UUIDField(default=uuid.uuid4, unique=True)
     master_confirmation = models.BooleanField(default=False)
     secondary_confirmation = models.BooleanField(default=False)
-    completed = models.BooleanField(default=False)
+    completed_at = models.DateTimeField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     emails_sent = models.BooleanField(default=False)
-    metadata = JSONField(blank=True, default=dict)
+
+    # these record the email addresses of master and secondary account, so that if the email address object is deleted,
+    # we can still see what email addresses were involved in the merge
+    master_email = models.EmailField()
+    secondary_email = models.EmailField()
 
     def __str__(self):
         return f"Merge Request ({self.pk}) for master account ({self.master_account.email})"
@@ -212,14 +221,12 @@ class AccountMergeRequest(models.Model):
             self.send_confirmation_email(self.master_account, self.master_verification_url)
             self.send_confirmation_email(self.secondary_account, self.secondary_verification_url)
             self.emails_sent = True
-            self.metadata['emails_sent_at'] = str(now())
-        if self.master_account:
-            self.metadata['master_account_email'] = self.master_account.email
-            self.metadata['master_account_user_id'] = self.master_account.user.id
-        if self.secondary_account:
-            self.metadata['secondary_account_email'] = self.secondary_account.email
-            self.metadata['secondary_account_user_id'] = self.secondary_account.user.id
-        self.metadata['last_updated'] = str(now())
+
+        if not self.master_email:
+            self.master_email = self.master_account.email
+
+        if not self.secondary_email:
+            self.secondary_email = self.secondary_account.email
 
         return super().save(*args, **kwargs)
 
@@ -233,8 +240,7 @@ class AccountMergeRequest(models.Model):
         secondary_user.email_addresses.update(user=master_user, primary=False)
         secondary_user.profiles.update(user=master_user)
         secondary_user.delete()
-        self.completed = True
-        self.metadata['completed_at'] = str(now())
+        self.completed_at = now()
         self.save()
 
 

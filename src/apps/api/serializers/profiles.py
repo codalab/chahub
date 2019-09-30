@@ -96,7 +96,6 @@ class ProfileCreateSerializer(serializers.ModelSerializer):
             'producer',
             'details',
         )
-        # TODO: this has to be a bad idea, right?
         validators = []
         extra_kwargs = {
             'id': {'read_only': True},

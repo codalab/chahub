@@ -122,7 +122,6 @@
                     toastr.success("Successfully made request!")
                 })
                 .fail(function (error) {
-                    console.log(error)
                     error = error.responseJSON
                     self.errors = _.uniq(_.flatten(_.values(error)))
                     self.update()

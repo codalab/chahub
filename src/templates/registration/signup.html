@@ -2,15 +2,16 @@
 {% load static %}
 
 {% block content %}
-    <div class="ui center aligned grid">
+    <div class="ui centered grid">
         <div class="column">
             <h2 class="ui image header">
-                <a href="/"><img src="{% static 'img/temp_chahub_logo_beta.png' %}" class="image"
-                                 style="width: 350px; opacity: 0.75;"></a>
+                <a href="/">
+                    <img src="{% static 'img/temp_chahub_logo_beta.png' %}" class="image chahub-image-header">
+                </a>
             </h2>
             <form class="ui large form" method="POST">
                 <div class="ui stacked segment">
-                    <h2 class="ui left aligned header">Sign Up</h2>
+                    <h2 class="ui header">Sign Up</h2>
                     {% csrf_token %}
                     <div class="field">
                         <div class="ui left icon input">
@@ -87,14 +88,14 @@
                         <button class="ui fluid large teal submit button" type="submit">Create Account</button>
                     </div>
 
-                    <div class="ui horizontal divider" style="padding-bottom: 5px; padding-top: 5px;">
-                        &nbsp;&nbsp;&nbsp;&nbsp; Or &nbsp;&nbsp;&nbsp;&nbsp;
+                    <div class="ui horizontal divider form-divider-line">
+                        <span class="form-divider-words">Or</span>
                     </div>
                     <div class="field">
                         <a class="ui fluid large basic icon button" href="{% url 'social:begin' 'github' %}">
                             <i class="github icon"></i>Login with GitHub</a>
                     </div>
-                    <div>Or <a href="{% url 'login' %}">Log in</a> instead.</div>
+                    <div>Already have an account? <a href="{% url 'login' %}">Log in</a> instead.</div>
                     <div class="ui error message">
                         {% for error in form.errors %}
                             {{ error }}

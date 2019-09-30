@@ -1,13 +1,10 @@
-import uuid
-
 from django.core.management.base import BaseCommand
+from faker import Faker
 from termcolor import colored
-
-from profiles.models import User as CodalabUser
-
 from tqdm import tqdm
 
-from faker import Faker
+from factories import UserFactory
+
 fake = Faker()
 
 
@@ -30,10 +27,7 @@ class Command(BaseCommand):
         for i in tqdm(range(count), ncols=100):
             try:
                 # Create a random user
-                temp_bot_username = "{0}_{1}_{2}".format(fake.user_name(), str(uuid.uuid4())[0:8],
-                                                         str(uuid.uuid4())[0:8])
-                temp_bot_email = fake.email()
-                CodalabUser.objects.create(username=temp_bot_username, email=temp_bot_email)
+                UserFactory()
             except:
                 print(colored('Failed to create user', 'red'))
         print(

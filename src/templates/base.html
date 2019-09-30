@@ -131,11 +131,10 @@
             GITHUB: "{% url 'social:begin' 'github' %}"
         }
     }
-    CHAHUB.state= {
+    CHAHUB.state = {
         user: {
-            // calling {  } === "True" turns python bools into js bools
-            is_authenticated: "{{ user.is_authenticated }}" === "True",
-            is_superuser: "{{ user.is_superuser }}" === "True",
+            is_authenticated: {{ user.is_authenticated|yesno:"true,false" }},
+            is_superuser: {{ user.is_superuser|yesno:"true,false" }},
             username: "{{ user.username|default:"Anonymous" }}",
         },
         producers: JSON.parse("{{ producers|escapejs|default:"[]" }}"),

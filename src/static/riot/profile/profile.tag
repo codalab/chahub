@@ -197,6 +197,8 @@
         self.selected_profile_id = undefined
 
         self.on('mount', function () {
+            // Todo: add `self.loading` here, and set it true, then false inside self.update_user and then add a
+            //  loading segment in the header, (so username doesnt appear as 'Anonymous' before profile load
             $('.secondary.pointing.menu .item', self.root).tab()
             self.update_user()
             $(self.refs.email_modal).modal({

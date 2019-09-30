@@ -7,7 +7,7 @@ from django.utils import timezone
 from termcolor import colored
 
 from competitions.models import Competition
-from profiles.models import User as CodalabUser
+from factories import UserFactory
 
 
 class Command(BaseCommand):
@@ -30,9 +30,7 @@ class Command(BaseCommand):
         for i in range(count):
             try:
                 # Setup a temp user
-                temp_username = str(uuid.uuid4())
-                temp_email = "{}.mailinator.com".format(temp_username)
-                temp_user = CodalabUser.objects.create(username=temp_username, email=temp_email)
+                temp_user = UserFactory()
 
                 temp_title = "New Competition_{}".format(str(uuid.uuid4()))
                 temp_desc = temp_title + "'s description"

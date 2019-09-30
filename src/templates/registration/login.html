@@ -2,15 +2,16 @@
 {% load static %}
 
 {% block content %}
-    <div class="ui center aligned grid">
+    <div class="ui centered grid">
         <div class="column">
             <h2 class="ui image header">
-                <a href="/"><img src="{% static 'img/temp_chahub_logo_beta.png' %}" class="image"
-                                 style="width: 350px; opacity: 0.75;"></a>
+                <a href="/">
+                    <img src="{% static 'img/temp_chahub_logo_beta.png' %}" class="image chahub-image-header">
+                </a>
             </h2>
             <form class="ui large form" method="POST">
                 <div class="ui stacked segment">
-                    <h2 class="ui left aligned header">Log In</h2>
+                    <h2 class="ui header">Log In</h2>
                     {% csrf_token %}
 
                     {% if form.non_field_errors %}
@@ -22,7 +23,7 @@
                         <div class="ui left icon input">
                             <i class="user icon"></i>
                             <input type="text" name="username" id="id_username" placeholder="username"
-                                   value="{{ form.username.value | default_if_none:'' }}">
+                                   value="{{ form.username.value|default_if_none:'' }}">
                         </div>
                     </div>
                     {% if form.username.errors %}
@@ -34,7 +35,7 @@
                         <div class="ui left icon input">
                             <i class="write icon"></i>
                             <input type="password" name="password" id="id_password" placeholder="password"
-                                   value="{{ form.password.value | default_if_none:'' }}">
+                                   value="{{ form.password.value|default_if_none:'' }}">
                         </div>
                     </div>
                     {% if form.password.errors %}
@@ -48,8 +49,8 @@
                             {{ error }}
                         {% endfor %}
                     </div>
-                    <div class="ui horizontal divider" style="padding-bottom: 5px; padding-top: 5px;">
-                        &nbsp;&nbsp;&nbsp;&nbsp; Or &nbsp;&nbsp;&nbsp;&nbsp;
+                    <div class="ui horizontal divider form-divider-line">
+                        <span class="form-divider-words">Or</span>
                     </div>
                     <div class="field">
                         <a class="ui fluid large basic icon button" href="{% url 'social:begin' 'github' %}">

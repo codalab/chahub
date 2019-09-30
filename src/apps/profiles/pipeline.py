@@ -39,11 +39,15 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
                   for name in backend.setting('USER_FIELDS', USER_FIELDS))
     if not fields:
         return
+
+    # This will also search through EmailAddresses to find the appropriate user,
+    # not just the user model email field.
     email = fields.get('email')
     email_objects = EmailAddress.objects.filter(email=email)
     if email_objects.exists():
         user = email_objects.first().user
         return {'is_new': False, 'user': user}
+
     try:
         user = strategy.create_user(**fields)
     except IntegrityError:
@@ -68,5 +72,4 @@ def user_details(user, **kwargs):
         if backend.name == 'github':
             data = {field: response.get(field) for field in GITHUB_FIELDS}
             data['uid'] = response.get('id')
-            # TODO: search on uid also? catch integrity errors
             GithubUserInfo.objects.update_or_create(user=user, defaults=data)

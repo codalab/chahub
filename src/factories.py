@@ -6,6 +6,7 @@ from producers.models import Producer
 from profiles.models import User, EmailAddress, Profile
 
 
+# Muting signals on User and EmailAddresses so factories don't try and send verification emails
 @factory.django.mute_signals(post_save)
 class UserFactory(DjangoModelFactory):
     class Meta:
