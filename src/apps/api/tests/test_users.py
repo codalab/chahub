@@ -14,26 +14,23 @@ class ChahubAPITestCase(APITestCase):
 class TestEmailPermissions(ChahubAPITestCase):
     def setUp(self):
         self.admin = UserFactory(username='admin', is_superuser=True)
-        self.user = UserFactory(username='test')
+        self.user = UserFactory(username='user')
         self.norm = UserFactory(username='norm')
 
-    def add_email(self, email_address, user=None):
-        user = user or self.user
+    def add_email(self, email_address, user):
         return self.client.post(
             reverse('user-add_email_address', kwargs={'pk': user.id, 'version': 'v1'}),
             data={'email_address': email_address}
         )
 
-    def remove_email(self, email_address, user=None):
-        user = user or self.user
+    def remove_email(self, email_address, user):
         email_pk = EmailAddress.objects.get(email=email_address).id
         return self.client.delete(
             reverse('user-remove_email_address', kwargs={'pk': user.id, 'version': 'v1'}),
             data={'email_pk': email_pk}
         )
 
-    def change_primary(self, email_address, user=None):
-        user = user or self.user
+    def change_primary(self, email_address, user):
         email_pk = EmailAddress.objects.get(email=email_address).id
         return self.client.post(
             reverse('user-change_primary_email', kwargs={'pk': user.id, 'version': 'v1'}),
@@ -44,14 +41,14 @@ class TestEmailPermissions(ChahubAPITestCase):
         email1, email2, email3 = ('email1@example.com', 'email2@example.com', 'email3@example.com')
         emails = self.user.email_addresses.all().values_list('email', flat=True)
         assert email1 not in emails and email2 not in emails and email3 not in emails
-        self.login(username='test')
-        resp = self.add_email(email1)
+        self.login(username='user')
+        resp = self.add_email(email1, self.user)
         assert resp.status_code == 201
         self.login(username='admin')
-        resp = self.add_email(email2)
+        resp = self.add_email(email2, self.user)
         assert resp.status_code == 201
         self.login(username='norm')
-        resp = self.add_email(email3)
+        resp = self.add_email(email3, self.user)
         assert resp.status_code == 403
         emails = self.user.email_addresses.all().values_list('email', flat=True)
         assert email1 in emails
@@ -64,14 +61,14 @@ class TestEmailPermissions(ChahubAPITestCase):
             EmailAddressFactory(user=self.user, email=email)
         emails = self.user.email_addresses.all().values_list('email', flat=True)
         assert email1 in emails and email2 in emails and email3 in emails
-        self.login(username='test')
-        resp = self.remove_email(email1)
+        self.login(username='user')
+        resp = self.remove_email(email1, self.user)
         assert resp.status_code == 200
         self.login(username='admin')
-        resp = self.remove_email(email2)
+        resp = self.remove_email(email2, self.user)
         assert resp.status_code == 200
         self.login(username='norm')
-        resp = self.remove_email(email3)
+        resp = self.remove_email(email3, self.user)
         assert resp.status_code == 403
         emails = self.user.email_addresses.all().values_list('email', flat=True)
         assert email1 not in emails
@@ -83,16 +80,16 @@ class TestEmailPermissions(ChahubAPITestCase):
         for email in [email1, email2, email3]:
             EmailAddressFactory(user=self.user, email=email, verified=True)
         assert self.user.primary_email not in [email1, email2, email3]
-        self.login(username='test')
-        resp = self.change_primary(email1)
+        self.login(username='user')
+        resp = self.change_primary(email1, self.user)
         assert resp.status_code == 200
         assert self.user.primary_email == email1
         self.login(username='admin')
-        resp = self.change_primary(email2)
+        resp = self.change_primary(email2, self.user)
         assert resp.status_code == 200
         assert self.user.primary_email == email2
         self.login(username='norm')
-        resp = self.change_primary(email3)
+        resp = self.change_primary(email3, self.user)
         assert resp.status_code == 403
         assert self.user.primary_email == email2  # didn't change
 
@@ -100,7 +97,7 @@ class TestEmailPermissions(ChahubAPITestCase):
 class TestEmails(APITestCase):
     def setUp(self):
         self.producer = ProducerFactory()
-        self.user = UserFactory(username='test')
+        self.user = UserFactory(username='user')
         self.profile = ProfileFactory()
 
     def test_email_does_not_connects_profiles_to_users_until_email_is_verified(self):

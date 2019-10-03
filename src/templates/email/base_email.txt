@@ -4,4 +4,4 @@ Hello{% if user %} {{ user.username }}{% endif %},
 {% block content %}{% endblock %}
 
 Thanks,
-CodaLab Team
+ChaHub Team

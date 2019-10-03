@@ -1,3 +1,5 @@
+import factory
+from django.db.models import signals
 from django.urls import reverse
 from api.urls import router as Router
 from django.core.management import call_command
@@ -31,7 +33,9 @@ class MaxQueryTestCase(APITestCase):
 
 
 class TestApiQueryCount(MaxQueryTestCase):
-
+    # Muting signals prevents Elastic Search from indexing these comps.
+    # There is probably a better way to do this. Will explore in ChaRepo updates
+    @factory.django.mute_signals(signals.post_save)
     def _generate_data(self):
         call_command('create_competition', amount=50, fill_all_details=True, fail_on_exception=True)
 

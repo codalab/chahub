@@ -7,7 +7,7 @@ services:
     build: .
     container_name: chahub-django
     hostname: chahub-django
-    command: bash -c "cd /app/src && /usr/local/bin/uvicorn asgi:application --workers 2 --port 8888 --reload --host 0.0.0.0"
+    command: bash -c "cd /app/src && watchmedo auto-restart -p '*.py' --recursive -- gunicorn asgi:application -w 2 -k uvicorn.workers.UvicornWorker -b :8888"
     environment:
       - DJANGO_SETTINGS_MODULE=settings.base
       - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}

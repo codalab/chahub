@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, action
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import RetrieveAPIView, GenericAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -48,7 +49,7 @@ class UserViewSet(ModelViewSet):
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
         user = self.get_object()
         if not self.has_permission(request, user):
-            return Response({}, status=status.HTTP_403_FORBIDDEN)
+            raise PermissionDenied('You do not have permission to add an email address to this user')
         email = user.add_email(email_address)
         if email:
             return Response({'added email': email.email}, status=status.HTTP_201_CREATED)
@@ -62,7 +63,7 @@ class UserViewSet(ModelViewSet):
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
         user = self.get_object()
         if not self.has_permission(request, user):
-            return Response({}, status=status.HTTP_403_FORBIDDEN)
+            raise PermissionDenied('You do not have permission to resend this email')
         user.resend_verification_email(email_pk)
         return Response({}, status=status.HTTP_200_OK)
 
@@ -74,7 +75,7 @@ class UserViewSet(ModelViewSet):
         user = self.get_object()
         email = get_object_or_404(EmailAddress, id=email_pk, user=user)
         if not self.has_permission(request, user) or email.primary or user.email_addresses.count() == 1:
-            return Response({}, status=status.HTTP_403_FORBIDDEN)
+            raise PermissionDenied('You do not have permission to remove an email address from this user')
         email.delete()
         user.refresh_profiles()
         return Response({}, status=status.HTTP_200_OK)
@@ -86,7 +87,7 @@ class UserViewSet(ModelViewSet):
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
         user = self.get_object()
         if not self.has_permission(request, user):
-            return Response({}, status=status.HTTP_403_FORBIDDEN)
+            raise PermissionDenied('You do not have permission to change this user\'s primary email')
         email = get_object_or_404(EmailAddress, id=email_pk, user=user)
         email.make_primary()
         return Response({}, status=status.HTTP_200_OK)
@@ -99,7 +100,7 @@ class UserViewSet(ModelViewSet):
         user = self.get_object()
         profile = get_object_or_404(Profile, user=user, id=profile_pk)
         if not self.has_permission(request, user):
-            return Response({}, status=status.HTTP_403_FORBIDDEN)
+            raise PermissionDenied('You do not have permission to delete this profile')
         profile.scrubbed = True
         profile.save()
         return Response({}, status=status.HTTP_200_OK)

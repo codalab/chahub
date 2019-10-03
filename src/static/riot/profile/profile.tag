@@ -142,7 +142,6 @@
         </div>
     </div>
 
-
     <div ref="delete_account_modal" class="ui modal">
         <div class="header">
             Delete Account?
@@ -297,6 +296,9 @@
                 .done(function (data) {
                     toastr.success('Successfully Deleted User')
                     location = URLS.HOME
+                })
+                .fail(function () {
+                    toastr.error('Error deleting user')
                 })
         }
 

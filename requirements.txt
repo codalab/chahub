@@ -34,3 +34,4 @@ django-querycount==0.7.0
 urllib3<1.25,>=1.21.1
 bpython==0.18
 factory_boy==2.12.0
+watchdog==0.9.0
