@@ -41,15 +41,21 @@ class TestEmailPermissions(ChahubAPITestCase):
         email1, email2, email3 = ('email1@example.com', 'email2@example.com', 'email3@example.com')
         emails = self.user.email_addresses.all().values_list('email', flat=True)
         assert email1 not in emails and email2 not in emails and email3 not in emails
+
         self.login(username='user')
         resp = self.add_email(email1, self.user)
         assert resp.status_code == 201
+
         self.login(username='admin')
         resp = self.add_email(email2, self.user)
         assert resp.status_code == 201
+
         self.login(username='norm')
         resp = self.add_email(email3, self.user)
+        # must be superuser to add email to a user other than yourself
         assert resp.status_code == 403
+        assert resp.json()['detail'] == 'You do not have permission to add an email address to this user'
+
         emails = self.user.email_addresses.all().values_list('email', flat=True)
         assert email1 in emails
         assert email2 in emails
@@ -61,15 +67,21 @@ class TestEmailPermissions(ChahubAPITestCase):
             EmailAddressFactory(user=self.user, email=email)
         emails = self.user.email_addresses.all().values_list('email', flat=True)
         assert email1 in emails and email2 in emails and email3 in emails
+
         self.login(username='user')
         resp = self.remove_email(email1, self.user)
         assert resp.status_code == 200
+
         self.login(username='admin')
         resp = self.remove_email(email2, self.user)
         assert resp.status_code == 200
+
         self.login(username='norm')
         resp = self.remove_email(email3, self.user)
+        # must be superuser to remove the email of a user other than yourself
         assert resp.status_code == 403
+        assert resp.json()['detail'] == 'You do not have permission to remove an email address from this user'
+
         emails = self.user.email_addresses.all().values_list('email', flat=True)
         assert email1 not in emails
         assert email2 not in emails
@@ -80,17 +92,22 @@ class TestEmailPermissions(ChahubAPITestCase):
         for email in [email1, email2, email3]:
             EmailAddressFactory(user=self.user, email=email, verified=True)
         assert self.user.primary_email not in [email1, email2, email3]
+
         self.login(username='user')
         resp = self.change_primary(email1, self.user)
         assert resp.status_code == 200
         assert self.user.primary_email == email1
+
         self.login(username='admin')
         resp = self.change_primary(email2, self.user)
         assert resp.status_code == 200
         assert self.user.primary_email == email2
+
         self.login(username='norm')
         resp = self.change_primary(email3, self.user)
+        # must be superuser to change the primary email of a user other than yourself
         assert resp.status_code == 403
+        assert resp.json()['detail'] == "You do not have permission to change this user's primary email"
         assert self.user.primary_email == email2  # didn't change
 
 

@@ -87,7 +87,7 @@ class UserViewSet(ModelViewSet):
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
         user = self.get_object()
         if not self.has_permission(request, user):
-            raise PermissionDenied('You do not have permission to change this user\'s primary email')
+            raise PermissionDenied("You do not have permission to change this user's primary email")
         email = get_object_or_404(EmailAddress, id=email_pk, user=user)
         email.make_primary()
         return Response({}, status=status.HTTP_200_OK)
