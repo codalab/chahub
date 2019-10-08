@@ -1,3 +1,5 @@
+import factory
+from django.db.models import signals
 from django.urls import reverse
 from api.urls import router as Router
 from django.core.management import call_command
@@ -12,7 +14,7 @@ DETAIL_MAX_QUERY_COUNTS = {
 }
 
 
-class MaxQueryTestCase(object):
+class MaxQueryTestCase(APITestCase):
     def setUp(self):
         all_urls = Router.get_urls()
         self.list_routes = [url for url in all_urls if url.name.split('-')[-1] == 'list']
@@ -30,8 +32,10 @@ class MaxQueryTestCase(object):
         assert len(connection.queries) <= max_count
 
 
-class TestApiQueryCount(MaxQueryTestCase, APITestCase):
-
+class TestApiQueryCount(MaxQueryTestCase):
+    # Muting signals prevents Elastic Search from indexing these comps.
+    # There is probably a better way to do this. Will explore in ChaRepo updates
+    @factory.django.mute_signals(signals.post_save)
     def _generate_data(self):
         call_command('create_competition', amount=50, fill_all_details=True, fail_on_exception=True)
 
@@ -46,7 +50,7 @@ class TestApiQueryCount(MaxQueryTestCase, APITestCase):
             # Using __name__, get our query cout max or default to 5
             max_count = LIST_MAX_QUERY_COUNTS.get(model_class.__name__, 6)
 
-            reversed_url = reverse('api:{}'.format(route.name), kwargs={'version': 'v1'})
+            reversed_url = reverse(route.name, kwargs={'version': 'v1'})
 
             self._assert_max_query_count(reversed_url, max_count)
 
@@ -63,5 +67,5 @@ class TestApiQueryCount(MaxQueryTestCase, APITestCase):
 
             # Loop through our objects, and make sure each one is below our threshold
             for instance in model_class.objects.all():
-                reversed_url = reverse('api:{}'.format(route.name), kwargs={'version': 'v1', 'pk': instance.pk})
+                reversed_url = reverse(route.name, kwargs={'version': 'v1', 'pk': instance.pk})
                 self._assert_max_query_count(reversed_url, max_count)

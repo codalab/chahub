@@ -7,6 +7,7 @@ from django.utils import timezone
 from termcolor import colored
 
 from competitions.models import Competition
+from factories import UserFactory
 from profiles.models import User as CodalabUser
 
 
@@ -77,10 +78,7 @@ class Command(BaseCommand):
             try:
                 # If our user is not set, create a random new one and set our user to that
                 if not options['user']:
-                    temp_username = str(uuid.uuid4())
-                    temp_email = "{}.mailinator.com".format(temp_username)
-                    temp_name = "Bot_{}".format(temp_username)
-                    temp_user = CodalabUser.objects.create(username=temp_username, name=temp_name, email=temp_email)
+                    temp_user = UserFactory()
 
                 # If no temp_title, generate a new one
                 if not options['title']:

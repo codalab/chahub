@@ -8,6 +8,7 @@ from django.utils import timezone
 from termcolor import colored
 
 from competitions.models import Competition, Phase, CompetitionParticipant
+from factories import UserFactory
 from profiles.models import User as CodalabUser
 
 from tqdm import tqdm
@@ -215,10 +216,8 @@ class Command(BaseCommand):
                     # Append a bit of UUID to help us get uniques
                     temp_bot_username = "{0}_{1}_{2}".format(fake.user_name(), str(uuid.uuid4())[0:8], str(uuid.uuid4())[0:8])
                     temp_bot_email = fake.email()
-                    temp_bot_name = fake.name()
 
-                    temp_bot = CodalabUser.objects.create(username=temp_bot_username, name=temp_bot_name,
-                                                          email=temp_bot_email)
+                    temp_bot = UserFactory(username=temp_bot_username, email=temp_bot_email)
 
                     # Grab our succesfully made user
                     new_bot_part = CompetitionParticipant.objects.create(

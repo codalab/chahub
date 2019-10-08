@@ -14,6 +14,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 # =============================================================================
 ALLOWED_HOSTS = ['*']
 USE_X_FORWARDED_HOST = True
+VALID_REDIRECT_DOMAINS = os.environ.get('VALID_REDIRECT_DOMAINS', 'localhost:8888').lstrip('[').rstrip(']').split(',')
 
 # Example ADMINS = example@test.com,example2@test.com
 ADMINS = os.environ.get('ADMINS')
@@ -52,7 +53,7 @@ OUR_APPS = (
     'profiles',
     'sockets',
     'producers',
-    'factory',
+    'commands',
 )
 INSTALLED_APPS = THIRD_PARTY_APPS + OUR_APPS
 
@@ -115,8 +116,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# AUTH_USER_MODEL = 'profiles.User'
-
 # =============================================================================
 # Logging
 # =============================================================================
@@ -149,7 +148,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
     'social_core.pipeline.social_auth.social_user',
-    'social_core.pipeline.user.create_user',
+    'profiles.pipeline.create_user',
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
@@ -192,7 +191,7 @@ SERVER_EMAIL = os.environ.get('SERVER_EMAIL', 'noreply@chahub.org')
 # =============================================================================
 # Debugging
 # =============================================================================
-DEBUG = os.environ.get('DEBUG', True)
+DEBUG = os.environ.get('DEBUG', False)
 
 if DEBUG:
     INSTALLED_APPS += ('debug_toolbar',)

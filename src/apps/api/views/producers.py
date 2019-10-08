@@ -1,18 +1,23 @@
 from rest_framework import status
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from api.authenticators import ProducerAuthentication
 from api.permissions import ProducerPermission
-from api.serializers import competitions as serializers
+from api.serializers import producers as serializers
 from producers.models import Producer
 
 
 class ProducerViewSet(ModelViewSet):
     queryset = Producer.objects.all()
     serializer_class = serializers.ProducerSerializer
-    authentication_classes = (ProducerAuthentication, )
+    authentication_classes = (
+        SessionAuthentication,
+        BasicAuthentication,
+        ProducerAuthentication,
+    )
     permission_classes = (ProducerPermission, )
 
     def create(self, request, *args, **kwargs):

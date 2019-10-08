@@ -8,7 +8,6 @@ from api.views import producers
 from api.views.producers import ProducerViewSet
 from .views import competitions, profiles, search
 
-app_name = 'api'
 API_PREFIX = "v1"
 
 # API routes
@@ -16,6 +15,8 @@ router = SimpleRouter()
 router.register('producers', ProducerViewSet)
 router.register('competitions', competitions.CompetitionViewSet)
 router.register('submissions', competitions.SubmissionViewSet)
+router.register('profiles', profiles.ProfileViewSet)
+router.register('users', profiles.UserViewSet)
 
 # Documentation details
 schema_view = get_schema_view(
@@ -36,6 +37,7 @@ urlpatterns = [
     url('query/', search.SearchView.as_view()),
     url('my_profile/', profiles.GetMyProfile.as_view()),
     url('producer_stats/', producers.producer_statistics, name='producer_stats'),
+    url('create_merge_request/', profiles.create_merge_request, name='create_merge_request'),
 
     url('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
