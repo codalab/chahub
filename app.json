@@ -17,8 +17,14 @@
   },
   "addons": [
     "heroku-postgresql",
-    "searchbox:starter",
+    "sendgrid:starter",
     "scheduler:standard",
+    {
+      "plan": "searchbox:starter",
+      "options": {
+        "es_version": "5"
+      }
+    },
     {
       "plan": "heroku-redis:hobby-dev",
       "options": {

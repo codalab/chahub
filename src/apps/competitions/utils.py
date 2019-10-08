@@ -25,10 +25,11 @@ def competition_download_image(competition_pk):
         comp.save()
         return
     resp = requests.get(comp.logo_url)
-    content_type = resp.headers.get('Content_Type')
+    content_type = resp.headers.get('Content-Type', '')
     logger.info(
         "Response; Status: {0}, Content-Type: {1}".format(resp.status_code, content_type.lower())
     )
+    # TODO this is only saving PNGs, and isn't actually saving them to the competition.
     if content_type.lower() == 'image/png':
         logger.info("Image found")
         image = Image.open(BytesIO(resp.content))

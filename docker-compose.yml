@@ -1,0 +1,79 @@
+version: '3'
+services:
+  #-----------------------------------------------
+  #   Web Service
+  #-----------------------------------------------
+  django:
+    build: .
+    container_name: chahub-django
+    hostname: chahub-django
+    command: bash -c "cd /app/src && watchmedo auto-restart -p '*.py' --recursive -- gunicorn asgi:application -w 2 -k uvicorn.workers.UvicornWorker -b :8888"
+    environment:
+      - DJANGO_SETTINGS_MODULE=settings.base
+      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+    env_file: .env
+    volumes:
+      - .:/app
+      - /tmp/codalab-v2/django:/codalab_tmp
+    ports:
+      - 8888:8888
+    depends_on:
+      - postgres
+      - elastic-search
+    stdin_open: true
+    tty: true
+    logging:
+      options:
+        max-size: "20k"
+        max-file: "10"
+  # --------------------------------------------------------------------------
+  # Database
+  # --------------------------------------------------------------------------
+  postgres:
+    image: postgres:9.6.15
+    hostname: postgres
+    restart: unless-stopped
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ${LOGGING_DIR}/psql:/var/log/psql
+      - ${DB_DATA_PATH}:/var/lib/postgresql/data
+      - ./backups:/app/backups
+    env_file: .env
+    logging:
+      options:
+        max-size: "20k"
+    container_name: chahub-postgres
+  # --------------------------------------------------------------------------
+  # Elastic Search
+  # --------------------------------------------------------------------------
+  elastic-search:
+    image: elasticsearch:5.3
+    hostname: elastic-search
+    restart: unless-stopped
+    ports:
+      - 9200:9200
+    volumes:
+      - ./var/data/elasticsearch:/usr/share/elasticsearch/data
+    env_file: .env
+    logging:
+      options:
+        max-size: "20k"
+    container_name: elastic-search
+  #-----------------------------------------------
+  #   Local development helper, rebuilds RiotJS/Stylus on change
+  #-----------------------------------------------
+  builder:
+    build:
+      context: .
+      dockerfile: Dockerfile.builder
+    volumes:
+      - .:/app
+    logging:
+      options:
+        max-size: "20k"
+        max-file: "10"

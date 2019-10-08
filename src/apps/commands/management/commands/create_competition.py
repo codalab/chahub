@@ -8,6 +8,7 @@ from termcolor import colored
 
 from competitions.models import Competition, Phase, CompetitionParticipant
 from profiles.models import User as CodalabUser
+from factories import UserFactory
 
 from tqdm import tqdm
 
@@ -17,16 +18,7 @@ fake = Faker()
 
 def _create_fake_user():
     try:
-        # Usernames will be in the format <some_username><some_number> IE: shieldshannah53
-        temp_email = fake.safe_email()
-        temp_email = "{0}{1}{2}".format(temp_email.split('@')[0] + "@", random.randint(1, 9999), temp_email.split('@')[1])
-        new_user = CodalabUser.objects.create(
-            username="{0}{1}".format(fake.user_name(), random.randint(1, 9999)),
-            name=fake.name(),
-            email=temp_email,
-        )
-        # print(colored("Successfully created new user!", 'green'))
-        return new_user
+        return UserFactory()
     except:
         print(colored("Could not create fake user! Operation failed!", 'red'))
         raise ObjectDoesNotExist("Could not create fake user! Operation failed!")
@@ -253,15 +245,6 @@ class Command(BaseCommand):
 
                 competition = _create_competition(options['fill-all-details'], data)
 
-                for i in tqdm(range(data['part_count']), ncols=100):
-                    _create_fake_participant(competition)
-
-                for i in tqdm(range(data['admin_count']), ncols=100):
-                    temp_part = _create_fake_participant(competition)
-                    competition.admins.add(temp_part)
-
-                competition.participant_count = CompetitionParticipant.objects.filter(competition=competition).count()
-
                 # Init some random dates for our first phase
                 temp_phase_start = timezone.now() + datetime.timedelta(days=random.randint(1, 35))
                 temp_phase_end = temp_phase_start + datetime.timedelta(days=random.randint(1, 35))
@@ -335,13 +318,6 @@ class Command(BaseCommand):
             _check_data_key(options, 'prize', data, 'prize', random.randint(100, 5000))
 
             competition = _create_competition(options['fill-all-details'], data)
-
-            for i in tqdm(range(data['part_count']), ncols=100):
-                _create_fake_participant(competition)
-
-            for i in tqdm(range(data['admin_count']), ncols=100):
-                temp_part = _create_fake_participant(competition)
-                competition.admins.add(temp_part)
 
             competition.participant_count = CompetitionParticipant.objects.filter(competition=competition).count()
 
