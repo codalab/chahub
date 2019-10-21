@@ -54,6 +54,7 @@ OUR_APPS = (
     'sockets',
     'producers',
     'commands',
+    'tasks',
 )
 INSTALLED_APPS = THIRD_PARTY_APPS + OUR_APPS
 
@@ -203,19 +204,22 @@ if DEBUG:
 # =============================================================================
 # Database
 # =============================================================================
-# Default local setup
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite'),
-    }
-}
+DATABASES = {'default': {}}
 
-# Overridden by env settings
-if os.environ.get('DATABASE_URL'):
-    # conn_max_age removed stop 'max connections reached problem'
-    # DATABASES['default'] = dj_database_url.config(conn_max_age=600)
-    DATABASES['default'] = dj_database_url.config()
+db_from_env = dj_database_url.config()
+if db_from_env:
+    DATABASES['default'].update(db_from_env)
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ.get('DB_NAME', 'postgres'),
+            'USER': os.environ.get('DB_USERNAME', 'postgres'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres'),
+            'HOST': os.environ.get('DB_HOST', 'postgres'),
+            'PORT': 5432
+        }
+    }
 
 
 # =============================================================================
@@ -227,6 +231,26 @@ if os.environ.get('USE_SSL'):
 else:
     # Allows us to use with django-oauth-toolkit on localhost sans https
     SESSION_COOKIE_SECURE = False
+
+
+# =========================================================================
+# RabbitMQ
+# =========================================================================
+RABBITMQ_DEFAULT_USER = os.environ.get('RABBITMQ_DEFAULT_USER', 'guest')
+RABBITMQ_DEFAULT_PASS = os.environ.get('RABBITMQ_DEFAULT_PASS', 'guest')
+RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST', 'rabbit')
+RABBITMQ_PORT = os.environ.get('RABBITMQ_PORT', '5672')
+RABBITMQ_MANAGEMENT_PORT = os.environ.get('RABBITMQ_MANAGEMENT_PORT', '15672')
+
+# ============================================================================
+# Celery
+# ============================================================================
+CELERY_BROKER_URL = os.environ.get("CLOUDAMQP_URL") or os.environ.get('BROKER_URL')
+if not CELERY_BROKER_URL:
+    CELERY_BROKER_URL = f'pyamqp://{RABBITMQ_DEFAULT_USER}:{RABBITMQ_DEFAULT_PASS}@{RABBITMQ_HOST}:{RABBITMQ_PORT}//'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ('json',)
+CELERY_TIMEZONE = 'UTC'
 
 
 # =============================================================================

@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db.models import F
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication
@@ -12,6 +13,7 @@ from api.authenticators import ProducerAuthentication
 from api.permissions import ProducerPermission
 from api.serializers.profiles import AccountMergeRequestSerializer, UserSerializer, MyUserSerializer, \
     ProfileSerializer, ProfileCreateSerializer
+from competitions.models import CompetitionParticipant, Competition
 from profiles.models import Profile, EmailAddress
 
 User = get_user_model()

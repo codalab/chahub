@@ -16,13 +16,46 @@
                 <div class="ui centered grid">
                     <div class="ui centered row">
                         <div class="ui sixteen wide mobile fifteen wide search-wrapper column">
-                            <div id="searchbar" class="ui left action right icon input">
+                            <div id="searchbar" class="ui left action input">
                                 <button class="ui icon button" onclick="{ clear_search }">
                                     <i class="delete icon"></i>
                                 </button>
-                                <input type="text" placeholder="Search..." ref="search"
-                                       onkeydown="{ input_updated }">
-                                <i class="search icon"></i>
+                                <input type="text" placeholder="Search..." ref="search" onkeydown="{ input_updated }">
+
+                                <div id="search-filter" class="ui multiple dropdown icon button" ref="object_types">
+                                    <i class="filter icon"></i>
+                                    <span class="text"></span>
+                                    <div class="menu">
+                                        <div class="item" data-value="all">
+                                            <i class="globe icon"></i>
+                                            <span class="label-text">All</span>
+                                        </div>
+                                        <!--<div class="item" data-value="user">
+                                            <i class="users icon"></i>
+                                            <span class="label-text">Users</span>
+                                        </div>
+                                        <div class="item" data-value="profile">
+                                            <i class="users icon"></i>
+                                            <span class="label-text">Profiles</span>
+                                        </div>-->
+                                        <div class="item" data-value="data">
+                                            <i class="file icon"></i>
+                                            <span class="label-text">Datasets</span>
+                                        </div>
+                                        <div class="item" data-value="competitions">
+                                            <i class="server icon"></i>
+                                            <span class="label-text">Competitions</span>
+                                        </div>
+                                        <!--<div class="item" data-value="tasks">
+                                            <i class="hdd icon"></i>
+                                            <span class="label-text">Tasks</span>
+                                        </div>
+                                        <div class="item" data-value="solutions">
+                                            <i class="code icon"></i>
+                                            <span class="label-text">Solutions</span>
+                                        </div>-->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -77,7 +110,7 @@
             <div id="advanced_search_align" class="middle six wide center aligned column">
                 <div id="advanced_search_button" ref="sort_filter"
                      class="ui tiny labeled icon dropdown button">
-                    <i class="filter icon"></i>
+                    <i class="sort icon"></i>
                     <span class="text">Relevance</span>
                     <div class="menu">
                         <div class="header">
@@ -138,11 +171,15 @@
                     </div>
                     Try broadening your search
                 </div>
-                <div class="ui success message" show="{ results.length > 0 && !showing_default_results }">
+                <!--<div class="ui success message" show="{ results.length > 0 && !showing_default_results }">
                     Found { results.length } results
-                </div>
+                </div>-->
                 <div class="ui middle aligned unstackable compact divided link items content-desktop">
-                    <competition-tile each="{ results }" no-reorder class="item"></competition-tile>
+                    <virtual each="{result in results}">
+                        <competition-tile if="{result.index_type === 'competitions'}" comp="{result}" no-reorder class="item"></competition-tile>
+                        <dataset-tile if="{result.index_type === 'data'}" dataset="{result}" no-reorder class="item"></dataset-tile>
+                    </virtual>
+
                 </div>
                 <!--<div class="ui middle aligned compact link items content-mobile" style="margin-top: -1;">
                     <competition-mobile-tile each="{ results }" no-reorder class="item"
@@ -163,7 +200,7 @@
         self.old_filters = {}
         self.display_search_options = false
 
-        self.one('mount', function () {
+        self.on('mount', function () {
             // header particles
             particlesJS.load('particle_header', URLS.assets.header_particles)
 
@@ -187,47 +224,6 @@
 
                     self.search()
                 }
-            })
-
-            // Sidebar with overlay on
-            //$('.sidebar')
-            //    .sidebar({
-            //        transition: 'overlay',
-            //    })
-            //    .sidebar('attach events', '#hamburger_button');
-
-            //$(self.refs.time_filter).dropdown('setting', 'onChange', self.search);
-
-            // Search handling
-            $(self.refs.search_wrapper).search({
-                apiSettings: {
-                    url: URLS.API + "query/?q={query}",
-                    onResponse: function (data) {
-                        // Let riotJS stuff know about updates
-                        self.update({
-                            results: data.results,
-                            suggestions: data.suggestions
-                        })
-
-                        // Handle SemanticUI stuff
-                        var response = {
-                            results: []
-                        };
-                        $.each(data.suggestions, function (index, item) {
-                            response.results.push({
-                                title: item.text
-                                //description: item.score
-                                //url: item.html_url
-                            });
-                        });
-                        return response;
-                    }
-                },
-                cache: false,  // Disabling cache makes results work properly
-                showNoResults: false,
-                minCharacters: 2,
-                duration: 300,
-                transition: 'slide down'
             })
 
             self.init_values_from_query_params()
@@ -262,7 +258,6 @@
 
         self.init_values_from_query_params = function () {
             var params = route.query()
-
             // On page load set search bar to search and execute search if we were given a query
             // Decoding the URI query for the search bar, must decodeURI after the or statement or
             // returns undefined in search params
@@ -290,6 +285,7 @@
             // Dropdowns
             $(self.refs.sort_filter).dropdown('set selected', params.sorting)
             $(self.refs.producer_filter).dropdown('set selected', params.producer)
+            $(self.refs.object_types).dropdown('set selected', params.index)
 
             // Dropdown actions (listen AFTER we set dropdowns, so double search doesn't happen!)
             $(".dropdown", self.root).dropdown({
@@ -349,26 +345,24 @@
 
         self.search = function (query) {
             var filters = {q: query || self.refs.search.value}
-
             filters.start_date = self.refs.start_date.value || ''
             filters.end_date = self.refs.end_date.value || ''
             filters.date_flags = $(self.refs.time_filter).dropdown('get value')
             filters.sorting = $(self.refs.sort_filter).dropdown('get value')
-
             // We may not have a producer so grab preset one from page load if so
             filters.producer = $(self.refs.producer_filter).dropdown('get value')
-
+            let index = $(self.refs.object_types).dropdown('get value')
+            filters.index = index && index !== 'all' ? index : null
+            if (index && index !== 'all') {
+                filters.index = index
+            }
             // Remove any unused filters so we don't do empty searches
-            dict_remove_empty_values(filters)
+            filters = _.omitBy(filters, _.isEmpty)
 
             // If we don't need to search.. don't! either it's the same search or empty
             if (JSON.stringify(self.old_filters) === JSON.stringify(filters)) {
                 return
             }
-
-            console.log("Doing search with filters:")
-            console.log(filters)
-            console.trace()
 
             self.old_filters = filters
             self.loading = true
@@ -376,6 +370,7 @@
 
             CHAHUB.api.search(filters)
                 .done(function (data) {
+                    console.log(data.results)
                     self.loading = false
                     self.suggestions = data.suggestions
                     self.showing_default_results = data.showing_default_results
@@ -560,6 +555,22 @@
             @media screen and (min-width 646px)
                 display none
 
+        .search-wrapper
+            z-index 2
+
+        #search-filter
+            margin-left 10px
+            border-radius 4px
+            padding 0.5em 0.25em 0.5em 0.75em
+
+            > .label
+                margin 0 .14285714em
+
+                .label-text
+                    display none
+
+                > .icon
+                    margin 0 .25rem 0 0
         #search_wrapper .results
             margin-top 1px
 
@@ -700,518 +711,3 @@
                 max-width 1750px
     </style>
 </search-results>
-
-<search-result class="item">
-    <!--<div class="image">
-        <img src="https://semantic-ui.com/images/wireframe/image.png">
-        <img src="{ logo }">
-    </div>
-    <div class="content">
-        <a class="header">{ title }</a>
-        <div class="meta">
-            <span class="price">$1200</span>
-            <span class="stay">1 Month</span>
-        </div>
-        <div class="description">
-            <p>Blah blah lorem ipsum dolor sit amet, description about a competition.</p>
-        </div>
-        <div class="extra">
-            <div class="ui right floated primary button">
-                Participate
-                <i class="right chevron icon"></i>
-            </div>
-        </div>
-    </div>-->
-</search-result>
-
-<competition-tile onclick="{redirect_to_url}">
-    <div class="floating-actions { is-admin: CHAHUB.state.user.is_superuser }">
-        <i class="icon green pencil alternate"
-           onclick="{ edit_competition }"></i>
-        <i class="icon red delete" onclick="{ delete_competition }"></i>
-        <i class="icon { yellow: locked, unlock: locked, lock: !locked }" onclick="{ lock_competition}"></i>
-    </div>
-    <div class="ui tiny image">
-        <img src="{logo || URLS.STATIC('img/img-wireframe.png')}" class="ui avatar image">
-    </div>
-    <div class="content">
-        <div class="header">
-            {title}
-        </div>
-        <div class="description">
-            <p>{description}</p>
-        </div>
-        <div class="extra">
-            <div class="mobile_linewrap">
-                <span class="url"><a href="{url}">{url_short(url)}</a></span>
-                <span class="date">
-                {pretty_date(start)}
-                <virtual if="{end}">
-                    - {pretty_date(end)}
-                </virtual>
-            </span>
-                <div class="mobile_labelwrap"></div>
-                <span class="participant_label ui right floated mini label tooltip" data-content="Participant count">
-                    <i class="user icon"></i> {participant_count}
-                </span>
-                <span class="deadline_label ui right floated mini label tooltip {red: !alert_icon}"
-                      data-content="Deadline of the current phase"
-                      show="{current_phase_deadline}">
-                    <i show="{!alert_icon}" class="alarm icon"></i> {pretty_deadline_time}
-                </span>
-                <span class="deadline_label ui right floated mini label" show="{!current_phase_deadline}">
-                    Never ends
-                </span>
-                <span class="prize_label ui right floated mini label tooltip" data-content="Prize Amount"
-                      show="{prize}">
-                    <i class="yellow trophy icon"></i> {prize}
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        var self = this
-
-        self.on("mount", function () {
-            $(".tooltip", self.root).popup()
-            $(self.refs.modal).modal()
-        })
-
-        self.redirect_to_url = function () {
-            window.open(self.url, '_blank');
-        }
-
-        self.url_short = function (url) {
-            return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
-        }
-
-        self.edit_competition = function (event) {
-            CHAHUB.events.trigger('competition_selected', event.item)
-            event.cancelBubble = true
-        }
-
-        self.delete_competition = function (event) {
-            // TODO - Need to delete the competition on confirm, else do nothing.
-            if (confirm(`Are you sure you want to delete "${event.item.title}?"`)) {
-                alert('Deleted')
-            }
-            event.cancelBubble = true
-        }
-
-        self.lock_competition = function (event) {
-            // TODO - Need to lock the competition and change icon/color to represent locked and unlocked state
-            event.cancelBubble = true
-        }
-    </script>
-
-    <style type="text/stylus">
-        :scope
-            display block
-            position relative
-
-        :scope:hover .floating-actions.is-admin
-            opacity 1
-
-        .floating-actions
-            position absolute
-            top 0
-            right 0
-            opacity 0
-            z-index 10
-
-        .content
-            .description
-                margin-top 0 !important
-                color #808080 !important
-                display block
-                font-size .9em !important
-
-            p
-                line-height 1.1em !important
-
-            @media screen and (max-width 645px)
-                padding-left 0.8em !important
-
-        .extra
-            margin-top 0
-            @media screen and (max-width 749px)
-                margin-bottom 0 !important
-
-            .url
-                font-size .8em
-                color rgba(0, 0, 255, 0.6) !important
-                white-space nowrap
-                overflow hidden
-                text-overflow ellipsis
-                max-width 90vw
-                display block !important
-                @media screen and (min-width 2560px)
-                    margin-bottom: 10px;
-                    overflow: visible;
-                @media screen and (max-width 750px) {
-                    margin-bottom: -6px;
-                }
-
-            .date
-                font-size 0.8em
-                color #8c8c8c !important
-
-        .ui.avatar.image
-            max-width 4em
-            @media screen and (max-width 750px)
-                max-width 3em
-            @media screen and (min-width 2560px)
-                max-width 8em
-
-        .ui.image
-            max-width 60px
-            display inline-grid !important
-            justify-content center
-            @media screen and (min-width 2560px)
-                max-width 240px
-
-        .participant_label
-            background-color #475e6f !important
-            border-color #475e6f !important
-            color #dfe3e5 !important
-            right 0
-            margin 0 2px !important
-            text-align right
-
-            .icon
-                float left
-
-        .prize_label
-            background-color rgba(99, 84, 14, 0.68) !important
-            border-color rgba(99, 84, 14, 0.68) !important
-            color #dee2e4 !important
-            margin 0 2px !important
-
-        .deadline_label
-            margin 0 2px !important
-
-        .mobile_linewrap
-            white-space nowrap
-            overflow hidden
-            text-overflow ellipsis
-            color rgba(0, 0, 255, 0.6)
-            margin-bottom 5px !important
-            margin-right 0 !important
-
-        .label
-            @media screen and (min-width 2560px)
-                font-size 1.2rem !important
-
-        .mobile_labelwrap
-            display block
-            @media screen and (min-width 500px)
-                display inline-block
-
-        @media screen and (min-width 2560px)
-            *
-                font-size 1.5rem !important
-
-            .header
-                font-size 2rem !important
-
-    </style>
-</competition-tile>
-
-<show-stats>
-    <button id="stats-btn" onclick="{ stats_button_clicked }"
-            class="ui black big launch left attached fixed button">
-        <i class="icon {minus: !show_stats, 'chart bar': show_stats}"></i>
-        <span class="btn-text">Stats</span>
-    </button>
-    <div id="stat-card" show="{ !show_stats }" class="ui card">
-        <div class="content">
-            <div class="header">By the numbers...</div>
-        </div>
-        <div class="content">
-            <h4 class="ui sub blue header">Chahub brings together</h4>
-            <div class="ui two column grid">
-                    <div class="column" each="{ stat in producer_stats }" no-reorder>
-            <div class="ui six tiny statistics">
-                <div class="statistic">
-                    <div class="value">
-                        { stat.count }
-                    </div>
-                    <div class="label">
-                        { stat.label }
-                    </div>
-                </div>
-            </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <script>
-        var self = this
-        self.show_stats = false
-        self.producer_stats = {}
-
-        self.on("mount", function () {
-            $(".tooltip", self.root).popup()
-            self.get_general_stats()
-        })
-
-        self.get_general_stats = function () {
-            CHAHUB.api.get_producer_stats()
-                .done(function (data) {
-                    console.log("Received general stats")
-                    self.update({
-                        producer_stats: [
-                            {label: "Competitions", count: num_formatter(data.competition_count, 1)},
-                            {label: "Datasets", count: num_formatter(data.dataset_count, 1)},
-                            {label: "Participants", count: num_formatter(data.participant_count, 1)},
-                            {label: "Submissions", count: num_formatter(data.submission_count, 1)},
-                            {label: "Users", count: num_formatter(data.user_count, 1)},
-                            {label: "Organizers", count: num_formatter(data.organizer_count, 1)},
-                        ],
-                    })
-                })
-        }
-
-        self.stats_button_clicked = function () {
-            self.show_stats = !self.show_stats
-            self.update()
-        }
-    </script>
-
-    <style type="text/stylus">
-        :scope
-            position fixed
-
-        #stats-btn
-            position fixed
-            top 110px
-            right 0 !important
-            width 55px
-            height auto
-            white-space nowrap
-            overflow hidden
-            transition 0.3s width ease, 0.5s transform ease
-
-            .icon
-                margin 0 .5em 0 -0.45em
-
-        #stats-btn:hover
-            width 130px
-
-            .btn-text
-                opacity 1
-
-        .btn-text
-            position absolute
-            white-space nowrap
-            top auto
-            right 54px
-            opacity 0
-            -webkit-transition 0.23s opacity 0.2s
-            -moz-transition 0.23s opacity 0.2s
-            -o-transition 0.23s opacity 0.2s
-            -ms-transition 0.23s opacity 0.2s
-            transition 0.23s opacity 0.2s
-
-        #stat-card
-            z-index -1
-
-        .ui.card>.content, .ui.cards>.card>.content
-            padding-right 3em
-
-        .ui.card>.content>.sub.header
-            padding-bottom 10px
-
-        .ui.statistics>.statistic
-            flex 1 1 auto
-    </style>
-</show-stats>
-
-<competition-modal>
-    <div class="ui modal competition-form" ref="modal">
-        <i class="close icon"></i>
-        <div class="header">
-            Edit Competition
-        </div>
-        <div style="padding: 20px;" class="edit-competition-form ui form">
-            <div class="field">
-                <label for="competition-title">Title</label>
-                <input id="competition-title" type="text" class="ui input" ref="competition_title" name="title">
-            </div>
-            <div class="field">
-                <label for="competition-description">Description</label>
-                <textarea class="ui input" ref="competition_description" id="competition-description"
-                          name="description"></textarea>
-            </div>
-            <div class="field">
-                <label for="logo-url">Logo URL</label>
-                <input type="url" class="ui input" ref="competition_logo" id="logo-url" name="logo">
-            </div>
-        </div>
-        <div class="actions">
-            <div class="ui black deny button">
-                Cancel
-            </div>
-            <div class="ui positive right labeled icon button">
-                Submit
-                <i class="checkmark icon"></i>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        var self = this
-
-        CHAHUB.events.on('competition_selected', function (competition) {
-            self.selected_competition = competition
-            self.refs.competition_title.value = self.selected_competition.title
-            self.refs.competition_description.value = self.selected_competition.description
-            self.refs.competition_logo.value = self.selected_competition.logo
-            console.log(self)
-            self.update()
-            $(self.refs.modal).modal('show')
-        })
-    </script>
-</competition-modal>
-
-<competition-card>
-    <!-- <div class="image">
-        <img src="https://i.imgur.com/n2XUSxU.png">
-    </div>
-    <div class="content">
-        <a class="header">{ title }</a>
-        <div class="meta">
-            <span class="date">Joined in 2013</span>
-        </div>
-        <div class="description">
-            Kristy is an art director living in New York.
-        </div>
-    </div>
-    <div class="extra content">
-        <a>
-            <i class="user icon"></i>
-            22 Friends
-        </a>
-    </div>
-
-    <script>
-    </script>
-
-    <style type="text/stylus">
-        :self
-            display block
-    </style>-->
-</competition-card>
-
-<competition-mobile-tile onclick="{redirect_to_url}">
-    <!--<h6 class="ui top attached header">
-        Dogs
-    </h6>
-    <div class="ui grid attached segment">
-        <div class="ui floating blue centered mini label tooltip" data-content="Participant count">
-            <p style="">{participant_count}</p>
-        </div>
-        <div class="ui tiny image" style="width: 40px;">
-            <img src="{logo}" style="margin-left: 1em; max-width: 3em; max-height: 3em;" class="ui avatar image">
-        </div>
-        <div class="content">
-            <div class="header">
-                {title}
-            </div>
-            <div class="description">
-                <p>{description}</p>
-            </div>
-            <div class="extra" style="margin-top: 0;">
-                <span style="font-size: .8em; color: rgba(0,0,255, 0.6);">{url}</span>
-                <span style="font-size: .8em;">
-                {pretty_date(start)}
-                <virtual if="{end}">
-                    - {pretty_date(end)}
-                </virtual>
-            </span>
-                <div class="ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
-                    <i class="yellow trophy icon"></i> {prize}
-                </div>
-                <div class="ui right floated red mini label tooltip"
-                     style="background-color: #db28289e;"
-                     data-content="Deadline of the current phase"
-                     show="{current_phase_deadline}">
-                    <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="ui attached message">
-        <div class="ui grid">
-            <div class="row">
-                <div class="ui two wide centered column" style="text-align: center;">
-                    <img src="{logo}" style="margin: 0em; max-width: 3em; max-height: 3em;"
-                         class="ui centered avatar image">
-                </div>
-                <div class="fourteen wide column">
-                    <div style="font-size: .95em;" class="header">
-                        {title}
-                    </div>
-                    <p style="font-size: .85em; color: rgba(0,0,0, 0.4);">{description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="ui attached fluid segment">
-        <div id="participant_label" class="ui floating centered mini label tooltip" data-content="Participant count">
-            <p style="">{participant_count}</p>
-        </div>
-        <div align="center" class="">
-            <div class="" style="margin-top: 0;">
-                <span style="font-size: .8em; color: rgba(0,0,255, 0.6);">{url}</span>
-            </div>
-            <div>
-                <span style="font-size: .8em;">
-                    {pretty_date(start)}
-                    <virtual if="{end}">
-                        - {pretty_date(end)}
-                    </virtual>
-                </span>
-            </div>
-            <div id="prize_label" class="ui right floated mini label tooltip" data-content="Prize Amount" show="{prize}">
-                <i class="yellow trophy icon"></i> {prize}
-            </div>
-            <div class="ui right floated red mini label tooltip"
-                 style="background-color: #db28289e;"
-                 data-content="Deadline of the current phase"
-                 show="{current_phase_deadline}">
-                <i class="alarm icon"></i> {pretty_date(current_phase_deadline)}
-            </div>
-        </div>
-    </div>
-    </div>-->
-    <script>
-        var self = this
-
-        self.on("mount", function () {
-            $(".tooltip", self.root).popup()
-        })
-
-        self.redirect_to_url = function () {
-            window.open(self.url, '_blank');
-        }
-    </script>
-
-    <style type="text/stylus">
-        :scope
-            display block
-
-        .content
-            .description
-                margin-top 0 !important
-                color #808080 !important
-                font-size .9em !important
-
-            p
-                line-height 1.1em !important
-    </style>
-
-</competition-mobile-tile>

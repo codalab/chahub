@@ -11,12 +11,13 @@ class SearchView(APIView):
     @cache_response(key_func=QueryParamsKeyConstructor(), timeout=60)
     def get(self, request, version="v1"):
         # Get search data
-        query = request.GET.get('q', '')
-        sorting = request.GET.get('sorting')
-        date_flags = request.GET.get('date_flags')
-        start = request.GET.get('start_date')
-        end = request.GET.get('end_date')
-        producer = request.GET.get('producer')
+        query = request.query_params.get('q', '')
+        sorting = request.query_params.get('sorting')
+        date_flags = request.query_params.get('date_flags')
+        start = request.query_params.get('start_date')
+        end = request.query_params.get('end_date')
+        producer = request.query_params.get('producer')
+        index = request.query_params.get('index')
 
         # Do we even have anything to search with?
         filters = (
@@ -26,8 +27,9 @@ class SearchView(APIView):
             start,
             end,
             producer,
+            index,
         )
-        empty_search = all(not f for f in filters)
+        empty_search = not any(filters)
 
         # Get results and prepare them
         data = {
@@ -37,7 +39,7 @@ class SearchView(APIView):
 
         if not empty_search:
             # Setup ES connection, excluding HTML text from our results
-            s = get_search_client()
+            s = get_search_client(index=index)
 
             # Do search/filtering/sorting
             s = self._search(s, query)
@@ -58,7 +60,7 @@ class SearchView(APIView):
                 query=query,
                 type="best_fields",
                 fuzziness=1,
-                fields=["title^5", "description^3", "html_text^2", "created_by"]
+                fields=["title^5", "description^3", "html_text^2", "created_by", "name"]
             )
             # s = s.highlight('title', fragment_size=50)
             # s = s.suggest('suggestions', query, term={'field': 'title'})
@@ -71,7 +73,7 @@ class SearchView(APIView):
                 'gte': "now/M",
                 'lte': "now/M",
             })
-        if date_flags == "this_year":
+        elif date_flags == "this_year":
             search = search.filter('range', start={
                 'gte': "now/y",
                 'lte': "now/y",

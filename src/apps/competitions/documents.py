@@ -1,4 +1,5 @@
 from django_elasticsearch_dsl import DocType, Index, fields
+
 from .models import Competition
 
 competitions = Index('competitions')
@@ -6,23 +7,6 @@ competitions.settings(
     number_of_shards=1,
     number_of_replicas=0
 )
-
-
-# class ModelDocMixin():
-#     """
-#     This mixin provides some utility function for documents,
-#     simplifying access to related model information.
-#     """
-#     @property
-#     def pk(self):
-#         return self.meta["id"]
-#
-#     def get_model_class(self):
-#         # return self.get_queryset().model
-#         return self._doc_type.model
-#
-#     def get_model_instance(self):
-#         return self.get_queryset().get(pk=self.pk)
 
 
 @competitions.doc_type

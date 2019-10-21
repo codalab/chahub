@@ -3,28 +3,55 @@ from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from api.serializers.mixins import ChaHubWritableNestedSerializer
 from api.serializers.producers import ProducerSerializer
+from api.serializers.tasks import TaskCreationSerializer, TaskSerializer
 from competitions.models import Competition, Phase, Submission, CompetitionParticipant
+from competitions.tasks import download_competition_image
 
 
-class CompetitionParticipantSerializer(serializers.ModelSerializer):
+class CompetitionParticipantSerializer(ChaHubWritableNestedSerializer):
     class Meta:
         model = CompetitionParticipant
-        fields = ('competition', 'user')
+        fields = (
+            'remote_id',
+            'user',
+            'status',
+        )
 
 
-class PhaseSerializer(WritableNestedModelSerializer):
+class PhaseSerializer(serializers.ModelSerializer):
+    tasks = TaskSerializer(many=True, required=False)
+
     class Meta:
         model = Phase
         fields = (
             'id',
-            # 'competition',
             'index',
             'start',
             'end',
             'name',
             'description',
             'is_active',
+            'tasks'
+        )
+
+
+class PhaseCreationSerializer(WritableNestedModelSerializer):
+    tasks = TaskCreationSerializer(many=True)
+
+    class Meta:
+        model = Phase
+        fields = (
+            'id',
+            'remote_id',
+            'index',
+            'start',
+            'end',
+            'name',
+            'description',
+            'is_active',
+            'tasks'
         )
 
 
@@ -59,8 +86,62 @@ class SubmissionSerializer(serializers.ModelSerializer):
         return instance
 
 
+class CompetitionCreationSerializer(WritableNestedModelSerializer):
+    producer = ProducerSerializer(required=False)
+    phases = PhaseCreationSerializer(required=False, many=True)
+    participants = CompetitionParticipantSerializer(required=False, many=True)
+    logo = serializers.URLField()
+
+    class Meta:
+        model = Competition
+        fields = (
+            'id',
+            'remote_id',
+            'title',
+            'producer',
+            'created_by',
+            'creator_id',
+            'start',
+            'logo',
+            'url',
+            'phases',
+            'participants',
+            'description',
+            'end',
+            'admins',
+            'is_active',
+            'participant_count',
+            'html_text',
+            'current_phase_deadline',
+            'prize',
+            'published'
+        )
+        validators = []
+
+    def create(self, validated_data):
+        """
+        This creates *AND* updates based on the combination of (remote_id, producer)
+        """
+        logo_url = validated_data.pop('logo', None)
+        validated_data['logo_url'] = logo_url
+        try:
+            comp = Competition.objects.get(
+                remote_id=validated_data.get('remote_id'),
+                producer=self.context['producer']
+            )
+            update_logo = logo_url and logo_url != comp.logo_url
+            comp = self.update(comp, validated_data)
+            if update_logo:
+                download_competition_image.apply_async((comp.id,))
+        except ObjectDoesNotExist:
+            comp = super().create(validated_data)
+            comp.producer = self.context['request'].user
+            comp.save()
+        return comp
+
+
 class CompetitionListSerializer(serializers.ModelSerializer):
-    producer = ProducerSerializer(required=False, validators=[])
+    producer = ProducerSerializer(required=False)
     logo = serializers.URLField()
 
     class Meta:
@@ -83,20 +164,11 @@ class CompetitionListSerializer(serializers.ModelSerializer):
             'prize',
             'published'
         )
-        validators = []
-        extra_kwargs = {
-            'producer': {
-                # UniqueTogether validator messes this up
-                'validators': [],
-            }
-        }
 
 
 class CompetitionDetailSerializer(WritableNestedModelSerializer):
-    # Stop the "uniqueness" validation, we want to be able to update already
-    # existing models
     # Also, Producer in this case comes from serializer context
-    producer = ProducerSerializer(required=False, validators=[])
+    producer = ProducerSerializer(required=False)
     phases = PhaseSerializer(required=False, many=True)
     participants = CompetitionParticipantSerializer(many=True, read_only=True)
     admins = serializers.StringRelatedField(many=True, read_only=True)
@@ -110,6 +182,7 @@ class CompetitionDetailSerializer(WritableNestedModelSerializer):
             'title',
             'producer',
             'created_by',
+            'creator_id',
             'start',
             'logo',
             'url',
@@ -126,13 +199,6 @@ class CompetitionDetailSerializer(WritableNestedModelSerializer):
             'prize',
             'published'
         )
-        validators = []
-        extra_kwargs = {
-            'producer': {
-                # UniqueTogether validator messes this up
-                'validators': [],
-            }
-        }
 
     def validate_description(self, description):
         if description:
@@ -147,26 +213,3 @@ class CompetitionDetailSerializer(WritableNestedModelSerializer):
         if not producer:
             raise ValidationError("Producer not found when creating data entry")
         return producer
-
-    def create(self, validated_data):
-        """
-        This creates *AND* updates based on the combination of (remote_id, producer)
-        """
-        logo_url = validated_data.pop('logo') if validated_data.get('logo') else None
-        validated_data['logo_url'] = logo_url
-        try:
-            # If we have an existing instance from this producer
-            # with the same remote_id, update it instead of making a new one
-            temp_instance = Competition.objects.get(
-                remote_id=validated_data.get('remote_id'),
-                producer__id=self.context['producer'].id
-            )
-            if logo_url and logo_url != temp_instance.logo_url:
-                temp_instance.logo_url = None
-                temp_instance.logo = None
-            return self.update(temp_instance, validated_data)
-        except ObjectDoesNotExist:
-            new_instance = super().create(validated_data)
-            new_instance.producer = self.context['producer']
-            new_instance.save()
-            return new_instance

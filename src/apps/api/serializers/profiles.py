@@ -6,6 +6,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
 
+from api.serializers.competitions import CompetitionListSerializer
 from profiles.models import GithubUserInfo, AccountMergeRequest, Profile, EmailAddress
 
 User = get_user_model()
@@ -112,6 +113,7 @@ class ProfileCreateSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     producer = serializers.CharField(source='producer.name')
+    competitions = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
@@ -119,8 +121,14 @@ class ProfileSerializer(serializers.ModelSerializer):
             'id',
             'remote_id',
             'username',
-            'producer'
+            'producer',
+            'competitions',
         )
+
+    def get_competitions(self, profile):
+        return CompetitionListSerializer(
+            profile.producer.competitions.filter(participants__user=profile.remote_id), many=True
+        ).data
 
 
 class EmailAddressSerializer(serializers.ModelSerializer):

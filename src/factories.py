@@ -1,3 +1,5 @@
+import uuid
+
 import factory
 from django.db.models.signals import post_save
 from factory import DjangoModelFactory, post_generation
@@ -57,3 +59,12 @@ class ProducerFactory(DjangoModelFactory):
     name = factory.Faker('company')
     contact = factory.Faker('safe_email')
     url = 'example.com'
+
+    @post_generation
+    def api_key(self, created, extracted, **kwargs):
+        if extracted:
+            if not isinstance(extracted, uuid.UUID):
+                extracted = uuid.UUID(extracted)
+            self.api_key = extracted
+            if created:
+                self.save()

@@ -20,19 +20,20 @@ services:
     depends_on:
       - postgres
       - elastic-search
+      - rabbit
     stdin_open: true
     tty: true
     logging:
       options:
         max-size: "20k"
         max-file: "10"
+
   # --------------------------------------------------------------------------
   # Database
   # --------------------------------------------------------------------------
   postgres:
     image: postgres:9.6.15
     hostname: postgres
-    restart: unless-stopped
     ports:
       - 5433:5432
     environment:
@@ -48,13 +49,15 @@ services:
       options:
         max-size: "20k"
     container_name: chahub-postgres
+
   # --------------------------------------------------------------------------
   # Elastic Search
   # --------------------------------------------------------------------------
   elastic-search:
     image: elasticsearch:5.3
     hostname: elastic-search
-    restart: unless-stopped
+    environment:
+      ES_JAVA_OPTS: "-Xms750m -Xmx750m"
     ports:
       - 9200:9200
     volumes:
@@ -64,6 +67,45 @@ services:
       options:
         max-size: "20k"
     container_name: elastic-search
+
+  #-----------------------------------------------
+  #   Rabbitmq Service
+  #-----------------------------------------------
+  rabbit:
+    image: rabbitmq:3.8-management
+    env_file: .env
+    ports:
+      - 15672:15672
+      - 5672:5672
+    volumes:
+      # To save rabbit state between container ups/downs
+      - ./var/rabbit:/var/lib/rabbit/:delegated
+    logging:
+      options:
+        max-size: "20k"
+        max-file: "10"
+
+  #-----------------------------------------------
+  #   Celery Service
+  #-----------------------------------------------
+  site_worker:
+    command: bash -c "watchmedo auto-restart -p '*.py' --recursive -- celery -A celery_config worker -Q site-worker -l info -n site-worker@%n"
+    working_dir: /app/src
+    build:
+      context: .
+    depends_on:
+      - rabbit
+      - postgres
+    environment:
+      - DJANGO_SETTINGS_MODULE=settings.base
+    env_file: .env
+    volumes:
+      - .:/app
+    logging:
+      options:
+        max-size: "20k"
+        max-file: "10"
+
   #-----------------------------------------------
   #   Local development helper, rebuilds RiotJS/Stylus on change
   #-----------------------------------------------

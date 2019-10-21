@@ -2,18 +2,19 @@ import datetime
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.utils.timezone import now
 
 
 class Competition(models.Model):
-    # created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     created_by = models.TextField(null=True, blank=True)
-    created_when = models.DateTimeField(auto_now_add=True)
+    creator_id = models.IntegerField(null=True, blank=True)
+    created_when = models.DateTimeField(default=now)
     start = models.DateTimeField(null=True, blank=True)
     title = models.TextField()
     description = models.TextField(null=True, blank=True)
     end = models.DateTimeField(null=True, blank=True)
     prize = models.PositiveIntegerField(null=True, blank=True)
-    producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True)
+    producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True, related_name='competitions')
     remote_id = models.CharField(max_length=128, null=True, blank=True)
     logo_url = models.URLField(null=True, blank=True)
     logo = models.ImageField(null=True, blank=True)
@@ -31,22 +32,11 @@ class Competition(models.Model):
     def __str__(self):
         return self.title
 
-    def save(self, **kwargs):
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
         if self.logo_url and not self.logo:
-            from competitions.utils import competition_download_image
-            competition_download_image(self.pk)
-        super().save(**kwargs)
-
-    # def save(self, *args, **kwargs):
-    #     # Send off our data
-    #     from api.serializers.competitions import CompetitionSerializer
-    #     Group("updates").send({
-    #         "text": json.dumps({
-    #             "type": "competition_update",
-    #             "data": CompetitionSerializer(self).data
-    #         }),
-    #     })
-    #     return super().save(*args, **kwargs)
+            from competitions.tasks import download_competition_image
+            download_competition_image.apply_async((self.id,))
 
     def get_current_phase_deadline(self):
         # TODO: We may need to have a celery task that updates ElasticSearch deadlines.
@@ -77,6 +67,7 @@ class Competition(models.Model):
 
 
 class Phase(models.Model):
+    remote_id = models.IntegerField(null=True, blank=True)
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE, related_name='phases')
     index = models.PositiveIntegerField()
     start = models.DateTimeField()
@@ -84,6 +75,7 @@ class Phase(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField(null=True, blank=True)
     never_ends = models.BooleanField(default=False)
+    tasks = models.ManyToManyField('tasks.Task', blank=True, related_name="phases")
 
     def __str__(self):
         return f"{self.competition.title} - {self.name}"
@@ -116,12 +108,11 @@ class Submission(models.Model):
 
 
 class CompetitionParticipant(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='participants',
-                             on_delete=models.SET_NULL)
+    remote_id = models.CharField(max_length=128, null=True, blank=True)
+    producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True, related_name='competition_participants')
+    user = models.IntegerField()
     competition = models.ForeignKey(Competition, related_name='participants', on_delete=models.CASCADE)
-
-    def __unicode__(self):
-        return str(self.user.username)
+    status = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return str(self.user.username)
+        return f'CompetitionParticipant - user remote_id: {self.user} for comp: {self.competition.title}'

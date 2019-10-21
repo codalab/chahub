@@ -24,6 +24,8 @@ class CompetitionViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
     def get_serializer_class(self):
         if self.action == 'list':
             return serializers.CompetitionListSerializer
+        elif self.action == 'create':
+            return serializers.CompetitionCreationSerializer
         return self.serializer_class
 
     def get_serializer_context(self):
