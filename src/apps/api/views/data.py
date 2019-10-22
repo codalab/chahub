@@ -1,6 +1,5 @@
 from rest_framework import status
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, ListModelMixin
-from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
@@ -10,24 +9,6 @@ from api.pagination import BasicPagination
 from api.permissions import ProducerPermission
 from api.serializers import data as serializers
 from datasets.models import Data, DataGroup
-
-
-# class DataViewSetCreate(CreateAPIView, GenericViewSet):
-#     queryset = Data.objects.all()
-#     serializer_class = serializers.DataSerializer
-#     parser_classes = (MultiPartParser,)
-#
-#     # def put(self, request, filename, format=None):
-#     #     file_obj = request.data['file']
-#     #     # ...
-#     #     # do some stuff with uploaded file
-#     #     # ...
-#     #     return Response(status=204)
-#     def perform_create(self, serializer):
-#         serializer.save(
-#             owner=self.request.user,
-#             data_file=self.request.data.get('data_file')
-#         )
 
 
 class DataViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, ListModelMixin, GenericViewSet):

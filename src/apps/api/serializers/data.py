@@ -1,5 +1,3 @@
-from django.conf import settings
-from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
 
 from api.serializers.mixins import ChaHubWritableNestedSerializer

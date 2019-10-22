@@ -20,8 +20,8 @@ CHAHUB.api = {
         // This causes bugs with repeating the query params over and over, so we just replaceState now
         //route('?' + $.param(params))
         var url_params = `/?${$.param(filters)}`
-        window.history.replaceState("", "", url_params);
-        return CHAHUB.api.request('GET', "query" + url_params)
+        window.history.replaceState("", "", decodeURI(url_params));
+        return CHAHUB.api.request('GET', "query", filters)
     },
     // ------------------------------------------------------------------------
     // Producers

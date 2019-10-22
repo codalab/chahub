@@ -46,11 +46,11 @@
                                             <i class="server icon"></i>
                                             <span class="label-text">Competitions</span>
                                         </div>
-                                        <!--<div class="item" data-value="tasks">
+                                        <div class="item" data-value="tasks">
                                             <i class="hdd icon"></i>
                                             <span class="label-text">Tasks</span>
                                         </div>
-                                        <div class="item" data-value="solutions">
+                                        <!--<div class="item" data-value="solutions">
                                             <i class="code icon"></i>
                                             <span class="label-text">Solutions</span>
                                         </div>-->
@@ -178,6 +178,7 @@
                     <virtual each="{result in results}">
                         <competition-tile if="{result.index_type === 'competitions'}" comp="{result}" no-reorder class="item"></competition-tile>
                         <dataset-tile if="{result.index_type === 'data'}" dataset="{result}" no-reorder class="item"></dataset-tile>
+                        <task-tile if="{result.index_type === 'tasks'}" task="{result}" no-reorder class="item"></task-tile>
                     </virtual>
 
                 </div>
@@ -352,10 +353,8 @@
             // We may not have a producer so grab preset one from page load if so
             filters.producer = $(self.refs.producer_filter).dropdown('get value')
             let index = $(self.refs.object_types).dropdown('get value')
-            filters.index = index && index !== 'all' ? index : null
-            if (index && index !== 'all') {
-                filters.index = index
-            }
+            filters.index = index && index !== 'all' ? index.split(',') : null
+
             // Remove any unused filters so we don't do empty searches
             filters = _.omitBy(filters, _.isEmpty)
 
@@ -370,7 +369,6 @@
 
             CHAHUB.api.search(filters)
                 .done(function (data) {
-                    console.log(data.results)
                     self.loading = false
                     self.suggestions = data.suggestions
                     self.showing_default_results = data.showing_default_results

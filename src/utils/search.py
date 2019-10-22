@@ -5,14 +5,22 @@ from elasticsearch_dsl import Search
 
 def get_search_client(size=100, index=None):
     client = Elasticsearch(settings.ELASTICSEARCH_DSL['default']['hosts'])
-    search_kwargs = {
-        'using': client,
-    }
-    if index is not None:
-        search_kwargs['index'] = index
-    s = Search(**search_kwargs)
+    if index is not None and not index:
+        # TODO: do this with a s.filter('terms') now that it is working
+        query = {
+            "query": {
+                "terms": {
+                    "_index": index
+                }
+            }
+        }
+        s = Search.from_dict(query)
+    else:
+        s = Search()
+
+    s.using(client)
     s = s.extra(size=size)
-    # s = s.filter('term', published=True)
+    s = s.filter('term', hidden=False)
     s = s.source(excludes=["html_text"])
     return s
 

@@ -17,7 +17,7 @@ class SearchView(APIView):
         start = request.query_params.get('start_date')
         end = request.query_params.get('end_date')
         producer = request.query_params.get('producer')
-        index = request.query_params.get('index')
+        index = request.query_params.getlist('index[]')
 
         # Do we even have anything to search with?
         filters = (
