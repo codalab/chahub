@@ -23,7 +23,7 @@ asgi_redis==1.4.3
 drf-writable-nested==0.5.1
 drf-extensions==0.3.1
 termcolor==1.1.0
-faker==0.8.10
+faker==2.0.3
 tqdm==4.19.5
 django-debug-toolbar==1.9.1
 asgiref==2.3.2
