@@ -129,6 +129,15 @@
         MY_PROFILE: {% if request.user.is_authenticated %}"{% url 'profiles:user_profile' username=request.user.username %}"{% else %}""{% endif %},
         SOCIAL_BEGIN: {
             GITHUB: "{% url 'social:begin' 'github' %}"
+        },
+        COMPETITION_DETAIL: function(pk) {
+            return "{% url 'competitions:detail' pk=0 %}".replace('0', pk)
+        },
+        TASK_DETAIL: function(pk) {
+            return "{% url 'tasks:detail' pk=0 %}".replace('0', pk)
+        },
+        DATASET_DETAIL: function(pk) {
+            return "{% url 'datasets:detail' pk=0 %}".replace('0', pk)
         }
     }
     CHAHUB.state = {
@@ -138,7 +147,6 @@
             username: "{{ user.username|default:"Anonymous" }}",
         },
         producers: JSON.parse("{{ producers|escapejs|default:"[]" }}"),
-        default_search_results: JSON.parse("{{ default_search_results|escapejs|default:"[]" }}")
     }
 
 </script>

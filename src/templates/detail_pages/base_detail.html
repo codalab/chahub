@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    {# Todo: don't use inline styling here #}
+    <div id="particles-js" style="height: 90px !important;">
+        <a href="/"><img id="brand_logo" src="{% static 'img/temp_chahub_logo_beta.png' %}"></a>
+    </div>
+    <user-button></user-button>
+    <div class="ui grid container">
+        {% block detail_tag %}
+
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block extra_body %}
+    <script>
+        $('document').ready(function () {
+            particlesJS.load('particles-js', "/static/particles/header.json", function () {})
+        })
+    </script>
+{% endblock %}

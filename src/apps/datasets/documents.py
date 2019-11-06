@@ -23,6 +23,7 @@ class DataDocument(Document):
     class Django:
         model = Data
         fields = (
+            'id',
             'created_by',
             'created_when',
             'name',

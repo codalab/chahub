@@ -1,4 +1,4 @@
-<dataset-tile>
+<dataset-tile onclick="{redirect_to_url}">
     <div class="floating-actions { is-admin: CHAHUB.state.user.is_superuser }">
         <i class="icon green pencil alternate"></i>
         <i class="icon red delete"></i>
@@ -14,11 +14,20 @@
             { opts.dataset.name }
         </div>
         <div class="description">
-            <p>{opts.dataset.description}</p>
+            <p>{ opts.dataset.description }</p>
+        </div>
+        <div class="extra">
+            <span class="url">
+                <a href="{opts.dataset.producer.url}" target="_blank">{ url_short(opts.dataset.producer.url) }</a>
+            </span>
         </div>
     </div>
     <script>
         let self = this
+        self.redirect_to_url = function () {
+            window.open(URLS.DATASET_DETAIL(self.opts.dataset.id), '_blank')
+        }
+
     </script>
     <style type="text/stylus">
         :scope

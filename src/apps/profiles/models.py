@@ -123,6 +123,15 @@ class Profile(models.Model):
     details = JSONField(null=True, blank=True)
     scrubbed = models.BooleanField(default=False)
 
+    # Todo: do this with an annotation on the user queryset? or maybe serializer context?
+    @property
+    def submission_count(self):
+        return self.producer.competition_participants.filter(user=self.remote_id).count()
+
+    @property
+    def participating_count(self):
+        return self.producer.competitions.filter(participants__user=self.remote_id).count()
+
     class Meta:
         unique_together = ['remote_id', 'producer']
 

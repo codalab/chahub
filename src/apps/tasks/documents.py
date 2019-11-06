@@ -22,6 +22,7 @@ class TaskDocument(Document):
     class Django:
         model = Task
         fields = (
+            'id',
             'remote_id',
             'created_by',
             'created_when',

@@ -14,6 +14,11 @@ TASK_DATA_FIELDS = [
 
 
 class TaskSerializer(serializers.ModelSerializer):
+    ingestion_program = DataSerializer(required=False)
+    input_data = DataSerializer(required=False)
+    scoring_program = DataSerializer(required=False)
+    reference_data = DataSerializer(required=False)
+
     class Meta:
         model = Task
         fields = (

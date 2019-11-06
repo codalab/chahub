@@ -1,18 +1,16 @@
 from django.conf.urls import url, include
-from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework.routers import SimpleRouter
 
-from api.views import producers
-from api.views.producers import ProducerViewSet
-from .views import competitions, profiles, search, data, tasks
+from .views import competitions, profiles, search, data, tasks, producers
 
 API_PREFIX = "v1"
 
 # API routes
 router = SimpleRouter()
-router.register('producers', ProducerViewSet)
+router.register('producers', producers.ProducerViewSet)
 router.register('competitions', competitions.CompetitionViewSet)
 router.register('submissions', competitions.SubmissionViewSet)
 router.register('profiles', profiles.ProfileViewSet)

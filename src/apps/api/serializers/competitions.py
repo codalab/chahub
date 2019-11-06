@@ -21,19 +21,18 @@ class CompetitionParticipantSerializer(ChaHubWritableNestedSerializer):
 
 
 class PhaseSerializer(serializers.ModelSerializer):
-    tasks = TaskSerializer(many=True, required=False)
 
     class Meta:
         model = Phase
         fields = (
             'id',
             'index',
+            'status',
             'start',
             'end',
             'name',
             'description',
             'is_active',
-            'tasks'
         )
 
 
@@ -72,7 +71,7 @@ class SubmissionSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         competition = Competition.objects.get(
             remote_id=attrs.pop('competition'),
-            producer=self.context.get('producer')
+            producer=self.context['request'].user
         )
         attrs['phase'] = competition.phases.get(index=attrs.pop('phase_index'))
         return attrs

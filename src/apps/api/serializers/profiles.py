@@ -123,6 +123,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             'username',
             'producer',
             'competitions',
+            'participating_count',
+            'submission_count',
         )
 
     def get_competitions(self, profile):

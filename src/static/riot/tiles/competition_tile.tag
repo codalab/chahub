@@ -1,4 +1,4 @@
-<competition-tile>
+<competition-tile onclick="{redirect_to_url}">
     <div class="floating-actions { is-admin: CHAHUB.state.user.is_superuser }">
         <i class="icon green pencil alternate"
            onclick="{ edit_competition }"></i>
@@ -17,7 +17,9 @@
         </div>
         <div class="extra">
             <div class="mobile_linewrap">
-                <span class="url"><a href="{opts.comp.url}">{url_short(opts.comp.url)}</a></span>
+                <span class="url">
+                    <a href="{opts.comp.url}" target="_blank">{url_short(opts.comp.producer.url)}</a>
+                </span>
                 <span class="date">
                 {pretty_date(opts.comp.start)}
                 <virtual if="{opts.comp.end}">
@@ -53,12 +55,9 @@
         })
 
         self.redirect_to_url = function () {
-            window.open(self.url, '_blank');
+            window.open(URLS.COMPETITION_DETAIL(self.opts.comp.id), '_blank')
         }
 
-        self.url_short = function (url) {
-            return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
-        }
 
         self.edit_competition = function (event) {
             CHAHUB.events.trigger('competition_selected', event.item)

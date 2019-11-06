@@ -23,6 +23,7 @@ class CompetitionDocument(Document):
     class Django:
         model = Competition
         fields = (
+            'id',
             'remote_id',
             'created_by',
             'title',

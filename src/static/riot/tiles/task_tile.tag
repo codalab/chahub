@@ -1,4 +1,4 @@
-<task-tile>
+<task-tile onclick="{redirect_to_url}">
     <div class="floating-actions { is-admin: CHAHUB.state.user.is_superuser }">
         <!--<i class="icon green pencil alternate"></i>
         <i class="icon red delete"></i>
@@ -16,10 +16,18 @@
         <div class="description">
             <p>{opts.task.description}</p>
         </div>
+        <div class="extra">
+            <span class="url">
+                <a href="{opts.task.producer.url}" target="_blank">{ url_short(opts.task.producer.url) }</a>
+            </span>
+        </div>
     </div>
 
     <script>
         let self = this
+        self.redirect_to_url = function () {
+            window.open(URLS.TASK_DETAIL(self.opts.task.id), '_blank')
+        }
     </script>
     <style type="text/stylus">
         :scope

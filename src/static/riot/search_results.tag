@@ -26,10 +26,6 @@
                                     <i class="filter icon"></i>
                                     <span class="text"></span>
                                     <div class="menu">
-                                        <div class="item" data-value="all">
-                                            <i class="globe icon"></i>
-                                            <span class="label-text">All</span>
-                                        </div>
                                         <!--<div class="item" data-value="user">
                                             <i class="users icon"></i>
                                             <span class="label-text">Users</span>
@@ -54,6 +50,11 @@
                                             <i class="code icon"></i>
                                             <span class="label-text">Solutions</span>
                                         </div>-->
+                                        <div class="ui divider"></div>
+                                        <div class="item" data-value="all">
+                                            <i class="globe icon"></i>
+                                            <span class="label-text">All</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -169,7 +170,6 @@
                     <div class="header">
                         No results found
                     </div>
-                    Try broadening your search
                 </div>
                 <!--<div class="ui success message" show="{ results.length > 0 && !showing_default_results }">
                     Found { results.length } results
@@ -191,6 +191,21 @@
         <div class="four wide right floated computer only column">
             <show-stats></show-stats>
         </div>
+        <div if="{!loading}" class="sixteen wide center aligned column">
+            <div class="ui pagination menu custom-pagination">
+                <a onclick="{prev_page}" class="{disabled: page === 1} inverted item">
+                    <
+                </a>
+                <a each="{page_number in page_range}"
+                   onclick="{set_page.bind(this, page_number)}"
+                   class="{active: page_number === page} item">
+                    {page_number}
+                </a>
+                <a onclick="{next_page}" class="{disabled: page * size >= total} inverted item">
+                    >
+                </a>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -200,6 +215,12 @@
         self.loading = true
         self.old_filters = {}
         self.display_search_options = false
+        self.page = 1
+        self.page_range = []
+        self.total = 0
+        // TODO: Add "results per page" dropdown?
+        // right now, size is static at 30
+        self.size = 30
 
         self.on('mount', function () {
             // header particles
@@ -259,15 +280,16 @@
 
         self.init_values_from_query_params = function () {
             var params = route.query()
+            self.page = params.page || 1
+            self.page = _.isNumber(self.page) ? self.page : _.parseInt(self.page)
+            // annoying regex to grab all the `index[]` entries, route.query only grabs the rightmost instance
+            params.index = _.map(location.search.match(/[?|&]index\[]=\w+/g), i => i.replace(/.+=/, ''))
+
             // On page load set search bar to search and execute search if we were given a query
             // Decoding the URI query for the search bar, must decodeURI after the or statement or
             // returns undefined in search params
             self.refs.search.value = params.q || ''
             self.refs.search.value = decodeURI(self.refs.search.value)
-
-            // TODO: set time_filter dropdown selected value
-            // TODO: set sort dropdown selected value
-            // TODO: set producer dropdown selected value
 
             // Date flags and ranges
             if (params.date_flags) {
@@ -295,6 +317,19 @@
                 }
             })
 
+            $(self.refs.object_types).dropdown({
+                onChange: function (text, value) {
+                    if (value === 'all') {
+                        _.delay(
+                            function () {
+                                $(self.refs.object_types).dropdown('clear')
+                            }, 1)
+                    } else {
+                        self.search()
+                    }
+                }
+            })
+
             // For iframes we might want to hide producer selection
             self.embedded = params.embedded
 
@@ -313,6 +348,23 @@
             self.refs.search.focus()
         }
 
+        self.next_page = function () {
+            self.set_page(self.page + 1)
+        }
+
+        self.prev_page = function () {
+            self.set_page(self.page - 1)
+        }
+
+        self.set_page = function (page_number) {
+            if (page_number > 0 && page_number < (self.total / self.size) + 1) {
+                self.page = page_number
+                self.update()
+                scrollTo(0, 0)
+                self.search()
+            }
+        }
+
         self.input_updated = function () {
             delay(function () {
                 self.search()
@@ -320,7 +372,8 @@
         }
 
         self.prepare_results = function () {
-            self.results.forEach(function (comp_result) {
+            // TODO: handle this w/ other data types better
+            _.forEach(self.results, function (comp_result) {
                 var humanized_time = humanize_time(comp_result.current_phase_deadline)
                 comp_result.alert_icon = humanized_time < 0;
                 if (comp_result.alert_icon) {
@@ -354,26 +407,26 @@
             filters.producer = $(self.refs.producer_filter).dropdown('get value')
             let index = $(self.refs.object_types).dropdown('get value')
             filters.index = index && index !== 'all' ? index.split(',') : null
-
             // Remove any unused filters so we don't do empty searches
-            filters = _.omitBy(filters, _.isEmpty)
-
-            // If we don't need to search.. don't! either it's the same search or empty
-            if (JSON.stringify(self.old_filters) === JSON.stringify(filters)) {
-                return
+            filters = _.omitBy(filters, i => _.isEmpty(i) && !_.isNumber(i))
+            if (!_.isEmpty(filters)) {
+                filters.page = self.page
             }
-
+            if (_.parseInt(_.get(self.old_filters, 'page')) === _.parseInt(filters.page)){
+                self.page = filters.page = 1
+            }
             self.old_filters = filters
-            self.loading = true
             self.update()
+            self.loading = true
 
             CHAHUB.api.search(filters)
                 .done(function (data) {
                     self.loading = false
-                    self.suggestions = data.suggestions
                     self.showing_default_results = data.showing_default_results
                     self.results = data.results
+                    self.total = data.total
                     self.prepare_results()
+                    self.page_range = _.filter(_.range(self.page - 4, self.page + 5), i => i > 0 && i < (self.total / self.size) + 1)
                     self.update()
                 })
         }

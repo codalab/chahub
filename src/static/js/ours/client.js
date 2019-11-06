@@ -70,4 +70,15 @@ CHAHUB.api = {
     create_merge: function(data) {
         return CHAHUB.api.request('POST', "create_merge_request/", data)
     },
+    // ------------------------------------------------------------------------
+    // Detail pages
+    get_competition(pk) {
+        return CHAHUB.api.request('GET', `competitions/${pk}/`)
+    },
+    get_task(pk) {
+        return CHAHUB.api.request('GET', `tasks/${pk}/`)
+    },
+    get_dataset(pk) {
+        return CHAHUB.api.request('GET', `datasets/${pk}/`)
+    },
 }

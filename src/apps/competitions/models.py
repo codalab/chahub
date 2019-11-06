@@ -74,6 +74,7 @@ class Phase(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField(null=True, blank=True)
     never_ends = models.BooleanField(default=False)
+    status = models.CharField(max_length=128, null=True, blank=True)
     tasks = models.ManyToManyField('tasks.Task', blank=True, related_name="phases")
 
     def __str__(self):
