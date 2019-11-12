@@ -30,7 +30,7 @@ def competition_download_image(competition_pk):
         "Response; Status: {0}, Content-Type: {1}".format(resp.status_code, content_type.lower())
     )
     # TODO this is only saving PNGs, and isn't actually saving them to the competition.
-    if content_type.lower() == 'image/png':
+    # if content_type.lower() == 'image/png':
         logger.info("Image found")
         image = Image.open(BytesIO(resp.content))
         width, height = image.size
@@ -48,5 +48,5 @@ def competition_download_image(competition_pk):
         comp.logo.save('logo_{0}.{1}'.format(comp.pk, image_format.lower()), new_image)
         comp.save()
         logger.info("Image file saved for competition {}".format(comp.pk))
-    else:
-        logger.warning("Image not found")
+    # else:
+    #     logger.warning("Image not found")
