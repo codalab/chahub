@@ -1,8 +1,22 @@
 version: '3'
 services:
   #-----------------------------------------------
-  #   Web Service
+  #   Web Services
   #-----------------------------------------------
+  caddy:
+    image: abiosoft/caddy:1.0.3
+    env_file: .env
+    environment:
+      - ACME_AGREE=true
+    volumes:
+      - ./Caddyfile:/etc/Caddyfile
+      - ./src/staticfiles:/var/www/django/static
+      - ./certs/caddy:/etc/caddycerts
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - django
   django:
     build: .
     container_name: chahub-django
