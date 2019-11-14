@@ -33,8 +33,8 @@ class Competition(models.Model):
 
     def save(self, **kwargs):
         if self.logo_url and not self.logo:
-            from competitions.utils import competition_download_image
-            competition_download_image(self.pk)
+            from competitions.utils import download_competition_image
+            download_competition_image(self.pk)
         super().save(**kwargs)
 
     # def save(self, *args, **kwargs):
