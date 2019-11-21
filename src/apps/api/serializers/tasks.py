@@ -39,11 +39,21 @@ class TaskSerializer(serializers.ModelSerializer):
         )
 
 
+class TaskSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = (
+            'remote_id',
+            'name',
+            'is_public',
+        )
+
+
 class TaskCreationSerializer(ChaHubWritableNestedSerializer):
-    ingestion_program = DataSerializer(required=False)
-    input_data = DataSerializer(required=False)
-    scoring_program = DataSerializer(required=False)
-    reference_data = DataSerializer(required=False)
+    ingestion_program = DataSerializer(required=False, allow_null=True)
+    input_data = DataSerializer(required=False, allow_null=True)
+    scoring_program = DataSerializer(required=False, allow_null=True)
+    reference_data = DataSerializer(required=False, allow_null=True)
 
     class Meta:
         model = Task

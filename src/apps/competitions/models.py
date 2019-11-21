@@ -9,7 +9,7 @@ class Competition(models.Model):
     creator_id = models.IntegerField(null=True, blank=True)
     created_when = models.DateTimeField(default=now)
     start = models.DateTimeField(null=True, blank=True)
-    title = models.TextField()
+    title = models.TextField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     end = models.DateTimeField(null=True, blank=True)
     prize = models.PositiveIntegerField(null=True, blank=True)
@@ -17,7 +17,7 @@ class Competition(models.Model):
     remote_id = models.CharField(max_length=128, null=True, blank=True)
     logo_url = models.URLField(null=True, blank=True)
     logo = models.ImageField(null=True, blank=True)
-    url = models.URLField()
+    url = models.URLField(null=True, blank=True)
     admins = models.ManyToManyField('CompetitionParticipant', related_name='admins', blank=True)
     participant_count = models.IntegerField(default=0)
     html_text = models.TextField(default="", null=True, blank=True)
@@ -29,7 +29,7 @@ class Competition(models.Model):
         unique_together = ('remote_id', 'producer')
 
     def __str__(self):
-        return self.title
+        return self.title or f'{getattr(self.producer, "name", "N/A")} competition {self.remote_id}'
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -68,10 +68,10 @@ class Competition(models.Model):
 class Phase(models.Model):
     remote_id = models.IntegerField(null=True, blank=True)
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE, related_name='phases')
-    index = models.PositiveIntegerField()
-    start = models.DateTimeField()
+    index = models.PositiveIntegerField(null=True, blank=True)
+    start = models.DateTimeField(null=True, blank=True)
     end = models.DateTimeField(null=True, blank=True)
-    name = models.CharField(max_length=256)
+    name = models.CharField(max_length=256, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     never_ends = models.BooleanField(default=False)
     status = models.CharField(max_length=128, null=True, blank=True)
@@ -105,12 +105,13 @@ class Submission(models.Model):
     phase = models.ForeignKey(Phase, on_delete=models.CASCADE, related_name='submissions')
     submitted_at = models.DateTimeField()
     participant = models.TextField()
+    # data = models.ForeignKey('datasets.Data', on_delete=models.CASCADE, related_name='submissions')
 
 
 class CompetitionParticipant(models.Model):
     remote_id = models.CharField(max_length=128, null=True, blank=True)
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True, related_name='competition_participants')
-    user = models.IntegerField()
+    user = models.IntegerField(null=True, blank=True)
     competition = models.ForeignKey(Competition, related_name='participants', on_delete=models.CASCADE)
     status = models.CharField(max_length=100, null=True, blank=True)
 

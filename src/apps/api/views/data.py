@@ -18,6 +18,18 @@ class DataViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, ListMo
     permission_classes = (ProducerPermission,)
     pagination_class = BasicPagination
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if self.request.method == 'GET':
+            qs = qs.prefetch_related(
+                'task_ingestion_programs',
+                'task_scoring_programs',
+                'task_reference_datas',
+                'task_input_datas',
+                'solutions',
+            )
+        return qs
+
     def create(self, request, *args, **kwargs):
         """Overriding this so we return an empty response instead of the details of the created object"""
         for dataset in request.data:

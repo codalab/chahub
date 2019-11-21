@@ -5,7 +5,7 @@ from rest_framework.exceptions import ValidationError
 
 from api.serializers.mixins import ChaHubWritableNestedSerializer
 from api.serializers.producers import ProducerSerializer
-from api.serializers.tasks import TaskCreationSerializer, TaskSerializer
+from api.serializers.tasks import TaskCreationSerializer
 from competitions.models import Competition, Phase, Submission, CompetitionParticipant
 from competitions.tasks import download_competition_image
 
@@ -37,7 +37,7 @@ class PhaseSerializer(serializers.ModelSerializer):
 
 
 class PhaseCreationSerializer(WritableNestedModelSerializer):
-    tasks = TaskCreationSerializer(many=True)
+    tasks = TaskCreationSerializer(many=True, required=False)
 
     class Meta:
         model = Phase
@@ -87,9 +87,9 @@ class SubmissionSerializer(serializers.ModelSerializer):
 
 class CompetitionCreationSerializer(WritableNestedModelSerializer):
     producer = ProducerSerializer(required=False)
-    phases = PhaseCreationSerializer(required=False, many=True)
-    participants = CompetitionParticipantSerializer(required=False, many=True)
-    logo = serializers.URLField()
+    phases = PhaseCreationSerializer(required=False, many=True, allow_null=True)
+    participants = CompetitionParticipantSerializer(required=False, many=True, allow_null=True)
+    logo = serializers.URLField(required=False, allow_null=True, allow_blank=True)
 
     class Meta:
         model = Competition
@@ -128,6 +128,11 @@ class CompetitionCreationSerializer(WritableNestedModelSerializer):
                 remote_id=validated_data.get('remote_id'),
                 producer=self.context['producer']
             )
+            # TODO: Don't think I need this. Will confirm
+            # if not validated_data.get('phases'):
+            #     validated_data.pop('phases', None)
+            #     if comp.phases.exists():
+            #         comp.phases.all().delete()
             update_logo = logo_url and logo_url != comp.logo_url
             comp = self.update(comp, validated_data)
             if update_logo:

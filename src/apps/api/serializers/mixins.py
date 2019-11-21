@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from drf_writable_nested import WritableNestedModelSerializer
 
 
@@ -14,7 +15,7 @@ class ChaHubWritableNestedSerializer(WritableNestedModelSerializer):
                 producer=validated_data['producer']
             )
             return self.update(obj, validated_data)
-        except self.Meta.model.DoesNotExist:
+        except ObjectDoesNotExist:
             return super().create(validated_data)
 
     def update(self, instance, validated_data):
