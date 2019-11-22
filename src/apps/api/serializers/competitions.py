@@ -3,11 +3,13 @@ from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from api.serializers.data import DataSerializer
 from api.serializers.mixins import ChaHubWritableNestedSerializer
 from api.serializers.producers import ProducerSerializer
 from api.serializers.tasks import TaskCreationSerializer
 from competitions.models import Competition, Phase, Submission, CompetitionParticipant
 from competitions.tasks import download_competition_image
+from datasets.models import Data
 
 
 class CompetitionParticipantSerializer(ChaHubWritableNestedSerializer):
@@ -55,8 +57,10 @@ class PhaseCreationSerializer(WritableNestedModelSerializer):
 
 
 class SubmissionSerializer(serializers.ModelSerializer):
-    competition = serializers.IntegerField(min_value=1, write_only=True, required=True)
-    phase_index = serializers.IntegerField(min_value=1, write_only=True, required=True)
+    competition = serializers.IntegerField(min_value=1, write_only=True, allow_null=True)
+    phase_index = serializers.IntegerField(min_value=1, write_only=True, allow_null=True)
+    producer = ProducerSerializer(required=False)
+    data = DataSerializer(required=False, allow_null=True)
 
     class Meta:
         model = Submission
@@ -66,9 +70,15 @@ class SubmissionSerializer(serializers.ModelSerializer):
             'phase_index',  # on write this is the phase index within the competition, NOT a PK
             'submitted_at',
             'participant',
+            'producer',
+            'data',
         )
 
     def validate(self, attrs):
+        competition = attrs.pop('competition')
+        if not competition:
+            attrs.pop('phase_index')
+            return attrs
         competition = Competition.objects.get(
             remote_id=attrs.pop('competition'),
             producer=self.context['request'].user
@@ -77,9 +87,18 @@ class SubmissionSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        producer = self.context['request'].user
+        data = validated_data.pop('data')
+        if data:
+            obj, created = Data.objects.update_or_create(
+                remote_id=data.pop('remote_id'),
+                producer=producer,
+                defaults=data
+            )
+            validated_data['data'] = obj
         instance, _ = Submission.objects.update_or_create(
             remote_id=validated_data.pop('remote_id'),
-            phase=validated_data.pop('phase'),
+            producer=producer,
             defaults=validated_data
         )
         return instance

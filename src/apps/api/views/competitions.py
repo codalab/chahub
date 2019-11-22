@@ -1,17 +1,16 @@
 from rest_framework import status
-from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, ListModelMixin
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
 
 from api.authenticators import ProducerAuthentication
 from api.pagination import BasicPagination
 from api.permissions import ProducerPermission
 from api.serializers import competitions as serializers
+from api.views.chahub import ChaHubModelViewSet
 from competitions.models import Competition, Submission
 
 
 # NOTE: We don't have delete mixin
-class CompetitionViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, ListModelMixin, GenericViewSet):
+class CompetitionViewSet(ChaHubModelViewSet):
     """Updating and inserting competitions are done by Producers.
 
     request.user = Producer in this case."""
@@ -20,6 +19,7 @@ class CompetitionViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
     authentication_classes = (ProducerAuthentication,)
     permission_classes = (ProducerPermission,)
     pagination_class = BasicPagination
+    lookup_field_on_deletion = 'remote_id'
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -53,22 +53,15 @@ class CompetitionViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
             self.perform_create(serializer)
         return Response({}, status=status.HTTP_201_CREATED)
 
+    def perform_destroy(self, instance):
+        instance.phases.update(deleted=True)
+        super().perform_destroy(instance)
 
-#
-#
-# class PhaseViewSet(ModelViewSet):
-#     queryset = Phase.objects.all()
-#     serializer_class = serializers.PhaseSerializer
-#
-#
 
-# NOTE: We don't have delete mixin
-class SubmissionViewSet(CreateModelMixin, GenericViewSet):
+class SubmissionViewSet(ChaHubModelViewSet):
     queryset = Submission.objects.all()
     serializer_class = serializers.SubmissionSerializer
-    authentication_classes = (ProducerAuthentication,)
-    permission_classes = (ProducerPermission,)
-    pagination_class = BasicPagination
+    lookup_field_on_deletion = 'remote_id'
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -77,8 +70,8 @@ class SubmissionViewSet(CreateModelMixin, GenericViewSet):
 
     def create(self, request, *args, **kwargs):
         """Overriding this so we return an empty response instead of the details of the created object"""
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response({}, status=status.HTTP_201_CREATED, headers=headers)
+        for submission in request.data:
+            serializer = self.get_serializer(data=submission)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+        return Response({}, status=status.HTTP_201_CREATED)

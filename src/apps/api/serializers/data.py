@@ -34,10 +34,9 @@ class DataSerializer(WritableNestedModelSerializer):
                 TaskSimpleSerializer(qs, many=True).data]
 
     def create(self, validated_data):
-        validated_data['producer'] = self.context['request'].user
         obj, created = Data.objects.update_or_create(
             remote_id=validated_data.pop('remote_id'),
-            producer=validated_data.pop('producer'),
+            producer=self.context['request'].user,
             defaults=validated_data
         )
         return obj

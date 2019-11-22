@@ -22,6 +22,8 @@ class Task(models.Model):
     reference_data = models.ForeignKey('datasets.Data', on_delete=models.SET_NULL, null=True, blank=True, related_name="task_reference_datas")
     scoring_program = models.ForeignKey('datasets.Data', on_delete=models.SET_NULL, null=True, blank=True, related_name="task_scoring_programs")
 
+    deleted = models.BooleanField(default=False)
+
     def __str__(self):
         return f"Task - {self.name} - ({self.id})"
 
@@ -29,11 +31,12 @@ class Task(models.Model):
 class Solution(models.Model):
     remote_id = models.IntegerField()
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True, related_name='solutions')
-    name = models.CharField(max_length=256)
+    name = models.CharField(max_length=256, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-    key = models.UUIDField(default=uuid.uuid4, blank=True)
-    tasks = models.OneToOneField(Task, related_name="solutions", on_delete=models.CASCADE)
+    key = models.UUIDField(default=uuid.uuid4, blank=True, null=True)
+    tasks = models.OneToOneField(Task, related_name="solutions", on_delete=models.CASCADE, null=True, blank=True)
     data = models.ForeignKey('datasets.Data', null=True, blank=True, on_delete=models.CASCADE, related_name='solutions')
+    deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Solution - ({self.id}) - Producer {self.producer.name}"
+        return f"Solution - ({self.id})"

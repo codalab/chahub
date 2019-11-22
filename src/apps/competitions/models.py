@@ -24,6 +24,7 @@ class Competition(models.Model):
     current_phase_deadline = models.DateTimeField(blank=True, null=True)
     is_active = models.BooleanField(default=False)
     published = models.BooleanField(default=False)
+    deleted = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('remote_id', 'producer')
@@ -76,6 +77,7 @@ class Phase(models.Model):
     never_ends = models.BooleanField(default=False)
     status = models.CharField(max_length=128, null=True, blank=True)
     tasks = models.ManyToManyField('tasks.Task', blank=True, related_name="phases")
+    deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.competition.title} - {self.name}"
@@ -102,10 +104,12 @@ class Phase(models.Model):
 
 class Submission(models.Model):
     remote_id = models.PositiveIntegerField()
-    phase = models.ForeignKey(Phase, on_delete=models.CASCADE, related_name='submissions')
-    submitted_at = models.DateTimeField()
-    participant = models.TextField()
-    # data = models.ForeignKey('datasets.Data', on_delete=models.CASCADE, related_name='submissions')
+    phase = models.ForeignKey(Phase, on_delete=models.CASCADE, related_name='submissions', null=True, blank=True)
+    submitted_at = models.DateTimeField(null=True, blank=True)
+    participant = models.TextField(null=True, blank=True)
+    data = models.ForeignKey('datasets.Data', on_delete=models.CASCADE, related_name='submissions', null=True, blank=True)
+    producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True, related_name='submissions')
+    deleted = models.BooleanField(default=False, blank=True)
 
 
 class CompetitionParticipant(models.Model):
@@ -114,6 +118,7 @@ class CompetitionParticipant(models.Model):
     user = models.IntegerField(null=True, blank=True)
     competition = models.ForeignKey(Competition, related_name='participants', on_delete=models.CASCADE)
     status = models.CharField(max_length=100, null=True, blank=True)
+    deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return f'CompetitionParticipant - user remote_id: {self.user} for comp: {self.competition.title}'

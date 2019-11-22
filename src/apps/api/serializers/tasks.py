@@ -3,6 +3,8 @@ from rest_framework import serializers
 
 from api.serializers.data import DataSerializer
 from api.serializers.mixins import ChaHubWritableNestedSerializer
+from api.serializers.producers import ProducerSerializer
+from datasets.models import Data
 from tasks.models import Task, Solution
 
 TASK_DATA_FIELDS = [
@@ -49,11 +51,46 @@ class TaskSimpleSerializer(serializers.ModelSerializer):
         )
 
 
+class SolutionCreationSerializer(WritableNestedModelSerializer):
+    producer = ProducerSerializer(required=False)
+    data = DataSerializer(required=False, allow_null=True)
+
+    class Meta:
+        model = Solution
+        fields = (
+            'remote_id',
+            'producer',
+            'data',
+            'name',
+            'description',
+            'key',
+            'producer',
+        )
+
+    def create(self, validated_data):
+        producer = self.context['request'].user
+        data = validated_data.pop('data')
+        if data:
+            obj, created = Data.objects.update_or_create(
+                remote_id=data.pop('remote_id'),
+                producer=producer,
+                defaults=data
+            )
+            validated_data['data'] = obj
+        obj, created = Solution.objects.update_or_create(
+            remote_id=validated_data.pop('remote_id'),
+            producer=producer,
+            defaults=validated_data
+        )
+        return obj
+
+
 class TaskCreationSerializer(ChaHubWritableNestedSerializer):
     ingestion_program = DataSerializer(required=False, allow_null=True)
     input_data = DataSerializer(required=False, allow_null=True)
     scoring_program = DataSerializer(required=False, allow_null=True)
     reference_data = DataSerializer(required=False, allow_null=True)
+    solutions = SolutionCreationSerializer(required=False, allow_null=True)
 
     class Meta:
         model = Task
@@ -73,36 +110,5 @@ class TaskCreationSerializer(ChaHubWritableNestedSerializer):
             'ingestion_only_during_scoring',
             'reference_data',
             'scoring_program',
-        )
-
-    # def create(self, validated_data):
-    #     print(validated_data)
-    #     solution = validated_data.pop('solution', None)
-    #     for field in TASK_DATA_FIELDS:
-    #         data = validated_data.get(field)
-    #         if data:
-    #             serializer = DataSerializer(data=data, context=self.context)
-    #             serializer.is_valid(raise_exception=True)
-    #             serializer.save()
-    #             validated_data[field] = serializer.data['id']
-    #
-    #     print(validated_data)
-    #     obj, created = Task.objects.update_or_create(
-    #         producer=self.context['request'].user,
-    #         remote_id=validated_data.pop('remote_id'),
-    #         defaults=validated_data
-    #     )
-    #
-    #     if solution:
-    #         serializer = SolutionCreationSerializer(data=solution, context=self.context)
-    #         serializer.is_valid(raise_exception=True)
-    #         serializer.save()
-    #     return obj
-
-
-class SolutionCreationSerializer(WritableNestedModelSerializer):
-    class Meta:
-        model = Solution
-        fields = (
-            'remote_id',
+            'solutions'
         )

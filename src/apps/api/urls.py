@@ -17,6 +17,7 @@ router.register('profiles', profiles.ProfileViewSet)
 router.register('users', profiles.UserViewSet)
 router.register('datasets', data.DataViewSet)
 router.register('tasks', tasks.TaskViewSet)
+router.register('solutions', tasks.SolutionViewSet)
 
 # Documentation details
 schema_view = get_schema_view(
