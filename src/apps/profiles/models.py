@@ -52,8 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def refresh_profiles(self):
         Profile.objects.filter(
-            Q(email__in=self.email_addresses.filter(verified=True).values_list('email', flat=True)) |
-            Q(user=self)
+            Q(email__in=self.email_addresses.filter(verified=True).values_list('email', flat=True)) | Q(user=self)
         ).distinct().update(user=Case(
             When(email__in=self.email_addresses.filter(verified=True).values_list('email', flat=True), then=Value(self.id)),
             default=None
