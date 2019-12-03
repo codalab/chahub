@@ -17,7 +17,6 @@ class DataViewSet(ChaHubModelViewSet):
     authentication_classes = (ProducerAuthentication,)
     permission_classes = (ProducerPermission,)
     pagination_class = BasicPagination
-    lookup_field_on_deletion = 'remote_id'
 
     def get_queryset(self):
         qs = super().get_queryset()

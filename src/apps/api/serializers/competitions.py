@@ -21,6 +21,15 @@ class CompetitionParticipantSerializer(ChaHubWritableNestedSerializer):
             'status',
         )
 
+    def create(self, validated_data):
+        producer = self.context['request'].user
+        instance, _ = CompetitionParticipant.objects.update_or_create(
+            remote_id=validated_data.pop('remote_id'),
+            producer=producer,
+            defaults=validated_data
+        )
+        return instance
+
 
 class PhaseSerializer(serializers.ModelSerializer):
 
@@ -40,13 +49,16 @@ class PhaseSerializer(serializers.ModelSerializer):
 
 class PhaseCreationSerializer(WritableNestedModelSerializer):
     tasks = TaskCreationSerializer(many=True, required=False)
+    competition_remote_id = serializers.IntegerField(required=False, allow_null=True)
 
     class Meta:
         model = Phase
         fields = (
             'id',
             'remote_id',
+            'competition_remote_id',
             'index',
+            'status',
             'start',
             'end',
             'name',
@@ -55,10 +67,21 @@ class PhaseCreationSerializer(WritableNestedModelSerializer):
             'tasks'
         )
 
+    def validate(self, attrs):
+        if 'competition_remote_id' in attrs:
+            try:
+                attrs['competition_id'] = Competition.objects.get(
+                    remote_id=attrs.pop('competition_remote_id'),
+                    producer=self.context['request'].user
+                ).id
+            except Competition.DoesNotExist:
+                raise ValidationError("Supplied competition_id does not relate to any competition on Chahub")
+        return super().validate(attrs)
+
 
 class SubmissionSerializer(serializers.ModelSerializer):
     competition = serializers.IntegerField(min_value=1, write_only=True, allow_null=True)
-    phase_index = serializers.IntegerField(min_value=1, write_only=True, allow_null=True)
+    phase_index = serializers.IntegerField(write_only=True, allow_null=True)
     producer = ProducerSerializer(required=False)
     data = DataSerializer(required=False, allow_null=True)
 
@@ -75,20 +98,20 @@ class SubmissionSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, attrs):
-        competition = attrs.pop('competition')
-        if not competition:
-            attrs.pop('phase_index')
+        competition = attrs.pop('competition', None)
+        phase_index = attrs.pop('phase_index', None)
+        if competition is None or phase_index is None:
             return attrs
         competition = Competition.objects.get(
-            remote_id=attrs.pop('competition'),
+            remote_id=competition,
             producer=self.context['request'].user
         )
-        attrs['phase'] = competition.phases.get(index=attrs.pop('phase_index'))
+        attrs['phase'] = competition.phases.get(index=phase_index)
         return attrs
 
     def create(self, validated_data):
         producer = self.context['request'].user
-        data = validated_data.pop('data')
+        data = validated_data.pop('data', None)
         if data:
             obj, created = Data.objects.update_or_create(
                 remote_id=data.pop('remote_id'),
@@ -128,7 +151,6 @@ class CompetitionCreationSerializer(WritableNestedModelSerializer):
             'end',
             'admins',
             'is_active',
-            'participant_count',
             'html_text',
             'current_phase_deadline',
             'prize',
@@ -196,6 +218,8 @@ class CompetitionDetailSerializer(WritableNestedModelSerializer):
     participants = CompetitionParticipantSerializer(many=True, read_only=True)
     admins = serializers.StringRelatedField(many=True, read_only=True)
     logo = serializers.URLField()
+    participant_count = serializers.IntegerField()
+    submission_count = serializers.IntegerField()
 
     class Meta:
         model = Competition
@@ -217,6 +241,7 @@ class CompetitionDetailSerializer(WritableNestedModelSerializer):
             'is_active',
             # 'get_active_phase_end',
             'participant_count',
+            'submission_count',
             'html_text',
             'current_phase_deadline',
             'prize',

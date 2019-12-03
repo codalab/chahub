@@ -1,5 +1,5 @@
 <dataset_detail>
-<div class="ui grid">
+    <div class="ui grid">
         <div class="row">
             <div class="ui sixteen wide column">
                 <div class="ui horizontal divider"></div>
@@ -13,7 +13,11 @@
                 <div><span class="detail_name">Created By:</span> {dataset.created_by}</div>
                 <div><span class="detail_name">Key:</span> {dataset.key}</div>
                 <div><span class="detail_name">Producer:</span> {_.get(dataset.producer, 'name')}</div>
-                <div><span class="detail_name">In Use:</span> {_.isEmpty(dataset.tasks_using) ? 'No' : 'Yes'}</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="ui sixteen wide column">
+                <a href="{dataset.download_url}" class="ui green icon button"><i class="download icon"></i> Download</a>
             </div>
         </div>
     </div>
@@ -34,10 +38,4 @@
                 })
         })
     </script>
-    <style type="text/stylus">
-        .detail_name
-            color #2a4457
-            font-weight bold
-            font-size medium
-    </style>
 </dataset_detail>

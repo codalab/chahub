@@ -7,7 +7,6 @@ from datasets.models import Data, DataGroup
 
 class DataSerializer(WritableNestedModelSerializer):
     producer = ProducerSerializer(required=False)
-    tasks_using = serializers.SerializerMethodField()
 
     class Meta:
         model = Data
@@ -23,15 +22,8 @@ class DataSerializer(WritableNestedModelSerializer):
             'key',
             'is_public',
             'producer',
-            'tasks_using',
+            'download_url',
         )
-
-    def get_tasks_using(self, instance):
-        from api.serializers.tasks import TaskSimpleSerializer
-        # TODO Figure out a way to break up this giant line
-        qs = instance.task_ingestion_programs.all() | instance.task_scoring_programs.all() | instance.task_reference_datas.all() | instance.task_input_datas.all()
-        return [task if task['is_public'] else {'is_public': False} for task in
-                TaskSimpleSerializer(qs, many=True).data]
 
     def create(self, validated_data):
         obj, created = Data.objects.update_or_create(

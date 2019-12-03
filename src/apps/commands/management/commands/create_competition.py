@@ -319,8 +319,6 @@ class Command(BaseCommand):
 
             competition = _create_competition(options['fill-all-details'], data)
 
-            competition.participant_count = CompetitionParticipant.objects.filter(competition=competition).count()
-
             # Init some random dates for our first phase
             temp_phase_start = timezone.now() + datetime.timedelta(days=random.randint(1, 35))
             temp_phase_end = temp_phase_start + datetime.timedelta(days=random.randint(1, 35))

@@ -30,14 +30,6 @@
                 <span class="participant_label ui right floated mini label tooltip" data-content="Participant count">
                     <i class="user icon"></i> {opts.comp.participant_count}
                 </span>
-                <span class="deadline_label ui right floated mini label tooltip {red: !opts.comp.alert_icon}"
-                      data-content="Deadline of the current phase"
-                      show="{opts.comp.current_phase_deadline}">
-                    <i show="{!opts.comp.alert_icon}" class="alarm icon"></i> {opts.comp.pretty_deadline_time}
-                </span>
-                <span class="deadline_label ui right floated mini label" show="{!opts.comp.current_phase_deadline}">
-                    Never ends
-                </span>
                 <span class="prize_label ui right floated mini label tooltip" data-content="Prize Amount"
                       show="{opts.comp.prize}">
                     <i class="yellow trophy icon"></i> {opts.comp.prize}

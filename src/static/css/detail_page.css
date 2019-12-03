@@ -1,0 +1,13 @@
+#particles-js {
+    height: 90px !important;
+}
+
+#permission-denied-row {
+    margin-top: 25px;
+}
+
+.detail_name {
+    color: #2a4457;
+    font-weight: bold;
+    font-size: medium;
+}

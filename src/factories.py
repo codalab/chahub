@@ -209,7 +209,6 @@ class CompetitionFactory(DjangoModelFactory):
     created_when = factory.Faker('date_time_this_year', tzinfo=UTC)
     prize = factory.LazyFunction(random_prize_money)
     url = factory.LazyAttribute(lambda c: urljoin(c.producer.url, fake.uri_path()))
-    participant_count = factory.LazyFunction(lambda: random.randint(1, 500))
     published = factory.Faker('boolean')
     start = factory.Faker('date_time_this_year', tzinfo=UTC)
     phases = factory.RelatedFactoryList(PhaseFactory, 'competition', size=lambda: random.randint(1, 4))

@@ -27,7 +27,7 @@
                         <div class="label">Participants</div>
                     </div>
                     <div class="ui statistic">
-                        <div class="value">0</div>
+                        <div class="value">{competition.submission_count}</div>
                         <div class="label">Submissions</div>
                     </div>
                 </div>

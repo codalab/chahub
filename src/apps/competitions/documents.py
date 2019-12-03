@@ -7,6 +7,7 @@ from .models import Competition
 @registry.register_document
 class CompetitionDocument(Document):
     hidden = fields.BooleanField()
+    participant_count = fields.IntegerField()
     producer = fields.ObjectField(properties={
         'id': fields.IntegerField(),
         'url': fields.TextField(),
@@ -37,7 +38,6 @@ class CompetitionDocument(Document):
             'start',
             'end',
             'published',
-            'participant_count',
         )
 
     # TODO: add "active" boolean field so we can add this to queries and not have a special case
@@ -47,3 +47,6 @@ class CompetitionDocument(Document):
 
     def prepare_logo(self, instance):
         return instance.logo.url if instance.logo else ''
+
+    def prepare_participant_count(self, instance):
+        return instance.participants.count()

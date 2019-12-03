@@ -1,16 +1,31 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static "css/detail_page.css" %}">
+{% endblock %}
 {% block content %}
-    {# Todo: don't use inline styling here #}
-    <div id="particles-js" style="height: 90px !important;">
+    <div id="particles-js">
         <a href="/"><img id="brand_logo" src="{% static 'img/temp_chahub_logo_beta.png' %}"></a>
     </div>
     <user-button></user-button>
-    <div class="ui grid container">
-        {% block detail_tag %}
+    <div class="ui grid container" id="grid-container">
+        {% if object.is_public or object.published %}
+            <div class="row">
+                <div class="ui sixteen wide column">
+                    {% block detail_tag %}
 
-        {% endblock %}
+                    {% endblock %}
+                </div>
+            </div>
+        {% else %}
+            <div class="row" id="permission-denied-row">
+                <div class="ui center aligned sixteen wide column">
+                    <h2>403 Permission Denied</h2>
+                    <p>You do not have permission to view this resource</p>
+                </div>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
 

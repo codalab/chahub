@@ -1,4 +1,3 @@
-from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
 
 from api.serializers.data import DataSerializer
@@ -16,6 +15,7 @@ TASK_DATA_FIELDS = [
 
 
 class TaskSerializer(serializers.ModelSerializer):
+    producer = ProducerSerializer(required=False)
     ingestion_program = DataSerializer(required=False)
     input_data = DataSerializer(required=False)
     scoring_program = DataSerializer(required=False)
@@ -51,7 +51,7 @@ class TaskSimpleSerializer(serializers.ModelSerializer):
         )
 
 
-class SolutionCreationSerializer(WritableNestedModelSerializer):
+class SolutionCreationSerializer(ChaHubWritableNestedSerializer):
     producer = ProducerSerializer(required=False)
     data = DataSerializer(required=False, allow_null=True)
 
@@ -90,7 +90,7 @@ class TaskCreationSerializer(ChaHubWritableNestedSerializer):
     input_data = DataSerializer(required=False, allow_null=True)
     scoring_program = DataSerializer(required=False, allow_null=True)
     reference_data = DataSerializer(required=False, allow_null=True)
-    solutions = SolutionCreationSerializer(required=False, allow_null=True)
+    solutions = SolutionCreationSerializer(required=False, allow_null=True, many=True)
 
     class Meta:
         model = Task
@@ -112,3 +112,10 @@ class TaskCreationSerializer(ChaHubWritableNestedSerializer):
             'scoring_program',
             'solutions'
         )
+
+    def create(self, validated_data):
+        solutions = validated_data.pop('solutions')
+        serializer = SolutionCreationSerializer(data=solutions, context=self.context, many=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return super().create(validated_data)

@@ -19,7 +19,6 @@ class Competition(models.Model):
     logo = models.ImageField(null=True, blank=True)
     url = models.URLField(null=True, blank=True)
     admins = models.ManyToManyField('CompetitionParticipant', related_name='admins', blank=True)
-    participant_count = models.IntegerField(default=0)
     html_text = models.TextField(default="", null=True, blank=True)
     current_phase_deadline = models.DateTimeField(blank=True, null=True)
     is_active = models.BooleanField(default=False)

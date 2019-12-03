@@ -34,7 +34,7 @@ class Solution(models.Model):
     name = models.CharField(max_length=256, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     key = models.UUIDField(default=uuid.uuid4, blank=True, null=True)
-    tasks = models.OneToOneField(Task, related_name="solutions", on_delete=models.CASCADE, null=True, blank=True)
+    tasks = models.ManyToManyField(Task, related_name="solutions", blank=True)
     data = models.ForeignKey('datasets.Data', null=True, blank=True, on_delete=models.CASCADE, related_name='solutions')
     deleted = models.BooleanField(default=False)
 

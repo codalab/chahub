@@ -1,6 +1,3 @@
-from rest_framework import status
-from rest_framework.response import Response
-
 from api.authenticators import ProducerAuthentication
 from api.pagination import BasicPagination
 from api.permissions import ProducerPermission
@@ -15,19 +12,11 @@ class TaskViewSet(ChaHubModelViewSet):
     authentication_classes = (ProducerAuthentication,)
     permission_classes = (ProducerPermission,)
     pagination_class = BasicPagination
-    lookup_field_on_deletion = 'remote_id'
 
     def get_serializer_class(self):
         if self.action == 'create':
             return serializers.TaskCreationSerializer
         return self.serializer_class
-
-    def create(self, request, *args, **kwargs):
-        for task in request.data:
-            serializer = self.get_serializer(data=task)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-        return Response({}, status=status.HTTP_201_CREATED)
 
 
 class SolutionViewSet(ChaHubModelViewSet):
@@ -36,16 +25,8 @@ class SolutionViewSet(ChaHubModelViewSet):
     authentication_classes = (ProducerAuthentication,)
     permission_classes = (ProducerPermission,)
     pagination_class = BasicPagination
-    lookup_field_on_deletion = 'remote_id'
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['producer'] = self.request.user
         return context
-
-    def create(self, request, *args, **kwargs):
-        for solution in request.data:
-            serializer = self.get_serializer(data=solution)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-        return Response({}, status=status.HTTP_201_CREATED)

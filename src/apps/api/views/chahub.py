@@ -13,7 +13,7 @@ class ChaHubModelViewSet(ModelViewSet):
     pagination_class = BasicPagination
     # Set this to the field to want to be looking up on deletion, in our case
     # we want to lookup based on remote_id (producer comes from permission checks implicitly)
-    lookup_field_on_deletion = None
+    lookup_field_on_deletion = 'remote_id'
     lookup_url_kwarg = 'pk'
 
     def dispatch(self, request, *args, **kwargs):
@@ -32,4 +32,16 @@ class ChaHubModelViewSet(ModelViewSet):
             if hasattr(instance, field):
                 setattr(instance, field, None)
         instance.deleted = True
+        if hasattr(instance, 'is_public'):
+            instance.is_public = False
+        elif hasattr(instance, 'published'):
+            instance.published = False
         instance.save()
+
+    def create(self, request, *args, **kwargs):
+        """Overriding this so we return an empty response instead of the details of the created object"""
+        for obj in request.data:
+            serializer = self.get_serializer(data=obj)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+        return Response({}, status=status.HTTP_201_CREATED)
