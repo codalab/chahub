@@ -18,6 +18,23 @@ class TaskViewSet(ChaHubModelViewSet):
             return serializers.TaskCreationSerializer
         return self.serializer_class
 
+    def get_queryset(self):
+        if self.request.method == "GET":
+            return super().get_queryset().select_related(
+                'ingestion_program',
+                'ingestion_program__producer',
+                'scoring_program',
+                'scoring_program__producer',
+                'input_data',
+                'input_data__producer',
+                'reference_data',
+                'reference_data__producer',
+            ).prefetch_related(
+                'producer',
+            )
+        else:
+            return super().get_queryset()
+
 
 class SolutionViewSet(ChaHubModelViewSet):
     queryset = Solution.objects.all()

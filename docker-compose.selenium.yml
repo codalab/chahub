@@ -1,0 +1,13 @@
+version: '3.4'
+services:
+  web:
+    environment:
+      - SELENIUM_HOSTNAME=selenium
+
+  selenium:
+    image: selenium/standalone-firefox-debug:3.141.59
+    volumes:
+      - ./artifacts:/artifacts/:z
+    ports:
+      - 4444:4444
+      - 5900:5900

@@ -84,21 +84,7 @@ class Phase(models.Model):
     @property
     def is_active(self):
         """ Returns true when this phase of the competition is on-going. """
-        if self.never_ends:
-            if self.start and self.end:
-                return self.start < timezone.now() < self.end
-            else:
-                return True
-        else:
-            next_phase = self.competition.phases.filter(index=self.index + 1)
-            if (next_phase is not None) and (len(next_phase) > 0):
-                # there is a phase following this phase, thus this phase is active if the current date
-                # is between the start of this phase and the start of the next phase
-                return self.start <= timezone.now() and (timezone.now() < next_phase[0].start)
-            else:
-                # there is no phase following this phase, thus this phase is active if the current data
-                # is after the start date of this phase and the competition is "active"
-                return self.start <= timezone.now() and self.competition.is_active
+        return self.status == "Current"
 
 
 class Submission(models.Model):

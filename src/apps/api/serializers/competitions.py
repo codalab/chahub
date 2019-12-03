@@ -188,6 +188,7 @@ class CompetitionCreationSerializer(WritableNestedModelSerializer):
 class CompetitionListSerializer(serializers.ModelSerializer):
     producer = ProducerSerializer(required=False)
     logo = serializers.URLField()
+    participant_count = serializers.IntegerField()
 
     class Meta:
         model = Competition
