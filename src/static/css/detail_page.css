@@ -2,8 +2,8 @@
     height: 90px !important;
 }
 
-#permission-denied-row {
-    margin-top: 25px;
+.error-row {
+    margin-top: 10vh;
 }
 
 .detail_name {

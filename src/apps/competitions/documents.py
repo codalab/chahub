@@ -43,7 +43,7 @@ class CompetitionDocument(Document):
     # TODO: add "active" boolean field so we can add this to queries and not have a special case
 
     def prepare_hidden(self, instance):
-        return not instance.published
+        return not instance.published or instance.deleted
 
     def prepare_logo(self, instance):
         return instance.logo.url if instance.logo else ''

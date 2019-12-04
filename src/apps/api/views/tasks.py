@@ -29,7 +29,6 @@ class TaskViewSet(ChaHubModelViewSet):
                 'input_data__producer',
                 'reference_data',
                 'reference_data__producer',
-            ).prefetch_related(
                 'producer',
             )
         else:

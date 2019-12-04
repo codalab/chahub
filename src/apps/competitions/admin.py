@@ -1,8 +1,9 @@
 from django.contrib import admin
+
+from utils.manager import DeletedAdmin
 from . import models
 
-
-admin.site.register(models.Competition)
-admin.site.register(models.Phase)
-admin.site.register(models.CompetitionParticipant)
-admin.site.register(models.Submission)
+admin.site.register(models.Competition, DeletedAdmin)
+admin.site.register(models.Phase, DeletedAdmin)
+admin.site.register(models.CompetitionParticipant, DeletedAdmin)
+admin.site.register(models.Submission, DeletedAdmin)

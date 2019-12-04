@@ -3,6 +3,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.timezone import now
 
+from utils.manager import ChaHubModelManager
+
 
 class Competition(models.Model):
     created_by = models.TextField(null=True, blank=True)
@@ -24,6 +26,8 @@ class Competition(models.Model):
     is_active = models.BooleanField(default=False)
     published = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
+
+    objects = ChaHubModelManager()
 
     class Meta:
         unique_together = ('remote_id', 'producer')
@@ -78,6 +82,8 @@ class Phase(models.Model):
     tasks = models.ManyToManyField('tasks.Task', blank=True, related_name="phases")
     deleted = models.BooleanField(default=False)
 
+    objects = ChaHubModelManager()
+
     def __str__(self):
         return f"{self.competition.title} - {self.name}"
 
@@ -97,6 +103,8 @@ class Submission(models.Model):
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True, related_name='submissions')
     deleted = models.BooleanField(default=False, blank=True)
 
+    objects = ChaHubModelManager()
+
 
 class CompetitionParticipant(models.Model):
     remote_id = models.CharField(max_length=128, null=True, blank=True)
@@ -105,6 +113,8 @@ class CompetitionParticipant(models.Model):
     competition = models.ForeignKey(Competition, related_name='participants', on_delete=models.CASCADE)
     status = models.CharField(max_length=100, null=True, blank=True)
     deleted = models.BooleanField(default=False)
+
+    objects = ChaHubModelManager()
 
     def __str__(self):
         return f'CompetitionParticipant - user remote_id: {self.user} for comp: {self.competition.title}'

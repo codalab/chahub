@@ -3,6 +3,8 @@ import uuid
 from django.db import models
 from django.utils.timezone import now
 
+from utils.manager import ChaHubModelManager
+
 
 class Task(models.Model):
     remote_id = models.IntegerField()
@@ -24,6 +26,8 @@ class Task(models.Model):
 
     deleted = models.BooleanField(default=False)
 
+    objects = ChaHubModelManager()
+
     def __str__(self):
         return f"Task - {self.name} - ({self.id})"
 
@@ -37,6 +41,8 @@ class Solution(models.Model):
     tasks = models.ManyToManyField(Task, related_name="solutions", blank=True)
     data = models.ForeignKey('datasets.Data', null=True, blank=True, on_delete=models.CASCADE, related_name='solutions')
     deleted = models.BooleanField(default=False)
+
+    objects = ChaHubModelManager()
 
     def __str__(self):
         return f"Solution - ({self.id})"

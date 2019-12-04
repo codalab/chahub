@@ -33,4 +33,4 @@ class TaskDocument(Document):
         )
 
     def prepare_hidden(self, instance):
-        return not instance.is_public
+        return not instance.is_public or instance.deleted

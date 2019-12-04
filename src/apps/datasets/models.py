@@ -4,6 +4,8 @@ from django.conf import settings
 from django.db import models
 from django.utils.timezone import now
 
+from utils.manager import ChaHubModelManager
+
 
 class Data(models.Model):
     created_by = models.TextField(null=True, blank=True)
@@ -18,6 +20,8 @@ class Data(models.Model):
     download_url = models.URLField(null=True, blank=True)
     is_public = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
+
+    objects = ChaHubModelManager()
 
     def __str__(self):
         return f"{self.name} dataset on {self.producer}"
