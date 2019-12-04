@@ -2,25 +2,14 @@ import os
 import pytest
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
-from selenium.webdriver.chrome.webdriver import WebDriver
 from django.contrib.auth import get_user_model
+from selenium.webdriver.firefox.webdriver import WebDriver
 
 User = get_user_model()
 
 
-class ATCTestHelpersMixin(object):
-
-    def login(self):
-        User.objects.create_user(username='test', password='test')
-        self.get(reverse('login'))
-        self.find("#id_username").send_keys("test")
-        self.find("#id_password").send_keys("test")
-        self.find(".submit.button").click()
-        self.assertTrue(self.selenium.find_element_by_css_selector('#searchbar > input[type="text"]'))
-
-
 @pytest.mark.e2e
-class SeleniumTestCase(ATCTestHelpersMixin, StaticLiveServerTestCase):
+class SeleniumTestCase(StaticLiveServerTestCase):
     urls = 'urls'  # TODO: what the F is this???
     serialized_rollback = True
 
@@ -35,6 +24,14 @@ class SeleniumTestCase(ATCTestHelpersMixin, StaticLiveServerTestCase):
     def tearDownClass(cls):
         cls.selenium.quit()
         super().tearDownClass()
+
+    def login(self):
+        User.objects.create_user(username='test', password='test')
+        self.get(reverse('login'))
+        self.find("#id_username").send_keys("test")
+        self.find("#id_password").send_keys("test")
+        self.find(".submit.button").click()
+        self.assertTrue(self.selenium.find_element_by_css_selector('#searchbar > input[type="text"]'))
 
     def setUp(self):
         super().setUp()
