@@ -26,14 +26,6 @@
                                     <i class="filter icon"></i>
                                     <span class="text"></span>
                                     <div class="menu">
-                                        <!--<div class="item" data-value="user">
-                                            <i class="users icon"></i>
-                                            <span class="label-text">Users</span>
-                                        </div>
-                                        <div class="item" data-value="profile">
-                                            <i class="users icon"></i>
-                                            <span class="label-text">Profiles</span>
-                                        </div>-->
                                         <div class="item" data-value="data">
                                             <i class="file icon"></i>
                                             <span class="label-text">Datasets</span>
@@ -46,10 +38,6 @@
                                             <i class="hdd icon"></i>
                                             <span class="label-text">Tasks</span>
                                         </div>
-                                        <!--<div class="item" data-value="solutions">
-                                            <i class="code icon"></i>
-                                            <span class="label-text">Solutions</span>
-                                        </div>-->
                                         <div class="ui divider"></div>
                                         <div class="item" data-value="all">
                                             <i class="globe icon"></i>
@@ -171,9 +159,6 @@
                         No results found
                     </div>
                 </div>
-                <!--<div class="ui success message" show="{ results.length > 0 && !showing_default_results }">
-                    Found { results.length } results
-                </div>-->
                 <div class="ui middle aligned unstackable compact divided link items content-desktop">
                     <virtual each="{result in results}">
                         <competition-tile if="{result.index_type === 'competitions'}" comp="{result}" no-reorder class="item"></competition-tile>
@@ -182,10 +167,6 @@
                     </virtual>
 
                 </div>
-                <!--<div class="ui middle aligned compact link items content-mobile" style="margin-top: -1;">
-                    <competition-mobile-tile each="{ results }" no-reorder class="item"
-                                             style="padding: -1em;"></competition-mobile-tile>
-                </div> -->
             </div>
         </div>
         <div class="four wide right floated computer only column">
