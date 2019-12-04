@@ -19,11 +19,10 @@ class SearchView(APIView):
         producer = request.query_params.get('producer')
         index = request.query_params.getlist('index[]')
         page = request.query_params.get('page', 1)
-        if not isinstance(page, int):
-            try:
-                page = int(page) if int(page) > 0 else 1
-            except ValueError:
-                page = 1
+        try:
+            page = max(int(page), 1)
+        except ValueError:
+            page = 1
 
         # Do we even have anything to search with?
         filters = (

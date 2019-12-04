@@ -80,7 +80,7 @@ class PhaseCreationSerializer(WritableNestedModelSerializer):
 
 
 class SubmissionSerializer(serializers.ModelSerializer):
-    competition = serializers.IntegerField(min_value=1, write_only=True, allow_null=True)
+    competition = serializers.IntegerField(write_only=True, allow_null=True)
     phase_index = serializers.IntegerField(write_only=True, allow_null=True)
     producer = ProducerSerializer(required=False)
     data = DataSerializer(required=False, allow_null=True)
@@ -92,7 +92,8 @@ class SubmissionSerializer(serializers.ModelSerializer):
             'competition',  # on write only
             'phase_index',  # on write this is the phase index within the competition, NOT a PK
             'submitted_at',
-            'participant',
+            'participant_name',
+            'owner',
             'producer',
             'data',
         )
@@ -169,11 +170,6 @@ class CompetitionCreationSerializer(WritableNestedModelSerializer):
                 remote_id=validated_data.get('remote_id'),
                 producer=self.context['producer']
             )
-            # TODO: Don't think I need this. Will confirm
-            # if not validated_data.get('phases'):
-            #     validated_data.pop('phases', None)
-            #     if comp.phases.exists():
-            #         comp.phases.all().delete()
             update_logo = logo_url and logo_url != comp.logo_url
             comp = self.update(comp, validated_data)
             if update_logo:
@@ -188,7 +184,6 @@ class CompetitionCreationSerializer(WritableNestedModelSerializer):
 class CompetitionListSerializer(serializers.ModelSerializer):
     producer = ProducerSerializer(required=False)
     logo = serializers.URLField()
-    participant_count = serializers.IntegerField()
 
     class Meta:
         model = Competition
@@ -204,7 +199,6 @@ class CompetitionListSerializer(serializers.ModelSerializer):
             'description',
             'end',
             'is_active',
-            'participant_count',
             'html_text',
             'current_phase_deadline',
             'prize',

@@ -117,9 +117,6 @@ class ProfileViewSet(ModelViewSet):
 
     def get_queryset(self):
         qs = self.queryset
-        pks_list = self.request.query_params.getlist('pk[]')
-        if pks_list:
-            qs = qs.filter(pk__in=pks_list)
         if self.request.method == 'GET':
             qs = qs.select_related(
                 'producer',

@@ -6,13 +6,6 @@ from api.serializers.producers import ProducerSerializer
 from datasets.models import Data
 from tasks.models import Task, Solution
 
-TASK_DATA_FIELDS = [
-    'ingestion_program',
-    'input_data',
-    'reference_data',
-    'scoring_program',
-]
-
 
 class TaskSerializer(serializers.ModelSerializer):
     producer = ProducerSerializer(required=False)
@@ -115,6 +108,7 @@ class TaskCreationSerializer(ChaHubWritableNestedSerializer):
 
     def create(self, validated_data):
         solutions = validated_data.pop('solutions')
+        # FIXME: This can't be right...
         serializer = SolutionCreationSerializer(data=solutions, context=self.context, many=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()

@@ -91,7 +91,8 @@ class Submission(models.Model):
     remote_id = models.PositiveIntegerField()
     phase = models.ForeignKey(Phase, on_delete=models.CASCADE, related_name='submissions', null=True, blank=True)
     submitted_at = models.DateTimeField(null=True, blank=True)
-    participant = models.TextField(null=True, blank=True)
+    owner = models.PositiveIntegerField(null=True, blank=True)  # remote_id of owner
+    participant_name = models.TextField(null=True, blank=True)
     data = models.ForeignKey('datasets.Data', on_delete=models.CASCADE, related_name='submissions', null=True, blank=True)
     producer = models.ForeignKey('producers.Producer', on_delete=models.SET_NULL, null=True, blank=True, related_name='submissions')
     deleted = models.BooleanField(default=False, blank=True)

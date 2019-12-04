@@ -1,7 +1,7 @@
 import logging
 
 from django.contrib.auth import get_user_model
-from django.db.models import Q, F, Count
+from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
@@ -129,7 +129,9 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_competitions(self, profile):
         return CompetitionListSerializer(
-            profile.producer.competitions.filter(participants__user=profile.remote_id).annotate(participant_count=Count(F('participants'), distinct=True)), many=True
+            profile.producer.competitions.filter(
+                participants__user=profile.remote_id
+            ), many=True
         ).data
 
 
