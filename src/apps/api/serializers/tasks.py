@@ -108,7 +108,6 @@ class TaskCreationSerializer(ChaHubWritableNestedSerializer):
 
     def create(self, validated_data):
         solutions = validated_data.pop('solutions')
-        # FIXME: This can't be right...
         serializer = SolutionCreationSerializer(data=solutions, context=self.context, many=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()

@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -15,6 +16,15 @@ class ChaHubModelViewSet(ModelViewSet):
     # we want to lookup based on remote_id (producer comes from permission checks implicitly)
     lookup_field_on_deletion = 'remote_id'
     lookup_url_kwarg = 'pk'
+
+    def get_object(self):
+        if self.request.method == "DELETE":
+            return get_object_or_404(
+                self.get_queryset(),
+                producer=self.request.user,
+                remote_id=self.kwargs[self.lookup_url_kwarg]
+            )
+        return super().get_object()
 
     def dispatch(self, request, *args, **kwargs):
         if request.method.lower() == 'delete':
