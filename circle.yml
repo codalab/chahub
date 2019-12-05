@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Build containers and collect static
           command: |
-            docker-compose up -d
+            docker-compose -f docker-compose.yml -f docker-compose.selenium.yml up -d
             docker-compose exec django python manage.py collectstatic --noinput
 
       - run:
