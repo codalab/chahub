@@ -30,13 +30,13 @@ jobs:
             docker-compose exec django python manage.py collectstatic --noinput
 
       - run:
-          name: pytest
-          command: docker-compose exec django py.test src/ -m "not e2e"
-
-      - run:
           name: e2e tests
           command: docker-compose -f docker-compose.yml -f docker-compose.selenium.yml exec django py.test -m e2e
           no_output_timeout: 60m
+
+      - run:
+          name: pytest
+          command: docker-compose exec django py.test src/ -m "not e2e"
 
       - run: docker-compose exec django flake8 src/ --ignore E501
 
