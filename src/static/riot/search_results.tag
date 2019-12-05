@@ -261,8 +261,7 @@
 
         self.init_values_from_query_params = function () {
             var params = route.query()
-            self.page = params.page || 1
-            self.page = _.isNumber(self.page) ? self.page : _.parseInt(self.page)
+            self.page = _.parseInt(params.page) || 1
             // annoying regex to grab all the `index[]` entries, route.query only grabs the rightmost instance
             params.index = _.map(location.search.match(/[?|&]index\[]=\w+/g), i => i.replace(/.+=/, ''))
 
@@ -318,7 +317,6 @@
                 console.log("Loading default search results")
                 self.results = CHAHUB.state.default_search_results
                 self.showing_default_results = true
-                self.prepare_results()
                 self.update()
             } else {
                 // We have some search to perform, not just displaying default results
@@ -350,19 +348,6 @@
             delay(function () {
                 self.search()
             }, 250)
-        }
-
-        self.prepare_results = function () {
-            // TODO: handle this w/ other data types better
-            _.forEach(self.results, function (comp_result) {
-                var humanized_time = humanize_time(comp_result.current_phase_deadline)
-                comp_result.alert_icon = humanized_time < 0;
-                if (comp_result.alert_icon) {
-                    comp_result.pretty_deadline_time = 'Phase ended ' + Math.abs(humanized_time) + ' days ago'
-                } else {
-                    comp_result.pretty_deadline_time = humanized_time
-                }
-            })
         }
 
         self.clear_search = function () {
@@ -406,7 +391,6 @@
                     self.showing_default_results = data.showing_default_results
                     self.results = data.results
                     self.total = data.total
-                    self.prepare_results()
                     self.page_range = _.filter(_.range(self.page - 4, self.page + 5), i => i > 0 && i < (self.total / self.size) + 1)
                     self.update()
                 })

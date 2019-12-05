@@ -8,9 +8,9 @@ klass=
 if [ "$1" == "-k" ]; then
     shift
     klass=$1
-    docker-compose -f docker-compose.yml -f docker-compose.selenium.yml exec django py.test -m e2e -k $klass
+    docker-compose -f docker-compose.yml -f docker-compose.selenium.yml exec django py.test src/tests/functional/ -m e2e -k $klass
 else
-    docker-compose -f docker-compose.yml -f docker-compose.selenium.yml exec django py.test -m e2e
+    docker-compose -f docker-compose.yml -f docker-compose.selenium.yml exec django py.test src/tests/functional/ -m e2e
 fi
 
 # Clean up
