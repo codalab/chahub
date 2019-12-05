@@ -5,7 +5,7 @@ services:
       - SELENIUM_HOSTNAME=selenium
 
   selenium:
-    image: selenium/standalone-firefox-debug:3.141.59
+    image: selenium/standalone-chrome-debug:3.141.59
     volumes:
       - ./artifacts:/artifacts/:z
     ports:

@@ -1,22 +1,37 @@
 import os
+import socket
+from time import sleep
+
 import pytest
+from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
-from django.contrib.auth import get_user_model
-from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver import DesiredCapabilities
+from selenium import webdriver
 
 User = get_user_model()
 
 
 @pytest.mark.e2e
 class SeleniumTestCase(StaticLiveServerTestCase):
-    urls = 'urls'  # TODO: what the F is this???
+    urls = 'base_urls'  # TODO: what the F is this???
     serialized_rollback = True
+
+    host = '0.0.0.0'
+    serve_static = True
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.selenium = WebDriver()
+        cls.host = socket.gethostbyname(socket.gethostname())
+        desired_capabilities = DesiredCapabilities.CHROME
+        desired_capabilities['loggingPrefs'] = {'browser': 'ALL'}
+
+        cls.selenium = webdriver.Remote(
+            command_executor=f'http://{settings.SELENIUM_HOSTNAME}:4444/wd/hub',
+            desired_capabilities=desired_capabilities,
+        )
         # Wait 10 seconds for elements to appear, always
         cls.selenium.implicitly_wait(10)
 
@@ -24,6 +39,10 @@ class SeleniumTestCase(StaticLiveServerTestCase):
     def tearDownClass(cls):
         cls.selenium.quit()
         super().tearDownClass()
+
+    def setUp(self):
+        super().setUp()
+        self.selenium.set_window_size(800, 600)
 
     def login(self):
         User.objects.create_user(username='test', password='test')
@@ -33,13 +52,11 @@ class SeleniumTestCase(StaticLiveServerTestCase):
         self.find(".submit.button").click()
         self.assertTrue(self.selenium.find_element_by_css_selector('#searchbar > input[type="text"]'))
 
-    def setUp(self):
-        super().setUp()
-        self.selenium.set_window_size(800, 600)
+    def wait(self, seconds):
+        return sleep(seconds)
 
     def get(self, url):
-        #  live_server_url will be a random localhost:5digits/
-        return self.selenium.get('%s%s' % (self.live_server_url, url))
+        return self.selenium.get(f'{self.live_server_url}{url}')
 
     def find(self, selector):
         return self.selenium.find_element_by_css_selector(selector)

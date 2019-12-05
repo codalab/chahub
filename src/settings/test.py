@@ -11,3 +11,5 @@ CELERY_TASK_ALWAYS_EAGER = True
 DATABASES['default'] = {  # noqa: F405
     'ENGINE': 'django.db.backends.sqlite3',
 }
+
+SELENIUM_HOSTNAME = os.environ.get("SELENIUM_HOSTNAME", "localhost")  # noqa: F405
