@@ -22,13 +22,18 @@ jobs:
           background: true
 
       - run: cp .env_sample .env
-      - run: chown -R 1000:1000 /usr/share/elasticsearch/data
 
       - run:
           name: Build containers and collect static
           command: |
             docker-compose -f docker-compose.yml -f docker-compose.selenium.yml up -d
             docker-compose exec django python manage.py collectstatic --noinput
+
+      - run:
+          name: Fixing elasticsearch
+          command: |
+            docker-compose run elasticsearch chown -R 1000:1000 /usr/share/elasticsearch/data
+            docker-compose -f docker-compose.yml -f docker-compose.selenium.yml up -d
 
       - run:
           name: e2e tests
