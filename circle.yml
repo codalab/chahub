@@ -25,7 +25,7 @@ jobs:
 
       - run:
           name: Making elasticsearch data dir
-          command: mkdir -p /usr/share/elasticsearch/data/nodes
+          command: sudo mkdir -p /usr/share/elasticsearch/data/nodes
 
       - run:
           name: Build containers and collect static
