@@ -33,7 +33,7 @@ jobs:
           name: Fixing elasticsearch
           command: |
             docker-compose run elasticsearch chown -R 1000:1000 /usr/share/elasticsearch/data
-            docker-compose -f docker-compose.yml -f docker-compose.selenium.yml up -d
+            docker-compose -f docker-compose.yml -f docker-compose.selenium.yml restart
 
       - run:
           name: e2e tests
