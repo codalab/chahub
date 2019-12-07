@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
@@ -32,9 +33,13 @@ class ChaHubModelViewSet(ModelViewSet):
         return super().dispatch(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+            content = {}
+        except ObjectDoesNotExist:
+            content = {'detail': 'Could not find object to delete, deletion considered successful'}
+        return Response(content, status=status.HTTP_204_NO_CONTENT)
 
     def perform_destroy(self, instance):
         blacklist_data = ['participant', 'email', 'username']
