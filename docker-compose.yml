@@ -5,7 +5,7 @@ services:
   #-----------------------------------------------
   django:
     build: .
-    command: bash -c "cd /app/src && watchmedo auto-restart -p '*.py' --recursive -- gunicorn asgi:application -w 2 -k uvicorn.workers.UvicornWorker -b :8888"
+    command: bash -c "cd /app/src && watchmedo auto-restart -p '*.py' --recursive -- gunicorn asgi:application -w 2 -k uvicorn.workers.UvicornWorker -b :8000"
     environment:
       - DJANGO_SETTINGS_MODULE=settings.base
       - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
@@ -14,7 +14,7 @@ services:
       - .:/app
       - /tmp/codalab-v2/django:/codalab_tmp
     ports:
-      - 8888:8888
+      - ${DJANGO_PORT}:8000
     depends_on:
       - postgres
       - elasticsearch
