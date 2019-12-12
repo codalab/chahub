@@ -1,5 +1,4 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -20,8 +19,7 @@ class ChaHubModelViewSet(ModelViewSet):
 
     def get_object(self):
         if self.request.method == "DELETE":
-            return get_object_or_404(
-                self.get_queryset(),
+            self.get_queryset().get(
                 producer=self.request.user,
                 remote_id=self.kwargs[self.lookup_url_kwarg]
             )
