@@ -310,6 +310,8 @@
                     self.user = data
                     self.update()
                     _.delay(() => {
+                        // Not strictly necessary, but makes the loader show up long enough to be recognized as such,
+                        // rather than a weird flicker
                         self.loading = false
                         self.update()
                     }, 500)
