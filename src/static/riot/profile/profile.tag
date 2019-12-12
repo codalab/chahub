@@ -3,11 +3,12 @@
         <user-button></user-button>
         <div class="ui profile-segment segment">
             <div class="ui container profile-header">
-                <div class="holder">
+                <loader show="{loading}"></loader>
+                <div class="holder" show="{!loading}">
                     <img src="{ _.get(user, 'github_user_info.avatar_url', URLS.STATIC('img/img-wireframe.png')) }"
                          class="profile-img" alt="profile-image">
                 </div>
-                <div class="profile-user">
+                <div class="profile-user" show="{!loading}">
                     { _.get(user, 'username', 'Anonymous / N/A') }
                     <div show="{ _.get( user, 'github_user_info', false) }" class="profile-brief">
                         <div class="location">
@@ -194,6 +195,7 @@
 
         self.user = {}
         self.selected_profile_id = undefined
+        self.loading = true
 
         self.on('mount', function () {
             // Todo: add `self.loading` here, and set it true, then false inside self.update_user and then add a
@@ -307,6 +309,10 @@
                 .done(function (data) {
                     self.user = data
                     self.update()
+                    _.delay(() => {
+                        self.loading = false
+                        self.update()
+                    }, 500)
                     CHAHUB.events.trigger("profile_loaded", self.user)
                 })
                 .fail(function (response) {
