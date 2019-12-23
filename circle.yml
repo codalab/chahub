@@ -25,16 +25,25 @@ jobs:
 
       - run:
           name: Making elasticsearch data dir
-          command: sudo mkdir -p /usr/share/elasticsearch/data/nodes
+          command: |
+            mkdir -p var/data/elasticsearch
+            sudo chown 1000:1000 var/data/elasticsearch
 
       - run:
-          name: run tests
+          name: Build containers and collect static
           command: |
             docker-compose -f docker-compose.yml -f docker-compose.selenium.yml up -d
             docker-compose exec django python manage.py collectstatic --noinput
-            docker-compose exec django py.test src/ -m "not e2e"
-            docker-compose -f docker-compose.yml -f docker-compose.selenium.yml exec django py.test src/tests/functional/ -m e2e
+
+
+      - run:
+          name: e2e tests
+          command: docker-compose -f docker-compose.yml -f docker-compose.selenium.yml exec django py.test src/tests/functional/ -m e2e
           no_output_timeout: 60m
+
+      - run:
+          name: pytest
+          command: docker-compose exec django py.test src/ -m "not e2e"
 
       - run: docker-compose exec django flake8 src/ --ignore E501
 
