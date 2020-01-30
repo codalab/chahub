@@ -17,6 +17,7 @@ services:
       - 443:443
     depends_on:
       - django
+
   django:
     build: .
     command: bash -c "cd /app/src && watchmedo auto-restart -p '*.py' --recursive -- gunicorn asgi:application -w 2 -k uvicorn.workers.UvicornWorker -b :8000"

@@ -16,7 +16,7 @@
   root /var/www/django
 
   # Serving dynamic requests:
-  proxy / django:8888 {
+  proxy / django:{$DJANGO_PORT} {
     except /static /media
     transparent
   }
