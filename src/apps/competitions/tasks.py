@@ -44,7 +44,7 @@ def download_competition_image(comp_pk):
         if not is_raw_bytes:
             image_rs.save(thumb_io, format=image.format)
             new_image = ContentFile(thumb_io.getvalue())
-            comp.logo.save(f'logo_{comp.pk}.{image_format.lower()}', new_image)
+            comp.logo.save(f'logo_{comp.pk}.{image.format.lower()}', new_image)
         else:
             image_rs.save(thumb_io, format='PNG')
             new_image = ContentFile(thumb_io.getvalue())
