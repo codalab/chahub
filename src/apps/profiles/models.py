@@ -39,7 +39,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def add_email(self, email, primary=False):
         if not EmailAddress.objects.filter(email=email).exists():
-            email = self.email_addresses.create(email=email, primary=primary)
+            email = EmailAddress.objects.create(email=email, primary=primary)
+            self.email_addresses.add(email)
             self.refresh_profiles()
             return email
         else:
