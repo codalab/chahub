@@ -16,7 +16,7 @@
   root /var/www/django
 
   # Serving dynamic requests:
-  proxy / chahub-django:8888 {
+  proxy / django:8888 {
     except /static /media
     transparent
   }
