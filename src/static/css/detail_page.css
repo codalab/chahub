@@ -1,0 +1,13 @@
+#particles-js {
+    height: 90px !important;
+}
+
+.error-row {
+    margin-top: 10vh;
+}
+
+.detail_name {
+    color: #2a4457;
+    font-weight: bold;
+    font-size: medium;
+}

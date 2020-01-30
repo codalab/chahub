@@ -1,44 +1,37 @@
-from django.conf import settings
+from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
 
+from api.serializers.producers import ProducerSerializer
 from datasets.models import Data, DataGroup
 
 
-class DataSerializer(serializers.ModelSerializer):
-    # data_file = FileField(allow_empty_file=False)
+class DataSerializer(WritableNestedModelSerializer):
+    producer = ProducerSerializer(required=False)
 
     class Meta:
         model = Data
         fields = (
+            'id',
+            'creator_id',
+            'remote_id',
             'created_by',
             'created_when',
             'name',
             'type',
             'description',
-            'data_file',
             'key',
+            'is_public',
+            'producer',
+            'download_url',
         )
-        read_only_fields = (
-            'owner',
-            'key',
-            'created_by',
-            'created_when',
-        )
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-
-        # Should only be changing data_file if we're using local storage!!!
-
-        # Fix the URL, should be the full URL with correct path
-        upload_path = '{}{}'.format(settings.MEDIA_URL, instance.data_file)
-        representation["data_file"] = self.context['request'].build_absolute_uri(upload_path)
-
-        return representation
 
     def create(self, validated_data):
-        validated_data["created_by"] = self.context['request'].user
-        return super().create(validated_data)
+        obj, created = Data.objects.update_or_create(
+            remote_id=validated_data.pop('remote_id'),
+            producer=self.context['request'].user,
+            defaults=validated_data
+        )
+        return obj
 
 
 class DataGroupSerializer(serializers.ModelSerializer):

@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="{% static "css/calendar.min.css" %}">
     <link rel="stylesheet" href="{% static "generated/output.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
     {% block extra_head %}
     {% endblock %}
@@ -59,9 +59,11 @@
 </head>
 <body>
 
-{% block content %}
+<div id="content">
+    {% block content %}
 
-{% endblock %}
+    {% endblock %}
+</div>
 
 <div class="footer pusher">
     <div id="chafooter" class="ui horizontal divided tiny list">
@@ -130,6 +132,15 @@
         MY_PROFILE: {% if request.user.is_authenticated %}"{% url 'profiles:user_profile' username=request.user.username %}"{% else %}""{% endif %},
         SOCIAL_BEGIN: {
             GITHUB: "{% url 'social:begin' 'github' %}"
+        },
+        COMPETITION_DETAIL: function(pk) {
+            return "{% url 'competitions:detail' pk=0 %}".replace('0', pk)
+        },
+        TASK_DETAIL: function(pk) {
+            return "{% url 'tasks:detail' pk=0 %}".replace('0', pk)
+        },
+        DATASET_DETAIL: function(pk) {
+            return "{% url 'datasets:detail' pk=0 %}".replace('0', pk)
         }
     }
     CHAHUB.state = {
@@ -139,7 +150,6 @@
             username: "{{ user.username|default:"Anonymous" }}",
         },
         producers: JSON.parse("{{ producers|escapejs|default:"[]" }}"),
-        default_search_results: JSON.parse("{{ default_search_results|escapejs|default:"[]" }}")
     }
 
 </script>

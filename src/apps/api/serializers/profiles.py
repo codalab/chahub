@@ -119,7 +119,22 @@ class ProfileSerializer(serializers.ModelSerializer):
             'id',
             'remote_id',
             'username',
-            'producer'
+            'producer',
+            'participating_count',
+            'submission_count',
+        )
+
+
+class ProfileListSerializer(serializers.ModelSerializer):
+    producer = serializers.CharField(source='producer.name')
+
+    class Meta:
+        model = Profile
+        fields = (
+            'id',
+            'remote_id',
+            'username',
+            'producer',
         )
 
 

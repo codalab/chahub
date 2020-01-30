@@ -14,11 +14,6 @@ class IndexView(TemplateView):
         we used to have to ping the API for producer data, for example"""
         context = super().get_context_data(**kwargs)
         context['producers'] = json.dumps(list(Producer.objects.all().values('id', 'name', 'url')))
-
-        if not self.request.GET:
-            from api.views.search import get_default_search_results
-            context['default_search_results'] = json.dumps(get_default_search_results())
-
         return context
 
     # I don't think we'll use this in an iframe, but just-in-case

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static "css/detail_page.css" %}">
+{% endblock %}
+{% block content %}
+    <div id="particles-js">
+        <a href="/"><img id="brand_logo" src="{% static 'img/temp_chahub_logo_beta.png' %}"></a>
+    </div>
+    <user-button></user-button>
+    <div class="ui grid container" id="grid-container">
+        {% if object.deleted %}
+            {% comment %}
+            This should be caught by the custom manager, but this is here as a backup
+            {% endcomment %}
+            <div class="row error-row">
+                <div class="ui four wide column"></div>
+                <div class="ui eight wide column">
+                    <div class="ui center aligned segment">
+                        <h2>404 Page Not Found</h2>
+                        <p>We couldn't seem to find the object you are looking for</p>
+                    </div>
+                </div>
+                <div class="ui four wide column"></div>
+            </div>
+        {% elif object.is_public or object.published %}
+            <div class="row">
+                <div class="ui sixteen wide column">
+                    {% block detail_tag %}
+
+                    {% endblock %}
+                </div>
+            </div>
+        {% else %}
+            <div class="row error-row">
+                <div class="ui four wide column"></div>
+                <div class="ui eight wide column">
+                    <div class="ui center aligned segment">
+                        <h2>403 Permission Denied</h2>
+                        <p>You do not have permission to view this resource</p>
+                    </div>
+                </div>
+                <div class="ui four wide column"></div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block extra_body %}
+    <script>
+        $('document').ready(function () {
+            particlesJS.load('particles-js', "/static/particles/header.json", function () {
+            })
+        })
+    </script>
+{% endblock %}

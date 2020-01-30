@@ -11,12 +11,18 @@ class SearchView(APIView):
     @cache_response(key_func=QueryParamsKeyConstructor(), timeout=60)
     def get(self, request, version="v1"):
         # Get search data
-        query = request.GET.get('q', '')
-        sorting = request.GET.get('sorting')
-        date_flags = request.GET.get('date_flags')
-        start = request.GET.get('start_date')
-        end = request.GET.get('end_date')
-        producer = request.GET.get('producer')
+        query = request.query_params.get('q', '')
+        sorting = request.query_params.get('sorting')
+        date_flags = request.query_params.get('date_flags')
+        start = request.query_params.get('start_date')
+        end = request.query_params.get('end_date')
+        producer = request.query_params.get('producer')
+        index = request.query_params.getlist('index[]')
+        page = request.query_params.get('page', 1)
+        try:
+            page = max(int(page), 1)
+        except ValueError:
+            page = 1
 
         # Do we even have anything to search with?
         filters = (
@@ -26,8 +32,9 @@ class SearchView(APIView):
             start,
             end,
             producer,
+            index,
         )
-        empty_search = all(not f for f in filters)
+        empty_search = not any(filters)
 
         # Get results and prepare them
         data = {
@@ -37,18 +44,19 @@ class SearchView(APIView):
 
         if not empty_search:
             # Setup ES connection, excluding HTML text from our results
-            s = get_search_client()
+            s = get_search_client(page=page, index=index)
 
             # Do search/filtering/sorting
             s = self._search(s, query)
             s = self._filter(s, date_flags, start, end, producer)
             s = self._sort(s, sorting, query)
-            data["results"] = get_results(s)
-
-        if not data["results"] or empty_search:
+            search_results = get_results(s)
+        else:
             data["showing_default_results"] = True
-            data["results"] = get_default_search_results()
+            search_results = get_default_search_results()
 
+        data["results"] = search_results["results"]
+        data["total"] = search_results["total"]
         return Response(data)
 
     def _search(self, search, query):
@@ -58,10 +66,8 @@ class SearchView(APIView):
                 query=query,
                 type="best_fields",
                 fuzziness=1,
-                fields=["title^5", "description^3", "html_text^2", "created_by"]
+                fields=["title^5", "name^5", "description^3", "html_text^2", "created_by"]
             )
-            # s = s.highlight('title', fragment_size=50)
-            # s = s.suggest('suggestions', query, term={'field': 'title'})
         return search
 
     def _filter(self, search, date_flags, start, end, producer):
@@ -71,7 +77,7 @@ class SearchView(APIView):
                 'gte': "now/M",
                 'lte': "now/M",
             })
-        if date_flags == "this_year":
+        elif date_flags == "this_year":
             search = search.filter('range', start={
                 'gte': "now/y",
                 'lte': "now/y",
