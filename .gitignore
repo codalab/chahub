@@ -5,13 +5,17 @@ __pycache__
 node_modules/
 var/
 
+# Generated static files
 src/static/output.css
 src/static/output.js
 src/static/riot.js
 src/static/riot.tag
 src/static/generated/*
+
+# Collected static files
 src/staticfiles/
 
+# User uploads
 src/uploads/
 
 db.sqlite

@@ -43,6 +43,11 @@ WHITENOISE_ROOT=
 export GUNICORN_CMD_ARGS="--workers=10"
 ```
 
+To setup ElasticSearch data directory:
+```bash
+sudo chown 1000:1000 var/data/elasticsearch/
+```
+
 
 # Background tasks
 
