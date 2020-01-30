@@ -33,9 +33,7 @@ def download_competition_image(comp_pk):
         image = Image.open(BytesIO(resp.content))
         width, height = image.size
         aspect = width / height
-        if not is_raw_bytes:
-            image_format = image.format
-        else:
+        if is_raw_bytes:
             logger.warning("Image format could not be determined because it is raw bytes. Saving as PNG.")
         logger.info(f"Aspect ratio is: {aspect}, or: {width}/{height} unsimplified")
         new_width = settings.LOGO_BASE_WIDTH
@@ -44,7 +42,7 @@ def download_competition_image(comp_pk):
         image_rs = image.resize((new_width, new_height), Image.ANTIALIAS)
         thumb_io = BytesIO()
         if not is_raw_bytes:
-            image_rs.save(thumb_io, format=image_format)
+            image_rs.save(thumb_io, format=image.format)
             new_image = ContentFile(thumb_io.getvalue())
             comp.logo.save(f'logo_{comp.pk}.{image_format.lower()}', new_image)
         else:
