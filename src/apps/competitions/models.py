@@ -40,7 +40,6 @@ class Competition(models.Model):
         if self.logo_url and not self.logo:
             from competitions.tasks import download_competition_image
             download_competition_image.apply_async((self.id,))
-        super().save(**kwargs)
 
     def get_current_phase_deadline(self):
         # TODO: We may need to have a celery task that updates ElasticSearch deadlines.
