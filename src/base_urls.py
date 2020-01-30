@@ -11,7 +11,9 @@ urlpatterns = [
     path('api/<str:version>/', include('api.urls')),
     path('profiles/', include('profiles.urls', namespace='profiles')),
     path('producers/', include('producers.urls', namespace='producers')),
-
+    path('competitions/', include('competitions.urls', namespace='competitions')),
+    path('tasks/', include('tasks.urls', namespace='tasks')),
+    path('datasets/', include('datasets.urls', namespace='datasets')),
     # Django built in
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),

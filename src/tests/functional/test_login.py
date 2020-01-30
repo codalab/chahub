@@ -1,4 +1,4 @@
-from tests.base import SeleniumTestCase
+from ..utils import SeleniumTestCase
 
 
 class TestLogin(SeleniumTestCase):

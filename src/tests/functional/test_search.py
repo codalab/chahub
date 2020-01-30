@@ -1,18 +1,18 @@
-from tests.base import SeleniumTestCase
 from producers.models import Producer
 from competitions.models import Competition
 from time import sleep
 
+from ..utils import SeleniumTestCase
 
-class TestChangingProviderAndResultsChange(SeleniumTestCase):
 
+class SearchTests(SeleniumTestCase):
     def test_changing_provider_changes_url_and_search_results(self):
         #  Creates Two Providers, and Two Competitions
         #  Assign Competitions to the two separate Providers - "tag" them through the url
         prod1 = Producer.objects.create(
             name='Prod1Testing'
         )
-        comp1 = Competition.objects.create(  # noqa
+        Competition.objects.create(
             title='Fake Competition1',
             producer=prod1,
             is_active=True,
@@ -22,7 +22,7 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
         prod2 = Producer.objects.create(
             name='Prod2Testing'
         )
-        comp2 = Competition.objects.create(  # noqa
+        Competition.objects.create(
             title='Even Faker Competition2',
             producer=prod2,
             is_active=True,
@@ -43,7 +43,6 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
         #  Confirm that the URL at index loads the proper competition
         #  Assert that the URL has changed to the producer1's search results and filtered out unwanted search results
         self.assertIn(f"producer={prod1.pk}", self.selenium.current_url)
-        self.assertLinkTextExists('test.org')
 
         #  Click the Producer drop-down bar and click the 4th child - Producer1
         #  Need a half second to load the dropdown bar
@@ -54,4 +53,3 @@ class TestChangingProviderAndResultsChange(SeleniumTestCase):
 
         #  Assert that the URL has changed to the producer2's search results and filtered out unwanted search results
         self.assertIn(f"producer={prod2.pk}", self.selenium.current_url)
-        self.assertLinkTextExists('test2.org')

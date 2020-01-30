@@ -11,7 +11,7 @@ from rest_framework.viewsets import ModelViewSet
 from api.authenticators import ProducerAuthentication
 from api.permissions import ProducerPermission
 from api.serializers.profiles import AccountMergeRequestSerializer, UserSerializer, MyUserSerializer, \
-    ProfileSerializer, ProfileCreateSerializer
+    ProfileSerializer, ProfileCreateSerializer, ProfileListSerializer
 from profiles.models import Profile, EmailAddress
 
 User = get_user_model()
@@ -37,7 +37,10 @@ class UserViewSet(ModelViewSet):
         return UserSerializer
 
     def get_queryset(self):
-        return super().get_queryset().select_related('github_user_info')
+        if self.request.method == 'GET':
+            return super().get_queryset().select_related('github_user_info')
+        else:
+            return super().get_queryset()
 
     def has_permission(self, request, user):
         return request.user == user or request.user.is_superuser or request.user.is_staff
@@ -113,14 +116,18 @@ class ProfileViewSet(ModelViewSet):
     permission_classes = (ProducerPermission, )
 
     def get_queryset(self):
-        pks_list = self.request.query_params.getlist('pk[]')
-        if pks_list:
-            return self.queryset.filter(pk__in=pks_list)
-        return self.queryset
+        qs = self.queryset
+        if self.request.method == 'GET':
+            qs = qs.select_related(
+                'producer',
+            )
+        return qs
 
     def get_serializer_class(self):
         if self.action == 'create':
             return ProfileCreateSerializer
+        if self.action == 'list':
+            return ProfileListSerializer
         return ProfileSerializer
 
     def get_serializer_context(self):

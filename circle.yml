@@ -1,32 +1,55 @@
 version: 2
+
 jobs:
   test:
-    docker:
-      - image: circleci/python:3.6-jessie-browsers
-      - image: library/elasticsearch:5.6
+    machine:
+      image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - run: sudo pip install -r requirements.dev.txt
-      - run: mkdir -p src/static/generated/
-      - run: python manage.py collectstatic --no-input
-      - run: curl -sL https://deb.nodesource.com/setup_10.x | sudo bash - && sudo apt install nodejs && sudo npm install riot@3.13.2 -g riot-compiler --save stylus -g
-      - run: riot src/static/riot src/static/generated/riot.js --style stylus
-      - run: stylus --compress --sourcemap-inline < src/static/stylus/index.styl > src/static/generated/output.css
-      - run: python manage.py migrate
-      - run: python manage.py create_competition --amount 3 --fill-all-details True --fail-on-exception True
-      - run: echo "Y" | python manage.py search_index --rebuild
-      - run: mkdir artifacts/
-      - save_cache:
-          key: codalab-{{ .Branch }}-{{ checksum "requirements.dev.txt" }}
-          paths:
-            - ~/.cache/pip
-      - run: py.test
+
+      - run:
+          # NOTE: To connect to this, use an SSH tunnel in front, like so..
+          #
+          #     In one terminal:
+          #         $ ssh -p PORT ubuntu@CIRCLE_IP_ADDRESS -L 5900:localhost:5900
+          #
+          #     In another terminal:
+          #         $ open vnc://0.0.0.0:5900
+          name: Download and start X for VNC viewing
+          command: |
+            sudo apt-get install -y x11vnc
+            x11vnc -forever -nopw
+          background: true
+
+      - run: cp .env_sample .env
+
+      - run:
+          name: Making elasticsearch data dir
+          command: |
+            mkdir -p var/data/elasticsearch
+            sudo chown 1000:1000 var/data/elasticsearch
+
+      - run:
+          name: Build containers and collect static
+          command: |
+            docker-compose -f docker-compose.yml -f docker-compose.selenium.yml up -d
+            docker-compose exec django python manage.py collectstatic --noinput
+
+
+      - run:
+          name: e2e tests
+          command: ./run_selenium_tests.sh
+          no_output_timeout: 60m
+
+      - run:
+          name: pytest
+          command: docker-compose exec django py.test src/ -m "not e2e"
+
+      - run: docker-compose exec django flake8 src/ --ignore E501
+
       - store_artifacts:
           path: artifacts/
-      - run: 'flake8 src/ --ignore E501'
-#      - run: if [[ `grep -rnw src -e 'TODO'` ]]; then (exit -1); fi
-#      - run [[ `grep -rnw src/templates/ -e 'style='` ]]; then (exit -1); fi
-#      - run [[ `grep -rnw src/static/riot -e 'style='` ]]; then (exit -1); fi
+
 workflows:
   version: 2
   build_and_test:

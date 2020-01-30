@@ -92,9 +92,8 @@ body
  */
 
 .footer
-    margin-top 20px !important
-    &.segment
-        padding 5em 0
+  display flex
+
 
 .secondary.pointing.menu .toc.item
     display none
@@ -138,12 +137,14 @@ body
  */
 .pusher
     display flex
-    min-height 100vh
+    min-height 96vh
     flex-direction column
 
 .pusher > .footer
     flex 1
 
+#content
+    min-height 96vh
 
 /* --------------------------------------------------------------------------------------
  Fix padding on menus

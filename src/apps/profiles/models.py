@@ -52,8 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def refresh_profiles(self):
         Profile.objects.filter(
-            Q(email__in=self.email_addresses.filter(verified=True).values_list('email', flat=True)) |
-            Q(user=self)
+            Q(email__in=self.email_addresses.filter(verified=True).values_list('email', flat=True)) | Q(user=self)
         ).distinct().update(user=Case(
             When(email__in=self.email_addresses.filter(verified=True).values_list('email', flat=True), then=Value(self.id)),
             default=None
@@ -122,6 +121,15 @@ class Profile(models.Model):
     producer = models.ForeignKey('producers.Producer', related_name='profiles', on_delete=models.CASCADE)
     details = JSONField(null=True, blank=True)
     scrubbed = models.BooleanField(default=False)
+
+    # Todo: do this with an annotation on the user queryset? or maybe serializer context?
+    @property
+    def submission_count(self):
+        return self.producer.competition_participants.filter(user=self.remote_id).count()
+
+    @property
+    def participating_count(self):
+        return self.producer.competitions.filter(participants__user=self.remote_id).count()
 
     class Meta:
         unique_together = ['remote_id', 'producer']

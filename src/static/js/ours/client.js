@@ -20,8 +20,8 @@ CHAHUB.api = {
         // This causes bugs with repeating the query params over and over, so we just replaceState now
         //route('?' + $.param(params))
         var url_params = `/?${$.param(filters)}`
-        window.history.replaceState("", "", url_params);
-        return CHAHUB.api.request('GET', "query" + url_params)
+        window.history.replaceState("", "", decodeURI(url_params));
+        return CHAHUB.api.request('GET', "query", filters)
     },
     // ------------------------------------------------------------------------
     // Producers
@@ -69,5 +69,16 @@ CHAHUB.api = {
     // Merge requests
     create_merge: function(data) {
         return CHAHUB.api.request('POST', "create_merge_request/", data)
+    },
+    // ------------------------------------------------------------------------
+    // Detail pages
+    get_competition(pk) {
+        return CHAHUB.api.request('GET', `competitions/${pk}/`)
+    },
+    get_task(pk) {
+        return CHAHUB.api.request('GET', `tasks/${pk}/`)
+    },
+    get_dataset(pk) {
+        return CHAHUB.api.request('GET', `datasets/${pk}/`)
     },
 }
