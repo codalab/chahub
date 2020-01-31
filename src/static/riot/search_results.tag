@@ -170,7 +170,7 @@
             </div>
         </div>
         <div class="four wide right floated computer only column">
-            <show-stats></show-stats>
+            <!--<show-stats></show-stats>-->
         </div>
         <div if="{!loading}" class="sixteen wide center aligned column">
             <div class="ui pagination menu custom-pagination">
