@@ -13,8 +13,8 @@ services:
       - ./src/staticfiles:/var/www/django/static
       - ./certs/caddy:/etc/caddycerts
     ports:
-      - 80:80
-      - 443:443
+      - 80:81
+      - 443:444
     depends_on:
       - django
 
@@ -85,8 +85,8 @@ services:
     image: rabbitmq:3.8-management
     env_file: .env
     ports:
-      - 15672:15672
-      - 5672:5672
+      - 15673:15673
+      - 5673:5673
     volumes:
       # To save rabbit state between container ups/downs
       - ./var/rabbit:/var/lib/rabbit/:delegated
