@@ -32,7 +32,6 @@ class CompetitionParticipantSerializer(ChaHubWritableNestedSerializer):
 
 
 class PhaseSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Phase
         fields = (
@@ -76,12 +75,20 @@ class PhaseCreationSerializer(WritableNestedModelSerializer):
                 ).id
             except Competition.DoesNotExist:
                 raise ValidationError("Supplied competition_id does not relate to any competition on Chahub")
+        if 'remote_id' in attrs:
+            try:
+                attrs['id'] = Phase.objects.get(
+                    remote_id=attrs['remote_id'],
+                    producer=self.context['request'].user
+                ).id
+            except:
+                print(f'Creating New Phase with data:\n{attrs}')
         return super().validate(attrs)
 
 
 class SubmissionSerializer(serializers.ModelSerializer):
     competition = serializers.IntegerField(write_only=True, allow_null=True)
-    phase_id = serializers.IntegerField(write_only=True, allow_null=True)
+    phase_index = serializers.IntegerField(write_only=True, allow_null=True)
     producer = ProducerSerializer(required=False)
     data = DataSerializer(required=False, allow_null=True)
 
@@ -90,7 +97,7 @@ class SubmissionSerializer(serializers.ModelSerializer):
         fields = (
             'remote_id',
             'competition',  # on write only
-            'phase_id',  # on write this is the phase index within the competition, NOT a PK
+            'phase_index',  # on write this is the phase index within the competition, NOT a PK
             'submitted_at',
             'participant_name',
             'owner',
@@ -99,19 +106,15 @@ class SubmissionSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, attrs):
-        from pprint import pprint
-        print('\n\n\n')
-        pprint(attrs)
-        print('\n\n\n')
         competition = attrs.pop('competition', None)
-        phase_id = attrs.pop('phase', None)
-        if competition is None or phase_id is None:
+        phase_index = attrs.pop('phase_index', None)
+        if competition is None or phase_index is None:
             return attrs
         competition = Competition.objects.get(
             remote_id=competition,
             producer=self.context['request'].user
         )
-        attrs['phase'] = competition.phases(remote_id=phase_id)
+        attrs['phase'] = competition.phases.get(index=phase_index)
         return attrs
 
     def create(self, validated_data):
