@@ -75,7 +75,6 @@ class SolutionCreationSerializer(ChaHubWritableNestedSerializer):
             producer=producer,
             defaults=validated_data
         )
-
         return obj
 
 

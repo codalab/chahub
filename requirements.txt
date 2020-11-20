@@ -1,8 +1,8 @@
 celery==4.3.0
-Django==2.1.11
+django>=2.2.13
 psycopg2-binary==2.7.6.1
 whitenoise==4.1.2
-djangorestframework==3.8.2
+djangorestframework>=3.9.1
 #django-rest-swagger==2.1.2
 #drf-openapi==1.0.0
 drf-yasg[validation]==1.9.1
@@ -18,7 +18,7 @@ django-extensions==2.2.3
 channels==2.1.2
 #daphne==2.2.2
 gunicorn==19.9.0
-uvicorn==0.8.4
+uvicorn>=0.11.7
 asgi_redis==1.4.3
 drf-writable-nested==0.5.1
 drf-extensions==0.3.1
@@ -28,8 +28,8 @@ tqdm==4.19.5
 django-debug-toolbar==1.9.1
 asgiref==2.3.2
 selenium==3.141.0
-Pillow==5.0.0
-django-storages[azure,google]
+pillow>=7.1.0
+django-storages[azure,google]==1.7.1
 boto3==1.9.86
 django-querycount==0.7.0
 urllib3<1.25,>=1.21.1

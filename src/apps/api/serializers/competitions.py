@@ -82,7 +82,7 @@ class PhaseCreationSerializer(WritableNestedModelSerializer):
                     producer=self.context['request'].user
                 ).id
             except:
-                print(f'Creating New Phase with data:\n{attrs}')
+                pass
         return super().validate(attrs)
 
 
