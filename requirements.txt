@@ -18,7 +18,7 @@ django-extensions==2.2.3
 channels==2.1.2
 #daphne==2.2.2
 gunicorn==19.9.0
-uvicorn>=0.11.7
+uvicorn==0.11.7
 asgi_redis==1.4.3
 drf-writable-nested==0.5.1
 drf-extensions==0.3.1
@@ -28,7 +28,7 @@ tqdm==4.19.5
 django-debug-toolbar==1.9.1
 asgiref==2.3.2
 selenium==3.141.0
-pillow>=7.1.0
+pillow==7.1.0
 django-storages[azure,google]==1.10.1
 boto3==1.9.86
 django-querycount==0.7.0
