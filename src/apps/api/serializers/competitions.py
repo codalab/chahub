@@ -32,7 +32,6 @@ class CompetitionParticipantSerializer(ChaHubWritableNestedSerializer):
 
 
 class PhaseSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Phase
         fields = (
@@ -76,6 +75,14 @@ class PhaseCreationSerializer(WritableNestedModelSerializer):
                 ).id
             except Competition.DoesNotExist:
                 raise ValidationError("Supplied competition_id does not relate to any competition on Chahub")
+        if 'remote_id' in attrs:
+            try:
+                attrs['id'] = Phase.objects.get(
+                    remote_id=attrs['remote_id'],
+                    producer=self.context['request'].user
+                ).id
+            except:
+                pass
         return super().validate(attrs)
 
 

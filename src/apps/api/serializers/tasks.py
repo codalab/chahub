@@ -110,5 +110,9 @@ class TaskCreationSerializer(ChaHubWritableNestedSerializer):
         solutions = validated_data.pop('solutions')
         serializer = SolutionCreationSerializer(data=solutions, context=self.context, many=True)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return super().create(validated_data)
+        solutions = serializer.save()
+        task = super().create(validated_data)
+        if solutions:
+            for solution in solutions:
+                solution.tasks.add(task)
+        return task
