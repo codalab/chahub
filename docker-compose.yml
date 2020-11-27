@@ -12,6 +12,7 @@ services:
       - ./Caddyfile:/etc/Caddyfile
       - ./src/staticfiles:/var/www/django/static
       - ./certs/caddy:/etc/caddycerts
+    restart: unless-stopped
     ports:
       - 80:80
       - 443:443
@@ -28,6 +29,7 @@ services:
     volumes:
       - .:/app
       - /tmp/codalab-v2/django:/codalab_tmp
+    restart: unless-stopped
     ports:
       - ${DJANGO_PORT}:8000
     depends_on:
@@ -56,6 +58,7 @@ services:
       - ${LOGGING_DIR}/psql:/var/log/psql
       - ${DB_DATA_PATH}:/var/lib/postgresql/data
       - ./backups:/app/backups
+    restart: unless-stopped
     env_file: .env
     logging:
       options:
@@ -73,6 +76,7 @@ services:
       - 9200:9200
     volumes:
       - ./var/data/elasticsearch:/usr/share/elasticsearch/data
+    restart: unless-stopped
     env_file: .env
     logging:
       options:
@@ -90,6 +94,7 @@ services:
     volumes:
       # To save rabbit state between container ups/downs
       - ./var/rabbit:/var/lib/rabbit/:delegated
+    restart: unless-stopped
     logging:
       options:
         max-size: "20k"
@@ -111,6 +116,7 @@ services:
     env_file: .env
     volumes:
       - .:/app
+    restart: unless-stopped
     logging:
       options:
         max-size: "20k"
